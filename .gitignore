@@ -7,11 +7,19 @@ Thumbs.db
 .env.*
 !.env.example
 
-# Dependencies (if scripts use Node/npm)
+# Dependencies
 node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
 # Build output
 .next/
+out/
 dist/
 build/
 coverage/
@@ -19,12 +27,19 @@ coverage/
 # Logs and temp
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 tmp/
 temp/
 .cache/
 
-# IDE (optional, uncomment if needed)
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+
+# IDE
 # .idea/
 # .vscode/
-# *.swp
-# *.swo
