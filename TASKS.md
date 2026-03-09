@@ -10,7 +10,7 @@
 ## Փուլ 0. Նախապատրաստություն
 
 - [ ] **0.1** TECH_CARD հաստատել (մշակողի հաստատում)
-- [ ] **0.2** Neon — նախագիծ/ԲԴ, `DATABASE_URL` + `DIRECT_URL` ավելացնել `.env`
+- [x] **0.2** Neon — նախագիծ/ԲԴ, `DATABASE_URL` + `DIRECT_URL` ավելացնել `.env`
 - [ ] **0.3** `pnpm install`, `pnpm db:generate`, `pnpm db:migrate` — ԲԴ աշխատում է
 
 ---
@@ -18,15 +18,15 @@
 ## Փուլ 1. Landing page (single-page, Apple-սթայլ)
 
 - [x] **1.1** Landing layout — `src/app/page.tsx`, sections wrapper, scroll-to-section (menu սեղմելիս → section)
-- [ ] **1.2** Section: 3 Power Banners (hero / carousel)
-- [ ] **1.3** Section: Goldcrest Engineering Philosophy
-- [ ] **1.4** Section: Modeling Specializations
-- [ ] **1.5** Section: Manufacturing Intelligence
-- [ ] **1.6** Section: Founder — Authority Block
-- [ ] **1.7** Section: Process
-- [ ] **1.8** Section: Quote CTA (տեղ — form-ը հաջորդ փուլում)
-- [ ] **1.9** Section: Footer
-- [ ] **1.10** SEO — metadata, title, description (landing)
+- [x] **1.2** Section: 3 Power Banners (hero / carousel)
+- [x] **1.3** Section: Goldcrest Engineering Philosophy
+- [x] **1.4** Section: Modeling Specializations
+- [x] **1.5** Section: Manufacturing Intelligence
+- [x] **1.6** Section: Founder — Authority Block
+- [x] **1.7** Section: Process
+- [x] **1.8** Section: Quote CTA (տեղ — form-ը հաջորդ փուլում)
+- [x] **1.9** Section: Footer
+- [x] **1.10** SEO — metadata, title, description (landing)
 
 ---
 
@@ -103,7 +103,7 @@
 | Փուլ | Task-եր | Done |
 |------|---------|------|
 | 0 | 0.1 – 0.3 | 0/3 |
-| 1 | 1.1 – 1.10 | 0/10 |
+| 1 | 1.1 – 1.10 | 10/10 |
 | 2 | 2.1 – 2.6 | 0/6 |
 | 3 | 3.1 – 3.7 | 0/7 |
 | 4 | 4.1 – 4.7 | 0/7 |

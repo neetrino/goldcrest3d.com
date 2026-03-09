@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "Goldcrest 3D — Մոդելավորում և արտադրություն",
   description:
-    "Goldcrest-ի 3D մոդելավորման և արտադրության ծառայություններ",
+    "Goldcrest-ի 3D մոդելավորման և արտադրության ծառայություններ։ CAD, պրոտոտիպավորում, արտադրություն։",
+  keywords: ["3D մոդելավորում", "CAD", "արտադրություն", "պրոտոտիպ", "Goldcrest"],
+  openGraph: {
+    title: "Goldcrest 3D — Մոդելավորում և արտադրություն",
+    description:
+      "Goldcrest-ի 3D մոդելավորման և արտադրության ծառայություններ։",
+    locale: "hy",
+  },
 };
 
 export default function RootLayout({
@@ -25,9 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hy">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${inter.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>
