@@ -4,7 +4,10 @@
 
 - `db.ts` — Prisma (Neon)
 - `validations/` — Zod schemas
-- (հետո) `email.ts`, `storage.ts`, `stripe.ts`
+- `auth.ts` — Auth.js config
+- `email.ts` — Resend
+- `storage.ts` — R2 upload
+- `stripe.ts` — payment link creation
 
 Աշխատում է **սերվերում** (API routes, Server Actions). Չի գնում բրաուզեր։
 

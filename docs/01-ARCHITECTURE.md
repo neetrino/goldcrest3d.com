@@ -113,7 +113,14 @@ docs/
 ├── BRIEF.md
 ├── TECH_CARD.md
 ├── 01-ARCHITECTURE.md
-└── PROGRESS.md
+├── 02-TECH_STACK.md
+├── 02-FRONTEND-BACKEND.md
+├── 03-STRUCTURE.md
+├── 04-API.md
+├── 05-DATABASE.md
+├── PROGRESS.md
+├── DECISIONS.md
+└── archive/
 ```
 
 ### Թղթապանակների նկարագրություն
@@ -174,7 +181,7 @@ docs/
 ```
 
 ### Մանրամասն սխեմա
-Տե՛ս `prisma/schema.prisma` (ստեղծվելու է զարգացման փուլում)
+Տե՛ս [05-DATABASE.md](./05-DATABASE.md) և `prisma/schema.prisma`
 
 ---
 
@@ -242,7 +249,12 @@ docs/
 
 - [BRIEF.md](./BRIEF.md)
 - [TECH_CARD.md](./TECH_CARD.md)
+- [02-TECH_STACK.md](./02-TECH_STACK.md)
+- [03-STRUCTURE.md](./03-STRUCTURE.md)
+- [04-API.md](./04-API.md)
+- [05-DATABASE.md](./05-DATABASE.md)
 - [PROGRESS.md](./PROGRESS.md)
+- [DECISIONS.md](./DECISIONS.md)
 - [project.md](../project.md) — ֆունկցիոնալ զադրանք
 
 ---

@@ -166,10 +166,10 @@
 |---|-------------|---------|-------|
 | 11.1 | docs/BRIEF.md | ✅ | |
 | 11.2 | docs/TECH_CARD.md | ✅ | այս ֆայլը |
-| 11.3 | docs/01-ARCHITECTURE.md | ⬜ | |
-| 11.4 | docs/PROGRESS.md | ⬜ | |
-| 11.5 | Նախագծի README.md | ⬜ | |
-| 11.6 | .env.example | ⬜ | |
+| 11.3 | docs/01-ARCHITECTURE.md | ✅ | |
+| 11.4 | docs/PROGRESS.md | ✅ | |
+| 11.5 | Նախագծի README.md | ✅ | project.md, src/, docs աղյուսակ |
+| 11.6 | .env.example | ✅ | DATABASE_URL, DIRECT_URL, R2, Resend, Stripe, Auth |
 
 ---
 

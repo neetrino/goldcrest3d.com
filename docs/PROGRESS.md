@@ -2,7 +2,7 @@
 
 **Նախագիծ.** Goldcrest 3D  
 **Փուլ.** Նախաձեռնում (փաստաթղթեր)  
-**Ընդհանուր առաջընթաց.** 15%
+**Ընդհանուր առաջընթաց.** 20%
 
 **Վերջին թարմացում.** 2026-03-09
 
@@ -12,7 +12,7 @@
 
 | Փուլ | Ստատուս | Առաջընթաց |
 |------|---------|------------|
-| 1. Նախաձեռնում (փաստաթղթեր) | 🔄 Աշխատանքի մեջ | 90% |
+| 1. Նախաձեռնում (փաստաթղթեր) | 🔄 Աշխատանքի մեջ | 95% |
 | 2. Landing + Quote form | ⏳ Սպասվում է | 0% |
 | 3. Admin — Leads Inbox | ⏳ Սպասվում է | 0% |
 | 4. Admin — Orders + Payments | ⏳ Սպասվում է | 0% |
@@ -27,19 +27,20 @@
 - [x] docs/BRIEF.md — լրացված
 - [x] docs/TECH_CARD.md — ստեղծված (սևագիր, սպասվում է հաստատում)
 - [x] docs/01-ARCHITECTURE.md — ստեղծված
+- [x] docs/02-TECH_STACK.md, 03-STRUCTURE.md, 04-API.md, 05-DATABASE.md — ստեղծված
+- [x] docs/DECISIONS.md — ստեղծված
+- [x] docs/archive/ — ստեղծված
 - [x] docs/PROGRESS.md — այս ֆայլը
-- [ ] README.md — նախագծի համար թարմացում
-- [ ] .env.example — env փոփոխականների ցանկ
+- [x] README.md — նախագծի նկարագրություն + մեկնարկի հրահանգ (src/, project.md)
+- [x] .env.example — DATABASE_URL, DIRECT_URL, R2, Resend, Stripe, Auth
 - [ ] TECH_CARD հաստատում → կոդի մեկնարկ
 
 ---
 
 ## 🔄 ԱՇԽԱՏԱՆՔԻ ՄԵՋ
 
-### Փուլ 1 (90%)
+### Փուլ 1 (95%)
 - [ ] TECH_CARD — մշակողի հաստատում
-- [ ] README — Goldcrest 3D նկարագրություն + մեկնարկի հրահանգ
-- [ ] .env.example — DATABASE_URL, R2, Resend, Stripe, Auth
 
 **Բլոկեր.** Չկա
 
@@ -90,6 +91,13 @@
 - Փաստաթղթերի փաթեթ պատրաստված — BRIEF, TECH_CARD, 01-ARCHITECTURE, PROGRESS (project.md + repo հիման վրա)
 - Չափ A, fullstack Next.js, Vercel, Neon, R2, Resend, Stripe, Auth.js
 
+### 2026-03-09 (թարմացում)
+- Ավելացվել են docs/02-TECH_STACK.md, 03-STRUCTURE.md, 04-API.md, 05-DATABASE.md, DECISIONS.md, archive/
+- README.md — ուղղված (src/, project.md, մեկնարկի հրահանգ, փաստաթղթերի աղյուսակ)
+- .env.example — DATABASE_URL, DIRECT_URL, R2, Resend, Stripe, Auth
+- 02-FRONTEND-BACKEND.md — _project → src/
+- 01-ARCHITECTURE.md — կապված փաստաթղթերի ցանկ և docs tree թարմացված
+
 ---
 
 ## 📈 ՄԵՏՐԻԿՆԵՐ
@@ -111,6 +119,7 @@
 - [docs/BRIEF.md](./BRIEF.md)
 - [docs/TECH_CARD.md](./TECH_CARD.md)
 - [docs/01-ARCHITECTURE.md](./01-ARCHITECTURE.md)
+- [docs/02-TECH_STACK.md](./02-TECH_STACK.md) · [03-STRUCTURE.md](./03-STRUCTURE.md) · [04-API.md](./04-API.md) · [05-DATABASE.md](./05-DATABASE.md) · [DECISIONS.md](./DECISIONS.md)
 - reference/platforms/ — Vercel, Neon, R2, Resend, Auth
 
 ---
