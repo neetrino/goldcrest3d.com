@@ -3,6 +3,7 @@
 Goldcrest-ի 3D մոդելավորման և արտադրության ծառայությունների պրոմո-կայք — single-page landing (Apple-սթայլ) և admin panel (հայտեր, պատվերներ, վճարման հղումներ Full / 50-50).
 
 **Ֆունկցիոնալ զադրանք.** [project.md](./project.md)  
+**Task-եր (հերթով).** [TASKS.md](./TASKS.md) — անել հերթով, done նշել կողքը  
 **Փաստաթղթեր.** [docs/](./docs/) — BRIEF, TECH_CARD, 01-ARCHITECTURE, 02–05, PROGRESS, DECISIONS
 
 ---
