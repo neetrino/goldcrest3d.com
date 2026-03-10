@@ -3,15 +3,24 @@ import { OrderNewForm } from "./OrderNewForm";
 
 export default function AdminOrderNewPage() {
   return (
-    <div className="max-w-2xl space-y-6">
+    <div className="max-w-2xl space-y-8">
       <Link
         href="/admin/orders"
-        className="text-sm text-neutral-600 hover:text-[var(--foreground)]"
+        className="inline-flex items-center gap-1 text-sm font-medium text-neutral-600 transition-colors hover:text-[var(--foreground)]"
       >
-        ← Orders
+        ← Back to Orders
       </Link>
-      <h1 className="text-xl font-semibold">New order</h1>
-      <OrderNewForm />
+      <div>
+        <h1 className="text-2xl font-semibold text-[var(--foreground)]">
+          New order
+        </h1>
+        <p className="mt-1 text-sm text-neutral-500">
+          Create an order and send the payment link to the client.
+        </p>
+      </div>
+      <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
+        <OrderNewForm />
+      </div>
     </div>
   );
 }

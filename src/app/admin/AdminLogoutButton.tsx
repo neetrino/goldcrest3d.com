@@ -12,7 +12,7 @@ export function AdminLogoutButton() {
     <button
       type="button"
       onClick={() => signOut({ callbackUrl: "/admin" })}
-      className="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 hover:underline underline-offset-4"
+      className="rounded-md border border-neutral-300 bg-[var(--background)] px-3 py-2 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-neutral-100"
     >
       {LOGOUT_LABEL}
     </button>

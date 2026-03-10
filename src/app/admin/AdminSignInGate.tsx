@@ -41,18 +41,18 @@ export function AdminSignInGate() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] p-4">
-      <div className="w-full max-w-sm space-y-6">
-        <h1 className="text-xl font-semibold text-center text-[var(--foreground)]">
+    <div className="flex min-h-screen items-center justify-center bg-neutral-50 p-4">
+      <div className="w-full max-w-sm rounded-lg border border-neutral-200 bg-white p-8 shadow-sm">
+        <h1 className="text-xl font-semibold text-[var(--foreground)]">
           Admin sign in
         </h1>
-        <p className="text-sm text-center text-neutral-500">
+        <p className="mt-2 text-sm text-neutral-500">
           Enter your credentials to access the admin area.
         </p>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
           {error && (
             <p
-              className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 px-3 py-2 rounded-md"
+              className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600"
               role="alert"
             >
               {ERROR_MESSAGE}
@@ -61,7 +61,7 @@ export function AdminSignInGate() {
           <div>
             <label
               htmlFor="admin-email"
-              className="block text-sm font-medium text-[var(--foreground)] mb-1"
+              className="block text-sm font-medium text-[var(--foreground)]"
             >
               Email
             </label>
@@ -73,13 +73,13 @@ export function AdminSignInGate() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-neutral-300 dark:border-neutral-600 rounded-md px-3 py-2 bg-[var(--background)] text-[var(--foreground)]"
+              className="mt-1.5 w-full rounded-md border border-neutral-300 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400/30"
             />
           </div>
           <div>
             <label
               htmlFor="admin-password"
-              className="block text-sm font-medium text-[var(--foreground)] mb-1"
+              className="block text-sm font-medium text-[var(--foreground)]"
             >
               Password
             </label>
@@ -91,13 +91,13 @@ export function AdminSignInGate() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-neutral-300 dark:border-neutral-600 rounded-md px-3 py-2 bg-[var(--background)] text-[var(--foreground)]"
+              className="mt-1.5 w-full rounded-md border border-neutral-300 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400/30"
             />
           </div>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2 px-4 rounded-md bg-neutral-800 dark:bg-neutral-200 text-white dark:text-neutral-900 font-medium hover:opacity-90 disabled:opacity-50"
+            className="w-full rounded-md bg-[var(--foreground)] px-4 py-2.5 text-sm font-medium text-[var(--background)] transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {isSubmitting ? "Signing in…" : "Sign in"}
           </button>

@@ -8,7 +8,7 @@ import type { Order } from "@prisma/client";
 const initialState: UpdateOrderResult = null;
 
 const inputClass =
-  "w-full rounded border border-[var(--foreground)]/20 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--foreground)]/50 focus:outline-none focus:ring-1 focus:ring-[var(--foreground)]/30 disabled:opacity-60";
+  "mt-1.5 w-full rounded-md border border-neutral-300 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400/30 disabled:opacity-60";
 
 type Props = { order: Order };
 
@@ -21,13 +21,13 @@ export function OrderEditForm({ order }: Props) {
   return (
     <form
       action={formAction}
-      className="max-w-xl space-y-4"
+      className="space-y-5"
       aria-describedby={state?.error ? "order-edit-error" : undefined}
     >
       <div>
         <label
           htmlFor="order-edit-clientName"
-          className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
+          className="block text-sm font-medium text-[var(--foreground)]"
         >
           Client name
         </label>
@@ -45,7 +45,7 @@ export function OrderEditForm({ order }: Props) {
       <div>
         <label
           htmlFor="order-edit-clientEmail"
-          className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
+          className="block text-sm font-medium text-[var(--foreground)]"
         >
           Client email
         </label>
@@ -62,7 +62,7 @@ export function OrderEditForm({ order }: Props) {
       <div>
         <label
           htmlFor="order-edit-productTitle"
-          className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
+          className="block text-sm font-medium text-[var(--foreground)]"
         >
           Product title
         </label>
@@ -80,7 +80,7 @@ export function OrderEditForm({ order }: Props) {
       <div>
         <label
           htmlFor="order-edit-productImage"
-          className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
+          className="block text-sm font-medium text-[var(--foreground)]"
         >
           Product image (change — select new file)
         </label>
@@ -90,7 +90,7 @@ export function OrderEditForm({ order }: Props) {
           type="file"
           accept="image/jpeg,image/png,image/webp,image/gif"
           disabled={isPending}
-          className="w-full text-sm text-[var(--foreground)]/80 file:mr-2 file:rounded file:border file:border-[var(--foreground)]/20 file:bg-[var(--foreground)]/5 file:px-3 file:py-1.5 file:text-sm file:text-[var(--foreground)]"
+          className="mt-1.5 w-full text-sm text-neutral-600 file:mr-3 file:rounded-md file:border file:border-neutral-300 file:bg-neutral-50 file:px-3 file:py-2 file:text-sm file:text-[var(--foreground)] file:transition-colors hover:file:bg-neutral-100"
         />
         {order.productImageKey && (
           <p className="mt-1 text-xs text-neutral-500">
@@ -101,7 +101,7 @@ export function OrderEditForm({ order }: Props) {
       <div>
         <label
           htmlFor="order-edit-priceCents"
-          className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
+          className="block text-sm font-medium text-[var(--foreground)]"
         >
           Price (AMD)
         </label>
@@ -118,10 +118,10 @@ export function OrderEditForm({ order }: Props) {
         />
       </div>
       <div>
-        <span className="mb-1 block text-sm font-medium text-[var(--foreground)]/80">
+        <span className="block text-sm font-medium text-[var(--foreground)]">
           Payment type
         </span>
-        <div className="flex gap-4">
+        <div className="mt-1.5 flex gap-6">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
@@ -149,21 +149,21 @@ export function OrderEditForm({ order }: Props) {
       {state?.error && (
         <p
           id="order-edit-error"
-          className="text-sm text-red-600 dark:text-red-400"
+          className="text-sm text-red-600"
           role="alert"
         >
           {state.error}
         </p>
       )}
       {state?.updated && (
-        <p className="text-sm text-green-600 dark:text-green-400" role="status">
+        <p className="text-sm text-green-600" role="status">
           Order updated.
         </p>
       )}
       <button
         type="submit"
         disabled={isPending}
-        className="rounded bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] hover:opacity-90 disabled:opacity-60"
+        className="rounded-md bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] transition-opacity hover:opacity-90 disabled:opacity-60"
       >
         {isPending ? "Updating…" : "Update"}
       </button>

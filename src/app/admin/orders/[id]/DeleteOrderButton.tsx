@@ -30,12 +30,12 @@ export function DeleteOrderButton({ orderId }: Props) {
         type="button"
         onClick={handleDelete}
         disabled={isPending}
-        className="rounded border border-red-500/80 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-60 dark:text-red-400 dark:hover:bg-red-950/30"
+        className="rounded-md border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50 disabled:opacity-60"
       >
         {isPending ? "Deleting…" : "Delete order"}
       </button>
       {error && (
-        <p className="mt-2 text-sm text-red-600 dark:text-red-400" role="alert">
+        <p className="mt-2 text-sm text-red-600" role="alert">
           {error}
         </p>
       )}

@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { auth } from "@/auth";
 import { AdminSignInGate } from "./AdminSignInGate";
-import { AdminLogoutButton } from "./AdminLogoutButton";
+import { AdminNav } from "./AdminNav";
 
 export default async function AdminLayout({
   children,
@@ -12,27 +11,9 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
-      <header className="border-b border-neutral-200 px-4 py-3">
-        <nav className="flex items-center justify-between gap-4">
-          <div className="flex gap-4">
-            <Link
-              href="/admin/leads"
-              className="text-sm font-medium hover:underline underline-offset-4"
-            >
-              Leads
-            </Link>
-            <Link
-              href="/admin/orders"
-              className="text-sm font-medium hover:underline underline-offset-4"
-            >
-              Orders
-            </Link>
-          </div>
-          <AdminLogoutButton />
-        </nav>
-      </header>
-      <main className="p-4">{children}</main>
+    <div className="min-h-screen bg-neutral-50 text-[var(--foreground)]">
+      <AdminNav />
+      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">{children}</main>
     </div>
   );
 }

@@ -8,6 +8,20 @@ import { OrderEditForm } from "./OrderEditForm";
 import { DeleteOrderButton } from "./DeleteOrderButton";
 import { PaymentLinkActions } from "./PaymentLinkActions";
 
+function StatusBadge({ status }: { status: string }) {
+  const isPaid = status === "PAID";
+  return (
+    <span
+      className={
+        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium " +
+        (isPaid ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800")
+      }
+    >
+      {isPaid ? "Paid" : "Pending"}
+    </span>
+  );
+}
+
 type Props = { params: Promise<{ id: string }> };
 
 export default async function AdminOrderDetailPage({ params }: Props) {
@@ -23,93 +37,133 @@ export default async function AdminOrderDetailPage({ params }: Props) {
     <div className="max-w-2xl space-y-8">
       <Link
         href="/admin/orders"
-        className="text-sm text-neutral-600 hover:text-[var(--foreground)]"
+        className="inline-flex items-center gap-1 text-sm font-medium text-neutral-600 transition-colors hover:text-[var(--foreground)]"
       >
-        ← Orders
+        ← Back to Orders
       </Link>
 
-      <div className="border border-neutral-200 rounded-md p-4 space-y-3">
-        <h1 className="text-xl font-semibold">{order.productTitle}</h1>
-        <p>
-          <span className="text-neutral-500">Client: </span>
-          <span className="font-medium">{order.clientName}</span>
-        </p>
-        <p>
-          <span className="text-neutral-500">Email: </span>
-          <a
-            href={`mailto:${order.clientEmail}`}
-            className="text-blue-600 hover:underline"
-          >
-            {order.clientEmail}
-          </a>
-        </p>
-        <p>
-          <span className="text-neutral-500">Price: </span>
-          <span className="font-medium">{formatPriceAmd(order.priceCents)} AMD</span>
-        </p>
-        <p>
-          <span className="text-neutral-500">Payment type: </span>
-          <span>{order.paymentType}</span>
-        </p>
-        <p>
-          <span className="text-neutral-500">Status: </span>
-          <span
-            className={
-              order.status === "PAID" ? "text-green-600" : "text-amber-600"
-            }
-          >
-            {order.status === "PAID" ? "Paid" : "Pending"}
-          </span>
-          {order.paidCents > 0 && (
-            <span className="ml-2 text-sm text-neutral-500">
-              (Paid: {formatPriceAmd(order.paidCents)} AMD)
-            </span>
-          )}
-        </p>
-        <p className="text-sm text-neutral-500">
-          Token (link): <code className="bg-neutral-100 px-1 rounded">{order.token}</code>
-        </p>
-        <p className="text-sm text-neutral-500">
-          {order.createdAt.toLocaleString("en-GB", {
-            dateStyle: "medium",
-            timeStyle: "short",
-          })}
-        </p>
-        {productImageUrl && (
+      <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <h1 className="text-xl font-semibold text-[var(--foreground)]">
+            {order.productTitle}
+          </h1>
+          <StatusBadge status={order.status} />
+        </div>
+        <dl className="mt-5 space-y-4">
           <div>
-            <span className="text-sm font-medium text-neutral-700">
-              Product image:
-            </span>
-            <div className="mt-1">
-              <a
-                href={productImageUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-blue-600 hover:underline"
-              >
-                Open
-              </a>
-            </div>
+            <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+              Client
+            </dt>
+            <dd className="mt-0.5 font-medium">{order.clientName}</dd>
           </div>
-        )}
+          <div>
+            <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+              Email
+            </dt>
+            <dd className="mt-0.5">
+              <a
+                href={`mailto:${order.clientEmail}`}
+                className="text-[var(--foreground)] underline decoration-neutral-300 underline-offset-2 hover:decoration-[var(--foreground)]"
+              >
+                {order.clientEmail}
+              </a>
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+              Price
+            </dt>
+            <dd className="mt-0.5 font-medium">
+              {formatPriceAmd(order.priceCents)} AMD
+              {order.paidCents > 0 && (
+                <span className="ml-2 text-sm font-normal text-neutral-500">
+                  (Paid: {formatPriceAmd(order.paidCents)} AMD)
+                </span>
+              )}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+              Payment type
+            </dt>
+            <dd className="mt-0.5">{order.paymentType}</dd>
+          </div>
+          <div>
+            <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+              Token (payment link)
+            </dt>
+            <dd className="mt-0.5">
+              <code className="rounded bg-neutral-100 px-1.5 py-0.5 text-sm font-mono text-neutral-700">
+                {order.token}
+              </code>
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+              Created
+            </dt>
+            <dd className="mt-0.5 text-sm text-neutral-600">
+              {order.createdAt.toLocaleString("en-GB", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </dd>
+          </div>
+          {productImageUrl && (
+            <div>
+              <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+                Product image
+              </dt>
+              <dd className="mt-1">
+                <a
+                  href={productImageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-[var(--foreground)] underline decoration-neutral-300 underline-offset-2 hover:decoration-[var(--foreground)]"
+                >
+                  Open image
+                </a>
+              </dd>
+            </div>
+          )}
+        </dl>
       </div>
 
-      <section>
-        <h2 className="text-lg font-semibold mb-3">Payment link</h2>
-        <PaymentLinkActions
-          orderId={order.id}
-          paymentLinkUrl={getOrderPaymentUrl(order.token)}
-        />
+      <section className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
+        <h2 className="text-base font-semibold text-[var(--foreground)]">
+          Payment link
+        </h2>
+        <p className="mt-1 text-sm text-neutral-500">
+          Send the link to the client or copy it.
+        </p>
+        <div className="mt-4">
+          <PaymentLinkActions
+            orderId={order.id}
+            paymentLinkUrl={getOrderPaymentUrl(order.token)}
+          />
+        </div>
       </section>
 
-      <section>
-        <h2 className="text-lg font-semibold mb-3">Edit</h2>
-        <OrderEditForm order={order} />
+      <section className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
+        <h2 className="text-base font-semibold text-[var(--foreground)]">
+          Edit order
+        </h2>
+        <p className="mt-1 text-sm text-neutral-500">
+          Update client, product, or price.
+        </p>
+        <div className="mt-5">
+          <OrderEditForm order={order} />
+        </div>
       </section>
 
-      <section>
-        <h2 className="text-lg font-semibold mb-3">Danger</h2>
-        <DeleteOrderButton orderId={order.id} />
+      <section className="rounded-lg border border-red-200 bg-red-50/50 p-6">
+        <h2 className="text-base font-semibold text-red-800">Danger zone</h2>
+        <p className="mt-1 text-sm text-red-700/90">
+          Deleting an order cannot be undone.
+        </p>
+        <div className="mt-4">
+          <DeleteOrderButton orderId={order.id} />
+        </div>
       </section>
     </div>
   );
