@@ -145,13 +145,13 @@ import { handlers } from '@/auth';
 export const { GET, POST } = handlers;
 ```
 
-### Middleware:
+### Proxy (Next.js 16+; formerly middleware):
 
 ```typescript
-// middleware.ts
+// proxy.ts
 import { auth } from './auth';
 
-export default auth((req) => {
+export const proxy = auth((req) => {
   const isLoggedIn = !!req.auth;
   const isAuthPage = req.nextUrl.pathname.startsWith('/auth');
   const isProtectedPage = req.nextUrl.pathname.startsWith('/dashboard');
@@ -392,10 +392,10 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxx
 CLERK_SECRET_KEY=sk_test_xxx
 ```
 
-### Middleware:
+### Proxy (Next.js 16+; formerly middleware):
 
 ```typescript
-// middleware.ts
+// proxy.ts
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 const isPublicRoute = createRouteMatcher([
@@ -405,7 +405,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/webhooks(.*)',
 ]);
 
-export default clerkMiddleware((auth, request) => {
+export const proxy = clerkMiddleware((auth, request) => {
   if (!isPublicRoute(request)) {
     auth().protect();
   }

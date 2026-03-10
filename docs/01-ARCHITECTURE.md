@@ -202,7 +202,7 @@ docs/
 ### Ինքնություն
 - Auth.js — Database sessions
 - Պահպանում. httpOnly cookies
-- Admin-only routes — middleware check session + role
+- Admin-only routes — proxy (request boundary) check session + role
 
 ### Պաշտպանություն
 - HTTPS (Vercel)

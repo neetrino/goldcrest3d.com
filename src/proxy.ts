@@ -7,8 +7,8 @@ const SESSION_COOKIE_NAMES = [
 ] as const;
 
 /**
- * Middleware runs in Edge runtime — Node.js crypto is not available.
- * We only check for session cookie presence; real auth is enforced in admin layout via auth().
+ * Proxy runs at the network boundary — we only check for session cookie presence;
+ * real auth is enforced in admin layout via auth().
  */
 function hasSessionCookie(req: NextRequest): boolean {
   for (const name of SESSION_COOKIE_NAMES) {
@@ -17,7 +17,7 @@ function hasSessionCookie(req: NextRequest): boolean {
   return false;
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
   if (path.startsWith("/api")) return NextResponse.next();
 
