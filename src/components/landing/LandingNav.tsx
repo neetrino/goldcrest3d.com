@@ -7,12 +7,9 @@ import {
 
 const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
   { id: LANDING_SECTION_IDS.HERO, label: "Home" },
-  { id: LANDING_SECTION_IDS.PHILOSOPHY, label: "Philosophy" },
-  { id: LANDING_SECTION_IDS.SPECIALIZATIONS, label: "Specialisations" },
-  { id: LANDING_SECTION_IDS.MANUFACTURING, label: "Manufacturing" },
+  { id: LANDING_SECTION_IDS.SPECIALIZATIONS, label: "Specializations" },
+  { id: LANDING_SECTION_IDS.PHILOSOPHY, label: "Engineering" },
   { id: LANDING_SECTION_IDS.FOUNDER, label: "Founder" },
-  { id: LANDING_SECTION_IDS.PROCESS, label: "Process" },
-  { id: LANDING_SECTION_IDS.QUOTE, label: "Request" },
   { id: LANDING_SECTION_IDS.FOOTER, label: "Contact" },
 ];
 
