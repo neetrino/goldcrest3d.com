@@ -19,19 +19,19 @@ export function LandingNav() {
       className="sticky top-0 z-50 border-b border-[var(--foreground)]/10 bg-[var(--background)]/90 backdrop-blur-md"
       aria-label="Main navigation"
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3 md:px-6">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-8 px-5 py-4 md:px-8 md:py-4">
         <a
           href={`#${LANDING_SECTION_IDS.HERO}`}
           className="text-lg font-semibold text-[var(--foreground)] no-underline hover:opacity-80"
         >
           Goldcrest 3D
         </a>
-        <ul className="flex flex-wrap items-center gap-1 md:gap-2">
+        <ul className="flex flex-wrap items-center gap-6 md:gap-8">
           {NAV_ITEMS.map(({ id, label }) => (
             <li key={id}>
               <a
                 href={`#${id}`}
-                className="rounded-md px-2 py-1.5 text-sm text-[var(--foreground)]/70 transition hover:bg-[var(--foreground)]/10 hover:text-[var(--foreground)] focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
+                className="rounded-md px-3 py-2 text-sm tracking-wide text-[var(--foreground)]/75 transition hover:bg-[var(--foreground)]/10 hover:text-[var(--foreground)] focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
               >
                 {label}
               </a>
