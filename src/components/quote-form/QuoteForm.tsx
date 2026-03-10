@@ -1,7 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
-import { submitQuote, FORM_FIELD_ATTACHMENT } from "@/app/actions/quote";
+import { submitQuote } from "@/app/actions/quote";
+
+/** Must match the field name used in submitQuote (server). */
+const QUOTE_ATTACHMENT_FIELD_NAME = "attachment";
 import type { QuoteSubmitResult } from "@/app/actions/quote";
 
 const initialState: QuoteSubmitResult = null;
@@ -75,7 +78,7 @@ export function QuoteForm() {
         </label>
         <input
           id="quote-attachment"
-          name={FORM_FIELD_ATTACHMENT}
+          name={QUOTE_ATTACHMENT_FIELD_NAME}
           type="file"
           accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
           disabled={isPending}
