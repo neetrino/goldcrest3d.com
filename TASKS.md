@@ -32,36 +32,36 @@
 
 ## Փուլ 2. Quote CTA — «Ուղարկել հայտ» ֆորմ
 
-- [ ] **2.1** Quote form UI — Full Name, Email, Message, Image upload (file input)
-- [ ] **2.2** Zod schema — `src/lib/validations/quoteForm.ts` (fullName, email, message, optional file)
-- [ ] **2.3** R2 — `src/lib/storage.ts` (upload quote attachment), env R2_* լրացնել
-- [ ] **2.4** Server Action `submitQuoteForm` — validation → R2 upload → `prisma.lead.create`
-- [ ] **2.5** Form submit → success/error message օգտատիրոջը
+- [x] **2.1** Quote form UI — Full Name, Email, Message, Image upload (file input)
+- [x] **2.2** Zod schema — `src/lib/validations/quoteForm.ts` (fullName, email, message, optional file)
+- [x] **2.3** R2 — `src/lib/storage.ts` (upload quote attachment), env R2_* լրացնել
+- [x] **2.4** Server Action `submitQuoteForm` — validation → R2 upload → `prisma.lead.create`
+- [x] **2.5** Form submit → success/error message օգտատիրոջը
 - [ ] **2.6** (Ըստ ընտրության) email notification to admin — Resend
 
 ---
 
 ## Փուլ 3. Admin — Auth + Leads Inbox
 
-- [ ] **3.1** Auth.js — կարգավորում (`src/lib/auth.ts`), DB sessions, `AUTH_SECRET`, `AUTH_URL`
-- [ ] **3.2** Admin layout — `src/app/admin/layout.tsx`, session check, redirect եթե unauthenticated
-- [ ] **3.3** Leads list — `src/app/admin/leads/page.tsx` (կամ list + [id]) — ցուցադրել բոլոր Lead-երը (name, email, createdAt)
-- [ ] **3.4** Lead detail view — client name, email, message, attachments (R2 links/prev)
-- [ ] **3.5** Reply UI — input + «Reply» button
-- [ ] **3.6** Resend — `src/lib/email.ts` (send email), env `RESEND_*` լրացնել
-- [ ] **3.7** Server Action `replyToLead(leadId, replyText)` — send email to lead’s email via Resend
+- [x] **3.1** Auth.js — կարգավորում (`src/lib/auth.ts`), DB sessions, `AUTH_SECRET`, `AUTH_URL`
+- [x] **3.2** Admin layout — `src/app/admin/layout.tsx`, session check, redirect եթե unauthenticated
+- [x] **3.3** Leads list — `src/app/admin/leads/page.tsx` (կամ list + [id]) — ցուցադրել բոլոր Lead-երը (name, email, createdAt)
+- [x] **3.4** Lead detail view — client name, email, message, attachments (R2 links/prev)
+- [x] **3.5** Reply UI — input + «Reply» button
+- [x] **3.6** Resend — `src/lib/email.ts` (send email), env `RESEND_*` լրացնել
+- [x] **3.7** Server Action `replyToLead(leadId, replyText)` — send email to lead’s email via Resend
 
 ---
 
 ## Փուլ 4. Admin — Orders (CRUD)
 
-- [ ] **4.1** Orders list — `src/app/admin/orders/page.tsx` — ցուցադրել orders (client, product, price, status)
-- [ ] **4.2** Add New Order — form: Client name, Client email, Product title, Product image (upload), Custom price
-- [ ] **4.3** Order validation (Zod) — clientName, clientEmail, productTitle, priceCents, paymentType (FULL | SPLIT)
-- [ ] **4.4** Server Action `createOrder` — R2 product image upload → Order create, token generate (cuid/nanoid)
-- [ ] **4.5** Order detail page — `src/app/admin/orders/[id]/page.tsx` (կամ modal) — ամբողջ order տվյալներ
-- [ ] **4.6** Edit order — Server Action `updateOrder`, form prefill
-- [ ] **4.7** Delete order — Server Action `deleteOrder` (կոնֆիրմ)
+- [x] **4.1** Orders list — `src/app/admin/orders/page.tsx` — ցուցադրել orders (client, product, price, status)
+- [x] **4.2** Add New Order — form: Client name, Client email, Product title, Product image (upload), Custom price
+- [x] **4.3** Order validation (Zod) — clientName, clientEmail, productTitle, priceCents, paymentType (FULL | SPLIT)
+- [x] **4.4** Server Action `createOrder` — R2 product image upload → Order create, token generate (cuid/nanoid)
+- [x] **4.5** Order detail page — `src/app/admin/orders/[id]/page.tsx` (կամ modal) — ամբողջ order տվյալներ
+- [x] **4.6** Edit order — Server Action `updateOrder`, form prefill
+- [x] **4.7** Delete order — Server Action `deleteOrder` (կոնֆիրմ)
 
 ---
 
@@ -102,11 +102,11 @@
 
 | Փուլ | Task-եր | Done |
 |------|---------|------|
-| 0 | 0.1 – 0.3 | 0/3 |
+| 0 | 0.1 – 0.3 | 1/3 |
 | 1 | 1.1 – 1.10 | 10/10 |
-| 2 | 2.1 – 2.6 | 0/6 |
-| 3 | 3.1 – 3.7 | 0/7 |
-| 4 | 4.1 – 4.7 | 0/7 |
+| 2 | 2.1 – 2.6 | 5/6 |
+| 3 | 3.1 – 3.7 | 7/7 |
+| 4 | 4.1 – 4.7 | 7/7 |
 | 5 | 5.1 – 5.8 | 0/8 |
 | 6 | 6.1 – 6.4 | 0/4 |
 | 7 | 7.1 – 7.6 | 0/6 |
