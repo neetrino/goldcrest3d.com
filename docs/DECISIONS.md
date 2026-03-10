@@ -44,6 +44,16 @@
 
 ---
 
+## Կախվածություններ
+
+| Որոշում | Պատճառ |
+|---------|--------|
+| Միայն popular փաթեթներ | Next.js, React, Prisma, Zod, next-auth, bcryptjs, resend, @aws-sdk/client-s3, pg — industry-standard կամ npm-ում շատ տարածված; փոքր/անծանոթ գրադարաններ չեն ավելացվում |
+
+Մանրամասն ցանկ — [02-TECH_STACK.md](./02-TECH_STACK.md#կախվածություններ--միայն-popular).
+
+---
+
 ## Անվտանգություն
 
 | Որոշում | Պատճառ |
@@ -52,6 +62,7 @@
 | Գաղտնիքներ env-ում | Ոչ կոդում |
 | Admin routes protected | Auth.js session + role |
 | CORS, CSRF, rate limiting | Quote form, auth |
+| Գաղտնաբառի hash | bcryptjs (popular, pure JS) |
 
 ---
 

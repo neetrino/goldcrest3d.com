@@ -107,7 +107,29 @@
 - Zod validation բոլոր սահմաններում
 - Rate limiting (quote, auth)
 - Գաղտնիքներ միայն env-ում
-- argon2 — Credentials provider-ի դեպքում
+- bcryptjs — գաղտնաբառի hash (Credentials provider)
+
+---
+
+---
+
+## Կախվածություններ — միայն popular
+
+Նախագծում օգտագործվում են **միայն լայն տարածված, ճանաչված** գրադարաններ։ Փոքր/անծանոթ փաթեթներ չեն ավելացվում։
+
+| Խումբ | Փաթեթ | Նշում |
+|-------|--------|-------|
+| Framework | next, react, react-dom | Next.js, React |
+| ORM / DB | prisma, @prisma/client, @prisma/adapter-pg, pg | Prisma, node-postgres |
+| Auth | next-auth, @auth/prisma-adapter | Auth.js, official adapter |
+| Password | bcryptjs | Հանրաճանաչ hash, pure JS |
+| Validation | zod | Schema validation |
+| Forms | react-hook-form, @hookform/resolvers | Forms + Zod |
+| Storage (S3) | @aws-sdk/client-s3 | Official AWS SDK, R2-compatible |
+| Email | resend | Թրանզակցիոն email |
+| Dev / Seed | typescript, tsx, eslint, tailwindcss | Tooling |
+
+**Կանոն.** Նոր dependency ավելացնելիս — միայն այնպիսի փաթեթ, որը industry-standard կամ npm-ում շատ տարածված է (օր. npm weekly downloads, GitHub stars)։ Հակառակ դեպքում — իրականացնել սեփական լոգիկա կամ օգտագործել արդեն stack-ում 있는 գործիքը։
 
 ---
 

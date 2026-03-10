@@ -1,8 +1,8 @@
 # Զարգացման առաջընթաց — Goldcrest 3D
 
 **Նախագիծ.** Goldcrest 3D  
-**Փուլ.** Նախաձեռնում (փաստաթղթեր)  
-**Ընդհանուր առաջընթաց.** ~45%
+**Փուլ.** Admin — Leads Inbox ավարտված  
+**Ընդհանուր առաջընթաց.** ~55%
 
 **Վերջին թարմացում.** 2026-03-10
 
@@ -14,7 +14,7 @@
 |------|---------|------------|
 | 1. Նախաձեռնում (փաստաթղթեր) | 🔄 Աշխատանքի մեջ | 95% |
 | 2. Landing + Quote form | 🔄 Աշխատանքի մեջ | 85% |
-| 3. Admin — Leads Inbox | ⏳ Սպասվում է | 0% |
+| 3. Admin — Leads Inbox | ✅ Պատրաստ | 100% |
 | 4. Admin — Orders + Payments | ⏳ Սպասվում է | 0% |
 | 5. Թեստավորում + Դեպլոյ | ⏳ Սպասվում է | 0% |
 
@@ -60,9 +60,9 @@
 5. [x] SEO — metadata, title, description
 
 ### Փուլ 3 — Admin Leads Inbox
-6. [ ] Auth.js — admin auth, protected /admin
-7. [ ] Leads Inbox — list + detail view (name, email, message, attachments)
-8. [ ] Reply → Resend, client email
+6. [x] Auth.js — admin auth, protected /admin (Credentials, JWT, middleware, /auth/signin, seed)
+7. [x] Leads Inbox — list + detail view (name, email, message, attachments)
+8. [x] Reply → Resend, client email (sendReplyToLead, LeadReplyForm)
 
 ### Փուլ 4 — Admin Orders + Payments
 9. [ ] Orders — CRUD (client name/email, product title, product image, custom price)
@@ -108,6 +108,15 @@
 - .env.example — ավելացվել է R2_ACCOUNT_ID
 - LandingSections — «Ուղարկել հայտ» սեկցիայում ներդրված QuoteForm
 
+### 2026-03-10 (Փուլ 3)
+- Auth.js — next-auth@beta, Credentials (email/password, argon2), PrismaAdapter, JWT session
+- Middleware — /admin պաշտպանություն, /auth/signin, /auth/error
+- Admin layout — նավ (Հայտեր, Պատվերներ), Դուրս գալ
+- Seed — prisma db seed, admin user (SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD)
+- Leads Inbox — ցանկ (fullName, email, message, createdAt), detail /admin/leads/[id]
+- Կցված ֆայլեր — R2 public URL-ներ lead detail-ում
+- Resend — sendEmail, sendReplyToLead; LeadReplyForm → replyToLeadAction
+
 ---
 
 ## 📈 ՄԵՏՐԻԿՆԵՐ
@@ -134,4 +143,4 @@
 
 ---
 
-**Հաջորդ թարմացում.** TECH_CARD հաստատումից և կոդի մեկնարկից հետո
+**Հաջորդ թարմացում.** Փուլ 4 — Orders + Payments
