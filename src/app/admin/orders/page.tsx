@@ -1,13 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-
-function formatPrice(cents: number): string {
-  return new Intl.NumberFormat("en-GB", {
-    style: "decimal",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(cents);
-}
+import { formatPriceAmd } from "@/lib/formatPrice";
 
 export default async function AdminOrdersPage() {
   const orders = await prisma.order.findMany({
@@ -45,7 +38,7 @@ export default async function AdminOrdersPage() {
                     </span>
                   </div>
                   <span className="text-sm font-medium shrink-0">
-                    {formatPrice(order.priceCents)} AMD
+                    {formatPriceAmd(order.priceCents)} AMD
                   </span>
                 </div>
                 <p className="mt-1 text-sm text-neutral-600">

@@ -3,6 +3,7 @@ import {
   RATE_LIMIT_QUOTE_WINDOW_MS,
 } from "@/constants";
 import { type NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
 
 const quoteLimit = new Map<string, { count: number; resetAt: number }>();
 
@@ -31,10 +32,22 @@ function isOverLimit(
   return entry.count > max;
 }
 
+/** Auth wrapper: redirect /admin to sign-in when not authenticated. */
+const adminProtect = auth((req) => {
+  const path = req.nextUrl.pathname;
+  if (path.startsWith("/api/auth")) return NextResponse.next();
+  if (path.startsWith("/admin") && !req.auth) {
+    const signIn = new URL("/api/auth/signin", req.url);
+    signIn.searchParams.set("callbackUrl", path);
+    return NextResponse.redirect(signIn);
+  }
+  return NextResponse.next();
+});
+
 /**
- * Proxy runs at the network boundary — rate limiting for quote form.
+ * Proxy runs at the network boundary — rate limiting for quote form, admin protection.
  */
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const method = req.method;
   const path = req.nextUrl.pathname;
   const ip = getClientIp(req);
@@ -52,7 +65,7 @@ export function proxy(req: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return adminProtect(req, { params: Promise.resolve({}) });
 }
 
 export const config = {

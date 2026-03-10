@@ -1,5 +1,6 @@
 "use server";
 
+import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { sendReplyToLead } from "@/lib/email";
 import { logger } from "@/lib/logger";
@@ -16,6 +17,9 @@ export async function replyToLeadAction(
   _prev: ReplyToLeadResult,
   formData: FormData,
 ): Promise<ReplyToLeadResult> {
+  const session = await requireAdminSession();
+  if (!session) return { error: "Unauthorized." };
+
   const body = formData.get("body");
   const parsed = leadReplySchema.safeParse({
     body: typeof body === "string" ? body : "",

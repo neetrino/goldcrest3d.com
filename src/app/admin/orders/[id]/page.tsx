@@ -3,17 +3,10 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
 import { getR2PublicUrl } from "@/lib/storage";
+import { formatPriceAmd } from "@/lib/formatPrice";
 import { OrderEditForm } from "./OrderEditForm";
 import { DeleteOrderButton } from "./DeleteOrderButton";
 import { PaymentLinkActions } from "./PaymentLinkActions";
-
-function formatPrice(cents: number): string {
-  return new Intl.NumberFormat("en-GB", {
-    style: "decimal",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(cents);
-}
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -52,7 +45,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
         </p>
         <p>
           <span className="text-neutral-500">Price: </span>
-          <span className="font-medium">{formatPrice(order.priceCents)} AMD</span>
+          <span className="font-medium">{formatPriceAmd(order.priceCents)} AMD</span>
         </p>
         <p>
           <span className="text-neutral-500">Payment type: </span>
@@ -69,7 +62,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           </span>
           {order.paidCents > 0 && (
             <span className="ml-2 text-sm text-neutral-500">
-              (Paid: {formatPrice(order.paidCents)} AMD)
+              (Paid: {formatPriceAmd(order.paidCents)} AMD)
             </span>
           )}
         </p>

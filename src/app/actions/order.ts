@@ -1,6 +1,7 @@
 "use server";
 
 import { R2_PREFIXES } from "@/constants";
+import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
 import { sendEmail } from "@/lib/email";
@@ -29,6 +30,9 @@ export async function createOrder(
   _prev: CreateOrderResult,
   formData: FormData,
 ): Promise<CreateOrderResult> {
+  const session = await requireAdminSession();
+  if (!session) return { success: false, error: "Unauthorized." };
+
   const clientName = formData.get("clientName");
   const clientEmail = formData.get("clientEmail");
   const productTitle = formData.get("productTitle");
@@ -94,6 +98,9 @@ export async function updateOrder(
   _prev: UpdateOrderResult,
   formData: FormData,
 ): Promise<UpdateOrderResult> {
+  const session = await requireAdminSession();
+  if (!session) return { error: "Unauthorized." };
+
   const existing = await prisma.order.findUnique({ where: { id: orderId } });
   if (!existing) return { error: "Order not found." };
 
@@ -157,6 +164,9 @@ export async function updateOrder(
  * Server Action: delete order.
  */
 export async function deleteOrder(orderId: string): Promise<DeleteOrderResult> {
+  const session = await requireAdminSession();
+  if (!session) return { error: "Unauthorized." };
+
   try {
     await prisma.order.delete({ where: { id: orderId } });
     return { deleted: true };
@@ -176,6 +186,9 @@ export type SendPaymentLinkResult =
 export async function sendPaymentLink(
   orderId: string,
 ): Promise<SendPaymentLinkResult> {
+  const session = await requireAdminSession();
+  if (!session) return { success: false, error: "Unauthorized." };
+
   const order = await prisma.order.findUnique({ where: { id: orderId } });
   if (!order) return { success: false, error: "Order not found." };
 

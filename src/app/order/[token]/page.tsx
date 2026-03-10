@@ -2,15 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getR2PublicUrl } from "@/lib/storage";
+import { formatPriceAmd } from "@/lib/formatPrice";
 import { OrderPayActions } from "./OrderPayActions";
-
-function formatPrice(cents: number): string {
-  return new Intl.NumberFormat("en-GB", {
-    style: "decimal",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(cents);
-}
 
 type Props = { params: Promise<{ token: string }> };
 
@@ -43,17 +36,17 @@ export default async function OrderPaymentPage({ params }: Props) {
         <dl className="mt-6 space-y-3">
           <div className="flex justify-between text-sm">
             <dt className="text-neutral-500">Total</dt>
-            <dd className="font-medium">{formatPrice(total)} AMD</dd>
+            <dd className="font-medium">{formatPriceAmd(total)} AMD</dd>
           </div>
           <div className="flex justify-between text-sm">
             <dt className="text-neutral-500">Paid</dt>
-            <dd className="font-medium text-green-600">{formatPrice(paid)} AMD</dd>
+            <dd className="font-medium text-green-600">{formatPriceAmd(paid)} AMD</dd>
           </div>
           {!isPaid && (
             <div className="flex justify-between text-sm">
               <dt className="text-neutral-500">Remaining</dt>
               <dd className="font-medium text-amber-600">
-                {formatPrice(remaining)} AMD
+                {formatPriceAmd(remaining)} AMD
               </dd>
             </div>
           )}
