@@ -1,12 +1,15 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { AdminSignInGate } from "./AdminSignInGate";
+import { AdminLogoutButton } from "./AdminLogoutButton";
 
 export default async function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await auth();
-  if (!session?.user) redirect("/api/auth/signin?callbackUrl=/admin");
+  if (!session?.user) {
+    return <AdminSignInGate />;
+  }
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
@@ -26,6 +29,7 @@ export default async function AdminLayout({
               Orders
             </Link>
           </div>
+          <AdminLogoutButton />
         </nav>
       </header>
       <main className="p-4">{children}</main>

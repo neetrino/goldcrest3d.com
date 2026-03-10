@@ -32,26 +32,37 @@ function isOverLimit(
   return entry.count > max;
 }
 
-/** Auth wrapper: redirect /admin to sign-in when not authenticated. */
+/** Auth wrapper: redirect /admin to sign-in when not authenticated. Never serve admin UI without auth. */
 const adminProtect = auth((req) => {
   const path = req.nextUrl.pathname;
   if (path.startsWith("/api/auth")) return NextResponse.next();
-  if (path.startsWith("/admin") && !req.auth) {
-    const signIn = new URL("/api/auth/signin", req.url);
-    signIn.searchParams.set("callbackUrl", path);
-    return NextResponse.redirect(signIn);
+  if (path.startsWith("/admin")) {
+    if (!req.auth) {
+      const signInUrl = new URL("/auth/signin", req.url);
+      signInUrl.searchParams.set("callbackUrl", path === "/admin" ? "/admin/leads" : path);
+      return NextResponse.redirect(signInUrl);
+    }
+    return NextResponse.next();
   }
   return NextResponse.next();
 });
 
 /**
- * Proxy runs at the network boundary — rate limiting for quote form, admin protection.
+ * Proxy runs at the network boundary — admin protection first, then rate limiting.
+ * Admin area is never opened without authentication (redirect to sign-in).
  */
 export async function proxy(req: NextRequest) {
-  const method = req.method;
   const path = req.nextUrl.pathname;
-  const ip = getClientIp(req);
 
+  const protectedResponse = await adminProtect(req, { params: Promise.resolve({}) });
+  const isRedirect =
+    protectedResponse instanceof Response &&
+    protectedResponse.status >= 300 &&
+    protectedResponse.status < 400;
+  if (isRedirect) return protectedResponse;
+
+  const method = req.method;
+  const ip = getClientIp(req);
   if (method === "POST" && path === "/") {
     if (
       isOverLimit(
@@ -65,7 +76,7 @@ export async function proxy(req: NextRequest) {
     }
   }
 
-  return adminProtect(req, { params: Promise.resolve({}) });
+  return protectedResponse instanceof Response ? protectedResponse : NextResponse.next();
 }
 
 export const config = {

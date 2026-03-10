@@ -27,7 +27,8 @@ Admin panel-ը ծառայում է.
 
 | URL | Նկարագրություն |
 |-----|-----------------|
-| `/admin` | Layout only; նավիգացիա Leads / Orders |
+| `/auth/signin` | Admin sign-in (proxy redirects անauthenticated /admin այստեղ; callbackUrl պահպանվում է) |
+| `/admin` | Layout only; նավիգացիա Leads / Orders (միայն auth-ից հետո) |
 | `/admin/leads` | Leads ցանկ (fullName, email, message, createdAt, attachment count) |
 | `/admin/leads/[id]` | Lead դիտում + Reply form (email client-ին) |
 | `/admin/orders` | Orders ցանկ + «New order» |
@@ -171,9 +172,12 @@ src/app/admin/
 ## 9. Անվտանգություն և պրոտեկցիա
 
 - **Նախատեսված.** Admin routes (`/admin/*`) — session check (Auth.js). TECH_CARD: Auth.js 5.x, Database sessions, ADMIN role.
-- **Կոդում.** Ստուգել `src/app/admin/layout.tsx` — եթե auth check չկա, ավելացնել redirect unauthenticated users (getServerSession / auth()).
-- **Proxy (Next.js 16).** `/admin` պաշտպանությունը `src/proxy.ts`-ում (auth wrapper); `middleware.ts` չի օգտագործվում.
-- **Server Actions.** createOrder, updateOrder, deleteOrder, sendPaymentLink, replyToLeadAction — խորհուրդ է կատարել session check action-ների ներսում (admin only).
+- **Proxy (Next.js 16).** Պրոտեկցիա միայն `src/proxy.ts`-ով. `middleware.ts` **ոչ միատեղ չի օգտագործվում** (խնդիրներից խուսափելու համար).
+  - Անauthenticated հարցումներ `/admin` կամ `/admin/*` → proxy-ն redirect է անում `/auth/signin?callbackUrl=<path>`.
+  - Admin էջը **երբեք** չի բացվում առանց auth; նախ միշտ sign-in էջ։
+- **Layout (server-side).** `src/app/admin/layout.tsx` — `auth()` session check; absence-ի դեպքում redirect `/auth/signin?callbackUrl=/admin` (defense in depth).
+- **Sign-in.** Custom էջ `src/app/auth/signin/page.tsx` — Auth.js `pages.signIn: "/auth/signin"`. Սխալ login-ի դեպքում ապահով հաղորդագրություն. «Invalid email or password. Please try again.»
+- **Server Actions.** createOrder, updateOrder, deleteOrder, sendPaymentLink, replyToLeadAction — session check action-ների ներսում (admin only).
 - **Գաղտնիքներ.** Միասնական env; production-ում AUTH_SECRET, DB, R2, Resend, Stripe — protected.
 
 ---
