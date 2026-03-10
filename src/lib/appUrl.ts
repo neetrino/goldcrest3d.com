@@ -1,6 +1,6 @@
 /**
  * App base URL (origin) for building absolute links (e.g. payment link).
- * Uses AUTH_URL env (same as Auth.js base).
+ * Uses AUTH_URL env.
  */
 
 export function getAppOrigin(): string {

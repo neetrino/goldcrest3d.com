@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { sendReplyToLead } from "@/lib/email";
 import { logger } from "@/lib/logger";
@@ -10,16 +9,13 @@ export type ReplyToLeadResult = { error?: string; sent?: boolean };
 
 /**
  * Server Action: send reply email to lead (client).
- * Admin only; lead must exist.
+ * Lead must exist.
  */
 export async function replyToLeadAction(
   leadId: string,
   _prev: ReplyToLeadResult,
   formData: FormData,
 ): Promise<ReplyToLeadResult> {
-  const session = await auth();
-  if (!session?.user) return { error: "Sign in required." };
-
   const body = formData.get("body");
   const parsed = leadReplySchema.safeParse({
     body: typeof body === "string" ? body : "",

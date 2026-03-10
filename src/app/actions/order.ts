@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { R2_PREFIXES } from "@/constants";
 import { prisma } from "@/lib/db";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
@@ -25,15 +24,11 @@ function generateOrderToken(): string {
 
 /**
  * Server Action: create order — validation, optional R2 image upload, Prisma create.
- * Admin only.
  */
 export async function createOrder(
   _prev: CreateOrderResult,
   formData: FormData,
 ): Promise<CreateOrderResult> {
-  const session = await auth();
-  if (!session?.user) return { success: false, error: "Sign in required." };
-
   const clientName = formData.get("clientName");
   const clientEmail = formData.get("clientEmail");
   const productTitle = formData.get("productTitle");
@@ -92,16 +87,13 @@ export async function createOrder(
 }
 
 /**
- * Server Action: update order. Admin only.
+ * Server Action: update order.
  */
 export async function updateOrder(
   orderId: string,
   _prev: UpdateOrderResult,
   formData: FormData,
 ): Promise<UpdateOrderResult> {
-  const session = await auth();
-  if (!session?.user) return { error: "Sign in required." };
-
   const existing = await prisma.order.findUnique({ where: { id: orderId } });
   if (!existing) return { error: "Order not found." };
 
@@ -162,12 +154,9 @@ export async function updateOrder(
 }
 
 /**
- * Server Action: delete order. Admin only.
+ * Server Action: delete order.
  */
 export async function deleteOrder(orderId: string): Promise<DeleteOrderResult> {
-  const session = await auth();
-  if (!session?.user) return { error: "Sign in required." };
-
   try {
     await prisma.order.delete({ where: { id: orderId } });
     return { deleted: true };
@@ -182,14 +171,11 @@ export type SendPaymentLinkResult =
   | null;
 
 /**
- * Server Action: send payment link email to order client. Admin only.
+ * Server Action: send payment link email to order client.
  */
 export async function sendPaymentLink(
   orderId: string,
 ): Promise<SendPaymentLinkResult> {
-  const session = await auth();
-  if (!session?.user) return { success: false, error: "Sign in required." };
-
   const order = await prisma.order.findUnique({ where: { id: orderId } });
   if (!order) return { success: false, error: "Order not found." };
 

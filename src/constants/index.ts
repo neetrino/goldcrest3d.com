@@ -26,7 +26,3 @@ export const R2_PREFIXES = {
 /** Rate limit: quote form — requests per window (per IP) */
 export const RATE_LIMIT_QUOTE_WINDOW_MS = 60_000;
 export const RATE_LIMIT_QUOTE_MAX = 10;
-
-/** Rate limit: auth (sign-in) — requests per window (per IP) */
-export const RATE_LIMIT_AUTH_WINDOW_MS = 60_000;
-export const RATE_LIMIT_AUTH_MAX = 5;
