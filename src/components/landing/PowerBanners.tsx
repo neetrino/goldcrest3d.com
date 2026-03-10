@@ -6,18 +6,18 @@ import { useEffect, useState } from "react";
 const BANNERS = [
   {
     title: "Goldcrest 3D",
-    subtitle: "Մոդելավորում և արտադրություն",
-    accent: "3D մոդելավորում, CAD, պատրաստի արտադրանք",
+    subtitle: "Modelling and manufacturing",
+    accent: "3D modelling, CAD, finished product",
   },
   {
-    title: "Ինժեներական ճշգրտություն",
-    subtitle: "Մասնագիտացված լուծումներ",
-    accent: "Պրոտոտիպից մինչև սերիական արտադրություն",
+    title: "Engineering precision",
+    subtitle: "Specialised solutions",
+    accent: "From prototype to series production",
   },
   {
-    title: "Մեկ գործընկեր",
-    subtitle: "Գաղափարից մինչև արտադրանք",
-    accent: "Մոդելավորում, նյութեր, արտադրություն",
+    title: "One partner",
+    subtitle: "Idea to product",
+    accent: "Modelling, materials, manufacturing",
   },
 ] as const;
 
@@ -37,7 +37,7 @@ export function PowerBanners() {
     <section
       id={LANDING_SECTION_IDS.HERO}
       className="relative min-h-[85vh] overflow-hidden bg-[var(--foreground)]/5"
-      aria-label="Գլխավոր բաններ"
+      aria-label="Hero banners"
     >
       <div className="mx-auto flex min-h-[85vh] max-w-6xl flex-col justify-center px-4 py-20 md:px-6 md:py-28">
         {BANNERS.map((banner, i) => (
@@ -70,7 +70,7 @@ export function PowerBanners() {
       <div
         className="absolute bottom-8 left-0 right-0 flex justify-center gap-2"
         role="tablist"
-        aria-label="Բաններ"
+        aria-label="Banners"
       >
         {BANNERS.map((_, i) => (
           <button
@@ -78,7 +78,7 @@ export function PowerBanners() {
             type="button"
             role="tab"
             aria-selected={i === index}
-            aria-label={`Բաններ ${i + 1}`}
+            aria-label={`Banner ${i + 1}`}
             className={`h-2 w-2 rounded-full bg-[var(--foreground)] transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/40 ${
               i === index ? "opacity-100" : "opacity-30 hover:opacity-60"
             }`}

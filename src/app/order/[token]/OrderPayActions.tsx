@@ -50,7 +50,7 @@ export function OrderPayActions({
               disabled={!!pending}
               className="w-full rounded bg-[var(--foreground)] px-4 py-3 text-[var(--background)] font-medium hover:opacity-90 disabled:opacity-60"
             >
-              {pending === "first" ? "Բեռնվում է…" : "Վճարել առաջին 50%"}
+              {pending === "first" ? "Loading…" : "Pay first 50%"}
             </button>
           )}
           {firstPaid && (
@@ -60,7 +60,7 @@ export function OrderPayActions({
               disabled={!!pending}
               className="w-full rounded bg-[var(--foreground)] px-4 py-3 text-[var(--background)] font-medium hover:opacity-90 disabled:opacity-60"
             >
-              {pending === "second" ? "Բեռնվում է…" : "Վճարել երկրորդ 50%"}
+              {pending === "second" ? "Loading…" : "Pay second 50%"}
             </button>
           )}
         </>
@@ -71,7 +71,7 @@ export function OrderPayActions({
           disabled={!!pending}
           className="w-full rounded bg-[var(--foreground)] px-4 py-3 text-[var(--background)] font-medium hover:opacity-90 disabled:opacity-60"
         >
-          {pending ? "Բեռնվում է…" : "Վճարել"}
+          {pending ? "Loading…" : "Pay"}
         </button>
       )}
       {error && (

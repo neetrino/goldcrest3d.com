@@ -1,12 +1,12 @@
 # FRONTEND
 
-UI կոմպոնենտներ — sections, hero, philosophy, CTA, quote form, admin UI, shadcn.
+UI components — sections, hero, philosophy, CTA, quote form, admin UI, shadcn.
 
 - `landing/` — landing sections, hero, philosophy, CTA…
 - `quote-form/` — form + validation
 - `admin/` — leads list/detail, orders list/detail
 - `ui/` — shadcn
 
-Բոլորը React կոմպոնենտներ, աշխատում են **բրաուզերում**.
+All are React components, run in the **browser**.
 
-Backend-ը՝ `lib/`, `app/api/`, Server Actions.
+Backend: `lib/`, `app/api/`, Server Actions.

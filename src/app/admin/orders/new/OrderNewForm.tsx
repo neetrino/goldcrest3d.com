@@ -36,7 +36,7 @@ export function OrderNewForm() {
           htmlFor="order-clientName"
           className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
         >
-          Հաճախորդի անուն
+          Client name
         </label>
         <input
           id="order-clientName"
@@ -47,7 +47,7 @@ export function OrderNewForm() {
           autoComplete="name"
           disabled={isPending}
           className={inputClass}
-          placeholder="Օր. Արամ Պետրոսյան"
+          placeholder="e.g. John Smith"
         />
       </div>
       <div>
@@ -55,7 +55,7 @@ export function OrderNewForm() {
           htmlFor="order-clientEmail"
           className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
         >
-          Հաճախորդի email
+          Client email
         </label>
         <input
           id="order-clientEmail"
@@ -73,7 +73,7 @@ export function OrderNewForm() {
           htmlFor="order-productTitle"
           className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
         >
-          Ապրանքի անվանում
+          Product title
         </label>
         <input
           id="order-productTitle"
@@ -83,7 +83,7 @@ export function OrderNewForm() {
           maxLength={200}
           disabled={isPending}
           className={inputClass}
-          placeholder="Օր. 3D մոդել — բնակարան"
+          placeholder="e.g. 3D model — apartment"
         />
       </div>
       <div>
@@ -91,7 +91,7 @@ export function OrderNewForm() {
           htmlFor="order-productImage"
           className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
         >
-          Ապրանքի նկար (ոչ պարտադիր)
+          Product image (optional)
         </label>
         <input
           id="order-productImage"
@@ -107,7 +107,7 @@ export function OrderNewForm() {
           htmlFor="order-priceCents"
           className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
         >
-          Գին (դրամ)
+          Price (AMD)
         </label>
         <input
           id="order-priceCents"
@@ -123,7 +123,7 @@ export function OrderNewForm() {
       </div>
       <div>
         <span className="mb-1 block text-sm font-medium text-[var(--foreground)]/80">
-          Վճարման տեսակ
+          Payment type
         </span>
         <div className="flex gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
@@ -135,7 +135,7 @@ export function OrderNewForm() {
               disabled={isPending}
               className="rounded border-[var(--foreground)]/30"
             />
-            <span className="text-sm">Ամբողջությամբ (FULL)</span>
+            <span className="text-sm">Full (FULL)</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -164,13 +164,13 @@ export function OrderNewForm() {
           disabled={isPending}
           className="rounded bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] hover:opacity-90 disabled:opacity-60"
         >
-          {isPending ? "Պահպանվում է…" : "Պահպանել պատվեր"}
+          {isPending ? "Saving…" : "Save order"}
         </button>
         <Link
           href="/admin/orders"
           className="rounded border border-[var(--foreground)]/30 px-4 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--foreground)]/5"
         >
-          Չեղարկել
+          Cancel
         </Link>
       </div>
     </form>

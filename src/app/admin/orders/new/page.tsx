@@ -8,9 +8,9 @@ export default function AdminOrderNewPage() {
         href="/admin/orders"
         className="text-sm text-neutral-600 hover:text-[var(--foreground)]"
       >
-        ← Պատվերներ
+        ← Orders
       </Link>
-      <h1 className="text-xl font-semibold">Նոր պատվեր</h1>
+      <h1 className="text-xl font-semibold">New order</h1>
       <OrderNewForm />
     </div>
   );

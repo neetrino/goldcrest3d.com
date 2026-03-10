@@ -15,7 +15,7 @@ export async function signInAction(
   const email = formData.get("email");
   const password = formData.get("password");
   if (typeof email !== "string" || typeof password !== "string") {
-    return { error: "Լրացրե՛ք email և գաղտնաբառ։" };
+    return { error: "Please enter email and password." };
   }
 
   const result = await signIn("credentials", {
@@ -24,9 +24,9 @@ export async function signInAction(
     redirect: false,
   });
 
-  if (result?.error) return { error: "Սխալ email կամ գաղտնաբառ։" };
+  if (result?.error) return { error: "Invalid email or password." };
   if (result?.ok) redirect("/admin/leads");
-  return { error: "Մուտքը չի հաջողվել։" };
+  return { error: "Sign-in failed." };
 }
 
 /**

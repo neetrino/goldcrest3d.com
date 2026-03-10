@@ -18,13 +18,13 @@ export default async function AdminLayout({
               href="/admin/leads"
               className="text-sm font-medium hover:underline underline-offset-4"
             >
-              Հայտեր
+              Leads
             </Link>
             <Link
               href="/admin/orders"
               className="text-sm font-medium hover:underline underline-offset-4"
             >
-              Պատվերներ
+              Orders
             </Link>
           </div>
           <div className="flex items-center gap-3">
@@ -36,7 +36,7 @@ export default async function AdminLayout({
                 type="submit"
                 className="text-sm text-neutral-600 hover:text-[var(--foreground)]"
               >
-                Դուրս գալ
+                Sign out
               </button>
             </form>
           </div>

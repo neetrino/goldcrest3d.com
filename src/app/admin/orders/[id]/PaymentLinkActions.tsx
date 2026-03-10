@@ -40,7 +40,7 @@ export function PaymentLinkActions({ orderId, paymentLinkUrl }: Props) {
         disabled={isPending || !paymentLinkUrl}
         className="rounded bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] hover:opacity-90 disabled:opacity-50"
       >
-        {isPending ? "Ուղարկվում է…" : "Ուղարկել վճարման հղում"}
+        {isPending ? "Sending…" : "Send payment link"}
       </button>
       <button
         type="button"
@@ -48,10 +48,10 @@ export function PaymentLinkActions({ orderId, paymentLinkUrl }: Props) {
         disabled={!paymentLinkUrl}
         className="rounded border border-[var(--foreground)]/30 px-4 py-2 text-sm font-medium hover:bg-[var(--foreground)]/5 disabled:opacity-50"
       >
-        {copied ? "Պատճենված" : "Պատճենել հղում"}
+        {copied ? "Copied" : "Copy link"}
       </button>
       {state?.success && (
-        <span className="text-sm text-green-600">Էլ․ նամակը ուղարկվել է</span>
+        <span className="text-sm text-green-600">Email sent</span>
       )}
       {state && !state.success && state.error && (
         <span className="text-sm text-red-600" role="alert">

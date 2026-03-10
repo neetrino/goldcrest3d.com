@@ -12,7 +12,7 @@ export function DeleteOrderButton({ orderId }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   async function handleDelete() {
-    if (!confirm("Հեռացնե՞լ այս պատվերը։")) return;
+    if (!confirm("Delete this order?")) return;
     setIsPending(true);
     setError(null);
     const result = await deleteOrder(orderId);
@@ -20,7 +20,7 @@ export function DeleteOrderButton({ orderId }: Props) {
       router.push("/admin/orders");
       return;
     }
-    setError(result?.error ?? "Սխալ");
+    setError(result?.error ?? "Error");
     setIsPending(false);
   }
 
@@ -32,7 +32,7 @@ export function DeleteOrderButton({ orderId }: Props) {
         disabled={isPending}
         className="rounded border border-red-500/80 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-60 dark:text-red-400 dark:hover:bg-red-950/30"
       >
-        {isPending ? "Ջնջվում է…" : "Հեռացնել պատվերը"}
+        {isPending ? "Deleting…" : "Delete order"}
       </button>
       {error && (
         <p className="mt-2 text-sm text-red-600 dark:text-red-400" role="alert">

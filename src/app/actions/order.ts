@@ -32,7 +32,7 @@ export async function createOrder(
   formData: FormData,
 ): Promise<CreateOrderResult> {
   const session = await auth();
-  if (!session?.user) return { success: false, error: "Մուտքը անհրաժեշտ է։" };
+  if (!session?.user) return { success: false, error: "Sign in required." };
 
   const clientName = formData.get("clientName");
   const clientEmail = formData.get("clientEmail");
@@ -62,7 +62,7 @@ export async function createOrder(
       first.productTitle?.[0] ??
       first.priceCents?.[0] ??
       first.paymentType?.[0] ??
-      "Սխալ տվյալներ";
+      "Invalid data";
     return { success: false, error: msg };
   }
 
@@ -87,7 +87,7 @@ export async function createOrder(
     });
     return { success: true, orderId: order.id };
   } catch {
-    return { success: false, error: "Պատվերը չի պահպանվել։ Փորձեք ավելի ուշ։" };
+    return { success: false, error: "Order could not be saved. Please try again later." };
   }
 }
 
@@ -100,10 +100,10 @@ export async function updateOrder(
   formData: FormData,
 ): Promise<UpdateOrderResult> {
   const session = await auth();
-  if (!session?.user) return { error: "Մուտքը անհրաժեշտ է։" };
+  if (!session?.user) return { error: "Sign in required." };
 
   const existing = await prisma.order.findUnique({ where: { id: orderId } });
-  if (!existing) return { error: "Պատվերը չի գտնվել։" };
+  if (!existing) return { error: "Order not found." };
 
   const clientName = formData.get("clientName");
   const clientEmail = formData.get("clientEmail");
@@ -133,7 +133,7 @@ export async function updateOrder(
       first.productTitle?.[0] ??
       first.priceCents?.[0] ??
       first.paymentType?.[0] ??
-      "Սխալ տվյալներ";
+      "Invalid data";
     return { error: msg };
   }
 
@@ -157,7 +157,7 @@ export async function updateOrder(
     });
     return { updated: true };
   } catch {
-    return { error: "Պատվերը չի թարմացվել։" };
+    return { error: "Order could not be updated." };
   }
 }
 
@@ -166,13 +166,13 @@ export async function updateOrder(
  */
 export async function deleteOrder(orderId: string): Promise<DeleteOrderResult> {
   const session = await auth();
-  if (!session?.user) return { error: "Մուտքը անհրաժեշտ է։" };
+  if (!session?.user) return { error: "Sign in required." };
 
   try {
     await prisma.order.delete({ where: { id: orderId } });
     return { deleted: true };
   } catch {
-    return { error: "Պատվերը չի ջնջվել։" };
+    return { error: "Order could not be deleted." };
   }
 }
 
@@ -188,17 +188,17 @@ export async function sendPaymentLink(
   orderId: string,
 ): Promise<SendPaymentLinkResult> {
   const session = await auth();
-  if (!session?.user) return { success: false, error: "Մուտքը անհրաժեշտ է։" };
+  if (!session?.user) return { success: false, error: "Sign in required." };
 
   const order = await prisma.order.findUnique({ where: { id: orderId } });
-  if (!order) return { success: false, error: "Պատվերը չի գտնվել։" };
+  if (!order) return { success: false, error: "Order not found." };
 
   const paymentUrl = getOrderPaymentUrl(order.token);
-  if (!paymentUrl) return { success: false, error: "Կայքի հղումը կարգավորված չէ (AUTH_URL)։" };
+  if (!paymentUrl) return { success: false, error: "Site URL is not configured (AUTH_URL)." };
 
-  const subject = "Goldcrest 3D — վճարման հղում";
-  const text = `Բարև ${order.clientName},\n\nՁեր պատվերի վճարման հղումը.\n\n${paymentUrl}\n\nԱպրանք: ${order.productTitle}\nԳին: ${(order.priceCents / 100).toFixed(0)} ֏`;
-  const html = `<p>Բարև ${escapeHtml(order.clientName)},</p><p>Ձեր պատվերի վճարման հղումը.</p><p><a href="${escapeHtml(paymentUrl)}">${escapeHtml(paymentUrl)}</a></p><p>Ապրանք: ${escapeHtml(order.productTitle)}<br>Գին: ${(order.priceCents / 100).toFixed(0)} ֏</p>`;
+  const subject = "Goldcrest 3D — payment link";
+  const text = `Hello ${order.clientName},\n\nYour order payment link.\n\n${paymentUrl}\n\nProduct: ${order.productTitle}\nPrice: ${(order.priceCents / 100).toFixed(0)} AMD`;
+  const html = `<p>Hello ${escapeHtml(order.clientName)},</p><p>Your order payment link.</p><p><a href="${escapeHtml(paymentUrl)}">${escapeHtml(paymentUrl)}</a></p><p>Product: ${escapeHtml(order.productTitle)}<br>Price: ${(order.priceCents / 100).toFixed(0)} AMD</p>`;
 
   const result = await sendEmail({
     to: order.clientEmail,

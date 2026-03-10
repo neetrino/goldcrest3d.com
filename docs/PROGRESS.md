@@ -66,13 +66,13 @@
 8. [x] Reply → Resend, client email (sendReplyToLead, LeadReplyForm)
 
 ### Փուլ 4 — Admin Orders + Payments
-9. [ ] Orders — CRUD (client name/email, product title, product image, custom price)
-10. [ ] Order detail — «Send Payment Link», «Copy payment link»; payment type Full / 50-50
-11. [ ] Stripe — payment link generation, 50/50 logic
-12. [ ] Email — payment link ուղարկում client-ին
-13. [ ] Client payment page — /order/[token] — Total / Paid / Remaining / type, pay button
+9. [x] Orders — CRUD (client name/email, product title, product image, custom price)
+10. [x] Order detail — «Send Payment Link», «Copy payment link»; payment type Full / 50-50
+11. [x] Stripe — checkout session, 50/50 logic (src/lib/stripe.ts, createCheckoutSessionForOrder)
+12. [x] Email — payment link ուղարկում client-ին (sendPaymentLink)
+13. [x] Client payment page — /order/[token] — Total / Paid / Remaining / type, pay button; webhook /api/webhooks/stripe
 
-### Փուլ 5 — Polish + Deploy
+### Փուլ 6 — Polish + Deploy
 14. [ ] Rate limiting, validation, error handling
 15. [ ] Թեստեր (Vitest, RTL)
 16. [ ] Vercel deploy, env, Neon migration
@@ -144,4 +144,11 @@
 
 ---
 
-**Հաջորդ թարմացում.** Փուլ 4 — Orders + Payments
+### 2026-03-10 (Փուլ 5 — Payment link + Client page)
+- Order detail — «Վճարման հղում» սեկցիա: Send Payment Link (Resend), Copy link (clipboard)
+- getOrderPaymentUrl / getAppOrigin — src/lib/appUrl.ts (AUTH_URL)
+- Stripe — src/lib/stripe.ts (createCheckoutSession), checkout action createCheckoutSessionForOrder
+- Client page /order/[token] — Total / Paid / Remaining, Pay (Full or 50%/50%), OrderPayActions
+- Webhook POST /api/webhooks/stripe — checkout.session.completed → paidCents, status PAID
+
+**Հաջորդ թարմացում.** Փուլ 6 — Polish + Deploy

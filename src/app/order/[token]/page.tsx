@@ -5,7 +5,7 @@ import { getR2PublicUrl } from "@/lib/storage";
 import { OrderPayActions } from "./OrderPayActions";
 
 function formatPrice(cents: number): string {
-  return new Intl.NumberFormat("hy-AM", {
+  return new Intl.NumberFormat("en-GB", {
     style: "decimal",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
@@ -37,32 +37,32 @@ export default async function OrderPaymentPage({ params }: Props) {
           {order.productTitle}
         </h1>
         <p className="mt-1 text-sm text-neutral-500">
-          Goldcrest 3D — պատվեր #{order.token}
+          Goldcrest 3D — order #{order.token}
         </p>
 
         <dl className="mt-6 space-y-3">
           <div className="flex justify-between text-sm">
-            <dt className="text-neutral-500">Ընդամենը</dt>
-            <dd className="font-medium">{formatPrice(total)} ֏</dd>
+            <dt className="text-neutral-500">Total</dt>
+            <dd className="font-medium">{formatPrice(total)} AMD</dd>
           </div>
           <div className="flex justify-between text-sm">
-            <dt className="text-neutral-500">Վճարված</dt>
-            <dd className="font-medium text-green-600">{formatPrice(paid)} ֏</dd>
+            <dt className="text-neutral-500">Paid</dt>
+            <dd className="font-medium text-green-600">{formatPrice(paid)} AMD</dd>
           </div>
           {!isPaid && (
             <div className="flex justify-between text-sm">
-              <dt className="text-neutral-500">Մնացած</dt>
+              <dt className="text-neutral-500">Remaining</dt>
               <dd className="font-medium text-amber-600">
-                {formatPrice(remaining)} ֏
+                {formatPrice(remaining)} AMD
               </dd>
             </div>
           )}
           <div className="flex justify-between text-sm">
-            <dt className="text-neutral-500">Վճարման տեսակ</dt>
+            <dt className="text-neutral-500">Payment type</dt>
             <dd>
               {order.paymentType === "SPLIT"
                 ? "50% + 50%"
-                : "Ամբողջ գումարը"}
+                : "Full amount"}
             </dd>
           </div>
         </dl>
@@ -70,8 +70,8 @@ export default async function OrderPaymentPage({ params }: Props) {
         {order.paymentType === "SPLIT" && !isPaid && (
           <p className="mt-3 text-sm text-neutral-600">
             {!firstHalfPaid
-              ? "Վճարեք առաջին 50%-ը, ապա մնացած 50%-ը։"
-              : "Վճարեք մնացած 50%-ը։"}
+              ? "Pay the first 50%, then the remaining 50%."
+              : "Pay the remaining 50%."}
           </p>
         )}
 
@@ -88,7 +88,7 @@ export default async function OrderPaymentPage({ params }: Props) {
         <div className="mt-6">
           {isPaid ? (
             <p className="rounded bg-green-50 py-3 text-center font-medium text-green-800">
-              Պատվերը ամբողջությամբ վճարված է
+              Order is fully paid
             </p>
           ) : (
             <OrderPayActions

@@ -34,7 +34,7 @@ export async function submitQuote(
   if (!parsed.success) {
     const first = parsed.error.flatten().fieldErrors;
     const msg =
-      first.fullName?.[0] ?? first.email?.[0] ?? first.message?.[0] ?? "Սխալ տվյալներ";
+      first.fullName?.[0] ?? first.email?.[0] ?? first.message?.[0] ?? "Invalid data";
     return { success: false, error: msg };
   }
 
@@ -54,7 +54,7 @@ export async function submitQuote(
       },
     });
   } catch {
-    return { success: false, error: "Հայտը չի պահպանվել։ Փորձեք ավելի ուշ։" };
+    return { success: false, error: "Request could not be saved. Please try again later." };
   }
 
   return { success: true };

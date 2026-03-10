@@ -8,9 +8,9 @@ export default async function AdminLeadsPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Հայտեր</h1>
+      <h1 className="text-2xl font-semibold">Leads</h1>
       {leads.length === 0 ? (
-        <p className="text-neutral-600">Դեռ հայտեր չկան։</p>
+        <p className="text-neutral-600">No leads yet.</p>
       ) : (
         <ul className="border border-neutral-200 rounded-md divide-y divide-neutral-200">
           {leads.map((lead) => (
@@ -32,7 +32,7 @@ export default async function AdminLeadsPage() {
                     dateTime={lead.createdAt.toISOString()}
                     className="text-sm text-neutral-500 shrink-0"
                   >
-                    {lead.createdAt.toLocaleDateString("hy-AM", {
+                    {lead.createdAt.toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "2-digit",
                       year: "numeric",
@@ -46,7 +46,7 @@ export default async function AdminLeadsPage() {
                 </p>
                 {lead.attachmentKeys.length > 0 && (
                   <span className="inline-block mt-1 text-xs text-neutral-500">
-                    {lead.attachmentKeys.length} ֆայլ
+                    {lead.attachmentKeys.length} file(s)
                   </span>
                 )}
               </Link>

@@ -33,22 +33,22 @@ export async function createCheckoutSession(
   paymentIndex?: 0 | 1,
 ): Promise<CreateCheckoutSessionResult> {
   if (!stripe) {
-    return { success: false, error: "Stripe-ը կարգավորված չէ (STRIPE_SECRET_KEY)։" };
+    return { success: false, error: "Stripe is not configured (STRIPE_SECRET_KEY)." };
   }
   if (amountCents <= 0) {
-    return { success: false, error: "Գումարը պետք է մեծ լինի 0-ից։" };
+    return { success: false, error: "Amount must be greater than 0." };
   }
 
   const baseUrl = getOrderPaymentUrl(order.token);
   if (!baseUrl) {
-    return { success: false, error: "Կայքի հղումը կարգավորված չէ (AUTH_URL)։" };
+    return { success: false, error: "Site URL is not configured (AUTH_URL)." };
   }
 
   const label =
     order.paymentType === "SPLIT" && paymentIndex !== undefined
       ? paymentIndex === 0
-        ? "Առաջին 50%"
-        : "Երկրորդ 50%"
+        ? "First 50%"
+        : "Second 50%"
       : order.productTitle;
 
   try {
@@ -79,11 +79,11 @@ export async function createCheckoutSession(
 
     const url = session.url ?? null;
     if (!url) {
-      return { success: false, error: "Stripe-ը հղում չի վերադարձրել։" };
+      return { success: false, error: "Stripe did not return a URL." };
     }
     return { success: true, url };
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Stripe սխալ։";
+    const message = err instanceof Error ? err.message : "Stripe error.";
     return { success: false, error: message };
   }
 }

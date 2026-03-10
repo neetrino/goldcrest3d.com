@@ -6,21 +6,21 @@ import {
 } from "@/constants";
 
 const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
-  { id: LANDING_SECTION_IDS.HERO, label: "Գլխավոր" },
-  { id: LANDING_SECTION_IDS.PHILOSOPHY, label: "Փիլիսոփայություն" },
-  { id: LANDING_SECTION_IDS.SPECIALIZATIONS, label: "Մասնագիտացում" },
-  { id: LANDING_SECTION_IDS.MANUFACTURING, label: "Արտադրություն" },
-  { id: LANDING_SECTION_IDS.FOUNDER, label: "Հիմնադիր" },
-  { id: LANDING_SECTION_IDS.PROCESS, label: "Գործընթաց" },
-  { id: LANDING_SECTION_IDS.QUOTE, label: "Հայտ" },
-  { id: LANDING_SECTION_IDS.FOOTER, label: "Կապ" },
+  { id: LANDING_SECTION_IDS.HERO, label: "Home" },
+  { id: LANDING_SECTION_IDS.PHILOSOPHY, label: "Philosophy" },
+  { id: LANDING_SECTION_IDS.SPECIALIZATIONS, label: "Specialisations" },
+  { id: LANDING_SECTION_IDS.MANUFACTURING, label: "Manufacturing" },
+  { id: LANDING_SECTION_IDS.FOUNDER, label: "Founder" },
+  { id: LANDING_SECTION_IDS.PROCESS, label: "Process" },
+  { id: LANDING_SECTION_IDS.QUOTE, label: "Request" },
+  { id: LANDING_SECTION_IDS.FOOTER, label: "Contact" },
 ];
 
 export function LandingNav() {
   return (
     <nav
       className="sticky top-0 z-50 border-b border-[var(--foreground)]/10 bg-[var(--background)]/90 backdrop-blur-md"
-      aria-label="Գլխավոր նավիգացիա"
+      aria-label="Main navigation"
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3 md:px-6">
         <a

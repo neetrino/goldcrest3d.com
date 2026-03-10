@@ -18,20 +18,20 @@ export async function replyToLeadAction(
   formData: FormData,
 ): Promise<ReplyToLeadResult> {
   const session = await auth();
-  if (!session?.user) return { error: "Մուտքը անհրաժեշտ է։" };
+  if (!session?.user) return { error: "Sign in required." };
 
   const body = formData.get("body");
   if (typeof body !== "string" || !body.trim()) {
-    return { error: "Մուտքագրե՛ք պատասխանի տեքստը։" };
+    return { error: "Please enter the reply text." };
   }
   if (body.length > MAX_BODY_LENGTH) {
-    return { error: "Տեքստը չափից երկար է։" };
+    return { error: "Text is too long." };
   }
 
   const lead = await prisma.lead.findUnique({
     where: { id: leadId },
   });
-  if (!lead) return { error: "Հայտը չի գտնվել։" };
+  if (!lead) return { error: "Lead not found." };
 
   const result = await sendReplyToLead({
     to: lead.email,

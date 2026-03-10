@@ -25,7 +25,7 @@ export function QuoteForm() {
     >
       <div>
         <label htmlFor="quote-fullName" className="mb-1 block text-sm font-medium text-[var(--foreground)]/80">
-          Անուն ազգանուն
+          Full name
         </label>
         <input
           id="quote-fullName"
@@ -36,7 +36,7 @@ export function QuoteForm() {
           autoComplete="name"
           disabled={isPending}
           className="w-full rounded border border-[var(--foreground)]/20 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--foreground)]/50 focus:outline-none focus:ring-1 focus:ring-[var(--foreground)]/30 disabled:opacity-60"
-          placeholder="Օր. Արամ Պետրոսյան"
+          placeholder="e.g. John Smith"
         />
       </div>
 
@@ -58,7 +58,7 @@ export function QuoteForm() {
 
       <div>
         <label htmlFor="quote-message" className="mb-1 block text-sm font-medium text-[var(--foreground)]/80">
-          Հաղորդագրություն
+          Message
         </label>
         <textarea
           id="quote-message"
@@ -68,13 +68,13 @@ export function QuoteForm() {
           rows={4}
           disabled={isPending}
           className="w-full resize-y rounded border border-[var(--foreground)]/20 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] focus:border-[var(--foreground)]/50 focus:outline-none focus:ring-1 focus:ring-[var(--foreground)]/30 disabled:opacity-60"
-          placeholder="Նկարագրեք ձեր նախագիծը կամ հարցը..."
+          placeholder="Describe your project or question..."
         />
       </div>
 
       <div>
         <label htmlFor="quote-attachment" className="mb-1 block text-sm font-medium text-[var(--foreground)]/80">
-          Կցել նկար/ֆայլ (ոչ պարտադիր)
+          Attach image/file (optional)
         </label>
         <input
           id="quote-attachment"
@@ -85,7 +85,7 @@ export function QuoteForm() {
           className="w-full text-sm text-[var(--foreground)]/80 file:mr-2 file:rounded file:border file:border-[var(--foreground)]/20 file:bg-[var(--foreground)]/5 file:px-3 file:py-1.5 file:text-sm file:text-[var(--foreground)]"
         />
         <p className="mt-1 text-xs text-[var(--foreground)]/60">
-          JPEG, PNG, WebP, GIF կամ PDF, առավելագույն 10 MB
+          JPEG, PNG, WebP, GIF or PDF, max 10 MB
         </p>
       </div>
 
@@ -96,7 +96,7 @@ export function QuoteForm() {
       )}
       {state?.success === true && (
         <p id="quote-success" className="text-sm text-green-600 dark:text-green-400" role="status">
-          Հայտը ուղարկված է։ Կկապնվենք ձեզ հետ։
+          Request sent. We will get back to you.
         </p>
       )}
 
@@ -105,7 +105,7 @@ export function QuoteForm() {
         disabled={isPending}
         className="rounded bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] hover:opacity-90 disabled:opacity-60"
       >
-        {isPending ? "Ուղարկվում է…" : "Ուղարկել հայտ"}
+        {isPending ? "Sending…" : "Send request"}
       </button>
     </form>
   );

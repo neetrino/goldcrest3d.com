@@ -15,16 +15,16 @@ export async function createCheckoutSessionForOrder(
   paymentIndex?: 0 | 1,
 ): Promise<CreateCheckoutSessionResult> {
   const order = await prisma.order.findUnique({ where: { id: orderId } });
-  if (!order) return { success: false, error: "Պատվերը չի գտնվել։" };
+  if (!order) return { success: false, error: "Order not found." };
   if (order.status === "PAID") {
-    return { success: false, error: "Պատվերը արդեն ամբողջությամբ վճարված է։" };
+    return { success: false, error: "Order is already fully paid." };
   }
 
   const total = order.priceCents;
   const paid = order.paidCents;
   const remaining = total - paid;
   if (remaining <= 0) {
-    return { success: false, error: "Վճարման ենթակա գումար չկա։" };
+    return { success: false, error: "No amount due for payment." };
   }
 
   let amountCents: number;
@@ -34,13 +34,13 @@ export async function createCheckoutSessionForOrder(
     const half = Math.floor(total / 2);
     if (paymentIndex === 1) {
       if (paid < half) {
-        return { success: false, error: "Նախ վճարեք առաջին 50%-ը։" };
+        return { success: false, error: "Please pay the first 50% first." };
       }
       amountCents = total - half;
       index = 1;
     } else {
       if (paid >= half) {
-        return { success: false, error: "Առաջին 50%-ը արդեն վճարված է։" };
+        return { success: false, error: "First 50% is already paid." };
       }
       amountCents = half;
       index = 0;

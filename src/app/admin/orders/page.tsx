@@ -2,7 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 
 function formatPrice(cents: number): string {
-  return new Intl.NumberFormat("hy-AM", {
+  return new Intl.NumberFormat("en-GB", {
     style: "decimal",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
@@ -17,16 +17,16 @@ export default async function AdminOrdersPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold">Պատվերներ</h1>
+        <h1 className="text-2xl font-semibold">Orders</h1>
         <Link
           href="/admin/orders/new"
           className="rounded bg-[var(--foreground)] px-3 py-2 text-sm font-medium text-[var(--background)] hover:opacity-90"
         >
-          Նոր պատվեր
+          New order
         </Link>
       </div>
       {orders.length === 0 ? (
-        <p className="text-neutral-600">Դեռ պատվերներ չկան։</p>
+        <p className="text-neutral-600">No orders yet.</p>
       ) : (
         <ul className="border border-neutral-200 rounded-md divide-y divide-neutral-200">
           {orders.map((order) => (
@@ -45,7 +45,7 @@ export default async function AdminOrdersPage() {
                     </span>
                   </div>
                   <span className="text-sm font-medium shrink-0">
-                    {formatPrice(order.priceCents)} ֏
+                    {formatPrice(order.priceCents)} AMD
                   </span>
                 </div>
                 <p className="mt-1 text-sm text-neutral-600">
@@ -61,11 +61,11 @@ export default async function AdminOrdersPage() {
                         : "text-amber-600"
                     }
                   >
-                    {order.status === "PAID" ? "Վճարված" : "Սպասվող"}
+                    {order.status === "PAID" ? "Paid" : "Pending"}
                   </span>
                   <span>·</span>
                   <time dateTime={order.createdAt.toISOString()}>
-                    {order.createdAt.toLocaleDateString("hy-AM", {
+                    {order.createdAt.toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "2-digit",
                       year: "numeric",

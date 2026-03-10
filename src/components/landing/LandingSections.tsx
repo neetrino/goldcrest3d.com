@@ -31,9 +31,9 @@ export function LandingSections() {
           Goldcrest Engineering Philosophy
         </h2>
         <p className="mt-4 max-w-2xl text-[var(--foreground)]/80">
-          Մենք հավատում ենք ճշգրտությանը, փոխզիջումից հրաժարվելուն և
-          գաղափարից մինչև արտադրանք ամբողջ ցիկլի պատասխանատվությանը։ Յուրաքանչյուր
-          նախագիծ — ինժեներական մոտեցում և արտադրական որակ։
+          We believe in precision, no compromise, and full responsibility from
+          idea to product. Every project gets an engineering approach and
+          production quality.
         </p>
       </Section>
 
@@ -42,10 +42,10 @@ export function LandingSections() {
           Modeling Specializations
         </h2>
         <ul className="mt-6 grid gap-4 text-[var(--foreground)]/80 sm:grid-cols-2">
-          <li>3D CAD մոդելավորում և օպտիմիզացիա</li>
-          <li>Ռեվերս ինժեներինգ և ս캔ից մոդել</li>
-          <li>Պրոտոտիպավորում և փորձնական շարքեր</li>
-          <li>Մասնագիտացված ինժեներական լուծումներ</li>
+          <li>3D CAD modelling and optimisation</li>
+          <li>Reverse engineering and scan-to-model</li>
+          <li>Prototyping and pilot runs</li>
+          <li>Specialised engineering solutions</li>
         </ul>
       </Section>
 
@@ -54,9 +54,9 @@ export function LandingSections() {
           Manufacturing Intelligence
         </h2>
         <p className="mt-4 max-w-2xl text-[var(--foreground)]/80">
-          Արտադրությունը ղեկավարվում է մոդելի և նյութի ընտրությամբ — CNC,
-          ավելացնող տեխնոլոգիաներ, ճիշտ ճշգրտություն և ժամանակացույց։ Մենք
-          ապահովում ենք կանխատեսելի արդյունք և թափանցիկ գործընթաց։
+          Manufacturing is driven by model and material choice — CNC, additive
+          technologies, precise tolerances and scheduling. We deliver
+          predictable results and a transparent process.
         </p>
       </Section>
 
@@ -65,26 +65,26 @@ export function LandingSections() {
           Founder — Authority Block
         </h2>
         <p className="mt-4 max-w-2xl text-[var(--foreground)]/80">
-          Goldcrest 3D-ի հիմնադիրը բերում է ինժեներական և արտադրական փորձ,
-          որպեսզի յուրաքանչյուր նախագիծ ստանա մասնագիտական մոտեցում և հուսալի
-          արդյունք։
+          The founder of Goldcrest 3D brings engineering and manufacturing
+          experience so every project gets a professional approach and reliable
+          results.
         </p>
       </Section>
 
       <Section id={LANDING_SECTION_IDS.PROCESS}>
         <h2 className="text-2xl font-semibold md:text-3xl">Process</h2>
         <ol className="mt-6 list-inside list-decimal space-y-2 text-[var(--foreground)]/80">
-          <li>Հայտ / հարցում — դուք նկարագրում եք խնդիրը կամ գաղափարը</li>
-          <li>Խորհրդատվություն — մենք որոշում ենք մոտեցումն ու նյութերը</li>
-          <li>Մոդելավորում — CAD, revizii, հաստատում</li>
-          <li>Արտադրություն — պատրաստի արտադրանք կամ փուլային առաքում</li>
+          <li>Request / enquiry — you describe the problem or idea</li>
+          <li>Consultation — we define approach and materials</li>
+          <li>Modelling — CAD, revisions, approval</li>
+          <li>Manufacturing — finished product or phased delivery</li>
         </ol>
       </Section>
 
       <Section id={LANDING_SECTION_IDS.QUOTE}>
-        <h2 className="text-2xl font-semibold md:text-3xl">Ուղարկել հայտ</h2>
+        <h2 className="text-2xl font-semibold md:text-3xl">Send a request</h2>
         <p className="mt-4 text-[var(--foreground)]/80">
-          Ուզու՞մ եք քննարկել նախագիծը — լրացրեք հայտը, մենք կկապնվենք ձեզ հետ։
+          Want to discuss a project? Fill in the form and we will get back to you.
         </p>
         <QuoteForm />
       </Section>
@@ -92,7 +92,7 @@ export function LandingSections() {
       <Section id={LANDING_SECTION_IDS.FOOTER} className="py-12">
         <footer className="border-t border-[var(--foreground)]/10 pt-8">
           <p className="text-sm text-[var(--foreground)]/70">
-            Goldcrest 3D · Մոդելավորում և արտադրություն · Կապ
+            Goldcrest 3D · Modelling and manufacturing · Contact
           </p>
         </footer>
       </Section>

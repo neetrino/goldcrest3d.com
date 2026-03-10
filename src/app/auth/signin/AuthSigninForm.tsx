@@ -34,7 +34,7 @@ export function AuthSigninForm() {
           htmlFor="password"
           className="block text-sm font-medium text-[var(--foreground)] mb-1"
         >
-          Գաղտնաբառ
+          Password
         </label>
         <input
           id="password"
@@ -54,7 +54,7 @@ export function AuthSigninForm() {
         type="submit"
         className="w-full py-2 px-4 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-500"
       >
-        Մուտք
+        Sign in
       </button>
     </form>
   );

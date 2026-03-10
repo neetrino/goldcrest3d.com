@@ -9,15 +9,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Goldcrest 3D — Մոդելավորում և արտադրություն",
+  title: "Goldcrest 3D — Modelling and manufacturing",
   description:
-    "Goldcrest-ի 3D մոդելավորման և արտադրության ծառայություններ։ CAD, պրոտոտիպավորում, արտադրություն։",
-  keywords: ["3D մոդելավորում", "CAD", "արտադրություն", "պրոտոտիպ", "Goldcrest"],
+    "Goldcrest 3D modelling and manufacturing services. CAD, prototyping, production.",
+  keywords: ["3D modelling", "CAD", "manufacturing", "prototype", "Goldcrest"],
   openGraph: {
-    title: "Goldcrest 3D — Մոդելավորում և արտադրություն",
+    title: "Goldcrest 3D — Modelling and manufacturing",
     description:
-      "Goldcrest-ի 3D մոդելավորման և արտադրության ծառայություններ։",
-    locale: "hy",
+      "Goldcrest 3D modelling and manufacturing services.",
+    locale: "en",
   },
 };
 
@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="hy">
+    <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
         {children}
       </body>

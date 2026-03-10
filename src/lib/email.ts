@@ -28,11 +28,11 @@ export async function sendEmail({
   html?: string;
 }): Promise<SendEmailResult> {
   if (!resend) {
-    return { success: false, error: "Email-ը կարգավորված չէ (RESEND_API_KEY)։" };
+    return { success: false, error: "Email is not configured (RESEND_API_KEY)." };
   }
   const toList = Array.isArray(to) ? to : [to];
   if (toList.length === 0) {
-    return { success: false, error: "Ստացողի հասցե չկա։" };
+    return { success: false, error: "No recipient address." };
   }
   const htmlContent = html ?? (text ? escapeHtml(text).replace(/\n/g, "<br>") : "<p></p>");
   const textContent = text ?? (html ? stripHtml(html) : "");
@@ -51,7 +51,7 @@ export async function sendEmail({
     return { success: true, id: data?.id };
   } catch (err) {
     const message =
-      err instanceof Error ? err.message : "Email-ը չի ուղարկվել։";
+      err instanceof Error ? err.message : "Email could not be sent.";
     return { success: false, error: message };
   }
 }
@@ -66,7 +66,7 @@ export async function sendReplyToLead({
   to: string;
   body: string;
 }): Promise<SendEmailResult> {
-  const subject = "Goldcrest 3D — պատասխան Ձեր հայտին";
+  const subject = "Goldcrest 3D — reply to your request";
   const text = body.trim();
   const html = `<p>${escapeHtml(text).replace(/\n/g, "</p><p>")}</p>`;
   return sendEmail({ to, subject, text, html });

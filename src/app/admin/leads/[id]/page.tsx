@@ -24,7 +24,7 @@ export default async function AdminLeadDetailPage({
         href="/admin/leads"
         className="text-sm text-neutral-600 hover:text-[var(--foreground)]"
       >
-        ← Հայտեր
+        ← Leads
       </Link>
       <div className="border border-neutral-200 rounded-md p-4 space-y-3">
         <h1 className="text-xl font-semibold">{lead.fullName}</h1>
@@ -39,7 +39,7 @@ export default async function AdminLeadDetailPage({
         </p>
         <p className="text-neutral-600 whitespace-pre-wrap">{lead.message}</p>
         <p className="text-sm text-neutral-500">
-          {lead.createdAt.toLocaleString("hy-AM", {
+          {lead.createdAt.toLocaleString("en-GB", {
             dateStyle: "medium",
             timeStyle: "short",
           })}
@@ -47,7 +47,7 @@ export default async function AdminLeadDetailPage({
         {attachmentUrls.length > 0 && (
           <div>
             <span className="text-sm font-medium text-neutral-700">
-              Կցված ֆայլեր:
+              Attachments:
             </span>
             <ul className="mt-1 space-y-1">
               {attachmentUrls.map(({ key, url }) => (

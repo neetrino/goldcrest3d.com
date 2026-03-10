@@ -29,7 +29,7 @@ export function OrderEditForm({ order }: Props) {
           htmlFor="order-edit-clientName"
           className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
         >
-          Հաճախորդի անուն
+          Client name
         </label>
         <input
           id="order-edit-clientName"
@@ -47,7 +47,7 @@ export function OrderEditForm({ order }: Props) {
           htmlFor="order-edit-clientEmail"
           className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
         >
-          Հաճախորդի email
+          Client email
         </label>
         <input
           id="order-edit-clientEmail"
@@ -64,7 +64,7 @@ export function OrderEditForm({ order }: Props) {
           htmlFor="order-edit-productTitle"
           className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
         >
-          Ապրանքի անվանում
+          Product title
         </label>
         <input
           id="order-edit-productTitle"
@@ -82,7 +82,7 @@ export function OrderEditForm({ order }: Props) {
           htmlFor="order-edit-productImage"
           className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
         >
-          Ապրանքի նկար (փոխել — նոր ֆայլ ընտրել)
+          Product image (change — select new file)
         </label>
         <input
           id="order-edit-productImage"
@@ -94,7 +94,7 @@ export function OrderEditForm({ order }: Props) {
         />
         {order.productImageKey && (
           <p className="mt-1 text-xs text-neutral-500">
-            Ընթացիկ: {order.productImageKey.split("/").pop()}
+            Current: {order.productImageKey.split("/").pop()}
           </p>
         )}
       </div>
@@ -103,7 +103,7 @@ export function OrderEditForm({ order }: Props) {
           htmlFor="order-edit-priceCents"
           className="mb-1 block text-sm font-medium text-[var(--foreground)]/80"
         >
-          Գին (դրամ)
+          Price (AMD)
         </label>
         <input
           id="order-edit-priceCents"
@@ -119,7 +119,7 @@ export function OrderEditForm({ order }: Props) {
       </div>
       <div>
         <span className="mb-1 block text-sm font-medium text-[var(--foreground)]/80">
-          Վճարման տեսակ
+          Payment type
         </span>
         <div className="flex gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
@@ -157,7 +157,7 @@ export function OrderEditForm({ order }: Props) {
       )}
       {state?.updated && (
         <p className="text-sm text-green-600 dark:text-green-400" role="status">
-          Պատվերը թարմացվել է։
+          Order updated.
         </p>
       )}
       <button
@@ -165,7 +165,7 @@ export function OrderEditForm({ order }: Props) {
         disabled={isPending}
         className="rounded bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] hover:opacity-90 disabled:opacity-60"
       >
-        {isPending ? "Թարմացվում է…" : "Թարմացնել"}
+        {isPending ? "Updating…" : "Update"}
       </button>
     </form>
   );

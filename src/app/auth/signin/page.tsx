@@ -10,7 +10,7 @@ export default async function SignInPage() {
     <main className="min-h-screen flex items-center justify-center bg-[var(--background)] p-4">
       <div className="w-full max-w-sm space-y-6">
         <h1 className="text-2xl font-semibold text-center text-[var(--foreground)]">
-          Admin — Մուտք
+          Admin — Sign in
         </h1>
         <AuthSigninForm />
       </div>
