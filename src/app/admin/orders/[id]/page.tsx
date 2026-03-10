@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import { getOrderPaymentUrl } from "@/lib/appUrl";
 import { getR2PublicUrl } from "@/lib/storage";
 import { OrderEditForm } from "./OrderEditForm";
 import { DeleteOrderButton } from "./DeleteOrderButton";
+import { PaymentLinkActions } from "./PaymentLinkActions";
 
 function formatPrice(cents: number): string {
   return new Intl.NumberFormat("hy-AM", {
@@ -98,6 +100,14 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           </div>
         )}
       </div>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-3">Վճարման հղում</h2>
+        <PaymentLinkActions
+          orderId={order.id}
+          paymentLinkUrl={getOrderPaymentUrl(order.token)}
+        />
+      </section>
 
       <section>
         <h2 className="text-lg font-semibold mb-3">Խմբագրել</h2>

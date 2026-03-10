@@ -3,6 +3,8 @@
 import { auth } from "@/lib/auth";
 import { R2_PREFIXES } from "@/constants";
 import { prisma } from "@/lib/db";
+import { getOrderPaymentUrl } from "@/lib/appUrl";
+import { sendEmail } from "@/lib/email";
 import { uploadToR2 } from "@/lib/storage";
 import { orderFormSchema } from "@/lib/validations/orderForm";
 
@@ -172,6 +174,50 @@ export async function deleteOrder(orderId: string): Promise<DeleteOrderResult> {
   } catch {
     return { error: "Պատվերը չի ջնջվել։" };
   }
+}
+
+export type SendPaymentLinkResult =
+  | { success: true }
+  | { success: false; error: string }
+  | null;
+
+/**
+ * Server Action: send payment link email to order client. Admin only.
+ */
+export async function sendPaymentLink(
+  orderId: string,
+): Promise<SendPaymentLinkResult> {
+  const session = await auth();
+  if (!session?.user) return { success: false, error: "Մուտքը անհրաժեշտ է։" };
+
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+  if (!order) return { success: false, error: "Պատվերը չի գտնվել։" };
+
+  const paymentUrl = getOrderPaymentUrl(order.token);
+  if (!paymentUrl) return { success: false, error: "Կայքի հղումը կարգավորված չէ (AUTH_URL)։" };
+
+  const subject = "Goldcrest 3D — վճարման հղում";
+  const text = `Բարև ${order.clientName},\n\nՁեր պատվերի վճարման հղումը.\n\n${paymentUrl}\n\nԱպրանք: ${order.productTitle}\nԳին: ${(order.priceCents / 100).toFixed(0)} ֏`;
+  const html = `<p>Բարև ${escapeHtml(order.clientName)},</p><p>Ձեր պատվերի վճարման հղումը.</p><p><a href="${escapeHtml(paymentUrl)}">${escapeHtml(paymentUrl)}</a></p><p>Ապրանք: ${escapeHtml(order.productTitle)}<br>Գին: ${(order.priceCents / 100).toFixed(0)} ֏</p>`;
+
+  const result = await sendEmail({
+    to: order.clientEmail,
+    subject,
+    text,
+    html,
+  });
+
+  if (!result.success) return { success: false, error: result.error };
+  return { success: true };
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 export { FORM_FIELD_PRODUCT_IMAGE };

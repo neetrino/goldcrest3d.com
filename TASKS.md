@@ -3,7 +3,7 @@
 > Յուրաքանչյուր task անելուց հետո `[ ]`-ը փոխի՛ր `[x]`-ի (done).  
 > Ըստ [project.md](./project.md) և [docs/PROGRESS.md](./docs/PROGRESS.md).
 
-**Վերջին թարմացում.** 2026-03-09
+**Վերջին թարմացում.** 2026-03-10
 
 ---
 
@@ -67,14 +67,14 @@
 
 ## Փուլ 5. Payment link — Send / Copy + Client page
 
-- [ ] **5.1** Order detail-ում «Send Payment Link» button
-- [ ] **5.2** Server Action `sendPaymentLink(orderId)` — build URL `origin + /order/[token]` → send email to `order.clientEmail` (Resend)
-- [ ] **5.3** «Copy payment link» — client-side copy `origin + /order/[token]` to clipboard
-- [ ] **5.4** Stripe — `src/lib/stripe.ts` (payment link creation), env `STRIPE_*` լրացնել
-- [ ] **5.5** Payment type Full — Stripe payment link 100%; Split — 50% + 50% (երկու link/checkout session)
-- [ ] **5.6** Client payment page — `src/app/order/[token]/page.tsx` (public): Total price, Paid amount, Remaining balance, Payment type (Full / 50-50)
-- [ ] **5.7** 50-50 — ցուցադրել մնացած 50% վճարման պարտավորություն
-- [ ] **5.8** Pay button — redirect to Stripe checkout / payment link; webhook կամ callback — `paidCents` / `status` թարմացում
+- [x] **5.1** Order detail-ում «Send Payment Link» button
+- [x] **5.2** Server Action `sendPaymentLink(orderId)` — build URL `origin + /order/[token]` → send email to `order.clientEmail` (Resend)
+- [x] **5.3** «Copy payment link» — client-side copy `origin + /order/[token]` to clipboard
+- [x] **5.4** Stripe — `src/lib/stripe.ts` (payment link creation), env `STRIPE_*` լրացնել
+- [x] **5.5** Payment type Full — Stripe payment link 100%; Split — 50% + 50% (երկու link/checkout session)
+- [x] **5.6** Client payment page — `src/app/order/[token]/page.tsx` (public): Total price, Paid amount, Remaining balance, Payment type (Full / 50-50)
+- [x] **5.7** 50-50 — ցուցադրել մնացած 50% վճարման պարտավորություն
+- [x] **5.8** Pay button — redirect to Stripe checkout / payment link; webhook կամ callback — `paidCents` / `status` թարմացում
 
 ---
 
@@ -107,7 +107,7 @@
 | 2 | 2.1 – 2.6 | 5/6 |
 | 3 | 3.1 – 3.7 | 7/7 |
 | 4 | 4.1 – 4.7 | 7/7 |
-| 5 | 5.1 – 5.8 | 0/8 |
+| 5 | 5.1 – 5.8 | 8/8 |
 | 6 | 6.1 – 6.4 | 0/4 |
 | 7 | 7.1 – 7.6 | 0/6 |
 
