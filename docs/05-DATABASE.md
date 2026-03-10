@@ -24,6 +24,7 @@ Admin օգտատեր — մուտք admin panel.
 | password | String? | bcrypt hash (Credentials provider) |
 | emailVerified | DateTime? | |
 | image | String? | |
+| role | String? | default ADMIN (admin panel access) |
 | createdAt, updatedAt | DateTime | |
 
 Կապված. Account[], Session[] (Auth.js).

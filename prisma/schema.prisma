@@ -40,12 +40,15 @@ model Session {
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
   email         String?   @unique
+  username      String?   @unique // Login (email or username)
+  name          String?
+  password      String?   // bcrypt hash; Credentials provider for admin
   emailVerified DateTime?
   image         String?
-  password      String?   // hashed; used by Credentials provider for admin
   role          String?   @default("ADMIN") // ADMIN for admin panel access
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
 }
