@@ -1,8 +1,8 @@
 # Զարգացման առաջընթաց — Goldcrest 3D
 
 **Նախագիծ.** Goldcrest 3D  
-**Փուլ.** Payment link + Client page ավարտված  
-**Ընդհանուր առաջընթաց.** ~75%
+**Փուլ.** Polish (6.1–6.4) ավարտված  
+**Ընդհանուր առաջընթաց.** ~85%
 
 **Վերջին թարմացում.** 2026-03-10
 
@@ -17,7 +17,8 @@
 | 3. Admin — Leads Inbox | ✅ Պատրաստ | 100% |
 | 4. Admin — Orders + Payments | ✅ Պատրաստ | 100% |
 | 5. Payment link + Client page | ✅ Պատրաստ | 100% |
-| 6. Թեստավորում + Դեպլոյ | ⏳ Սպասվում է | 0% |
+| 6. Polish + Անվտանգություն | ✅ Պատրաստ | 100% |
+| 7. Թեստավորում + Դեպլոյ | ⏳ Սպասվում է | 0% |
 
 ---
 
@@ -73,10 +74,13 @@
 13. [x] Client payment page — /order/[token] — Total / Paid / Remaining / type, pay button; webhook /api/webhooks/stripe
 
 ### Փուլ 6 — Polish + Deploy
-14. [ ] Rate limiting, validation, error handling
-15. [ ] Թեստեր (Vitest, RTL)
-16. [ ] Vercel deploy, env, Neon migration
-17. [ ] PROGRESS 100%, TECH_CARD 12-րդ բաժին
+14. [x] Rate limiting (proxy.ts — quote 10/ր, auth 5/ր)
+15. [x] CORS/CSRF — Next.js default, DECISIONS.md
+16. [x] Error handling — logger, try/catch, user-friendly messages
+17. [x] Վալիդացիա — Zod quote, order, lead reply; orderId checkout
+18. [ ] Թեստեր (Vitest, RTL)
+19. [ ] Vercel deploy, env, Neon migration
+20. [ ] PROGRESS 100%, TECH_CARD 12-րդ բաժին
 
 ---
 
@@ -157,4 +161,9 @@
 - Client page /order/[token] — Total / Paid / Remaining, Pay (Full or 50%/50%), OrderPayActions
 - Webhook POST /api/webhooks/stripe — checkout.session.completed → paidCents, status PAID
 
-**Հաջորդ թարմացում.** Փուլ 6 — Polish + Deploy
+### 2026-03-10 (Փուլ 6 — Polish)
+- Task 2.6 — նոր հայտի email ադմինին (ADMIN_NOTIFY_EMAIL, sendNewLeadNotificationToAdmin)
+- Task 6.1 — rate limiting proxy.ts-ում (POST / 10/ր, POST /api/auth/* 5/ր)
+- Task 6.2–6.4 — CORS/CSRF (Next.js default), logger (src/lib/logger.ts), try/catch + Zod (leadReplySchema, checkout orderId)
+
+**Հաջորդ թարմացում.** Փուլ 7 — Թեստավորում + Դեպլոյ

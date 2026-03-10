@@ -11,7 +11,7 @@
 
 - [ ] **0.1** TECH_CARD հաստատել (մշակողի հաստատում)
 - [x] **0.2** Neon — նախագիծ/ԲԴ, `DATABASE_URL` + `DIRECT_URL` ավելացնել `.env`
-- [ ] **0.3** `pnpm install`, `pnpm db:generate`, `pnpm db:migrate` — ԲԴ աշխատում է
+- [x] **0.3** `pnpm install`, `pnpm db:generate`, `pnpm db:migrate` — ԲԴ աշխատում է
 
 ---
 
@@ -37,7 +37,7 @@
 - [x] **2.3** R2 — `src/lib/storage.ts` (upload quote attachment), env R2_* լրացնել
 - [x] **2.4** Server Action `submitQuoteForm` — validation → R2 upload → `prisma.lead.create`
 - [x] **2.5** Form submit → success/error message օգտատիրոջը
-- [ ] **2.6** (Ըստ ընտրության) email notification to admin — Resend
+- [x] **2.6** (Ըստ ընտրության) email notification to admin — Resend
 
 ---
 
@@ -80,10 +80,10 @@
 
 ## Փուլ 6. Polish + Անվտանգություն
 
-- [ ] **6.1** Rate limiting — quote form, auth routes (middleware կամ Vercel)
-- [ ] **6.2** CORS, CSRF — forms / Server Actions (Next.js default + ստուգում)
-- [ ] **6.3** Error handling — try/catch, user-friendly messages, լոգ (Pino prod)
-- [ ] **6.4** Վալիդացիա — Zod բոլոր Server Actions-ում, API-ում
+- [x] **6.1** Rate limiting — quote form, auth routes (middleware կամ Vercel)
+- [x] **6.2** CORS, CSRF — forms / Server Actions (Next.js default + ստուգում)
+- [x] **6.3** Error handling — try/catch, user-friendly messages, լոգ (Pino prod)
+- [x] **6.4** Վալիդացիա — Zod բոլոր Server Actions-ում, API-ում
 
 ---
 
@@ -102,13 +102,13 @@
 
 | Փուլ | Task-եր | Done |
 |------|---------|------|
-| 0 | 0.1 – 0.3 | 1/3 |
+| 0 | 0.1 – 0.3 | 2/3 |
 | 1 | 1.1 – 1.10 | 10/10 |
-| 2 | 2.1 – 2.6 | 5/6 |
+| 2 | 2.1 – 2.6 | 6/6 |
 | 3 | 3.1 – 3.7 | 7/7 |
 | 4 | 4.1 – 4.7 | 7/7 |
 | 5 | 5.1 – 5.8 | 8/8 |
-| 6 | 6.1 – 6.4 | 0/4 |
+| 6 | 6.1 – 6.4 | 4/4 |
 | 7 | 7.1 – 7.6 | 0/6 |
 
 **Ընդամենը.** 51 task

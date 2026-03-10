@@ -3,10 +3,10 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { sendReplyToLead } from "@/lib/email";
+import { logger } from "@/lib/logger";
+import { leadReplySchema } from "@/lib/validations/leadReply";
 
 export type ReplyToLeadResult = { error?: string; sent?: boolean };
-
-const MAX_BODY_LENGTH = 10_000;
 
 /**
  * Server Action: send reply email to lead (client).
@@ -21,23 +21,29 @@ export async function replyToLeadAction(
   if (!session?.user) return { error: "Sign in required." };
 
   const body = formData.get("body");
-  if (typeof body !== "string" || !body.trim()) {
-    return { error: "Please enter the reply text." };
-  }
-  if (body.length > MAX_BODY_LENGTH) {
-    return { error: "Text is too long." };
-  }
-
-  const lead = await prisma.lead.findUnique({
-    where: { id: leadId },
+  const parsed = leadReplySchema.safeParse({
+    body: typeof body === "string" ? body : "",
   });
-  if (!lead) return { error: "Lead not found." };
+  if (!parsed.success) {
+    const msg = parsed.error.flatten().fieldErrors.body?.[0] ?? "Invalid data";
+    return { error: msg };
+  }
 
-  const result = await sendReplyToLead({
-    to: lead.email,
-    body: body.trim(),
-  });
+  try {
+    const lead = await prisma.lead.findUnique({
+      where: { id: leadId },
+    });
+    if (!lead) return { error: "Lead not found." };
 
-  if (!result.success) return { error: result.error };
-  return { sent: true };
+    const result = await sendReplyToLead({
+      to: lead.email,
+      body: parsed.data.body.trim(),
+    });
+
+    if (!result.success) return { error: result.error };
+    return { sent: true };
+  } catch (err) {
+    logger.error("replyToLeadAction failed", err);
+    return { error: "Reply could not be sent. Please try again later." };
+  }
 }

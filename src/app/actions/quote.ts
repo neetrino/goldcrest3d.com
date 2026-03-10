@@ -2,6 +2,8 @@
 
 import { R2_PREFIXES } from "@/constants";
 import { prisma } from "@/lib/db";
+import { sendNewLeadNotificationToAdmin } from "@/lib/email";
+import { logger } from "@/lib/logger";
 import { uploadToR2 } from "@/lib/storage";
 import { quoteFormSchema } from "@/lib/validations/quoteForm";
 
@@ -53,9 +55,17 @@ export async function submitQuote(
         attachmentKeys,
       },
     });
-  } catch {
+  } catch (err) {
+    logger.error("submitQuote: lead create failed", err);
     return { success: false, error: "Request could not be saved. Please try again later." };
   }
+
+  await sendNewLeadNotificationToAdmin({
+    fullName: parsed.data.fullName,
+    email: parsed.data.email,
+    message: parsed.data.message,
+    attachmentCount: attachmentKeys.length,
+  });
 
   return { success: true };
 }

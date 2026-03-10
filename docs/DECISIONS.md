@@ -70,7 +70,19 @@
 | Գաղտնիքներ env-ում | Ոչ կոդում |
 | Admin routes protected | Auth.js session + role |
 | CORS, CSRF, rate limiting | Quote form, auth |
+| CORS / CSRF | Next.js default — Server Actions-ը same-origin, CSRF պաշտպանություն built-in; հատուկ CORS headers չեն պետք (public API չկա) |
+| Rate limiting | proxy.ts — POST / (quote) 10/ր, POST /api/auth/* 5/ր (in-memory per instance) |
 | Գաղտնաբառի hash | bcryptjs (popular, pure JS) |
+
+---
+
+## Սխալների մշակում և լոգ
+
+| Որոշում | Պատճառ |
+|---------|--------|
+| Logger | `src/lib/logger.ts` — info/error, առայժմ console; prod-ում Pino (TECH_CARD 8.7) |
+| Server Actions | try/catch, user-friendly message, logger.error |
+| API routes (webhook) | try/catch, logger.error, 500 + message |
 
 ---
 

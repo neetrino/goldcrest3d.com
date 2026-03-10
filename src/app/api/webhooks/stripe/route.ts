@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/db";
+import { logger } from "@/lib/logger";
 
 const secretKey = process.env.STRIPE_SECRET_KEY;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -56,7 +57,8 @@ export async function POST(request: NextRequest) {
         ...(isFullyPaid && { status: "PAID" }),
       },
     });
-  } catch {
+  } catch (err) {
+    logger.error("Stripe webhook: order update failed", err);
     return new Response("Database error", { status: 500 });
   }
 

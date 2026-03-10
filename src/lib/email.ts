@@ -57,6 +57,37 @@ export async function sendEmail({
 }
 
 /**
+ * Notifies admin about a new quote/lead (optional: set ADMIN_NOTIFY_EMAIL in env).
+ */
+export async function sendNewLeadNotificationToAdmin({
+  fullName,
+  email,
+  message,
+  attachmentCount,
+}: {
+  fullName: string;
+  email: string;
+  message: string;
+  attachmentCount: number;
+}): Promise<SendEmailResult> {
+  const to = process.env.ADMIN_NOTIFY_EMAIL;
+  if (!to?.trim()) {
+    return { success: true };
+  }
+  const subject = "Goldcrest 3D — նոր հայտ";
+  const text = [
+    `Անուն: ${fullName}`,
+    `Email: ${email}`,
+    `Հաղորդագրություն: ${message}`,
+    attachmentCount > 0 ? `Կցված ֆայլեր: ${attachmentCount}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+  const html = `<p>${escapeHtml(text).replace(/\n/g, "</p><p>")}</p>`;
+  return sendEmail({ to: to.trim(), subject, text, html });
+}
+
+/**
  * Sends reply to a lead (client email).
  */
 export async function sendReplyToLead({
