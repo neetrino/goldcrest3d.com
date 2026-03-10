@@ -1,5 +1,5 @@
 /**
- * Edge-only middleware: quote form rate limiting only.
+ * Next.js 16 proxy: quote form rate limiting (POST /).
  * Must NOT import: @/auth, @/lib/db, or any module that uses Node (crypto, bcrypt, Prisma).
  * Admin protection is enforced in src/app/admin/layout.tsx (auth() + AdminSignInGate).
  */
