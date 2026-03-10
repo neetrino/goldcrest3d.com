@@ -1,9 +1,13 @@
-import {
-  RATE_LIMIT_QUOTE_MAX,
-  RATE_LIMIT_QUOTE_WINDOW_MS,
-} from "@/constants";
+/**
+ * Edge-only middleware: quote form rate limiting only.
+ * Must NOT import: @/auth, @/lib/db, or any module that uses Node (crypto, bcrypt, Prisma).
+ * Admin protection is enforced in src/app/admin/layout.tsx (auth() + AdminSignInGate).
+ */
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
+
+/** Inlined from @/constants to keep this file Edge-safe (no app imports). */
+const RATE_LIMIT_QUOTE_WINDOW_MS = 60_000;
+const RATE_LIMIT_QUOTE_MAX = 10;
 
 const quoteLimit = new Map<string, { count: number; resetAt: number }>();
 
@@ -32,38 +36,15 @@ function isOverLimit(
   return entry.count > max;
 }
 
-/** Auth wrapper: redirect /admin to sign-in when not authenticated. Never serve admin UI without auth. */
-const adminProtect = auth((req) => {
-  const path = req.nextUrl.pathname;
-  if (path.startsWith("/api/auth")) return NextResponse.next();
-  if (path.startsWith("/admin")) {
-    if (!req.auth) {
-      const signInUrl = new URL("/auth/signin", req.url);
-      signInUrl.searchParams.set("callbackUrl", path === "/admin" ? "/admin/leads" : path);
-      return NextResponse.redirect(signInUrl);
-    }
-    return NextResponse.next();
-  }
-  return NextResponse.next();
-});
-
 /**
- * Proxy runs at the network boundary — admin protection first, then rate limiting.
- * Admin area is never opened without authentication (redirect to sign-in).
+ * Middleware (Edge): rate limit POST / (quote form). Մնացած request-ներ — next().
  */
 export async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
-
-  const protectedResponse = await adminProtect(req, { params: Promise.resolve({}) });
-  const isRedirect =
-    protectedResponse instanceof Response &&
-    protectedResponse.status >= 300 &&
-    protectedResponse.status < 400;
-  if (isRedirect) return protectedResponse;
-
   const method = req.method;
-  const ip = getClientIp(req);
+
   if (method === "POST" && path === "/") {
+    const ip = getClientIp(req);
     if (
       isOverLimit(
         quoteLimit,
@@ -76,7 +57,7 @@ export async function proxy(req: NextRequest) {
     }
   }
 
-  return protectedResponse instanceof Response ? protectedResponse : NextResponse.next();
+  return NextResponse.next();
 }
 
 export const config = {
