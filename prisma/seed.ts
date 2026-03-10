@@ -10,7 +10,7 @@ import { prisma } from "../src/lib/db";
 
 const DEFAULT_EMAIL = "admin@goldcrest.local";
 const DEFAULT_USERNAME = "admin";
-const DEFAULT_PASSWORD = "ChangeMeAfterFirstLogin!";
+const DEFAULT_PASSWORD = "Admin123";
 
 const SALT_ROUNDS = 12;
 

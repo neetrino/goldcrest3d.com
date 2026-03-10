@@ -89,12 +89,12 @@
 
 ## Փուլ 7. Թեստավորում + Դեպլոյ
 
-- [ ] **7.1** Vitest — unit tests (validations, utils)
-- [ ] **7.2** React Testing Library — կրիտիկական կոմպոնենտներ (quote form, admin forms)
+- [x] **7.1** Vitest — unit tests (validations, utils)
+- [x] **7.2** React Testing Library — կրիտիկական կոմպոնենտներ (quote form, admin forms)
 - [ ] **7.3** Vercel — project connect, env (DATABASE_URL, DIRECT_URL, R2, Resend, Stripe, Auth)
 - [ ] **7.4** Neon — prod branch, migration production-ում
-- [ ] **7.5** PROGRESS.md — 100%, բոլոր փուլեր done
-- [ ] **7.6** TECH_CARD — 12-րդ բաժին (եզրափակիչ ստուգում) լրացնել
+- [ ] **7.5** PROGRESS.md — 100%, բոլոր փուլեր done (հետո դեպլոյից)
+- [x] **7.6** TECH_CARD — 12-րդ բաժին (եզրափակիչ ստուգում) լրացնել
 
 ---
 
@@ -109,7 +109,7 @@
 | 4 | 4.1 – 4.7 | 7/7 |
 | 5 | 5.1 – 5.8 | 8/8 |
 | 6 | 6.1 – 6.4 | 4/4 |
-| 7 | 7.1 – 7.6 | 0/6 |
+| 7 | 7.1 – 7.6 | 3/6 |
 
 **Ընդամենը.** 51 task
 

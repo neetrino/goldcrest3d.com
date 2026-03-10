@@ -2,7 +2,7 @@
 
 **Նախագիծ.** Goldcrest 3D  
 **Փուլ.** Polish (6.1–6.4) ավարտված  
-**Ընդհանուր առաջընթաց.** ~85%
+**Ընդհանուր առաջընթաց.** ~95%
 
 **Վերջին թարմացում.** 2026-03-10
 
@@ -18,7 +18,7 @@
 | 4. Admin — Orders + Payments | ✅ Պատրաստ | 100% |
 | 5. Payment link + Client page | ✅ Պատրաստ | 100% |
 | 6. Polish + Անվտանգություն | ✅ Պատրաստ | 100% |
-| 7. Թեստավորում + Դեպլոյ | ⏳ Սպասվում է | 0% |
+| 7. Թեստավորում + Դեպլոյ | 🔄 Աշխատանքի մեջ | 33% |
 
 ---
 
@@ -78,7 +78,7 @@
 15. [x] CORS/CSRF — Next.js default, DECISIONS.md
 16. [x] Error handling — logger, try/catch, user-friendly messages
 17. [x] Վալիդացիա — Zod quote, order, lead reply; orderId checkout
-18. [ ] Թեստեր (Vitest, RTL)
+18. [x] Թեստեր (Vitest, RTL) — validations, appUrl, QuoteForm, OrderNewForm, OrderEditForm
 19. [ ] Vercel deploy, env, Neon migration
 20. [ ] PROGRESS 100%, TECH_CARD 12-րդ բաժին
 
@@ -166,4 +166,10 @@
 - Task 6.1 — rate limiting proxy.ts-ում (POST / 10/ր, POST /api/auth/* 5/ր)
 - Task 6.2–6.4 — CORS/CSRF (Next.js default), logger (src/lib/logger.ts), try/catch + Zod (leadReplySchema, checkout orderId)
 
-**Հաջորդ թարմացում.** Փուլ 7 — Թեստավորում + Դեպլոյ
+### 2026-03-10 (Փուլ 7 — Թեստեր)
+- Vitest + RTL — vitest.config.ts, vitest.setup.ts, pnpm test / test:run
+- Unit: quoteFormSchema, orderFormSchema, leadReplySchema, getAppOrigin, getOrderPaymentUrl
+- RTL: QuoteForm, OrderNewForm, OrderEditForm (mocks for actions, next/navigation)
+- 34 թեստ, 7 ֆայլ
+
+**Հաջորդ թարմացում.** Փուլ 7 — Vercel/Neon դեպլոյ, TECH_CARD 12
