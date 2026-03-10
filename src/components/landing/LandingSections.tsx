@@ -1,4 +1,5 @@
 import { LANDING_SECTION_IDS } from "@/constants";
+import { QuoteForm } from "@/components/quote-form/QuoteForm";
 import { PowerBanners } from "./PowerBanners";
 
 function Section({
@@ -84,8 +85,8 @@ export function LandingSections() {
         <h2 className="text-2xl font-semibold md:text-3xl">Ուղարկել հայտ</h2>
         <p className="mt-4 text-[var(--foreground)]/80">
           Ուզու՞մ եք քննարկել նախագիծը — լրացրեք հայտը, մենք կկապնվենք ձեզ հետ։
-          Ձևը կհասանելի լինի հաջորդ փուլում։
         </p>
+        <QuoteForm />
       </Section>
 
       <Section id={LANDING_SECTION_IDS.FOOTER} className="py-12">

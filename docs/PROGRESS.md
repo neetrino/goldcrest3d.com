@@ -2,9 +2,9 @@
 
 **Նախագիծ.** Goldcrest 3D  
 **Փուլ.** Նախաձեռնում (փաստաթղթեր)  
-**Ընդհանուր առաջընթաց.** ~35%
+**Ընդհանուր առաջընթաց.** ~45%
 
-**Վերջին թարմացում.** 2026-03-09
+**Վերջին թարմացում.** 2026-03-10
 
 ---
 
@@ -13,7 +13,7 @@
 | Փուլ | Ստատուս | Առաջընթաց |
 |------|---------|------------|
 | 1. Նախաձեռնում (փաստաթղթեր) | 🔄 Աշխատանքի մեջ | 95% |
-| 2. Landing + Quote form | 🔄 Աշխատանքի մեջ | 50% |
+| 2. Landing + Quote form | 🔄 Աշխատանքի մեջ | 85% |
 | 3. Admin — Leads Inbox | ⏳ Սպասվում է | 0% |
 | 4. Admin — Orders + Payments | ⏳ Սպասվում է | 0% |
 | 5. Թեստավորում + Դեպլոյ | ⏳ Սպասվում է | 0% |
@@ -42,9 +42,9 @@
 ### Փուլ 1 (95%)
 - [ ] TECH_CARD — մշակողի հաստատում
 
-### Փուլ 2 — Landing (50%)
+### Փուլ 2 — Landing (85%)
 - [x] Landing sections 1.2–1.10 — Power Banners, Philosophy, Specializations, Manufacturing, Founder, Process, Quote CTA, Footer, SEO
-- [ ] Quote form (Փուլ 2 task-եր)
+- [x] Quote form — Full Name, Email, Message, Image upload → Server Action → Prisma + R2
 
 **Բլոկեր.** Փուլ 0.3 — DB migrate reset (մշակողի հաստատում) — եթե ցանկանում եք db:migrate-ը անխափան աշխատի
 
@@ -53,11 +53,11 @@
 ## 📋 ՀԱՋՈՐԴ ԱՌԱՋԱԴՐԱՆՔՆԵՐ
 
 ### Փուլ 2 — Landing + Quote form
-1. [ ] Next.js նախագիծ (pnpm, TypeScript, Tailwind, shadcn)
-2. [ ] Prisma + Neon, schema (Lead, User)
-3. [ ] Landing page — sections (Banners, Philosophy, Specializations, Manufacturing, Founder, Process, Quote CTA, Footer), scroll-to-section
-4. [ ] Quote form — Full Name, Email, Message, Image upload → Server Action → Prisma + R2
-5. [ ] SEO — metadata, title, description
+1. [x] Next.js նախագիծ (pnpm, TypeScript, Tailwind, shadcn)
+2. [x] Prisma + Neon, schema (Lead, User)
+3. [x] Landing page — sections (Banners, Philosophy, Specializations, Manufacturing, Founder, Process, Quote CTA, Footer), scroll-to-section
+4. [x] Quote form — Full Name, Email, Message, Image upload → Server Action → Prisma + R2
+5. [x] SEO — metadata, title, description
 
 ### Փուլ 3 — Admin Leads Inbox
 6. [ ] Auth.js — admin auth, protected /admin
@@ -101,6 +101,12 @@
 - .env.example — DATABASE_URL, DIRECT_URL, R2, Resend, Stripe, Auth
 - 02-FRONTEND-BACKEND.md — _project → src/
 - 01-ARCHITECTURE.md — կապված փաստաթղթերի ցանկ և docs tree թարմացված
+
+### 2026-03-10
+- Quote form — QuoteForm.tsx (react-hook-form + useActionState), Server Action submitQuote
+- R2 upload — src/lib/storage.ts (@aws-sdk/client-s3), uploadToR2("quotes", file)
+- .env.example — ավելացվել է R2_ACCOUNT_ID
+- LandingSections — «Ուղարկել հայտ» սեկցիայում ներդրված QuoteForm
 
 ---
 

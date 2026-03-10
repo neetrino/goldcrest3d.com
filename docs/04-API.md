@@ -28,9 +28,11 @@
 
 **Լոգիկա.**  
 1. Zod validation  
-2. Upload image to R2 (եթե կա)  
+2. Upload image to R2 (եթե կա) — `uploadToR2(prefix, file)`, prefix `quotes`  
 3. `prisma.lead.create({ fullName, email, message, attachmentKeys })`  
 4. (Ըստ ընտրության) email notification to admin  
+
+**R2.** Env: `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_URL`. Կցված ֆայլերի public URL — `getR2PublicUrl(key)` (lib/storage).  
 
 ---
 

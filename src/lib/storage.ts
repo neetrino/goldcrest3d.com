@@ -1,5 +1,86 @@
 /**
  * R2 upload — quote attachments, order product images.
- * TODO: implement when R2 is configured.
+ * S3-compatible API via @aws-sdk/client-s3.
  */
-export {};
+
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+
+const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID;
+const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
+const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
+const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME;
+const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
+
+function getR2Client(): S3Client | null {
+  if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
+    return null;
+  }
+  return new S3Client({
+    region: "auto",
+    endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: R2_ACCESS_KEY_ID,
+      secretAccessKey: R2_SECRET_ACCESS_KEY,
+    },
+    forcePathStyle: true,
+  });
+}
+
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
+const ALLOWED_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "application/pdf",
+];
+
+/**
+ * Uploads a file to R2 under prefix (e.g. "quotes" or "orders").
+ * Returns the object key or null if R2 is not configured / upload fails.
+ */
+export async function uploadToR2(
+  prefix: string,
+  file: File,
+): Promise<string | null> {
+  if (!R2_BUCKET_NAME) return null;
+  const client = getR2Client();
+  if (!client) return null;
+
+  if (file.size > MAX_FILE_SIZE_BYTES) return null;
+  const contentType = file.type || "application/octet-stream";
+  if (
+    !ALLOWED_TYPES.includes(contentType) &&
+    !contentType.startsWith("image/")
+  ) {
+    return null;
+  }
+
+  const ext = file.name.split(".").pop() ?? "bin";
+  const key = `${prefix}/${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
+
+  try {
+    const body = new Uint8Array(await file.arrayBuffer());
+    await client.send(
+      new PutObjectCommand({
+        Bucket: R2_BUCKET_NAME,
+        Key: key,
+        Body: body,
+        ContentType: contentType,
+      }),
+    );
+    return key;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Builds public URL for an R2 object key (e.g. for leads attachments, order product image).
+ * Returns null if R2_PUBLIC_URL is not set (e.g. bucket not exposed).
+ */
+export function getR2PublicUrl(key: string): string | null {
+  if (!R2_PUBLIC_URL || !key) return null;
+  const base = R2_PUBLIC_URL.replace(/\/$/, "");
+  return `${base}/${key}`;
+}

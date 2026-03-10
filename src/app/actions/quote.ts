@@ -1,0 +1,63 @@
+"use server";
+
+import { R2_PREFIXES } from "@/constants";
+import { prisma } from "@/lib/db";
+import { uploadToR2 } from "@/lib/storage";
+import { quoteFormSchema } from "@/lib/validations/quoteForm";
+
+const FORM_FIELD_ATTACHMENT = "attachment";
+
+export type QuoteSubmitResult =
+  | { success: true }
+  | { success: false; error: string }
+  | null;
+
+/**
+ * Server Action: validate quote form, upload optional file to R2, create Lead.
+ * Signature compatible with useActionState(prevState, formData).
+ */
+export async function submitQuote(
+  _prev: QuoteSubmitResult,
+  formData: FormData,
+): Promise<QuoteSubmitResult> {
+  const fullName = formData.get("fullName");
+  const email = formData.get("email");
+  const message = formData.get("message");
+  const file = formData.get(FORM_FIELD_ATTACHMENT);
+
+  const parsed = quoteFormSchema.safeParse({
+    fullName: typeof fullName === "string" ? fullName : "",
+    email: typeof email === "string" ? email : "",
+    message: typeof message === "string" ? message : "",
+  });
+
+  if (!parsed.success) {
+    const first = parsed.error.flatten().fieldErrors;
+    const msg =
+      first.fullName?.[0] ?? first.email?.[0] ?? first.message?.[0] ?? "Սխալ տվյալներ";
+    return { success: false, error: msg };
+  }
+
+  const attachmentKeys: string[] = [];
+  if (file instanceof File && file.size > 0) {
+    const key = await uploadToR2(R2_PREFIXES.QUOTES, file);
+    if (key) attachmentKeys.push(key);
+  }
+
+  try {
+    await prisma.lead.create({
+      data: {
+        fullName: parsed.data.fullName,
+        email: parsed.data.email,
+        message: parsed.data.message,
+        attachmentKeys,
+      },
+    });
+  } catch {
+    return { success: false, error: "Հայտը չի պահպանվել։ Փորձեք ավելի ուշ։" };
+  }
+
+  return { success: true };
+}
+
+export { FORM_FIELD_ATTACHMENT };
