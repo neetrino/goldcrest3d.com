@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createOrder, FORM_FIELD_PRODUCT_IMAGE } from "@/app/actions/order";
 import type { CreateOrderResult } from "@/app/actions/order";
@@ -165,12 +166,12 @@ export function OrderNewForm() {
         >
           {isPending ? "Պահպանվում է…" : "Պահպանել պատվեր"}
         </button>
-        <a
+        <Link
           href="/admin/orders"
           className="rounded border border-[var(--foreground)]/30 px-4 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--foreground)]/5"
         >
           Չեղարկել
-        </a>
+        </Link>
       </div>
     </form>
   );
