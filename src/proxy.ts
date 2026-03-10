@@ -22,13 +22,15 @@ export function proxy(req: NextRequest) {
   if (path.startsWith("/api")) return NextResponse.next();
 
   const hasSession = hasSessionCookie(req);
-  const isAuthPage = path.startsWith("/auth");
+  const isSignInPage = path === "/signin" || path.startsWith("/auth");
   const isAdminPage = path.startsWith("/admin");
 
   if (isAdminPage && !hasSession) {
-    return NextResponse.redirect(new URL("/auth/signin", req.nextUrl));
+    const signInUrl = new URL("/signin", req.nextUrl);
+    signInUrl.searchParams.set("callbackUrl", path);
+    return NextResponse.redirect(signInUrl);
   }
-  if (isAuthPage && hasSession) {
+  if (isSignInPage && hasSession) {
     return NextResponse.redirect(new URL("/admin/leads", req.nextUrl));
   }
   return NextResponse.next();

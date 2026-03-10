@@ -61,7 +61,7 @@
 5. [x] SEO — metadata, title, description
 
 ### Փուլ 3 — Admin Leads Inbox
-6. [x] Auth.js — admin auth, protected /admin (Credentials, JWT, middleware, /auth/signin, seed)
+6. [x] Auth.js — admin auth, protected /admin (Credentials, JWT, proxy, /signin, email or username, seed)
 7. [x] Leads Inbox — list + detail view (name, email, message, attachments)
 8. [x] Reply → Resend, client email (sendReplyToLead, LeadReplyForm)
 
@@ -91,6 +91,12 @@
 ---
 
 ## 💡 Նշումներ և որոշումներ
+
+### 2026-03-10 — Admin authentication
+- Sign-in only at **/signin** (no public signup). `/auth/signin` redirects to `/signin`.
+- Login by **email or username** (User.username added, bcrypt password).
+- **Proxy** (`src/proxy.ts`) protects `/admin/*`: unauthenticated → redirect to `/signin`.
+- **Initial Admin** (after `pnpm db:seed`): email `admin@goldcrest.local`, username `admin`, password `ChangeMeAfterFirstLogin!` (or set SEED_ADMIN_* in .env). Change password after first login.
 
 ### 2026-03-09
 - Փաստաթղթերի փաթեթ պատրաստված — BRIEF, TECH_CARD, 01-ARCHITECTURE, PROGRESS (project.md + repo հիման վրա)

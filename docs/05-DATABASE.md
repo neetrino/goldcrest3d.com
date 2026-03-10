@@ -18,8 +18,10 @@ Admin օգտատեր — մուտք admin panel.
 | Դաշտ | Տիպ | Նշում |
 |------|-----|-------|
 | id | String (cuid) | PK |
-| email | String? unique | |
+| email | String? unique | Login (email or username) |
+| username | String? unique | Login (email or username) |
 | name | String? | |
+| password | String? | bcrypt hash (Credentials provider) |
 | emailVerified | DateTime? | |
 | image | String? | |
 | createdAt, updatedAt | DateTime | |

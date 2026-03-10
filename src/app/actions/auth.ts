@@ -12,20 +12,29 @@ export async function signInAction(
   _prev: SignInResult,
   formData: FormData,
 ): Promise<SignInResult> {
-  const email = formData.get("email");
+  const login = formData.get("login");
   const password = formData.get("password");
-  if (typeof email !== "string" || typeof password !== "string") {
-    return { error: "Please enter email and password." };
+  if (typeof login !== "string" || !login.trim() || typeof password !== "string") {
+    return { error: "Please enter email or username and password." };
   }
 
   const result = await signIn("credentials", {
-    email,
+    login: login.trim(),
     password,
     redirect: false,
   });
 
-  if (result?.error) return { error: "Invalid email or password." };
-  if (result?.ok) redirect("/admin/leads");
+  if (result?.error) return { error: "Invalid email/username or password." };
+  if (result?.ok) {
+    const callbackUrl = formData.get("callbackUrl");
+    const safePath =
+      typeof callbackUrl === "string" &&
+      callbackUrl.startsWith("/admin") &&
+      !callbackUrl.includes("..")
+        ? callbackUrl
+        : "/admin/leads";
+    redirect(safePath);
+  }
   return { error: "Sign-in failed." };
 }
 
@@ -34,5 +43,5 @@ export async function signInAction(
  */
 export async function signOutAction() {
   await signOut({ redirect: false });
-  redirect("/auth/signin");
+  redirect("/signin");
 }

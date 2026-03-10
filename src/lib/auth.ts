@@ -14,24 +14,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   pages: {
-    signIn: "/auth/signin",
+    signIn: "/signin",
     error: "/auth/error",
   },
   providers: [
     Credentials({
       name: "credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        login: { label: "Email or username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        const email = credentials?.email as string | undefined;
+        const login = credentials?.login as string | undefined;
         const password = credentials?.password as string | undefined;
-        if (!email || !password) return null;
+        if (!login?.trim() || !password) return null;
 
-        const user = await prisma.user.findUnique({
-          where: { email },
-        });
+        const byEmail = login.includes("@");
+        const user = byEmail
+          ? await prisma.user.findUnique({ where: { email: login.trim() } })
+          : await prisma.user.findUnique({
+              where: { username: login.trim() },
+            });
         if (!user || !user.password) return null;
 
         const isValid = await compare(password, user.password);

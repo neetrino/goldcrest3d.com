@@ -11,7 +11,7 @@ export default function AuthErrorPage() {
           Something went wrong while signing in. Please try again.
         </p>
         <Link
-          href="/auth/signin"
+          href="/signin"
           className="inline-block py-2 px-4 bg-neutral-800 text-white rounded-md hover:bg-neutral-700"
         >
           Back to sign-in
