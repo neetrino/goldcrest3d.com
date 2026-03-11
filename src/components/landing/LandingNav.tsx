@@ -41,7 +41,7 @@ export function LandingNav() {
             priority
           />
         </Link>
-        <ul className="hidden flex-1 list-none justify-center gap-10 md:flex">
+        <ul className="hidden flex-1 list-none justify-center gap-[60px] md:flex">
           {NAV_ITEMS.map(({ id, label }) => (
             <li key={id}>
               <Link
