@@ -77,22 +77,40 @@ export function PowerBanners() {
               )}
             </div>
             <div
-              className={`relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
-                slide.contentAlign === "right"
-                  ? "items-end text-right"
-                  : slide.contentAlign === "left"
-                    ? "items-start text-left"
-                    : "items-center text-center"
-              }`}
+              className={
+                slide.id === "rendering"
+                  ? "relative z-10 flex w-full flex-col items-start justify-center gap-8 pl-6 pr-6 pt-16 pb-16 text-left text-white md:absolute md:left-0 md:top-[58%] md:max-w-[672px] md:-translate-y-1/2 md:pl-[153px] md:pr-12 md:pt-0 md:pb-0"
+                  : `relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
+                      slide.contentAlign === "right"
+                        ? "items-end text-right"
+                        : slide.contentAlign === "left"
+                          ? "items-start text-left"
+                          : "items-center text-center"
+                    }`
+              }
             >
-              <h1 className="max-w-[896px] font-black leading-[1.1] tracking-[-0.025em] text-white text-[clamp(2.25rem,5vw,72px)]">
+              <h1
+                className={
+                  slide.id === "rendering"
+                    ? "relative inline-block w-[651px] max-w-full font-black leading-[72px] tracking-[-1.8px] text-left text-white text-[72px] whitespace-nowrap"
+                    : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[72px]"
+                }
+              >
                 {slide.title}
               </h1>
-              <p className="mt-6 max-w-[672px] font-light italic leading-[28px] text-white/90 text-[clamp(1rem,2vw,20px)]">
+              <p
+                className={
+                  slide.id === "rendering"
+                    ? "relative inline-block w-full text-left text-xl font-light italic leading-7 text-[rgba(255,255,255,0.9)]"
+                    : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[20px]"
+                }
+              >
                 {slide.subtitle}
               </p>
-              <GetAQuoteButton className="mt-8 shrink-0" />
-          </div>
+              <GetAQuoteButton
+                className={slide.id === "rendering" ? "w-[271.5px] shrink-0" : "mt-8 shrink-0"}
+              />
+            </div>
         </div>
       ))}
     </section>

@@ -26,7 +26,7 @@ export function SectionManufacturing() {
       <div className="mx-auto max-w-7xl">
         <h2
           id="manufacturing-heading"
-          className="text-center font-normal leading-tight tracking-[-0.02em] text-[var(--foreground)] text-[clamp(2rem,5vw,48px)]"
+          className="font-manrope text-center font-normal leading-[40px] tracking-[-0.9px] text-black text-[48px]"
         >
           Manufacturing Intelligence
         </h2>
@@ -37,10 +37,10 @@ export function SectionManufacturing() {
                 key={item.title}
                 type="button"
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="flex w-full items-center justify-between rounded-2xl bg-white p-6 text-left shadow-sm transition hover:shadow-md"
+                className="flex w-full items-center justify-between rounded-[16px] bg-white p-[30px] text-left shadow-sm transition hover:shadow-md"
                 aria-expanded={openIndex === i}
               >
-                <span className="font-extrabold text-[var(--foreground)] text-[18px]">
+                <span className="font-manrope font-extrabold leading-[28px] text-black text-[18px]">
                   {item.title}
                 </span>
                 <span
@@ -58,7 +58,7 @@ export function SectionManufacturing() {
               </button>
             ))}
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#e8eaed] lg:min-h-[400px]">
+          <div className="relative aspect-[750/625] overflow-hidden rounded-[16px] bg-[#e8eaed] lg:min-h-[400px]">
             <Image
               src={LANDING_IMAGES.manufacturing}
               alt="CAD and manufacturing"

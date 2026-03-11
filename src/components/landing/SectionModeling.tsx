@@ -56,7 +56,7 @@ export function SectionModeling() {
       <div className="mx-auto max-w-7xl">
         <h2
           id="modeling-heading"
-          className="text-center font-normal leading-tight tracking-[-0.02em] text-[#ddab52] text-[clamp(2rem,5vw,48px)]"
+          className="font-manrope text-center font-normal leading-[40px] tracking-[-0.9px] text-[#ddab52] text-[48px]"
         >
           Modeling Specialization
         </h2>
@@ -64,7 +64,7 @@ export function SectionModeling() {
           {CARDS.map((card) => (
             <article
               key={card.title}
-              className="overflow-hidden rounded-2xl bg-[#353535] shadow-lg"
+              className="overflow-hidden rounded-[16px] bg-[#353535] shadow-lg"
             >
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
@@ -76,10 +76,10 @@ export function SectionModeling() {
                 />
               </div>
               <div className="p-6 text-white">
-                <h3 className="font-bold leading-tight text-[20px]">
+                <h3 className="font-manrope font-bold leading-[28px] text-[20px]">
                   {card.title}
                 </h3>
-                <p className="mt-3 font-light leading-[1.6] text-white/80 text-[16px]">
+                <p className="mt-3 font-manrope font-light leading-[26px] text-white/80 text-[16px]">
                   {card.description}
                 </p>
               </div>

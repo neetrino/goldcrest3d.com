@@ -21,7 +21,7 @@ export function SectionFinishedCreations() {
       <div className="mx-auto max-w-7xl">
         <h2
           id="finished-heading"
-          className="text-center font-normal leading-tight tracking-[-0.02em] text-[var(--foreground)] text-[clamp(1.75rem,4vw,48px)]"
+          className="font-manrope text-center font-normal leading-[40px] tracking-[-0.9px] text-black text-[48px]"
         >
           Finished Creations
         </h2>
@@ -29,7 +29,7 @@ export function SectionFinishedCreations() {
           {GALLERY_IMAGES.map((src, i) => (
             <div
               key={`${src}-${i}`}
-              className="relative aspect-[4/3] overflow-hidden rounded-2xl"
+              className="relative aspect-[4/3] overflow-hidden rounded-[16px]"
             >
               <Image
                 src={src}

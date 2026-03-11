@@ -7,9 +7,9 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-/** Logo from Figma Header (node 92:263). Replace with /images/logo.png when available. */
+/** Logo from Figma Header (node 92:263). */
 const LOGO_SRC =
-  "https://www.figma.com/api/mcp/asset/fd491da2-4ff4-4cd2-8e9b-e83cf4d24502";
+  "https://www.figma.com/api/mcp/asset/ce31ef4f-5914-417c-9ba4-4c47b79e2bff";
 
 const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
   { id: LANDING_SECTION_IDS.HERO, label: "Home" },
