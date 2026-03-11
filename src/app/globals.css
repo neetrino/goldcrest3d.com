@@ -32,3 +32,13 @@ body {
 section[id] {
   scroll-margin-top: 4.5rem;
 }
+
+/* Nav CTA "Request a Quote" — gold gradient from Figma (Header 92:255) */
+.nav-cta-gradient {
+  background: linear-gradient(
+    43.74deg,
+    rgb(255, 204, 111) 16.4%,
+    rgb(153, 122, 66) 46.5%,
+    rgb(236, 192, 110) 100%
+  );
+}

@@ -31,7 +31,7 @@ export function PowerBanners() {
           3D Production-Ready Modeling
         </h1>
         {/* 92:269 — Inter Light Italic, 20px, leading 28px, white/90, text-center */}
-        <p className="min-w-full shrink-0 text-center font-light italic leading-[28px] text-white/90 text-[19px]">
+        <p className="min-w-full shrink-0 -ml-6 text-center font-light italic leading-[28px] text-white/90 text-[19px]">
           Engineered for casting, printing and precise stone setting. Every
           micron accounted for.
         </p>

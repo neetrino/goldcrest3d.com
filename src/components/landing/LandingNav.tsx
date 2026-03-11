@@ -4,6 +4,12 @@ import {
   LANDING_SECTION_IDS,
   type LandingSectionId,
 } from "@/constants";
+import Image from "next/image";
+import Link from "next/link";
+
+/** Logo from Figma Header (node 92:255). Replace with /images/logo.png when available. */
+const LOGO_SRC =
+  "https://www.figma.com/api/mcp/asset/e8a85363-92c6-44c0-a48d-d4b356c99573";
 
 const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
   { id: LANDING_SECTION_IDS.HERO, label: "Home" },
@@ -16,28 +22,43 @@ const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
 export function LandingNav() {
   return (
     <nav
-      className="sticky top-0 z-50 border-b border-[var(--foreground)]/10 bg-[var(--background)]/90 backdrop-blur-md"
+      className="sticky top-0 z-50 h-[69px] w-full border-b border-[var(--foreground)]/5 bg-white"
       aria-label="Main navigation"
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-8 px-5 py-4 md:px-8 md:py-4">
-        <a
+      <div className="flex h-full w-full items-center justify-between gap-8 pl-[51px] pr-[51px]">
+        <Link
           href={`#${LANDING_SECTION_IDS.HERO}`}
-          className="text-lg font-semibold text-[var(--foreground)] no-underline hover:opacity-80"
+          className="flex shrink-0 items-center"
+          aria-label="Goldcrest 3D — Home"
         >
-          Goldcrest 3D
-        </a>
-        <ul className="flex flex-wrap items-center gap-6 md:gap-8">
+          <Image
+            src={LOGO_SRC}
+            alt="Goldcrest 3D"
+            width={83}
+            height={48}
+            sizes="100vw"
+            className="relative h-12 w-[83px] max-h-full max-w-full overflow-hidden object-cover"
+            priority
+          />
+        </Link>
+        <ul className="hidden flex-1 list-none justify-center gap-10 md:flex">
           {NAV_ITEMS.map(({ id, label }) => (
             <li key={id}>
-              <a
+              <Link
                 href={`#${id}`}
-                className="rounded-md px-3 py-2 text-sm tracking-wide text-[var(--foreground)]/75 transition hover:bg-[var(--foreground)]/10 hover:text-[var(--foreground)] focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
+                className="text-[14px] font-medium leading-5 text-[#0f172a] no-underline transition hover:opacity-80 focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
               >
                 {label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
+        <Link
+          href={`#${LANDING_SECTION_IDS.QUOTE}`}
+          className="nav-cta-gradient flex h-14 shrink-0 items-center justify-center rounded-full px-6 py-2.5 text-base font-bold leading-5 text-white shadow-sm transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50"
+        >
+          Request a Quote
+        </Link>
       </div>
     </nav>
   );
