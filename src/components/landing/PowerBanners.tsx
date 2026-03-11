@@ -1,90 +1,41 @@
 "use client";
 
 import { LANDING_SECTION_IDS } from "@/constants";
-import { useEffect, useState } from "react";
+import { GetAQuoteButton } from "./GetAQuoteButton";
 
-const BANNERS = [
-  {
-    title: "Goldcrest 3D",
-    subtitle: "Modelling and manufacturing",
-    accent: "3D modelling, CAD, finished product",
-  },
-  {
-    title: "Engineering precision",
-    subtitle: "Specialised solutions",
-    accent: "From prototype to series production",
-  },
-  {
-    title: "One partner",
-    subtitle: "Idea to product",
-    accent: "Modelling, materials, manufacturing",
-  },
-] as const;
+/** Hero — Figma 92:319 (3d 1) + 92:267 (text block at x=849, y=295, 896×292) */
+const HERO_BG_IMAGE = "/images/hero-3d-bg.png";
 
-const ROTATE_INTERVAL_MS = 6000;
-
+/** Figma 1920×883: content frame 92:267 at left=849 (44.22%), top=295 (33.41%), width=896 (46.67%) */
 export function PowerBanners() {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const t = setInterval(() => {
-      setIndex((i) => (i + 1) % BANNERS.length);
-    }, ROTATE_INTERVAL_MS);
-    return () => clearInterval(t);
-  }, []);
-
   return (
     <section
       id={LANDING_SECTION_IDS.HERO}
-      className="relative min-h-[85vh] overflow-hidden bg-[var(--foreground)]/5"
-      aria-label="Hero banners"
+      className="relative w-full overflow-hidden bg-[#1a1a1a] aspect-[1920/883]"
+      aria-label="Hero"
     >
-      <div className="mx-auto flex min-h-[85vh] max-w-6xl flex-col justify-center px-4 py-20 md:px-6 md:py-28">
-        {BANNERS.map((banner, i) => (
-          <div
-            key={i}
-            className="absolute inset-0 flex flex-col justify-center px-4 py-20 md:px-6 md:py-28"
-            style={{
-              opacity: i === index ? 1 : 0,
-              pointerEvents: i === index ? "auto" : "none",
-              transition: "opacity 0.6s ease",
-            }}
-            aria-hidden={i !== index}
-          >
-            <div className="mx-auto max-w-3xl text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-[var(--foreground)] md:text-5xl lg:text-6xl">
-                {banner.title}
-              </h1>
-              <p className="mt-4 text-lg text-[var(--foreground)]/80 md:text-xl">
-                {banner.subtitle}
-              </p>
-              <p className="mt-2 text-sm text-[var(--foreground)]/60 md:text-base">
-                {banner.accent}
-              </p>
-            </div>
-          </div>
-        ))}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <img
+          src={HERO_BG_IMAGE}
+          alt=""
+          className="absolute h-[127.56%] left-[-10.32%] max-w-none top-[-3.43%] w-[110.3%]"
+          width={1920}
+          height={1128}
+          fetchPriority="high"
+        />
       </div>
 
-      {/* Dots */}
-      <div
-        className="absolute bottom-8 left-0 right-0 flex justify-center gap-2"
-        role="tablist"
-        aria-label="Banners"
-      >
-        {BANNERS.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            role="tab"
-            aria-selected={i === index}
-            aria-label={`Banner ${i + 1}`}
-            className={`h-2 w-2 rounded-full bg-[var(--foreground)] transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/40 ${
-              i === index ? "opacity-100" : "opacity-30 hover:opacity-60"
-            }`}
-            onClick={() => setIndex(i)}
-          />
-        ))}
+      {/* Content 92:267 — same position as Figma: left 44.22%, top 33.41%, width 46.67% (896px max) */}
+      <div className="absolute left-[44.22%] top-[33.41%] z-10 w-[46.67%] max-w-[896px] flex flex-col gap-[32px] items-end">
+        <h1 className="min-w-full shrink-0 text-right font-black leading-[72px] tracking-[-1.8px] text-white text-[clamp(2.5rem,5vw,72px)]">
+          3D Production-Ready Modeling
+        </h1>
+        {/* 92:269 — Inter Light Italic, 20px, leading 28px, white/90, text-center */}
+        <p className="min-w-full shrink-0 text-center font-light italic leading-[28px] text-white/90 text-[19px]">
+          Engineered for casting, printing and precise stone setting. Every
+          micron accounted for.
+        </p>
+        <GetAQuoteButton className="shrink-0" />
       </div>
     </section>
   );
