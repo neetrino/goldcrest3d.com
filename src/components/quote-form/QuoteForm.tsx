@@ -113,6 +113,7 @@ export function QuoteForm() {
               width={24}
               height={30}
               className="object-contain"
+              unoptimized
             />
           </span>
           <p className="mt-1 font-manrope text-[14px] font-normal leading-[20px] text-[rgba(24,22,16,0.6)]">

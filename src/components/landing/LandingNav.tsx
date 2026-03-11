@@ -7,7 +7,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-/** Logo from Figma Header (node 92:263). */
 const LOGO_SRC =
   "https://www.figma.com/api/mcp/asset/ce31ef4f-5914-417c-9ba4-4c47b79e2bff";
 
@@ -39,6 +38,7 @@ export function LandingNav() {
             sizes="100vw"
             className="relative h-12 w-[83px] max-h-full max-w-full overflow-hidden object-cover"
             priority
+            unoptimized
           />
         </Link>
         <ul className="hidden flex-1 list-none justify-center gap-[60px] md:flex md:max-w-[711px]" aria-label="Nav links">

@@ -1,5 +1,6 @@
 /**
- * Landing page image URLs (Figma MCP assets; replace with /public when ready).
+ * Landing page image URLs (Figma MCP assets). Use unoptimized so Next doesn't proxy (avoids 400).
+ * Replace with /images/... when you export final assets to public.
  */
 
 export const LANDING_IMAGES = {

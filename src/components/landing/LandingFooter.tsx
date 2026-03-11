@@ -18,6 +18,7 @@ export function LandingFooter() {
                 fill
                 className="object-contain object-left"
                 sizes="111px"
+                unoptimized
               />
             </div>
             <p className="font-manrope font-light leading-[24px] text-[rgba(24,22,16,0.6)] text-[16px]">
@@ -67,6 +68,7 @@ export function LandingFooter() {
                   width={48}
                   height={48}
                   className="rounded-full"
+                  unoptimized
                 />
               </a>
               <a
@@ -82,6 +84,7 @@ export function LandingFooter() {
                   width={48}
                   height={48}
                   className="rounded-full"
+                  unoptimized
                 />
               </a>
               <a
@@ -97,6 +100,7 @@ export function LandingFooter() {
                   width={48}
                   height={48}
                   className="rounded-full"
+                  unoptimized
                 />
               </a>
             </div>

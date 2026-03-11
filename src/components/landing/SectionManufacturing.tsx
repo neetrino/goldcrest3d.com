@@ -53,6 +53,7 @@ export function SectionManufacturing() {
                     width={24}
                     height={24}
                     className="h-full w-full"
+                    unoptimized
                   />
                 </span>
               </button>
@@ -62,6 +63,7 @@ export function SectionManufacturing() {
             <Image
               src={LANDING_IMAGES.manufacturing}
               alt="CAD and manufacturing"
+              unoptimized
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"

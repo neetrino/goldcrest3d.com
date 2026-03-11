@@ -56,6 +56,7 @@ export function SectionFounder() {
               fill
               className="object-cover object-top"
               sizes="(max-width: 768px) 100vw, 493px"
+              unoptimized
             />
           </div>
         </div>

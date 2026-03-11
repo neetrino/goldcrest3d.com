@@ -64,6 +64,7 @@ export function PowerBanners() {
                   className="object-cover"
                   sizes="100vw"
                   priority={slide.id === "modeling"}
+                  unoptimized
                 />
               ) : (
                 <Image
@@ -73,6 +74,7 @@ export function PowerBanners() {
                   className="object-cover"
                   sizes="100vw"
                   priority
+                  unoptimized
                 />
               )}
             </div>
