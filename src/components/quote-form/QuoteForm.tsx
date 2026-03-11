@@ -105,7 +105,7 @@ export function QuoteForm() {
         disabled={isPending}
         className="rounded bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] hover:opacity-90 disabled:opacity-60"
       >
-        {isPending ? "Sending…" : "Send request"}
+        {isPending ? "Sending…" : "Submit Request"}
       </button>
     </form>
   );

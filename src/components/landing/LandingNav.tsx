@@ -22,7 +22,7 @@ const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
 export function LandingNav() {
   return (
     <nav
-      className="sticky top-0 z-50 h-[69px] w-full bg-white"
+      className="sticky top-0 z-50 h-[70px] w-full bg-white/95 backdrop-blur-[6px]"
       aria-label="Main navigation"
     >
       <div className="flex h-full w-full items-center justify-between pl-[51px] pr-[51px]">

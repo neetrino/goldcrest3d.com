@@ -9,6 +9,7 @@ export const LANDING_SECTION_IDS = {
   SPECIALIZATIONS: "specializations",
   MANUFACTURING: "manufacturing",
   FOUNDER: "founder",
+  FINISHED_CREATIONS: "finished-creations",
   PROCESS: "process",
   QUOTE: "quote",
   FOOTER: "footer",

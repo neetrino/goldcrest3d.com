@@ -28,8 +28,7 @@ export function AdminNav() {
           >
             {NAV_ITEMS.map(({ href, label }) => {
               const isActive =
-                pathname === href ||
-                (href !== "/admin" && pathname.startsWith(href + "/"));
+                pathname === href || pathname.startsWith(href + "/");
               return (
                 <Link
                   key={href}
