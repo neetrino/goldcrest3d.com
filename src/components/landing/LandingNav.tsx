@@ -7,9 +7,9 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-/** Logo from Figma Header (node 92:255). Replace with /images/logo.png when available. */
+/** Logo from Figma Header (node 92:263). Replace with /images/logo.png when available. */
 const LOGO_SRC =
-  "https://www.figma.com/api/mcp/asset/e8a85363-92c6-44c0-a48d-d4b356c99573";
+  "https://www.figma.com/api/mcp/asset/fd491da2-4ff4-4cd2-8e9b-e83cf4d24502";
 
 const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
   { id: LANDING_SECTION_IDS.HERO, label: "Home" },
@@ -22,10 +22,10 @@ const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
 export function LandingNav() {
   return (
     <nav
-      className="sticky top-0 z-50 h-[69px] w-full border-b border-[var(--foreground)]/5 bg-white"
+      className="sticky top-0 z-50 h-[69px] w-full bg-white"
       aria-label="Main navigation"
     >
-      <div className="flex h-full w-full items-center justify-between gap-8 pl-[51px] pr-[51px]">
+      <div className="flex h-full w-full items-center justify-between pl-[51px] pr-[51px]">
         <Link
           href={`#${LANDING_SECTION_IDS.HERO}`}
           className="flex shrink-0 items-center"
@@ -41,7 +41,7 @@ export function LandingNav() {
             priority
           />
         </Link>
-        <ul className="hidden flex-1 list-none justify-center gap-[60px] md:flex">
+        <ul className="hidden flex-1 list-none justify-center gap-[60px] md:flex md:max-w-[711px]" aria-label="Nav links">
           {NAV_ITEMS.map(({ id, label }) => (
             <li key={id}>
               <Link
@@ -55,7 +55,7 @@ export function LandingNav() {
         </ul>
         <Link
           href={`#${LANDING_SECTION_IDS.QUOTE}`}
-          className="nav-cta-gradient flex h-14 shrink-0 items-center justify-center rounded-full px-6 py-2.5 text-base font-bold leading-5 text-white shadow-sm transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50"
+          className="nav-cta-gradient mr-10 flex h-14 shrink-0 items-center justify-center rounded-full px-6 py-2.5 text-base font-bold leading-5 text-white shadow-sm transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50"
         >
           Request a Quote
         </Link>
