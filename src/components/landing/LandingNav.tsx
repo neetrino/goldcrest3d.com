@@ -37,7 +37,6 @@ export function LandingNav() {
             height={48}
             sizes="100vw"
             className="relative h-12 w-[83px] max-h-full max-w-full overflow-hidden object-cover"
-            priority
             unoptimized
           />
         </Link>

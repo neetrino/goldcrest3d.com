@@ -112,6 +112,8 @@ export function LandingFooter() {
                 width={368}
                 height={96}
                 className="h-full w-full object-cover"
+                style={{ height: "auto" }}
+                loading="eager"
                 unoptimized
               />
             </div>
