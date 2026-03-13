@@ -5,17 +5,17 @@ import { LANDING_IMAGES } from "@/constants/landing-assets";
 import Image from "next/image";
 import { useState } from "react";
 
-/** Figma: row1 — 3 images, row2 — 4 images (extra ring). Equal cells, gap 16px. */
-const ROW1_IMAGES = [
-  LANDING_IMAGES.finishedCnc,
-  LANDING_IMAGES.finishedCopper,
-  LANDING_IMAGES.finishedOpacity,
+/** Row1: 3 items, Row2: 4 items (incl. extra ring). Each has id gallery-item-1 … gallery-item-7 for per-item sizing. */
+const ROW1_ITEMS = [
+  { id: "gallery-item-1", src: LANDING_IMAGES.finishedCnc },
+  { id: "gallery-item-2", src: LANDING_IMAGES.finishedCopper },
+  { id: "gallery-item-3", src: LANDING_IMAGES.finishedOpacity },
 ];
-const ROW2_IMAGES = [
-  LANDING_IMAGES.finishedCopper,
-  LANDING_IMAGES.finishedOpacity,
-  LANDING_IMAGES.finishedCnc,
-  LANDING_IMAGES.finishedCopper,
+const ROW2_ITEMS = [
+  { id: "gallery-item-4", src: LANDING_IMAGES.finishedCopper },
+  { id: "gallery-item-5", src: LANDING_IMAGES.finishedOpacity },
+  { id: "gallery-item-6", src: LANDING_IMAGES.finishedCnc },
+  { id: "gallery-item-7", src: LANDING_IMAGES.finishedCopper },
 ];
 
 export function SectionFinishedCreations() {
@@ -35,31 +35,57 @@ export function SectionFinishedCreations() {
           Finished Creations
         </h2>
         <div className="mt-9 flex flex-col gap-4">
-          <div className="grid grid-cols-3 gap-4">
-            {ROW1_IMAGES.map((src, i) => (
+          <div className="flex justify-center">
+            <div className="grid grid-cols-[540px_575px_540px] gap-x-2 gap-y-4">
+            {ROW1_ITEMS.map((item) => (
               <div
-                key={`r1-${i}`}
-                className="relative aspect-square overflow-hidden rounded-[16px]"
+                key={item.id}
+                id={item.id}
+                className={`relative overflow-hidden rounded-[16px] ${
+                  item.id === "gallery-item-1"
+                    ? "h-[360px] w-[540px] aspect-[145/84]"
+                    : item.id === "gallery-item-2"
+                      ? "h-[360px] w-[575px] aspect-[79/42]"
+                      : item.id === "gallery-item-3"
+                        ? "h-[360px] w-[540px] aspect-[145/84]"
+                        : "aspect-square"
+                }`}
               >
                 <Image
-                  src={src}
+                  src={item.src}
                   alt=""
                   fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 33vw, 390px"
+                  className={
+                    item.id === "gallery-item-1"
+                      ? "object-cover object-position-[0_-0.215px]"
+                      : item.id === "gallery-item-2"
+                        ? "object-cover object-position-[0_-176.4975px]"
+                        : "object-cover"
+                  }
+                  sizes={
+                    item.id === "gallery-item-1"
+                      ? "540px"
+                      : item.id === "gallery-item-2"
+                        ? "575px"
+                        : item.id === "gallery-item-3"
+                          ? "540px"
+                          : "(max-width: 768px) 33vw, 390px"
+                  }
                   unoptimized
                 />
               </div>
             ))}
+            </div>
           </div>
           <div className="grid grid-cols-4 gap-4">
-            {ROW2_IMAGES.map((src, i) => (
+            {ROW2_ITEMS.map((item) => (
               <div
-                key={`r2-${i}`}
+                key={item.id}
+                id={item.id}
                 className="relative aspect-square overflow-hidden rounded-[16px]"
               >
                 <Image
-                  src={src}
+                  src={item.src}
                   alt=""
                   fill
                   className="object-cover"
