@@ -34,7 +34,7 @@ export function SectionFinishedCreations() {
         >
           Finished Creations
         </h2>
-        <div className="mt-9 flex flex-col items-center gap-4">
+        <div className="mt-9 flex flex-col items-center gap-2">
           <div className="grid grid-cols-[540px_575px_540px] gap-x-2 gap-y-4">
             {ROW1_ITEMS.map((item) => (
               <div
@@ -80,7 +80,7 @@ export function SectionFinishedCreations() {
               <div
                 key={item.id}
                 id={item.id}
-                className="relative h-[220px] w-full min-w-0 overflow-hidden rounded-[16px]"
+                className="relative h-[235px] w-full min-w-0 overflow-hidden rounded-[16px]"
               >
                 <Image
                   src={item.src}
