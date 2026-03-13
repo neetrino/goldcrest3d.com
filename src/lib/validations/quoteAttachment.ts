@@ -33,3 +33,15 @@ export function validateQuoteAttachment(
 
   return null;
 }
+
+/**
+ * Validates an array of files for the quote form.
+ * Returns the first error message found, or null if all valid (or empty).
+ */
+export function validateQuoteAttachments(files: File[]): string | null {
+  for (const file of files) {
+    const err = validateQuoteAttachment(file);
+    if (err) return err;
+  }
+  return null;
+}

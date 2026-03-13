@@ -5,7 +5,10 @@ import { submitQuote } from "@/app/actions/quote";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import type { QuoteSubmitResult } from "@/app/actions/quote";
 import Image from "next/image";
-import { QUOTE_ATTACHMENT_ALLOWED_MIME_TYPES } from "@/lib/validations/quoteAttachment";
+import {
+  QUOTE_ATTACHMENT_ALLOWED_MIME_TYPES,
+  validateQuoteAttachment,
+} from "@/lib/validations/quoteAttachment";
 
 const QUOTE_ATTACHMENT_FIELD_NAME = "attachment";
 /** Picker shows all images + PDF; server still validates PNG, JPG, PDF only */
@@ -20,15 +23,23 @@ const inputClass =
 
 const IMAGE_MIME_PREFIX = "image/";
 
-function setFileInputFiles(input: HTMLInputElement | null, file: File | null) {
+type FileWithPreview = { file: File; previewUrl: string | null };
+
+function setFileInputFiles(input: HTMLInputElement | null, files: File[]) {
   if (!input) return;
   const dt = new DataTransfer();
-  if (file) dt.items.add(file);
+  for (const f of files) dt.items.add(f);
   input.files = dt.files;
 }
 
 function isImageFile(file: File): boolean {
   return (file.type ?? "").toLowerCase().startsWith(IMAGE_MIME_PREFIX);
+}
+
+function buildFileWithPreview(file: File): FileWithPreview {
+  const previewUrl =
+    isImageFile(file) ? URL.createObjectURL(file) : null;
+  return { file, previewUrl };
 }
 
 export function QuoteForm() {
@@ -37,44 +48,53 @@ export function QuoteForm() {
     FormData
   >(submitQuote, initialState);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState("");
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const previewUrlRef = useRef<string | null>(null);
+  const [items, setItems] = useState<FileWithPreview[]>([]);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
-  const updateFilePreview = useCallback((file: File | null) => {
-    if (previewUrlRef.current) {
-      URL.revokeObjectURL(previewUrlRef.current);
-      previewUrlRef.current = null;
+  const addFiles = useCallback((newFiles: File[]) => {
+    const valid: FileWithPreview[] = [];
+    let firstError: string | null = null;
+    for (const file of newFiles) {
+      const err = validateQuoteAttachment(file);
+      if (err) {
+        if (!firstError) firstError = err;
+        continue;
+      }
+      valid.push(buildFileWithPreview(file));
     }
-    setFileName(file ? file.name : "");
-    if (file && isImageFile(file)) {
-      const url = URL.createObjectURL(file);
-      previewUrlRef.current = url;
-      setPreviewUrl(url);
-    } else {
-      setPreviewUrl(null);
-    }
+    setValidationError(firstError);
+    setItems((prev) => [...prev, ...valid]);
+  }, []);
+
+  const removeFile = useCallback((index: number) => {
+    setItems((prev) => {
+      const next = prev.slice();
+      const removed = next.splice(index, 1)[0];
+      if (removed?.previewUrl) URL.revokeObjectURL(removed.previewUrl);
+      return next;
+    });
+    setValidationError(null);
   }, []);
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0] ?? null;
-      updateFilePreview(file);
+      const fileList = e.target.files;
+      if (!fileList?.length) return;
+      const arr = Array.from(fileList);
+      addFiles(arr);
+      e.target.value = "";
     },
-    [updateFilePreview],
+    [addFiles],
   );
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
-      const file = e.dataTransfer.files?.[0];
-      if (!file) return;
-      const type = (file.type ?? "").toLowerCase();
-      if (!QUOTE_ATTACHMENT_ALLOWED_MIME_TYPES.includes(type)) return;
-      setFileInputFiles(fileInputRef.current, file);
-      updateFilePreview(file);
+      const fileList = e.dataTransfer.files;
+      if (!fileList?.length) return;
+      addFiles(Array.from(fileList));
     },
-    [updateFilePreview],
+    [addFiles],
   );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -82,18 +102,32 @@ export function QuoteForm() {
     e.dataTransfer.dropEffect = "copy";
   }, []);
 
+  // Sync hidden input with current files so form submit sends them
+  useEffect(() => {
+    setFileInputFiles(
+      fileInputRef.current,
+      items.map((i) => i.file),
+    );
+  }, [items]);
+
+  const itemsRef = useRef<FileWithPreview[]>([]);
+  itemsRef.current = items;
   useEffect(() => {
     if (state?.success === true) {
-      setFileInputFiles(fileInputRef.current, null);
-      updateFilePreview(null);
+      itemsRef.current.forEach((i) => {
+        if (i.previewUrl) URL.revokeObjectURL(i.previewUrl);
+      });
+      setItems([]);
+      setValidationError(null);
+      setFileInputFiles(fileInputRef.current, []);
     }
-  }, [state?.success, updateFilePreview]);
+  }, [state?.success]);
 
   useEffect(() => {
     return () => {
-      if (previewUrlRef.current) {
-        URL.revokeObjectURL(previewUrlRef.current);
-      }
+      itemsRef.current.forEach((i) => {
+        if (i.previewUrl) URL.revokeObjectURL(i.previewUrl);
+      });
     };
   }, []);
 
@@ -169,37 +203,54 @@ export function QuoteForm() {
             htmlFor="quote-attachment"
             className="flex w-full cursor-pointer flex-col items-center justify-center"
           >
-            <span className="sr-only">Attach file (optional)</span>
+            <span className="sr-only">Attach files (optional)</span>
             <input
               ref={fileInputRef}
               id="quote-attachment"
               name={QUOTE_ATTACHMENT_FIELD_NAME}
               type="file"
               accept={ACCEPT_ATTRIBUTE}
+              multiple
               disabled={isPending}
               className="sr-only"
               onChange={handleFileChange}
             />
-            {previewUrl ? (
-              <div className="mt-1 flex flex-col items-center gap-2">
-                <img
-                  src={previewUrl}
-                  alt=""
-                  className="max-h-[140px] max-w-full rounded object-contain"
-                />
-                <p className="font-manrope text-[12px] font-normal leading-[16px] text-[rgba(24,22,16,0.6)]">
-                  {fileName}
-                </p>
-              </div>
-            ) : fileName && fileName.toLowerCase().endsWith(".pdf") ? (
-              <div className="mt-1 flex flex-col items-center gap-1">
-                <span className="rounded bg-neutral-200 px-2 py-1 font-manrope text-xs font-medium text-neutral-600">
-                  PDF
-                </span>
-                <p className="font-manrope text-[12px] font-normal leading-[16px] text-[rgba(24,22,16,0.6)]">
-                  {fileName}
-                </p>
-              </div>
+            {items.length > 0 ? (
+              <ul className="mt-1 w-full space-y-2" role="list">
+                {items.map((item, index) => (
+                  <li
+                    key={`${item.file.name}-${index}`}
+                    className="flex items-center gap-2 rounded border border-[#EEEEEE] bg-white px-3 py-2"
+                  >
+                    {item.previewUrl ? (
+                      <img
+                        src={item.previewUrl}
+                        alt=""
+                        className="h-10 w-10 shrink-0 rounded object-cover"
+                      />
+                    ) : (
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-neutral-200 font-manrope text-[10px] font-medium text-neutral-600">
+                        PDF
+                      </span>
+                    )}
+                    <span className="min-w-0 flex-1 truncate font-manrope text-[12px] font-normal leading-[16px] text-[rgba(24,22,16,0.6)]">
+                      {item.file.name}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        removeFile(index);
+                      }}
+                      disabled={isPending}
+                      className="shrink-0 rounded p-1 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600 disabled:opacity-50"
+                      aria-label={`Remove ${item.file.name}`}
+                    >
+                      <span className="text-lg leading-none" aria-hidden>×</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
             ) : (
               <>
                 <span className="flex h-[30px] w-6 items-center justify-center">
@@ -216,7 +267,7 @@ export function QuoteForm() {
                   or drag and drop
                 </p>
                 <p className="font-manrope text-[12px] font-normal leading-[16px] text-[rgba(24,22,16,0.4)]">
-                  {fileName || "No file chosen"}
+                  No file chosen
                 </p>
               </>
             )}
@@ -226,6 +277,14 @@ export function QuoteForm() {
           </label>
         </div>
       </div>
+      {validationError && (
+        <p
+          className="text-center font-manrope text-[12px] font-normal leading-[16px] text-red-600"
+          role="alert"
+        >
+          {validationError}
+        </p>
+      )}
 
       {state?.success === false && (
         <p

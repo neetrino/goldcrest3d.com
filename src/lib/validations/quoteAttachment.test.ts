@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   validateQuoteAttachment,
+  validateQuoteAttachments,
   QUOTE_ATTACHMENT_MAX_BYTES,
 } from "./quoteAttachment";
 
@@ -44,5 +45,35 @@ describe("validateQuoteAttachment", () => {
     expect(validateQuoteAttachment(file({ type: "image/gif" }))).toBe(
       "Only PNG, JPG, and PDF files are allowed."
     );
+  });
+});
+
+describe("validateQuoteAttachments", () => {
+  it("returns null for empty array", () => {
+    expect(validateQuoteAttachments([])).toBeNull();
+  });
+
+  it("returns null for valid files", () => {
+    expect(
+      validateQuoteAttachments([
+        file({ type: "image/png" }),
+        file({ type: "application/pdf" }),
+      ])
+    ).toBeNull();
+  });
+
+  it("returns first error for invalid file in array", () => {
+    expect(
+      validateQuoteAttachments([
+        file({ type: "image/png" }),
+        file({ type: "image/webp" }),
+      ])
+    ).toBe("Only PNG, JPG, and PDF files are allowed.");
+    expect(
+      validateQuoteAttachments([
+        file({ type: "image/png" }),
+        file({ size: QUOTE_ATTACHMENT_MAX_BYTES + 1 }),
+      ])
+    ).toBe("File must be 10MB or smaller.");
   });
 });

@@ -5,7 +5,7 @@ import { prisma } from "@/lib/db";
 import { sendNewLeadNotificationToAdmin } from "@/lib/email";
 import { logger } from "@/lib/logger";
 import { uploadToR2 } from "@/lib/storage";
-import { validateQuoteAttachment } from "@/lib/validations/quoteAttachment";
+import { validateQuoteAttachments } from "@/lib/validations/quoteAttachment";
 import { quoteFormSchema } from "@/lib/validations/quoteForm";
 
 const FORM_FIELD_ATTACHMENT = "attachment";
@@ -26,7 +26,10 @@ export async function submitQuote(
   const fullName = formData.get("fullName");
   const email = formData.get("email");
   const message = formData.get("message");
-  const file = formData.get(FORM_FIELD_ATTACHMENT);
+  const rawFiles = formData.getAll(FORM_FIELD_ATTACHMENT);
+  const filesForUpload = rawFiles.filter(
+    (f): f is File => f instanceof File && f.size > 0,
+  );
 
   const parsed = quoteFormSchema.safeParse({
     fullName: typeof fullName === "string" ? fullName : "",
@@ -41,13 +44,12 @@ export async function submitQuote(
     return { success: false, error: msg };
   }
 
-  const fileForUpload = file instanceof File ? file : null;
-  const attachmentError = validateQuoteAttachment(fileForUpload);
+  const attachmentError = validateQuoteAttachments(filesForUpload);
   if (attachmentError) return { success: false, error: attachmentError };
 
   const attachmentKeys: string[] = [];
-  if (fileForUpload && fileForUpload.size > 0) {
-    const key = await uploadToR2(R2_PREFIXES.QUOTES, fileForUpload);
+  for (const file of filesForUpload) {
+    const key = await uploadToR2(R2_PREFIXES.QUOTES, file);
     if (key) attachmentKeys.push(key);
   }
 
