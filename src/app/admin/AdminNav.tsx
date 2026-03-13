@@ -1,8 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AdminLogoutButton } from "./AdminLogoutButton";
+
+const LOGO_SRC =
+  "https://www.figma.com/api/mcp/asset/ce31ef4f-5914-417c-9ba4-4c47b79e2bff";
 
 const NAV_ITEMS = [
   { href: "/admin/leads", label: "Leads" },
@@ -13,14 +17,24 @@ export function AdminNav() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-neutral-200 bg-[var(--background)]">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+    <header className="sticky top-0 z-40 h-[70px] border-b border-neutral-200 bg-[var(--background)]">
+      <div className="flex h-full w-full items-center justify-between pl-[51px] pr-[51px]">
         <div className="flex items-center gap-1">
           <Link
             href="/admin/leads"
-            className="text-base font-semibold text-[var(--foreground)] no-underline hover:opacity-85"
+            className="flex shrink-0 items-center no-underline hover:opacity-85"
+            aria-label="Goldcrest Admin — home"
           >
-            Goldcrest Admin
+            <Image
+              src={LOGO_SRC}
+              alt="Goldcrest Admin"
+              width={83}
+              height={48}
+              sizes="100vw"
+              className="relative h-12 w-[83px] max-h-full max-w-full overflow-hidden object-cover"
+              priority
+              unoptimized
+            />
           </Link>
           <nav
             className="ml-6 flex items-center gap-1"
