@@ -40,26 +40,26 @@ export function SectionProcess() {
       className="bg-[#f8f7f6] px-4 py-14 md:px-6 md:py-[56px]"
       aria-labelledby="process-heading"
     >
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[1400px] px-0">
         <h2
           id="process-heading"
-          className="font-manrope text-center font-extrabold uppercase leading-[36px] tracking-[3px] text-[#0f172a] text-[30px]"
+          className="font-manrope text-center font-extrabold uppercase leading-tight tracking-[3px] text-[#0f172a] text-[30px] md:text-[34px]"
         >
           Our Engineering Process
         </h2>
-        <div className="mt-11 flex flex-wrap justify-center gap-[46px] md:gap-[46px]">
+        <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-6 lg:mt-12">
           {STEPS.map((step) => (
             <div
               key={step.num}
-              className="w-full max-w-[291px] shrink-0 space-y-[22px]"
+              className="flex min-w-0 flex-col space-y-4 lg:space-y-3"
             >
-              <span className="font-manrope block font-normal leading-[60px] text-[#c69f58] text-[60px]">
+              <span className="font-manrope block font-normal leading-none text-[#c69f58] text-[42px] lg:text-[44px]">
                 {step.num}
               </span>
-              <h3 className="font-manrope font-bold leading-[28px] text-[#181610] text-[20px]">
+              <h3 className="font-manrope font-bold leading-tight text-[#181610] text-[20px] lg:text-[19px]">
                 {step.title}
               </h3>
-              <p className="font-manrope font-light leading-[24px] text-[rgba(24,22,16,0.6)] text-[16px]">
+              <p className="font-manrope font-light leading-[1.45] text-[rgba(24,22,16,0.6)] text-[16px] lg:text-[15px]">
                 {step.description}
               </p>
             </div>
