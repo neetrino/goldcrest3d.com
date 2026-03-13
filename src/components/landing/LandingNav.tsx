@@ -41,7 +41,7 @@ export function LandingNav() {
             unoptimized
           />
         </Link>
-        <ul className="hidden flex-1 list-none justify-center gap-[60px] md:flex md:max-w-[711px]" aria-label="Nav links">
+        <ul className="hidden flex-1 list-none justify-center gap-10 md:flex md:max-w-[711px]" aria-label="Nav links">
           {NAV_ITEMS.map(({ id, label }) => (
             <li key={id}>
               <Link

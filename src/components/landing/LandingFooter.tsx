@@ -9,7 +9,7 @@ export function LandingFooter() {
       aria-label="Site footer"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-4 md:gap-12">
           <div className="flex max-w-[384px] flex-col gap-[10px]">
             <div className="relative h-[63px] w-[111px]">
               <Image
@@ -26,16 +26,17 @@ export function LandingFooter() {
               for high-end manufacturing.
             </p>
           </div>
+          <div />
           <div>
             <h3 className="font-bold leading-[16px] tracking-[1.2px] text-[#0f172a] text-[12px] uppercase">
               Contact
             </h3>
             <div className="mt-[40px] flex flex-col gap-[13px]">
               <a
-                href="mailto:hello@goldcrest3d.com"
+                href="mailto:hello@ds-jewelry.studio"
                 className="text-[14px] leading-[20px] text-[#64748b] hover:text-[var(--foreground)]"
               >
-                hello@goldcrest3d.com
+                hello@ds-jewelry.studio
               </a>
               <a
                 href="tel:+15559023481"
@@ -59,7 +60,7 @@ export function LandingFooter() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 transition hover:opacity-80"
+                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
                 aria-label="Instagram"
               >
                 <Image
@@ -75,7 +76,7 @@ export function LandingFooter() {
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 transition hover:opacity-80"
+                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
                 aria-label="LinkedIn"
               >
                 <Image
@@ -91,7 +92,7 @@ export function LandingFooter() {
                 href="https://youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 transition hover:opacity-80"
+                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
                 aria-label="YouTube"
               >
                 <Image
@@ -104,11 +105,21 @@ export function LandingFooter() {
                 />
               </a>
             </div>
+            <div className="mt-4 h-24 w-full overflow-hidden rounded-lg bg-slate-200 grayscale opacity-50">
+              <Image
+                src={LANDING_IMAGES.finishedCnc}
+                alt=""
+                width={368}
+                height={96}
+                className="h-full w-full object-cover"
+                unoptimized
+              />
+            </div>
           </div>
         </div>
         <div className="mt-0 flex flex-col gap-4 border-t border-[#e2e8f0] pt-10 md:flex-row md:items-center md:justify-between">
           <p className="font-bold leading-[15px] tracking-[1px] text-[#94a3b8] text-[10px] uppercase">
-            © {new Date().getFullYear()} Goldcrest 3D. All rights reserved.
+            © 2024 DS Studio Engineering. All Rights Reserved.
           </p>
           <div className="flex gap-8">
             <Link

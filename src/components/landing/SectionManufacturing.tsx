@@ -26,11 +26,18 @@ export function SectionManufacturing() {
       <div className="mx-auto max-w-7xl">
         <h2
           id="manufacturing-heading"
-          className="font-manrope text-center font-normal leading-[40px] tracking-[-0.9px] text-black text-[48px]"
+          className="font-manrope text-left font-normal leading-[40px] tracking-[-0.9px] text-black text-[48px]"
         >
           Manufacturing Intelligence
         </h2>
-        <div className="mt-12 grid gap-8 lg:grid-cols-[1fr,1fr] lg:items-start">
+        <div
+          className="mt-[120px] overflow-hidden rounded-[16px] p-6 lg:p-8"
+          style={{
+            background:
+              "linear-gradient(-65.02deg, rgb(248, 247, 246) 0.94%, rgb(192, 198, 205) 99.4%)",
+          }}
+        >
+          <div className="grid gap-8 lg:grid-cols-[1fr,1fr] lg:items-stretch">
           <div className="space-y-3">
             {ACCORDION_ITEMS.map((item, i) => (
               <button
@@ -68,6 +75,7 @@ export function SectionManufacturing() {
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
+          </div>
           </div>
         </div>
       </div>

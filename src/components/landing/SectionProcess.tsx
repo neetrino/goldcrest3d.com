@@ -37,7 +37,7 @@ export function SectionProcess() {
   return (
     <section
       id={LANDING_SECTION_IDS.PROCESS}
-      className="bg-[#f8f7f6] px-4 py-14 md:px-6 md:py-14"
+      className="bg-[#f8f7f6] px-4 py-14 md:px-6 md:py-[56px]"
       aria-labelledby="process-heading"
     >
       <div className="mx-auto max-w-7xl">
@@ -47,7 +47,7 @@ export function SectionProcess() {
         >
           Our Engineering Process
         </h2>
-        <div className="mt-11 flex flex-wrap justify-center gap-[46px]">
+        <div className="mt-11 flex flex-wrap justify-center gap-[46px] md:gap-[46px]">
           {STEPS.map((step) => (
             <div
               key={step.num}

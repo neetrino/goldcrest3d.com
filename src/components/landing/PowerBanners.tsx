@@ -53,7 +53,7 @@ export function PowerBanners() {
       {SLIDES.map((slide) => (
         <div
           key={slide.id}
-          className="relative flex h-[100dvh] min-h-[560px] w-full shrink-0 overflow-hidden md:min-h-[600px]"
+          className="relative flex min-h-[560px] w-full shrink-0 overflow-hidden md:min-h-[883px]"
         >
           <div className="absolute inset-0 pointer-events-none">
               {slide.useRemote ? (
@@ -94,8 +94,8 @@ export function PowerBanners() {
               <h1
                 className={
                   slide.id === "rendering"
-                    ? "relative inline-block w-[651px] max-w-full font-black leading-[72px] tracking-[-1.8px] text-left text-white text-[72px] whitespace-nowrap"
-                    : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[72px]"
+                    ? "relative inline-block max-w-full font-black leading-[72px] tracking-[-1.8px] text-left text-white text-[56px] md:text-[72px] md:w-[651px]"
+                    : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
                 }
               >
                 {slide.title}
@@ -103,8 +103,8 @@ export function PowerBanners() {
               <p
                 className={
                   slide.id === "rendering"
-                    ? "relative inline-block w-full text-left text-xl font-light italic leading-7 text-[rgba(255,255,255,0.9)]"
-                    : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[20px]"
+                    ? "relative inline-block w-full max-w-[672px] text-left font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
+                    : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
                 }
               >
                 {slide.subtitle}

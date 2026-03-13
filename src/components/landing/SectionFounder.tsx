@@ -12,11 +12,11 @@ export function SectionFounder() {
       <div className="mx-auto max-w-7xl">
         <h2
           id="founder-heading"
-          className="font-manrope text-center font-normal leading-[40px] tracking-[-0.9px] text-black text-[48px]"
+          className="font-manrope text-left font-normal leading-[40px] tracking-[-0.9px] text-black text-[48px]"
         >
           Founder & Lead Cad Engineer
         </h2>
-        <div className="relative mt-10 overflow-hidden rounded-2xl md:flex">
+        <div className="relative mt-[120px] overflow-hidden rounded-[16px] md:flex">
           <div
             className="min-h-[320px] flex-1 px-8 py-12 md:px-12 md:py-16"
             style={{
@@ -35,7 +35,7 @@ export function SectionFounder() {
                 <p className="font-black leading-[36px] text-[#0f172a] text-[30px]">
                   16+
                 </p>
-                <p className="font-bold uppercase tracking-[1.4px] text-[#0f172a] text-[14px]">
+                <p className="font-bold uppercase tracking-[1.4px] text-white text-[14px]">
                   Years Experience
                 </p>
               </div>
@@ -43,7 +43,7 @@ export function SectionFounder() {
                 <p className="font-black leading-[36px] text-[#0f172a] text-[30px]">
                   2.5k+
                 </p>
-                <p className="font-bold uppercase tracking-[1.4px] text-[#0f172a] text-[14px]">
+                <p className="font-bold uppercase tracking-[1.4px] text-white text-[14px]">
                   Projects Delivered
                 </p>
               </div>

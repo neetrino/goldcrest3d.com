@@ -17,13 +17,13 @@ export function SectionModeling() {
   return (
     <section
       id={LANDING_SECTION_IDS.SPECIALIZATIONS}
-      className="bg-white px-4 py-16 md:px-6 md:py-24"
+      className="bg-white px-4 py-[67px] md:px-6 md:py-[67px]"
       aria-labelledby="modeling-heading"
     >
       <div className="mx-auto max-w-[1920px]">
         <ModelingSpecializationTitle />
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2">
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:gap-[18px]">
           <ModelingBlockHipHop />
           <ModelingBlockBridal />
           <ModelingBlockHighJewelry />
