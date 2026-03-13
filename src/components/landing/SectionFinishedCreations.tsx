@@ -34,9 +34,8 @@ export function SectionFinishedCreations() {
         >
           Finished Creations
         </h2>
-        <div className="mt-9 flex flex-col gap-4">
-          <div className="flex justify-center">
-            <div className="grid grid-cols-[540px_575px_540px] gap-x-2 gap-y-4">
+        <div className="mt-9 flex flex-col items-center gap-4">
+          <div className="grid grid-cols-[540px_575px_540px] gap-x-2 gap-y-4">
             {ROW1_ITEMS.map((item) => (
               <div
                 key={item.id}
@@ -75,21 +74,20 @@ export function SectionFinishedCreations() {
                 />
               </div>
             ))}
-            </div>
           </div>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-[412px_412px_412px_412px] gap-x-2 gap-y-4">
             {ROW2_ITEMS.map((item) => (
               <div
                 key={item.id}
                 id={item.id}
-                className="relative aspect-square overflow-hidden rounded-[16px]"
+                className="relative h-[220px] w-full min-w-0 overflow-hidden rounded-[16px]"
               >
                 <Image
                   src={item.src}
                   alt=""
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 25vw, 290px"
+                  sizes="412px"
                   unoptimized
                 />
               </div>
