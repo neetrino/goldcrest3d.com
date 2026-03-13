@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
+import { prisma } from "@/lib/db";
 import { AdminSignInGate } from "./AdminSignInGate";
-import { AdminNav } from "./AdminNav";
+import { AdminSidebar } from "./AdminSidebar";
 
 export default async function AdminLayout({
   children,
@@ -10,10 +11,16 @@ export default async function AdminLayout({
     return <AdminSignInGate />;
   }
 
+  const leadsCount = await prisma.lead.count();
+
   return (
-    <div className="min-h-screen bg-neutral-50 text-[var(--foreground)]">
-      <AdminNav />
-      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">{children}</main>
+    <div className="flex min-h-screen bg-[#f8f7f6] text-[var(--foreground)]">
+      <AdminSidebar
+        leadsCount={leadsCount}
+        userName={session.user.name ?? null}
+        userImage={session.user.image ?? null}
+      />
+      <main className="flex-1 overflow-hidden">{children}</main>
     </div>
   );
 }

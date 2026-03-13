@@ -6,9 +6,15 @@ import { replyToLeadAction, type ReplyToLeadResult } from "@/app/actions/lead";
 type LeadReplyFormProps = {
   leadId: string;
   leadEmail: string;
+  /** "card" = standalone card (e.g. detail page), "inbox" = Figma reply bar style */
+  variant?: "card" | "inbox";
 };
 
-export function LeadReplyForm({ leadId, leadEmail }: LeadReplyFormProps) {
+export function LeadReplyForm({
+  leadId,
+  leadEmail,
+  variant = "card",
+}: LeadReplyFormProps) {
   const initialState: ReplyToLeadResult = {};
   const [state, formAction] = useActionState<
     ReplyToLeadResult,
@@ -17,6 +23,59 @@ export function LeadReplyForm({ leadId, leadEmail }: LeadReplyFormProps) {
     (prev, formData) => replyToLeadAction(leadId, prev, formData),
     initialState,
   );
+
+  if (variant === "inbox") {
+    return (
+      <div className="border border-slate-200 bg-white">
+        <form action={formAction}>
+          <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+            <span className="text-[12px] font-bold text-slate-400">
+              Reply to: {leadEmail}
+            </span>
+          </div>
+          <div className="p-4">
+            <textarea
+              id="reply-body-inbox"
+              name="body"
+              rows={5}
+              required
+              className="w-full resize-none rounded border-0 bg-transparent px-0 py-2 text-[14px] text-[var(--foreground)] placeholder:text-gray-500 focus:outline-none"
+              placeholder="Write your response here..."
+            />
+            {state?.error && (
+              <p className="mt-2 text-sm text-red-600" role="alert">
+                {state.error}
+              </p>
+            )}
+            {state?.sent && (
+              <p className="mt-2 text-sm text-green-600" role="status">
+                Email sent.
+              </p>
+            )}
+          </div>
+          <div className="flex items-center justify-between border-t border-slate-200 px-4 py-4">
+            <span className="text-[10px] font-bold uppercase tracking-tight text-slate-400">
+              Automatic signature enabled
+            </span>
+            <div className="flex items-center gap-3">
+              <button
+                type="reset"
+                className="rounded-lg px-4 py-2 text-[14px] font-semibold text-slate-600 hover:bg-slate-100"
+              >
+                Discard
+              </button>
+              <button
+                type="submit"
+                className="flex items-center gap-2 rounded-lg bg-[var(--foreground)] px-6 py-2 text-[14px] font-bold text-white hover:opacity-90"
+              >
+                Send Reply
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
