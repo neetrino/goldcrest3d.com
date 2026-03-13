@@ -16,6 +16,28 @@ const ICON_REPORTS =
 const ICON_SETTINGS =
   "https://www.figma.com/api/mcp/asset/7bd8c9ae-ad6d-4832-a03d-2ef7770b20de";
 
+/** Log out icon — box with arrow right (15×15), matches sidebar icon style. */
+function IconLogout({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width={15}
+      height={15}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  );
+}
+
 const NAV_ITEMS = [
   { href: "/admin/leads", label: "Inbox/Leads", icon: ICON_INBOX, showBadge: true },
   { href: "/admin/orders", label: "Orders", icon: ICON_ORDERS, showBadge: false },
@@ -124,20 +146,29 @@ export function AdminSidebar({
               Senior Admin
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => signOut({ callbackUrl: "/admin" })}
-            className="shrink-0 rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-            aria-label="Log out"
-          >
-            <Image
-              src={ICON_SETTINGS}
-              alt=""
-              width={15}
-              height={15}
-              unoptimized
-            />
-          </button>
+          <div className="flex shrink-0 items-center gap-1">
+            <Link
+              href="/admin/settings"
+              className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              aria-label="Settings"
+            >
+              <Image
+                src={ICON_SETTINGS}
+                alt=""
+                width={15}
+                height={15}
+                unoptimized
+              />
+            </Link>
+            <button
+              type="button"
+              onClick={() => signOut({ callbackUrl: "/admin" })}
+              className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              aria-label="Log out"
+            >
+              <IconLogout className="h-[15px] w-[15px]" />
+            </button>
+          </div>
         </div>
       </div>
     </aside>

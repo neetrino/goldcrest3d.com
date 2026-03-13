@@ -12,11 +12,13 @@ function AuthSignInForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/admin";
   const errorParam = searchParams.get("error");
+  const updatedParam = searchParams.get("updated");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const showError = errorParam === CREDENTIALS_ERROR;
+  const showEmailUpdated = updatedParam === "email";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -36,6 +38,14 @@ function AuthSignInForm() {
         Admin sign in
       </h1>
       <form onSubmit={handleSubmit} className="space-y-4">
+        {showEmailUpdated && (
+          <p
+            className="text-sm text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-950/30 px-3 py-2 rounded-md"
+            role="status"
+          >
+            Email updated. Please sign in with your new email.
+          </p>
+        )}
         {showError && (
           <p
             className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 px-3 py-2 rounded-md"
