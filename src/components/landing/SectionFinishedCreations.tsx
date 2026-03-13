@@ -5,18 +5,17 @@ import { LANDING_IMAGES } from "@/constants/landing-assets";
 import Image from "next/image";
 import { useState } from "react";
 
-/** Figma: Slide1 row 3 images 725/790/790 h420; Slide2 row 5 images 480/480/440/480/480 h256. Dots: 4, one active. */
+/** Figma: row1 — 3 images, row2 — 4 images (extra ring). Equal cells, gap 16px. */
 const ROW1_IMAGES = [
-  { src: LANDING_IMAGES.finishedCnc, w: 725, h: 420 },
-  { src: LANDING_IMAGES.finishedCopper, w: 790, h: 420 },
-  { src: LANDING_IMAGES.finishedOpacity, w: 790, h: 420 },
+  LANDING_IMAGES.finishedCnc,
+  LANDING_IMAGES.finishedCopper,
+  LANDING_IMAGES.finishedOpacity,
 ];
 const ROW2_IMAGES = [
-  { src: LANDING_IMAGES.finishedCopper, w: 480, h: 256 },
-  { src: LANDING_IMAGES.finishedOpacity, w: 480, h: 256 },
-  { src: LANDING_IMAGES.finishedCnc, w: 440, h: 256 },
-  { src: LANDING_IMAGES.finishedCopper, w: 480, h: 256 },
-  { src: LANDING_IMAGES.finishedOpacity, w: 480, h: 256 },
+  LANDING_IMAGES.finishedCopper,
+  LANDING_IMAGES.finishedOpacity,
+  LANDING_IMAGES.finishedCnc,
+  LANDING_IMAGES.finishedCopper,
 ];
 
 export function SectionFinishedCreations() {
@@ -25,46 +24,46 @@ export function SectionFinishedCreations() {
   return (
     <section
       id={LANDING_SECTION_IDS.FINISHED_CREATIONS}
-      className="bg-[#f8f7f6] px-4 py-[81px] md:px-6 md:py-[81px]"
+      className="bg-white px-4 pt-[56px] pb-10 md:px-6"
       aria-labelledby="finished-heading"
     >
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-[1200px]">
         <h2
           id="finished-heading"
-          className="font-manrope text-center font-normal leading-[40px] tracking-[-0.9px] text-black text-[48px]"
+          className="text-center font-semibold leading-tight tracking-tight text-[#181610] text-[28px]"
         >
           Finished Creations
         </h2>
-        <div className="mt-[27px] flex flex-col gap-[10px]">
-          <div className="flex flex-wrap justify-center gap-[10px]">
-            {ROW1_IMAGES.map((item, i) => (
+        <div className="mt-9 flex flex-col gap-4">
+          <div className="grid grid-cols-3 gap-4">
+            {ROW1_IMAGES.map((src, i) => (
               <div
                 key={`r1-${i}`}
-                className="relative h-[256px] flex-1 min-w-[200px] max-w-[725px] overflow-hidden rounded-[16px] md:h-[420px]"
+                className="relative aspect-square overflow-hidden rounded-[16px]"
               >
                 <Image
-                  src={item.src}
+                  src={src}
                   alt=""
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 725px"
+                  sizes="(max-width: 768px) 33vw, 390px"
                   unoptimized
                 />
               </div>
             ))}
           </div>
-          <div className="flex flex-wrap justify-center gap-[10px]">
-            {ROW2_IMAGES.map((item, i) => (
+          <div className="grid grid-cols-4 gap-4">
+            {ROW2_IMAGES.map((src, i) => (
               <div
                 key={`r2-${i}`}
-                className="relative h-[180px] min-w-[120px] flex-1 max-w-[480px] overflow-hidden rounded-[16px] md:h-[256px]"
+                className="relative aspect-square overflow-hidden rounded-[16px]"
               >
                 <Image
-                  src={item.src}
+                  src={src}
                   alt=""
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 50vw, 480px"
+                  sizes="(max-width: 768px) 25vw, 290px"
                   unoptimized
                 />
               </div>
@@ -72,7 +71,7 @@ export function SectionFinishedCreations() {
           </div>
         </div>
         <div
-          className="mt-[27px] flex justify-center items-center gap-[6px]"
+          className="mt-10 flex justify-center items-center gap-2 pb-8"
           aria-label="Carousel indicators"
         >
           {[0, 1, 2, 3].map((i) => (
@@ -80,10 +79,8 @@ export function SectionFinishedCreations() {
               key={i}
               type="button"
               onClick={() => setActiveDot(i)}
-              className={`h-[9px] rounded-full border-0 transition-colors hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-[#c69f58] ${
-                activeDot === i
-                  ? "w-5 rounded-[4.5px] bg-[#181610]"
-                  : "w-[9px] bg-[rgba(24,22,16,0.2)]"
+              className={`h-2 w-2 rounded-full border-0 transition-colors hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-[#c69f58] ${
+                activeDot === i ? "bg-[#181610]" : "bg-[rgba(24,22,16,0.2)]"
               }`}
               aria-current={activeDot === i ? "true" : undefined}
             />
