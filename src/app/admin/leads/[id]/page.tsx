@@ -13,10 +13,12 @@ export default async function AdminLeadDetailPage({
   const lead = await prisma.lead.findUnique({ where: { id } });
   if (!lead) notFound();
 
-  const attachmentUrls = lead.attachmentKeys.map((key) => ({
-    key,
-    url: getR2PublicUrl(key),
-  }));
+  const attachmentUrls = lead.attachmentKeys.map((key) => {
+    const url = getR2PublicUrl(key);
+    const ext = key.split(".").pop()?.toLowerCase() ?? "";
+    const isImage = ["png", "jpg", "jpeg"].includes(ext);
+    return { key, url, isImage };
+  });
 
   return (
     <div className="max-w-2xl space-y-8">
@@ -47,7 +49,7 @@ export default async function AdminLeadDetailPage({
           </div>
           <div>
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-              Received
+              Submission date/time
             </dt>
             <dd className="mt-0.5 text-sm text-neutral-600">
               {lead.createdAt.toLocaleString("en-GB", {
@@ -69,19 +71,36 @@ export default async function AdminLeadDetailPage({
               <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
                 Attachments
               </dt>
-              <dd className="mt-1">
-                <ul className="space-y-1">
-                  {attachmentUrls.map(({ key, url }) => (
-                    <li key={key}>
+              <dd className="mt-2">
+                <ul className="space-y-3">
+                  {attachmentUrls.map(({ key, url, isImage }) => (
+                    <li key={key} className="flex flex-col gap-1">
                       {url ? (
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-[var(--foreground)] underline decoration-neutral-300 underline-offset-2 hover:decoration-[var(--foreground)]"
-                        >
-                          {key.split("/").pop() ?? key}
-                        </a>
+                        <>
+                          {isImage ? (
+                            <a
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-block max-w-[280px] rounded border border-neutral-200 overflow-hidden hover:opacity-90"
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={url}
+                                alt=""
+                                className="block w-full object-contain max-h-48"
+                              />
+                            </a>
+                          ) : null}
+                          <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-[var(--foreground)] underline decoration-neutral-300 underline-offset-2 hover:decoration-[var(--foreground)]"
+                          >
+                            {isImage ? "Open image" : key.split("/").pop() ?? key}
+                          </a>
+                        </>
                       ) : (
                         <span className="text-sm text-neutral-500">{key}</span>
                       )}

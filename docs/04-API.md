@@ -17,7 +17,7 @@
 
 ## Quote form (Landing)
 
-**Նկարագրություն.** «Ուղարկել հայտ» — Full Name, Email, Message, Image upload.
+**Նկարագրություն.** «Ուղարկել հայտ» — Full Name, Email, Message, optional file upload (PNG, JPG, PDF, max 10MB).
 
 | Ընտրանք | Մեթոդ | Նկարագրություն |
 |----------|--------|-----------------|

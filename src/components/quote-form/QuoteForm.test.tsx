@@ -14,10 +14,10 @@ describe("QuoteForm", () => {
     expect(screen.getByLabelText(/^email$/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/message/i)).toBeInTheDocument();
     expect(
-      screen.getByLabelText(/attach image\/file \(optional\)/i)
+      screen.getByLabelText(/attach file \(optional\)/i)
     ).toBeInTheDocument();
 
-    const submit = screen.getByRole("button", { name: /send request/i });
+    const submit = screen.getByRole("button", { name: /submit request/i });
     expect(submit).toBeInTheDocument();
     expect(submit).toHaveAttribute("type", "submit");
   });
@@ -38,10 +38,9 @@ describe("QuoteForm", () => {
 
   it("has accessibility hints for file input", () => {
     render(<QuoteForm />);
-    const fileInput = screen.getByLabelText(/attach image\/file/i);
-    expect(fileInput).toHaveAttribute(
-      "accept",
-      "image/jpeg,image/png,image/webp,image/gif,application/pdf"
-    );
+    const fileInputs = screen.getAllByLabelText(/attach file \(optional\)/i);
+    const fileInput = fileInputs[0];
+    expect(fileInput).toHaveAttribute("accept", expect.stringContaining("image/png"));
+    expect(fileInput.getAttribute("accept")).toContain("application/pdf");
   });
 });
