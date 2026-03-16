@@ -103,9 +103,9 @@ export function PowerBanners() {
             </div>
             {/* Text overlay: modeling = centered below jewelry (reference layout); others = existing placement */}
             {slide.id === "modeling" ? (
-              <div className="relative z-10 flex min-h-full w-full flex-col items-center justify-end px-6 pb-28 pt-12 text-center md:pb-36 md:pt-16">
+              <div className="relative z-10 flex min-h-full w-full translate-y-2 flex-col items-center justify-end px-6 pb-12 pt-12 text-center md:translate-y-4 md:pb-20 md:pt-16">
                 <div className="flex w-full justify-center">
-                  <h1 className="-translate-y-6 whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:text-[36px] md:leading-[1.1] md:tracking-[-1.8px] md:text-[48px] md:-translate-y-8">
+                  <h1 className="mt-96 -translate-y-6 whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:mt-[28rem] md:text-[36px] md:leading-[1.1] md:tracking-[-1.8px] md:text-[48px] md:-translate-y-8">
                     {slide.title}
                   </h1>
                 </div>
