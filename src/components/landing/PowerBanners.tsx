@@ -5,6 +5,10 @@ import { LANDING_IMAGES } from "@/constants/landing-assets";
 import { GetAQuoteButton, HERO_GET_QUOTE_BUTTON_ID } from "./GetAQuoteButton";
 import Image from "next/image";
 
+/** Explicit two-line copy for Jewelry Rendering subtitle; line break is intentional. */
+const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation";
+const RENDERING_SUBTITLE_LINE2 = "and global sales. Perfection in every light ray.";
+
 const SLIDES: Array<{
   id: string;
   title: string;
@@ -27,8 +31,7 @@ const SLIDES: Array<{
   {
     id: "rendering",
     title: "Jewelry Rendering",
-    subtitle:
-      "High-resolution assets for brand presentation and global sales. Perfection in every light ray.",
+    subtitle: `${RENDERING_SUBTITLE_LINE1} ${RENDERING_SUBTITLE_LINE2}`,
     bg: LANDING_IMAGES.heroRendering,
     contentAlign: "right",
     useRemote: true,
@@ -166,7 +169,14 @@ export function PowerBanners() {
                         : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
                   }
                 >
-                  {slide.subtitle}
+                  {slide.id === "rendering" ? (
+                    <>
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
+                    </>
+                  ) : (
+                    slide.subtitle
+                  )}
                 </p>
                 <GetAQuoteButton
                   className={slide.id === "rendering" ? "w-[190px] shrink-0" : "mt-8 shrink-0"}
