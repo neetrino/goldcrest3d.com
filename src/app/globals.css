@@ -58,6 +58,16 @@ section[id] {
   }
 }
 
+/* Hero "Get a Quote" button — move up only this CTA */
+#hero-get-quote {
+  transform: translateY(-3rem);
+}
+@media (min-width: 768px) {
+  #hero-get-quote {
+    transform: translateY(-3.25rem);
+  }
+}
+
 /* Nav CTA "Request a Quote" — gold gradient from Figma */
 .nav-cta-gradient {
   background: linear-gradient(

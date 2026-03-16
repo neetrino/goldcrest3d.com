@@ -2,7 +2,7 @@
 
 import { LANDING_ELEMENT_IDS, LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
-import { GetAQuoteButton } from "./GetAQuoteButton";
+import { GetAQuoteButton, HERO_GET_QUOTE_BUTTON_ID } from "./GetAQuoteButton";
 import Image from "next/image";
 
 const SLIDES: Array<{
@@ -106,7 +106,7 @@ export function PowerBanners() {
                 >
                   {slide.subtitle}
                 </p>
-                <GetAQuoteButton variant="gold" className="mt-10 shrink-0 md:mt-12" />
+                <GetAQuoteButton id={HERO_GET_QUOTE_BUTTON_ID} variant="gold" className="mt-10 shrink-0 md:mt-12" />
               </div>
             ) : (
               <div

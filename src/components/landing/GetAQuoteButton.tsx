@@ -6,16 +6,21 @@ import Link from "next/link";
  * variant "default": white bg, text slate-900.
  * variant "gold": hero style — golden gradient, white text, pill shape (matches reference).
  */
+export const HERO_GET_QUOTE_BUTTON_ID = "hero-get-quote";
+
 export function GetAQuoteButton({
+  id,
   className,
   variant = "default",
 }: {
+  id?: string;
   className?: string;
   variant?: "default" | "gold";
 } = {}) {
   const isGold = variant === "gold";
   return (
     <Link
+      id={id}
       href={`#${LANDING_SECTION_IDS.QUOTE}`}
       className={
         isGold
