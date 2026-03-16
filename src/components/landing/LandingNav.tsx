@@ -20,12 +20,12 @@ const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
 
 /** Scoped styles for the header "Request a Quote" CTA only. Change here to avoid affecting other header elements. */
 const REQUEST_QUOTE_BTN_CLASSES =
-  "nav-cta-gradient mr-10 -translate-x-56 flex h-[40px] w-[190px] shrink-0 items-center justify-center rounded-full px-[28px] py-[10px] text-sm font-bold leading-5 text-white transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50";
+  "nav-cta-gradient mr-10 -translate-x-56 flex h-[36px] w-[190px] shrink-0 items-center justify-center rounded-full px-[28px] py-[8px] text-sm font-bold leading-5 text-white transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50";
 
 export function LandingNav() {
   return (
     <nav
-      className="sticky top-0 z-50 h-[70px] w-full bg-white/95 backdrop-blur-[6px]"
+      className="sticky top-0 z-50 h-[58px] w-full bg-white/95 backdrop-blur-[6px]"
       aria-label="Main navigation"
     >
       <div className="flex h-full w-full items-center justify-between pl-[51px] pr-[51px]">
@@ -38,10 +38,10 @@ export function LandingNav() {
             <Image
               src={LOGO_SRC}
               alt="Goldcrest 3D"
-              width={100}
+              width={104}
               height={58}
               sizes="100vw"
-              className="relative h-14 w-[97px] max-h-full max-w-full overflow-hidden object-cover"
+              className="relative h-[58px] w-[104px] max-h-full max-w-full overflow-hidden object-cover"
               unoptimized
             />
           </Link>
