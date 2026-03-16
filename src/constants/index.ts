@@ -21,6 +21,8 @@ export type LandingSectionId =
 /** Landing element IDs — unique id for specific copy (e.g. hero modeling subtitle) */
 export const LANDING_ELEMENT_IDS = {
   HERO_MODELING_SUBTITLE: "hero-modeling-subtitle",
+  /** Wrapper for hero modeling title, subtitle and CTA — used to shift text independently from background */
+  HERO_MODELING_TEXT_GROUP: "hero-modeling-text-group",
 } as const;
 
 /**

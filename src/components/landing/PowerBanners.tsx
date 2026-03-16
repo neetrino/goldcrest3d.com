@@ -55,7 +55,7 @@ export function PowerBanners() {
       {SLIDES.map((slide) => (
         <div
           key={slide.id}
-          className={`relative flex min-h-[560px] w-full shrink-0 flex-col overflow-hidden md:min-h-[883px] ${
+          className={`relative flex min-h-[460px] w-full shrink-0 flex-col overflow-hidden md:min-h-[720px] ${
             slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""
           }`}
         >
@@ -76,15 +76,28 @@ export function PowerBanners() {
             }
           >
               {slide.id === "modeling" ? (
-                <div className="absolute inset-y-0 left-1/2 w-[120%] -translate-x-1/2">
+                <div className="absolute inset-y-0 left-1/2 w-[115%] -translate-x-1/2">
                   <Image
                     src={slide.bg}
                     alt=""
                     fill
                     className="object-cover"
-                    style={{ objectPosition: "center 239%" }}
+                    style={{ objectPosition: "center 135%" }}
                     sizes="100vw"
                     priority
+                    unoptimized
+                  />
+                </div>
+              ) : slide.id === "rendering" ? (
+                <div className="absolute inset-y-0 left-1/2 w-[115%] -translate-x-1/2">
+                  <Image
+                    src={slide.bg}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    style={{ objectPosition: "center 60%" }}
+                    sizes="100vw"
+                    priority={false}
                     unoptimized
                   />
                 </div>
@@ -94,7 +107,6 @@ export function PowerBanners() {
                   alt=""
                   fill
                   className="object-cover"
-                  style={slide.id === "rendering" ? { objectPosition: "center 250%" } : undefined}
                   sizes="100vw"
                   priority={slide.id === "modeling"}
                   unoptimized
@@ -103,9 +115,12 @@ export function PowerBanners() {
             </div>
             {/* Text overlay: modeling = centered below jewelry (reference layout); others = existing placement */}
             {slide.id === "modeling" ? (
-              <div className="relative z-10 flex min-h-full w-full translate-y-2 flex-col items-center justify-end px-6 pb-12 pt-12 text-center md:translate-y-4 md:pb-20 md:pt-16">
+              <div
+                id={LANDING_ELEMENT_IDS.HERO_MODELING_TEXT_GROUP}
+                className="relative z-10 flex min-h-full w-full -translate-y-4 flex-col items-center justify-end px-6 pb-12 pt-12 text-center md:-translate-y-6 md:pb-20 md:pt-16"
+              >
                 <div className="flex w-full justify-center">
-                  <h1 className="mt-96 -translate-y-6 whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:mt-[28rem] md:text-[36px] md:leading-[1.1] md:tracking-[-1.8px] md:text-[48px] md:-translate-y-8">
+                  <h1 className="mt-96 -translate-y-2 whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:mt-[28rem] md:text-[36px] md:leading-[1.1] md:tracking-[-1.8px] md:text-[48px] md:-translate-y-4">
                     {slide.title}
                   </h1>
                 </div>
