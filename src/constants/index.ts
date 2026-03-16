@@ -18,6 +18,11 @@ export const LANDING_SECTION_IDS = {
 export type LandingSectionId =
   (typeof LANDING_SECTION_IDS)[keyof typeof LANDING_SECTION_IDS];
 
+/** Landing element IDs — unique id for specific copy (e.g. hero modeling subtitle) */
+export const LANDING_ELEMENT_IDS = {
+  HERO_MODELING_SUBTITLE: "hero-modeling-subtitle",
+} as const;
+
 /**
  * Landing image IDs — data-landing-image on each image wrapper.
  * Օգտագործել՝ «այս նկարը [id]-ի համար» — կփոխենք LANDING_IMAGES / src.

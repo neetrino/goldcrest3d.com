@@ -1,6 +1,6 @@
 "use client";
 
-import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
+import { LANDING_ELEMENT_IDS, LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import { GetAQuoteButton } from "./GetAQuoteButton";
 import Image from "next/image";
@@ -96,11 +96,14 @@ export function PowerBanners() {
             {slide.id === "modeling" ? (
               <div className="relative z-10 flex min-h-full w-full flex-col items-center justify-end px-6 pb-28 pt-12 text-center md:pb-36 md:pt-16">
                 <div className="flex w-full justify-center">
-                  <h1 className="-translate-y-2 whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:text-[36px] md:leading-[1.1] md:tracking-[-1.8px] md:text-[48px] md:-translate-y-3">
+                  <h1 className="-translate-y-6 whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:text-[36px] md:leading-[1.1] md:tracking-[-1.8px] md:text-[48px] md:-translate-y-8">
                     {slide.title}
                   </h1>
                 </div>
-                <p className="mt-5 max-w-[672px] font-normal leading-[1.4] text-[#b0b0b0] text-[17px] md:mt-6 md:text-[18px] md:leading-[28px]">
+                <p
+                  id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
+                  className="mt-5 whitespace-nowrap font-normal leading-[1.4] text-[#b0b0b0] text-[17px] md:mt-6 md:text-[18px] md:leading-[28px]"
+                >
                   {slide.subtitle}
                 </p>
                 <GetAQuoteButton variant="gold" className="mt-10 shrink-0 md:mt-12" />
