@@ -20,7 +20,7 @@ const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
 
 /** Scoped styles for the header "Request a Quote" CTA only. Change here to avoid affecting other header elements. */
 const REQUEST_QUOTE_BTN_CLASSES =
-  "nav-cta-gradient mr-10 -translate-x-8 flex h-[40px] w-[190px] shrink-0 items-center justify-center rounded-full px-[28px] py-[10px] text-sm font-bold leading-5 text-white transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50";
+  "nav-cta-gradient mr-10 -translate-x-56 flex h-[40px] w-[190px] shrink-0 items-center justify-center rounded-full px-[28px] py-[10px] text-sm font-bold leading-5 text-white transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50";
 
 export function LandingNav() {
   return (
@@ -32,7 +32,7 @@ export function LandingNav() {
         <div className="flex shrink-0">
           <Link
             href={`#${LANDING_SECTION_IDS.HERO}`}
-            className="relative left-[23rem] flex items-center"
+            className="relative left-[18rem] flex items-center"
             aria-label="Goldcrest 3D — Home"
           >
             <Image
@@ -46,12 +46,15 @@ export function LandingNav() {
             />
           </Link>
         </div>
-        <ul className="hidden flex-1 list-none justify-center gap-10 md:flex md:max-w-[711px]" aria-label="Nav links">
+        <ul
+          className="hidden h-5 list-none flex-1 items-start justify-end gap-[80px] md:flex md:max-w-[711px]"
+          aria-label="Nav links"
+        >
           {NAV_ITEMS.map(({ id, label }) => (
-            <li key={id}>
+            <li key={id} className="flex h-5 items-center">
               <Link
                 href={`#${id}`}
-                className="text-[14px] font-medium leading-5 text-[#0f172a] no-underline transition hover:opacity-80 focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
+                className="h-5 text-[14px] font-medium leading-5 text-[#0f172a] no-underline transition hover:opacity-80 focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
               >
                 {label}
               </Link>
