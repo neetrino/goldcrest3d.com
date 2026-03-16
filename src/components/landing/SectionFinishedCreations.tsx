@@ -1,21 +1,21 @@
 "use client";
 
-import { LANDING_SECTION_IDS } from "@/constants";
+import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import Image from "next/image";
 import { useState } from "react";
 
-/** Row1: 3 items, Row2: 4 items (incl. extra ring). Each has id gallery-item-1 … gallery-item-7 for per-item sizing. */
+/** Row1: 3 items, Row2: 4 items. data-landing-image: finished-1 … finished-7 for section-by-section replacement. */
 const ROW1_ITEMS = [
-  { id: "gallery-item-1", src: LANDING_IMAGES.finishedCnc },
-  { id: "gallery-item-2", src: LANDING_IMAGES.finishedCopper },
-  { id: "gallery-item-3", src: LANDING_IMAGES.finishedOpacity },
+  { id: "gallery-item-1", imageId: LANDING_IMAGE_IDS.FINISHED_1, src: LANDING_IMAGES.finishedCnc },
+  { id: "gallery-item-2", imageId: LANDING_IMAGE_IDS.FINISHED_2, src: LANDING_IMAGES.finishedCopper },
+  { id: "gallery-item-3", imageId: LANDING_IMAGE_IDS.FINISHED_3, src: LANDING_IMAGES.finishedOpacity },
 ];
 const ROW2_ITEMS = [
-  { id: "gallery-item-4", src: LANDING_IMAGES.finishedCopper },
-  { id: "gallery-item-5", src: LANDING_IMAGES.finishedOpacity },
-  { id: "gallery-item-6", src: LANDING_IMAGES.finishedCnc },
-  { id: "gallery-item-7", src: LANDING_IMAGES.finishedCopper },
+  { id: "gallery-item-4", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.finishedCopper },
+  { id: "gallery-item-5", imageId: LANDING_IMAGE_IDS.FINISHED_5, src: LANDING_IMAGES.finishedOpacity },
+  { id: "gallery-item-6", imageId: LANDING_IMAGE_IDS.FINISHED_6, src: LANDING_IMAGES.finishedCnc },
+  { id: "gallery-item-7", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: LANDING_IMAGES.finishedCopper },
 ];
 
 export function SectionFinishedCreations() {
@@ -40,6 +40,7 @@ export function SectionFinishedCreations() {
               <div
                 key={item.id}
                 id={item.id}
+                data-landing-image={item.imageId}
                 className={`relative overflow-hidden rounded-[16px] ${
                   item.id === "gallery-item-1"
                     ? "h-[360px] w-[540px] aspect-[145/84]"
@@ -80,6 +81,7 @@ export function SectionFinishedCreations() {
               <div
                 key={item.id}
                 id={item.id}
+                data-landing-image={item.imageId}
                 className="relative h-[235px] w-full min-w-0 overflow-hidden rounded-[16px]"
               >
                 <Image

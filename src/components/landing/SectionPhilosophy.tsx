@@ -10,9 +10,10 @@ export function SectionPhilosophy() {
       <div className="mx-auto max-w-4xl px-6 text-center">
         <h2
           id="philosophy-heading"
-          className="font-manrope font-normal leading-[40px] tracking-[-0.9px] text-[#ddab52] text-[48px]"
+          className="font-manrope font-normal leading-[40px] tracking-[-0.9px] text-[48px]"
         >
-          Goldcrest Engineering Philosophy
+          <span className="text-[#ddab52]">Goldcrest Engineering </span>
+          <span className="font-bold text-black">Philosophy</span>
         </h2>
         <blockquote className="mt-[42px] font-manrope text-center font-light leading-[36px] text-[rgba(24,22,16,0.8)] text-[30px]">
           &ldquo;We design with manufacturing awareness.

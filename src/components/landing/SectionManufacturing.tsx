@@ -1,6 +1,6 @@
 "use client";
 
-import { LANDING_SECTION_IDS } from "@/constants";
+import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import Image from "next/image";
 import { useState } from "react";
@@ -53,6 +53,7 @@ export function SectionManufacturing() {
                 <span
                   className={`block h-6 w-6 shrink-0 transition-transform ${openIndex === i ? "rotate-180" : ""}`}
                   aria-hidden
+                  data-landing-image={LANDING_IMAGE_IDS.MANUFACTURING_ICON_DOWN}
                 >
                   <Image
                     src={LANDING_IMAGES.iconDown}
@@ -66,7 +67,10 @@ export function SectionManufacturing() {
               </button>
             ))}
           </div>
-          <div className="relative aspect-[750/625] overflow-hidden rounded-[16px] bg-[#e8eaed] lg:min-h-[400px]">
+          <div
+            className="relative aspect-[750/625] overflow-hidden rounded-[16px] bg-[#e8eaed] lg:min-h-[400px]"
+            data-landing-image={LANDING_IMAGE_IDS.MANUFACTURING_MAIN}
+          >
             <Image
               src={LANDING_IMAGES.manufacturing}
               alt="CAD and manufacturing"

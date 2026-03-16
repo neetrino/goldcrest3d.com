@@ -1,3 +1,4 @@
+import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import { ModelingCard } from "./ModelingCard";
 
@@ -8,6 +9,7 @@ export function ModelingBlockHipHop() {
       title="Hip-Hop Jewelry"
       description="High-mass, fully iced-out structures engineered for structural durability and controlled weight distribution. Advanced pavé density calibration and reinforced stone retention designed for intensive wear and long-term performance."
       imageSrc={LANDING_IMAGES.modelingHipHop}
+      imageId={LANDING_IMAGE_IDS.MODELING_HIPHOP}
       imageOnLeft={false}
       textAlign="left"
       imagePosition="right center"

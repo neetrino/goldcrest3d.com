@@ -19,7 +19,7 @@ export function SectionQuote() {
           Submit Project
         </h2>
         <p className="mt-[29.25px] font-manrope text-center font-light leading-[28px] text-[rgba(24,22,16,0.5)] text-[20px]">
-          Start your next engineering project with precision.
+          Tell us about your project, and we&apos;ll get back to you with a quote.
         </p>
         <div className="mt-[96px]">
           <QuoteForm />

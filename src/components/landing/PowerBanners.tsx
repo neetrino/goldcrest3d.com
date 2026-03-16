@@ -1,11 +1,9 @@
 "use client";
 
-import { LANDING_SECTION_IDS } from "@/constants";
+import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import { GetAQuoteButton } from "./GetAQuoteButton";
 import Image from "next/image";
-
-const HERO_LOCAL_BG = "/images/hero-3d-bg.png";
 
 const SLIDES: Array<{
   id: string;
@@ -14,14 +12,17 @@ const SLIDES: Array<{
   bg: string;
   contentAlign: "left" | "center" | "right";
   useRemote?: boolean;
+  /** Figma: Jewelry Design uses dark text on light bg */
+  darkText?: boolean;
 }> = [
   {
     id: "modeling",
     title: "3D Production-Ready Modeling",
     subtitle:
       "Engineered for casting, printing and precise stone setting. Every micron accounted for.",
-    bg: HERO_LOCAL_BG,
-    contentAlign: "right",
+    bg: LANDING_IMAGES.heroModeling,
+    contentAlign: "center",
+    useRemote: true,
   },
   {
     id: "rendering",
@@ -29,7 +30,7 @@ const SLIDES: Array<{
     subtitle:
       "High-resolution assets for brand presentation and global sales. Perfection in every light ray.",
     bg: LANDING_IMAGES.heroRendering,
-    contentAlign: "left",
+    contentAlign: "right",
     useRemote: true,
   },
   {
@@ -38,8 +39,9 @@ const SLIDES: Array<{
     subtitle:
       "Concept-to-CAD development for legacy collection building. Your vision, engineered.",
     bg: LANDING_IMAGES.heroDesign,
-    contentAlign: "center",
+    contentAlign: "left",
     useRemote: true,
+    darkText: true,
   },
 ];
 
@@ -47,7 +49,7 @@ export function PowerBanners() {
   return (
     <section
       id={LANDING_SECTION_IDS.HERO}
-      className="relative w-full bg-[#1a1a1a]"
+      className="relative w-full bg-[#d8d8d8]"
       aria-label="Hero"
     >
       {SLIDES.map((slide) => (
@@ -55,8 +57,30 @@ export function PowerBanners() {
           key={slide.id}
           className="relative flex min-h-[560px] w-full shrink-0 overflow-hidden md:min-h-[883px]"
         >
-          <div className="absolute inset-0 pointer-events-none">
-              {slide.useRemote ? (
+          <div
+            className="absolute inset-0 pointer-events-none overflow-hidden"
+            data-landing-image={
+              slide.id === "modeling"
+                ? LANDING_IMAGE_IDS.HERO_MODELING
+                : slide.id === "rendering"
+                  ? LANDING_IMAGE_IDS.HERO_RENDERING
+                  : LANDING_IMAGE_IDS.HERO_DESIGN
+            }
+          >
+              {slide.id === "modeling" ? (
+                <div className="absolute inset-y-0 left-1/2 w-[120%] -translate-x-1/2">
+                  <Image
+                    src={slide.bg}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    style={{ objectPosition: "center 239%" }}
+                    sizes="100vw"
+                    priority
+                    unoptimized
+                  />
+                </div>
+              ) : (
                 <Image
                   src={slide.bg}
                   alt=""
@@ -66,53 +90,60 @@ export function PowerBanners() {
                   priority={slide.id === "modeling"}
                   unoptimized
                 />
-              ) : (
-                <Image
-                  src={slide.bg}
-                  alt=""
-                  fill
-                  className="object-cover"
-                  sizes="100vw"
-                  priority
-                  unoptimized
-                />
               )}
             </div>
-            <div
-              className={
-                slide.id === "rendering"
-                  ? "relative z-10 flex w-full flex-col items-start justify-center gap-8 pl-6 pr-6 pt-16 pb-16 text-left text-white md:absolute md:left-0 md:top-[58%] md:max-w-[672px] md:-translate-y-1/2 md:pl-[153px] md:pr-12 md:pt-0 md:pb-0"
-                  : `relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
-                      slide.contentAlign === "right"
-                        ? "items-end text-right"
-                        : slide.contentAlign === "left"
-                          ? "items-start text-left"
-                          : "items-center text-center"
-                    }`
-              }
-            >
-              <h1
+            {/* Text overlay: modeling = centered below jewelry (reference layout); others = existing placement */}
+            {slide.id === "modeling" ? (
+              <div className="relative z-10 flex min-h-full w-full flex-col items-center justify-end px-6 pb-16 pt-12 text-center md:pb-20 md:pt-16">
+                <h1 className="max-w-[896px] whitespace-nowrap font-black leading-tight tracking-tight text-white text-[40px] md:text-[56px] md:leading-[1.1] md:tracking-[-1.8px] md:text-[72px]">
+                  {slide.title}
+                </h1>
+                <p className="mt-5 max-w-[672px] font-normal leading-[1.4] text-[#b0b0b0] text-[17px] md:mt-6 md:text-[18px] md:leading-[28px]">
+                  {slide.subtitle}
+                </p>
+                <GetAQuoteButton variant="gold" className="mt-10 shrink-0 md:mt-12" />
+              </div>
+            ) : (
+              <div
                 className={
                   slide.id === "rendering"
-                    ? "relative inline-block max-w-full font-black leading-[72px] tracking-[-1.8px] text-left text-white text-[56px] md:text-[72px] md:w-[651px]"
-                    : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
+                    ? "relative z-10 flex w-full flex-col items-end justify-center gap-8 pl-6 pr-6 pt-16 pb-16 text-right text-white md:absolute md:right-0 md:top-[58%] md:max-w-[494px] md:-translate-y-1/2 md:pl-12 md:pr-[153px] md:pt-0 md:pb-0"
+                    : `relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
+                        slide.contentAlign === "right"
+                          ? "items-end text-right"
+                          : slide.contentAlign === "left"
+                            ? "items-start text-left"
+                            : "items-center text-center"
+                      } ${slide.darkText ? "text-[#121212]" : "text-white"}`.trim()
                 }
               >
-                {slide.title}
-              </h1>
-              <p
-                className={
-                  slide.id === "rendering"
-                    ? "relative inline-block w-full max-w-[672px] text-left font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
-                    : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
-                }
-              >
-                {slide.subtitle}
-              </p>
-              <GetAQuoteButton
-                className={slide.id === "rendering" ? "w-[271.5px] shrink-0" : "mt-8 shrink-0"}
-              />
-            </div>
+                <h1
+                  className={
+                    slide.id === "rendering"
+                      ? "relative inline-block max-w-full font-black leading-[72px] tracking-[-1.8px] text-right text-white text-[56px] md:text-[52px] md:w-[494px]"
+                      : slide.darkText
+                        ? "max-w-[494px] font-black leading-[72px] tracking-[-1.8px] text-black text-[56px] md:text-[52px]"
+                        : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
+                  }
+                >
+                  {slide.title}
+                </h1>
+                <p
+                  className={
+                    slide.id === "rendering"
+                      ? "relative inline-block w-full max-w-[433px] text-right font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
+                      : slide.darkText
+                        ? "mt-8 max-w-[409px] font-light italic leading-[28px] text-[rgba(18,18,18,0.9)] text-[18px] md:text-[20px]"
+                        : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
+                  }
+                >
+                  {slide.subtitle}
+                </p>
+                <GetAQuoteButton
+                  className={slide.id === "rendering" ? "w-[190px] shrink-0" : "mt-8 shrink-0"}
+                />
+              </div>
+            )}
         </div>
       ))}
     </section>

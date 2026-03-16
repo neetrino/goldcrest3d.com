@@ -5,6 +5,8 @@ export type ModelingCardProps = {
   title: string;
   description: string;
   imageSrc: string;
+  /** data-landing-image id for this card's image (section-by-section replacement). */
+  imageId: string;
   /** If set, card uses gradient background and image in one half; if not, image is full-cover with text overlay. */
   gradient?: string;
   imageOnLeft: boolean;
@@ -24,6 +26,7 @@ export function ModelingCard({
   title,
   description,
   imageSrc,
+  imageId,
   gradient,
   imageOnLeft,
   textAlign,
@@ -42,15 +45,17 @@ export function ModelingCard({
   if (!gradient) {
     return (
       <article className="relative min-h-[320px] overflow-hidden rounded-[16px] md:min-h-[400px] lg:min-h-[495px]">
-        <Image
-          src={imageSrc}
-          alt=""
-          fill
-          className="object-cover"
-          style={imageStyle}
-          sizes="(max-width: 768px) 100vw, 50vw"
-          unoptimized
-        />
+        <div className="absolute inset-0" data-landing-image={imageId}>
+          <Image
+            src={imageSrc}
+            alt=""
+            fill
+            className="object-cover"
+            style={imageStyle}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            unoptimized
+          />
+        </div>
         <div
           className={`absolute inset-0 z-10 flex flex-col justify-center gap-6 px-6 py-8 text-white md:px-8 md:py-10 ${
             imageOnLeft ? "items-end pl-[50%]" : "items-start pr-[50%]"
@@ -74,7 +79,10 @@ export function ModelingCard({
     >
       {imageOnLeft ? (
         <>
-          <div className="relative order-2 h-[240px] shrink-0 overflow-hidden md:order-1 md:h-auto md:min-h-0 md:w-1/2">
+          <div
+            className="relative order-2 h-[240px] shrink-0 overflow-hidden md:order-1 md:h-auto md:min-h-0 md:w-1/2"
+            data-landing-image={imageId}
+          >
             <Image
               src={imageSrc}
               alt=""
@@ -124,7 +132,10 @@ export function ModelingCard({
               {description}
             </p>
           </div>
-          <div className="relative h-[240px] shrink-0 overflow-hidden md:h-auto md:min-h-0 md:w-1/2">
+          <div
+            className="relative h-[240px] shrink-0 overflow-hidden md:h-auto md:min-h-0 md:w-1/2"
+            data-landing-image={imageId}
+          >
             <Image
               src={imageSrc}
               alt=""

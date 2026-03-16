@@ -3,17 +3,25 @@ import Link from "next/link";
 
 /**
  * CTA button "Get a Quote" — Figma node 92:270 / 5:54.
- * White bg, rounded-[35px], 271×56px, text slate-900, font-bold, links to #quote.
+ * variant "default": white bg, text slate-900.
+ * variant "gold": hero style — golden gradient, white text, pill shape (matches reference).
  */
 export function GetAQuoteButton({
   className,
+  variant = "default",
 }: {
   className?: string;
+  variant?: "default" | "gold";
 } = {}) {
+  const isGold = variant === "gold";
   return (
     <Link
       href={`#${LANDING_SECTION_IDS.QUOTE}`}
-      className={`flex h-14 min-w-[271px] items-center justify-center rounded-[35px] bg-white px-8 py-4 text-base font-bold leading-6 text-[#0f172a] transition-colors hover:bg-white/90 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50 ${className ?? ""}`}
+      className={
+        isGold
+          ? `flex h-14 min-w-[200px] items-center justify-center rounded-[35px] px-8 py-4 text-base font-medium leading-6 text-white transition-opacity hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50 nav-cta-gradient ${className ?? ""}`
+          : `flex h-14 min-w-[271px] items-center justify-center rounded-[35px] bg-white px-8 py-4 text-base font-bold leading-6 text-[#0f172a] transition-colors hover:bg-white/90 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50 ${className ?? ""}`
+      }
     >
       Get a Quote
     </Link>

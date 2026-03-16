@@ -1,4 +1,4 @@
-import { LANDING_SECTION_IDS } from "@/constants";
+import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import Image from "next/image";
 
@@ -49,7 +49,10 @@ export function SectionFounder() {
               </div>
             </div>
           </div>
-          <div className="relative h-[320px] w-full shrink-0 md:h-auto md:max-w-[493px]">
+          <div
+            className="relative h-[320px] w-full shrink-0 md:h-auto md:max-w-[493px]"
+            data-landing-image={LANDING_IMAGE_IDS.FOUNDER_PHOTO}
+          >
             <Image
               src={LANDING_IMAGES.founder}
               alt="Davit Sargsyan"

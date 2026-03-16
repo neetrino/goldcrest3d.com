@@ -2,6 +2,7 @@
 
 import { useActionState, useRef, useState, useCallback, useEffect } from "react";
 import { submitQuote } from "@/app/actions/quote";
+import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import type { QuoteSubmitResult } from "@/app/actions/quote";
 import Image from "next/image";
@@ -253,7 +254,10 @@ export function QuoteForm() {
               </ul>
             ) : (
               <>
-                <span className="flex h-[30px] w-6 items-center justify-center">
+                <span
+                  className="flex h-[30px] w-6 items-center justify-center"
+                  data-landing-image={LANDING_IMAGE_IDS.QUOTE_UPLOAD_ICON}
+                >
                   <Image
                     src={LANDING_IMAGES.iconUpload}
                     alt=""

@@ -1,3 +1,4 @@
+import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import { ModelingCard } from "./ModelingCard";
 
@@ -8,6 +9,7 @@ export function ModelingBlockHighJewelry() {
       title="High Jewelry"
       description="Advanced pavé and fine-setting structures developed with micron-level precision. Invisible settings and ultra-thin tolerances engineered with strict structural discipline."
       imageSrc={LANDING_IMAGES.modelingHighJewelry}
+      imageId={LANDING_IMAGE_IDS.MODELING_HIGH_JEWELRY}
       gradient="linear-gradient(177.43deg, rgb(53, 53, 53) 19.132%, rgb(196, 195, 195) 96.072%)"
       imageOnLeft={false}
       textAlign="left"

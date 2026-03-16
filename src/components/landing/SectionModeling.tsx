@@ -26,10 +26,10 @@ export function SectionModeling() {
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:gap-[18px]">
           <ModelingBlockHipHop />
           <ModelingBlockBridal />
-          <ModelingBlockHighJewelry />
-          <ModelingBlockMechanical />
           <ModelingBlockPortrait />
+          <ModelingBlockMechanical />
           <ModelingBlockHeritage />
+          <ModelingBlockHighJewelry />
         </div>
       </div>
     </section>
