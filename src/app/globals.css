@@ -35,7 +35,7 @@ section[id] {
   scroll-margin-top: 4.5rem;
 }
 
-/* Hero modeling subtitle — vertical position, width, centering, size (ID-only) */
+/* Hero modeling subtitle — design spec (ID-only) */
 #hero-modeling-subtitle {
   transform: translateY(-1.5rem);
   width: 90%;
@@ -43,16 +43,18 @@ section[id] {
   margin-inline: auto;
   text-align: center;
   white-space: normal;
-  font-size: 1.125rem;
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 350;
+  line-height: 31px;
 }
 @media (min-width: 768px) {
   #hero-modeling-subtitle {
     transform: translateY(-1.625rem);
     width: 90%;
     max-width: 52rem;
-    font-size: 1.25rem;
-    line-height: 1.5;
   }
 }
 
