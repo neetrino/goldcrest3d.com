@@ -55,7 +55,9 @@ export function PowerBanners() {
       {SLIDES.map((slide) => (
         <div
           key={slide.id}
-          className="relative flex min-h-[560px] w-full shrink-0 overflow-hidden md:min-h-[883px]"
+          className={`relative flex min-h-[560px] w-full shrink-0 overflow-hidden md:min-h-[883px] ${
+            slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""
+          }`}
         >
           <div
             className="absolute inset-0 pointer-events-none overflow-hidden"
@@ -86,6 +88,7 @@ export function PowerBanners() {
                   alt=""
                   fill
                   className="object-cover"
+                  style={slide.id === "rendering" ? { objectPosition: "center 250%" } : undefined}
                   sizes="100vw"
                   priority={slide.id === "modeling"}
                   unoptimized
@@ -131,7 +134,15 @@ export function PowerBanners() {
                         : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
                   }
                 >
-                  {slide.title}
+                  {slide.id === "rendering" ? (
+                    <>
+                      Jewelry
+                      <br />
+                      Rendering
+                    </>
+                  ) : (
+                    slide.title
+                  )}
                 </h1>
                 <p
                   className={
