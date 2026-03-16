@@ -56,7 +56,7 @@ export function LandingNav() {
         </ul>
         <Link
           href={`#${LANDING_SECTION_IDS.QUOTE}`}
-          className="nav-cta-gradient mr-10 flex h-14 shrink-0 items-center justify-center rounded-full px-6 py-2.5 text-base font-bold leading-5 text-white shadow-sm transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50"
+          className="nav-cta-gradient mr-10 flex h-[40px] w-[190px] shrink-0 items-center justify-center rounded-full px-[28px] py-[10px] text-sm font-bold leading-5 text-white transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50"
         >
           Request a Quote
         </Link>
