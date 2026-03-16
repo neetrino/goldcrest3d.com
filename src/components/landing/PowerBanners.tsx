@@ -136,7 +136,7 @@ export function PowerBanners() {
               <div
                 className={
                   slide.id === "rendering"
-                    ? "relative z-10 flex w-full flex-col items-end justify-center gap-8 pl-6 pr-6 pt-16 pb-16 text-right text-white md:absolute md:right-0 md:top-[58%] md:max-w-[494px] md:-translate-y-1/2 md:pl-12 md:pr-[153px] md:pt-0 md:pb-0"
+                    ? "relative z-10 flex w-full flex-col items-end justify-center gap-8 pl-6 pr-6 pt-16 pb-16 text-right text-white md:absolute md:right-0 md:top-[50%] md:max-w-[494px] md:-translate-y-1/2 md:pl-12 md:pr-[153px] md:pt-0 md:pb-0"
                     : `relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
                         slide.contentAlign === "right"
                           ? "items-end text-right"
@@ -149,7 +149,7 @@ export function PowerBanners() {
                 <h1
                   className={
                     slide.id === "rendering"
-                      ? "relative inline-block max-w-full whitespace-nowrap font-black leading-[72px] tracking-[-1.8px] text-right text-white text-[56px] md:text-[52px] md:w-[494px]"
+                      ? "relative inline-block max-w-full -translate-x-12 whitespace-nowrap font-black leading-[68px] tracking-[-1.8px] text-right text-white text-[52px] md:-translate-x-36 md:text-[48px] md:w-[494px]"
                       : slide.darkText
                         ? "max-w-[494px] font-black leading-[72px] tracking-[-1.8px] text-black text-[56px] md:text-[52px]"
                         : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
@@ -160,7 +160,7 @@ export function PowerBanners() {
                 <p
                   className={
                     slide.id === "rendering"
-                      ? "relative inline-block w-full max-w-[433px] text-right font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
+                      ? "relative inline-block w-full max-w-[433px] text-right font-light italic leading-[26px] text-[rgba(255,255,255,0.9)] text-[17px] md:text-[19px]"
                       : slide.darkText
                         ? "mt-8 max-w-[409px] font-light italic leading-[28px] text-[rgba(18,18,18,0.9)] text-[18px] md:text-[20px]"
                         : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
