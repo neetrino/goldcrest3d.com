@@ -18,6 +18,10 @@ const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
   { id: LANDING_SECTION_IDS.FOOTER, label: "Contact" },
 ];
 
+/** Scoped styles for the header "Request a Quote" CTA only. Change here to avoid affecting other header elements. */
+const REQUEST_QUOTE_BTN_CLASSES =
+  "nav-cta-gradient mr-10 -translate-x-8 flex h-[40px] w-[190px] shrink-0 items-center justify-center rounded-full px-[28px] py-[10px] text-sm font-bold leading-5 text-white transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50";
+
 export function LandingNav() {
   return (
     <nav
@@ -55,8 +59,10 @@ export function LandingNav() {
           ))}
         </ul>
         <Link
+          id="landing-nav-request-quote"
           href={`#${LANDING_SECTION_IDS.QUOTE}`}
-          className="nav-cta-gradient mr-10 flex h-[40px] w-[190px] shrink-0 items-center justify-center rounded-full px-[28px] py-[10px] text-sm font-bold leading-5 text-white transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50"
+          className={REQUEST_QUOTE_BTN_CLASSES}
+          aria-label="Request a Quote"
         >
           Request a Quote
         </Link>
