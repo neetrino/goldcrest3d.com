@@ -76,13 +76,13 @@ export function PowerBanners() {
             }
           >
               {slide.id === "modeling" ? (
-                <div className="absolute inset-y-0 left-1/2 w-[115%] -translate-x-1/2">
+                <div className="absolute inset-y-0 left-1/2 w-[100%] -translate-x-1/2 -translate-y-18 scale-x-110 scale-y-110 md:-translate-y-28 md:scale-x-110 md:scale-y-110">
                   <Image
                     src={slide.bg}
                     alt=""
                     fill
                     className="object-cover"
-                    style={{ objectPosition: "center 135%" }}
+                    style={{ objectPosition: "center 50%" }}
                     sizes="100vw"
                     priority
                     unoptimized
@@ -117,7 +117,7 @@ export function PowerBanners() {
             {slide.id === "modeling" ? (
               <div
                 id={LANDING_ELEMENT_IDS.HERO_MODELING_TEXT_GROUP}
-                className="relative z-10 flex min-h-full w-full -translate-y-4 flex-col items-center justify-end px-6 pb-12 pt-12 text-center md:-translate-y-6 md:pb-20 md:pt-16"
+                className="relative z-10 flex min-h-full w-full -translate-y-8 flex-col items-center justify-end px-6 pb-12 pt-12 text-center md:-translate-y-14 md:pb-20 md:pt-16"
               >
                 <div className="flex w-full justify-center">
                   <h1 className="mt-96 -translate-y-2 whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:mt-[28rem] md:text-[36px] md:leading-[1.1] md:tracking-[-1.8px] md:text-[48px] md:-translate-y-4">
@@ -126,11 +126,11 @@ export function PowerBanners() {
                 </div>
                 <p
                   id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
-                  className="mt-5 whitespace-nowrap font-normal leading-[1.4] text-[#b0b0b0] text-[17px] md:mt-6 md:text-[18px] md:leading-[28px]"
+                  className="mt-5 whitespace-nowrap font-normal leading-tight text-[#b0b0b0] text-[17px] md:mt-6 md:text-[18px] md:leading-snug"
                 >
                   {slide.subtitle}
                 </p>
-                <GetAQuoteButton id={HERO_GET_QUOTE_BUTTON_ID} variant="gold" className="mt-10 shrink-0 md:mt-12" />
+                <GetAQuoteButton id={HERO_GET_QUOTE_BUTTON_ID} variant="gold" className="mt-6 shrink-0 md:mt-8" />
               </div>
             ) : (
               <div
@@ -149,21 +149,13 @@ export function PowerBanners() {
                 <h1
                   className={
                     slide.id === "rendering"
-                      ? "relative inline-block max-w-full font-black leading-[72px] tracking-[-1.8px] text-right text-white text-[56px] md:text-[52px] md:w-[494px]"
+                      ? "relative inline-block max-w-full whitespace-nowrap font-black leading-[72px] tracking-[-1.8px] text-right text-white text-[56px] md:text-[52px] md:w-[494px]"
                       : slide.darkText
                         ? "max-w-[494px] font-black leading-[72px] tracking-[-1.8px] text-black text-[56px] md:text-[52px]"
                         : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
                   }
                 >
-                  {slide.id === "rendering" ? (
-                    <>
-                      Jewelry
-                      <br />
-                      Rendering
-                    </>
-                  ) : (
-                    slide.title
-                  )}
+                  {slide.title}
                 </h1>
                 <p
                   className={
