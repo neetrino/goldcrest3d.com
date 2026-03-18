@@ -129,12 +129,29 @@ section[id] {
   --section2-bg-size-height: 130%;
   /* Դրական արժեք — նկարը վեր է (տեքստը չի շարժվում) */
   --section2-bg-nudge-up: 45px;
+  /* Նկարի դիրքի հաշվարկ — նույն Figma բարձրությունը (::before-ում) */
+  --section2-bg-layout-height: 712px;
+  /* Տեսանելի բլոկ — կտրվում է միայն ներքևից, նկարի մասշտաբ/դիրք չի փոխվում */
+  --section2-block-visible-height: 615px;
   position: relative;
   width: 100%;
   max-width: 1920px;
   margin-inline: auto;
-  height: 712px;
+  height: var(--section2-block-visible-height);
   flex-shrink: 0;
+  background-color: lightgray;
+  overflow: hidden;
+}
+
+.power-banners-section2-block::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  width: 100%;
+  height: var(--section2-bg-layout-height);
+  pointer-events: none;
   background-color: lightgray;
   background-image: var(--section2-hero-bg);
   background-position: center calc(70% - var(--section2-bg-nudge-up));
