@@ -14,6 +14,16 @@ import Image from "next/image";
 const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation";
 const RENDERING_SUBTITLE_LINE2 = "and global sales. Perfection in every light ray.";
 
+/**
+ * Figma node 222:314 «brief» — նկարի շերտ (w/h/top ՝ dev mode արժեքներ).
+ * translate-x — միայն նկարը դեպի աջ (տեքստը ֆիքսված է z-10 շերտում).
+ */
+const DESIGN_BRIEF_IMAGE_LAYER_CLASS =
+  "absolute left-[-0.01%] top-[-19.7%] h-[139.32%] w-[112.31%] max-w-none translate-x-[5%] md:translate-x-[7%]";
+
+/** Figma brief ֆրեյմի բարձրություն (712px) */
+const DESIGN_SLIDE_MIN_HEIGHT_MD = "md:min-h-[712px]";
+
 const SLIDES: Array<{
   id: string;
   title: string;
@@ -63,9 +73,11 @@ export function PowerBanners() {
       {SLIDES.map((slide) => (
         <Fragment key={slide.id}>
         <div
-          className={`relative flex min-h-[460px] w-full shrink-0 flex-col overflow-hidden md:min-h-[720px] ${
-            slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""
-          }`}
+          className={`relative flex min-h-[460px] w-full shrink-0 flex-col overflow-hidden ${
+            slide.id === "design"
+              ? DESIGN_SLIDE_MIN_HEIGHT_MD
+              : "md:min-h-[720px]"
+          } ${slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""}`}
         >
           {slide.id === "rendering" && (
             <div
@@ -108,6 +120,22 @@ export function PowerBanners() {
                     priority={false}
                     unoptimized
                   />
+                </div>
+              ) : slide.id === "design" ? (
+                <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                  <div className={DESIGN_BRIEF_IMAGE_LAYER_CLASS}>
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={slide.bg}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="100vw"
+                        priority={false}
+                        unoptimized
+                      />
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <Image
