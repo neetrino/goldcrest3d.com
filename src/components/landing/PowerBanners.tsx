@@ -195,7 +195,7 @@ export function PowerBanners() {
                   </h1>
                   <p
                     id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
-                    className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] -translate-x-3 -translate-y-6 text-right md:-translate-x-5 md:-translate-y-6"
+                    className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] text-right"
                   >
                     <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
                     <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>

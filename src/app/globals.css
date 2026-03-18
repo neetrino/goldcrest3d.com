@@ -37,7 +37,7 @@ section[id] {
   scroll-margin-top: 4.5rem;
 }
 
-/* Հերո ենթավերնագիր — modeling և Jewelry Rendering նույն մասշտաբ (20/28, #FFFFFFE5) */
+/* Հերո ենթավերնագիր — հիմք (modeling 20/28; rendering-ը ներքևում մի քիչ փոքր) */
 .hero-primary-subtitle-typography {
   color: #ffffffe5;
   font-family: "SF Compact", -apple-system, system-ui, sans-serif;
@@ -45,6 +45,19 @@ section[id] {
   font-style: italic;
   font-weight: 350;
   line-height: 28px;
+}
+
+/* translateX — միայն այս ենթավերնագիր; դրական = աջ (Tailwind-ի transform-ը հանված է TSX-ից) */
+#hero-rendering-subtitle {
+  font-size: 18px;
+  line-height: 26px;
+  transform: translate(-10px, -24px);
+}
+
+@media (min-width: 768px) {
+  #hero-rendering-subtitle {
+    transform: translate(-4px, -24px);
+  }
 }
 
 #hero-modeling-subtitle {
