@@ -78,6 +78,22 @@ section[id] {
   }
 }
 
+/* PowerBanners section1 (modeling) — Figma: max 1918×707, aspect 274/101 */
+.power-banners-section1-frame {
+  position: relative;
+  width: 100%;
+  max-width: 1918px;
+  aspect-ratio: 274 / 101;
+}
+
+.power-banners-section1-bg {
+  background-color: #d3d3d3;
+  background-image: var(--section1-hero-bg);
+  background-position: -16px -160.175px;
+  background-size: 101.668% 129.633%;
+  background-repeat: no-repeat;
+}
+
 /* Nav CTA "Request a Quote" — gold gradient from Figma */
 .nav-cta-gradient {
   background: linear-gradient(

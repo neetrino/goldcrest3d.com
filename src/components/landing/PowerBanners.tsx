@@ -73,10 +73,14 @@ export function PowerBanners() {
       {SLIDES.map((slide) => (
         <Fragment key={slide.id}>
         <div
-          className={`relative flex min-h-[460px] w-full shrink-0 flex-col overflow-hidden ${
-            slide.id === "design"
-              ? DESIGN_SLIDE_MIN_HEIGHT_MD
-              : "md:min-h-[720px]"
+          className={`relative flex w-full shrink-0 flex-col overflow-hidden ${
+            slide.id === "modeling"
+              ? "items-center bg-[#d8d8d8]"
+              : `min-h-[460px] ${
+                  slide.id === "design"
+                    ? DESIGN_SLIDE_MIN_HEIGHT_MD
+                    : "md:min-h-[720px]"
+                }`
           } ${slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""}`}
         >
           {slide.id === "rendering" && (
@@ -85,90 +89,81 @@ export function PowerBanners() {
               aria-hidden
             />
           )}
-          <div
-            className="absolute inset-0 pointer-events-none overflow-hidden"
-            data-landing-image={
-              slide.id === "modeling"
-                ? LANDING_IMAGE_IDS.HERO_MODELING
-                : slide.id === "rendering"
-                  ? LANDING_IMAGE_IDS.HERO_RENDERING
-                  : LANDING_IMAGE_IDS.HERO_DESIGN
-            }
-          >
-              {slide.id === "modeling" ? (
-                <div className="absolute inset-y-0 left-1/2 w-[100%] -translate-x-1/2 -translate-y-18 scale-x-110 scale-y-110 md:-translate-y-28 md:scale-x-110 md:scale-y-110">
-                  <Image
-                    src={slide.bg}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    style={{ objectPosition: "center 50%" }}
-                    sizes="100vw"
-                    priority
-                    unoptimized
-                  />
-                </div>
-              ) : slide.id === "rendering" ? (
-                <div className="absolute inset-y-0 left-1/2 w-[115%] -translate-x-[calc(50%-3.25rem)] md:-translate-x-[calc(50%-5.5rem)]">
-                  <Image
-                    src={slide.bg}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    style={{ objectPosition: "66% 60%" }}
-                    sizes="100vw"
-                    priority={false}
-                    unoptimized
-                  />
-                </div>
-              ) : slide.id === "design" ? (
-                <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                  <div className={DESIGN_BRIEF_IMAGE_LAYER_CLASS}>
-                    <div className="relative h-full w-full">
-                      <Image
-                        src={slide.bg}
-                        alt=""
-                        fill
-                        className="object-cover"
-                        sizes="100vw"
-                        priority={false}
-                        unoptimized
-                      />
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <Image
-                  src={slide.bg}
-                  alt=""
-                  fill
-                  className="object-cover"
-                  sizes="100vw"
-                  priority={slide.id === "modeling"}
-                  unoptimized
-                />
-              )}
-            </div>
-            {/* Text overlay: modeling = centered below jewelry (reference layout); others = existing placement */}
-            {slide.id === "modeling" ? (
+          {slide.id === "modeling" ? (
+            <div
+              className="power-banners-section1-frame mx-auto shrink-0"
+              data-landing-image={LANDING_IMAGE_IDS.HERO_MODELING}
+            >
+              <div
+                className="power-banners-section1-bg pointer-events-none absolute inset-0"
+                style={
+                  {
+                    ["--section1-hero-bg" as string]: `url("${slide.bg}")`,
+                  } as React.CSSProperties
+                }
+                aria-hidden
+              />
               <div
                 id={LANDING_ELEMENT_IDS.HERO_MODELING_TEXT_GROUP}
-                className="relative z-10 flex min-h-full w-full -translate-y-8 flex-col items-center justify-end px-6 pb-12 pt-12 text-center md:-translate-y-14 md:pb-20 md:pt-16"
+                className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center px-6 pb-10 pt-8 text-center md:pb-16 md:pt-12"
               >
-                <div className="flex w-full justify-center">
-                  <h1 className="mt-96 -translate-y-2 whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:mt-[28rem] md:text-[36px] md:leading-[1.1] md:tracking-[-1.8px] md:text-[48px] md:-translate-y-4">
-                    {slide.title}
-                  </h1>
-                </div>
+                <h1 className="whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:text-[48px] md:leading-[1.1] md:tracking-[-1.8px]">
+                  {slide.title}
+                </h1>
                 <p
                   id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
-                  className="mt-5 -translate-y-0.5 whitespace-nowrap font-normal leading-tight text-[#b0b0b0] text-[17px] md:mt-6 md:-translate-y-1 md:text-[18px] md:leading-snug"
+                  className="mt-4 whitespace-nowrap font-normal leading-tight text-[#b0b0b0] text-[17px] md:mt-5 md:text-[18px] md:leading-snug"
                 >
                   {slide.subtitle}
                 </p>
-                <GetAQuoteButton id={HERO_GET_QUOTE_BUTTON_ID} variant="gold" className="mt-6 shrink-0 md:mt-8" />
+                <GetAQuoteButton
+                  id={HERO_GET_QUOTE_BUTTON_ID}
+                  variant="gold"
+                  className="mt-6 shrink-0 md:mt-8"
+                />
               </div>
-            ) : (
+            </div>
+          ) : (
+            <>
+              <div
+                className="absolute inset-0 pointer-events-none overflow-hidden"
+                data-landing-image={
+                  slide.id === "rendering"
+                    ? LANDING_IMAGE_IDS.HERO_RENDERING
+                    : LANDING_IMAGE_IDS.HERO_DESIGN
+                }
+              >
+                {slide.id === "rendering" ? (
+                  <div className="absolute inset-y-0 left-1/2 w-[115%] -translate-x-[calc(50%-3.25rem)] md:-translate-x-[calc(50%-5.5rem)]">
+                    <Image
+                      src={slide.bg}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      style={{ objectPosition: "66% 60%" }}
+                      sizes="100vw"
+                      priority={false}
+                      unoptimized
+                    />
+                  </div>
+                ) : (
+                  <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                    <div className={DESIGN_BRIEF_IMAGE_LAYER_CLASS}>
+                      <div className="relative h-full w-full">
+                        <Image
+                          src={slide.bg}
+                          alt=""
+                          fill
+                          className="object-cover"
+                          sizes="100vw"
+                          priority={false}
+                          unoptimized
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
               <div
                 className={
                   slide.id === "rendering"
@@ -217,7 +212,8 @@ export function PowerBanners() {
                   className={slide.id === "rendering" ? "shrink-0" : "mt-8 shrink-0"}
                 />
               </div>
-            )}
+            </>
+          )}
         </div>
         {slide.id === "rendering" && (
           <div
