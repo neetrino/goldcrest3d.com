@@ -163,7 +163,7 @@ export function PowerBanners() {
                 <p
                   className={
                     slide.id === "rendering"
-                      ? "relative inline-block w-full max-w-[433px] text-right font-light italic leading-[26px] text-[rgba(255,255,255,0.9)] text-[17px] md:text-[19px]"
+                      ? "relative inline-block w-full max-w-[433px] -translate-x-3 -translate-y-6 text-right font-light italic leading-[26px] text-[rgba(255,255,255,0.9)] text-[17px] md:-translate-x-5 md:-translate-y-6 md:text-[19px]"
                       : slide.darkText
                         ? "mt-8 max-w-[409px] font-light italic leading-[28px] text-[rgba(18,18,18,0.9)] text-[18px] md:text-[20px]"
                         : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
