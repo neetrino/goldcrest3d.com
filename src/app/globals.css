@@ -37,18 +37,21 @@ section[id] {
   scroll-margin-top: 4.5rem;
 }
 
-/* Hero modeling subtitle — Figma: 20/28, #FFFFFFE5, SF Compact italic 350 */
-#hero-modeling-subtitle {
-  align-self: stretch;
-  margin-inline: auto;
-  text-align: center;
-  white-space: normal;
+/* Հերո ենթավերնագիր — modeling և Jewelry Rendering նույն մասշտաբ (20/28, #FFFFFFE5) */
+.hero-primary-subtitle-typography {
   color: #ffffffe5;
   font-family: "SF Compact", -apple-system, system-ui, sans-serif;
   font-size: 20px;
   font-style: italic;
   font-weight: 350;
   line-height: 28px;
+}
+
+#hero-modeling-subtitle {
+  align-self: stretch;
+  margin-inline: auto;
+  text-align: center;
+  white-space: normal;
   transform: translateY(-8px);
 }
 
@@ -157,6 +160,21 @@ section[id] {
   background-position: center calc(70% - var(--section2-bg-nudge-up));
   background-size: var(--section2-bg-size-width) var(--section2-bg-size-height);
   background-repeat: no-repeat;
+}
+
+/* Section2 տեքստի կլաստեր — միասին դեպի ձախ (--section2-text-cluster-nudge-* PowerBanners-ից) */
+.power-banners-section2-text-cluster {
+  transform: translateX(
+    calc(-1 * var(--section2-text-cluster-nudge-mobile, 56px))
+  );
+}
+
+@media (min-width: 768px) {
+  .power-banners-section2-text-cluster {
+    transform: translateX(
+      calc(-1 * var(--section2-text-cluster-nudge-md, 128px))
+    );
+  }
 }
 
 /* Nav CTA "Request a Quote" — gold gradient from Figma */

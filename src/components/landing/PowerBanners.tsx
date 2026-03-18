@@ -22,6 +22,10 @@ const SECTION1_HERO_TEXT_NUDGE_DOWN_PX = 22;
 /** Միայն modeling վերնագիր — translateY(-N); ցածր N = ավելի ներքև */
 const SECTION1_MODELING_TITLE_NUDGE_UP_PX = 0;
 
+/** Հերո գլխավոր վերնագրի մասշտաբ — modeling և Jewelry Rendering նույնը */
+const HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS =
+  "font-black leading-tight text-white text-[24px] tracking-[-0.006em] md:text-[42px] md:leading-[1.1] md:[letter-spacing:-1.28px]";
+
 /** Explicit two-line copy for Jewelry Rendering subtitle; line break is intentional. */
 const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation";
 const RENDERING_SUBTITLE_LINE2 = "and global sales. Perfection in every light ray.";
@@ -35,6 +39,13 @@ const DESIGN_BRIEF_IMAGE_LAYER_CLASS =
 
 /** Figma brief ֆրեյմի բարձրություն (712px) */
 const DESIGN_SLIDE_MIN_HEIGHT_MD = "md:min-h-[712px]";
+
+/** Section2 (Jewelry Rendering) — ամբողջ տեքստային բլոկը միասին դեպի ձախ (px) */
+const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX = 56;
+const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MD_PX = 128;
+
+/** Միայն «Jewelry Rendering» վերնագիր — դեպի ներքև (px) */
+const SECTION2_RENDERING_TITLE_NUDGE_DOWN_PX = 10;
 
 const SLIDES: Array<{
   id: string;
@@ -134,7 +145,7 @@ export function PowerBanners() {
                   }}
                 >
                   <h1
-                    className="inline-block whitespace-nowrap font-black leading-tight text-white text-[24px] tracking-[-0.006em] md:text-[42px] md:leading-[1.1] md:[letter-spacing:-1.28px]"
+                    className={`inline-block whitespace-nowrap ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
                     style={{
                       transform: `translateY(-${SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
                     }}
@@ -143,7 +154,7 @@ export function PowerBanners() {
                   </h1>
                   <p
                     id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
-                    className="mt-4 shrink-0 md:mt-5"
+                    className="hero-primary-subtitle-typography mt-4 shrink-0 md:mt-5"
                   >
                     {slide.subtitle}
                   </p>
@@ -163,22 +174,38 @@ export function PowerBanners() {
               style={
                 {
                   ["--section2-hero-bg" as string]: `url("${slide.bg}")`,
+                  ["--section2-text-cluster-nudge-mobile" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX}px`,
+                  ["--section2-text-cluster-nudge-md" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MD_PX}px`,
                 } as React.CSSProperties
               }
             >
-              <div className="relative z-10 flex h-full w-full flex-col items-end justify-center gap-8 pl-6 pr-6 pt-16 pb-16 text-right text-white md:absolute md:right-0 md:top-[50%] md:max-w-[494px] md:h-auto md:-translate-y-1/2 md:pl-12 md:pr-[153px] md:pt-0 md:pb-0">
-                <h1 className="relative inline-block max-w-full translate-x-1 -translate-y-2.5 whitespace-nowrap font-black leading-[68px] tracking-[-1.8px] text-right text-white text-[52px] md:-translate-x-10 md:-translate-y-2.5 md:text-[48px] md:w-[494px]">
-                  {slide.title}
-                </h1>
-                <p className="relative inline-block w-full max-w-[433px] -translate-x-3 -translate-y-6 text-right font-light italic leading-[26px] text-[rgba(255,255,255,0.9)] text-[17px] md:-translate-x-5 md:-translate-y-6 md:text-[19px]">
-                  <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
-                  <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
-                </p>
-                <GetAQuoteButton
-                  id={HERO_SECTION2_GET_QUOTE_BUTTON_ID}
-                  variant="gold"
-                  className="shrink-0"
-                />
+              <div className="relative z-10 flex h-full w-full flex-col items-end justify-center pl-6 pr-6 pt-16 pb-16 md:absolute md:right-0 md:top-[50%] md:max-w-[494px] md:h-auto md:-translate-y-1/2 md:pl-12 md:pr-[153px] md:pt-0 md:pb-0">
+                <div className="power-banners-section2-text-cluster flex w-full flex-col items-end gap-8 text-right text-white">
+                  <h1
+                    className={`relative inline-block max-w-full translate-x-1 -translate-y-2.5 whitespace-nowrap text-right md:-translate-x-10 md:-translate-y-2.5 ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
+                  >
+                    <span
+                      className="inline-block"
+                      style={{
+                        transform: `translateY(${SECTION2_RENDERING_TITLE_NUDGE_DOWN_PX}px)`,
+                      }}
+                    >
+                      {slide.title}
+                    </span>
+                  </h1>
+                  <p
+                    id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
+                    className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] -translate-x-3 -translate-y-6 text-right md:-translate-x-5 md:-translate-y-6"
+                  >
+                    <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
+                    <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
+                  </p>
+                  <GetAQuoteButton
+                    id={HERO_SECTION2_GET_QUOTE_BUTTON_ID}
+                    variant="gold"
+                    className="shrink-0"
+                  />
+                </div>
               </div>
             </div>
           ) : (
