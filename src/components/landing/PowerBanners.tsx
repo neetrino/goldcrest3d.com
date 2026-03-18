@@ -40,6 +40,8 @@ const DESIGN_SECTION_BLOCK_HEIGHT_MD_PX = 640;
  */
 const DESIGN_SECTION_BG_POSITION_X_PX = -0.228;
 const DESIGN_SECTION_BG_POSITION_Y_PX = -140.296;
+/** Դրական արժեք — ֆոնի նկարը դեպի ներքև (px) */
+const DESIGN_SECTION_BG_NUDGE_DOWN_PX = 16;
 const DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT = 112.306;
 const DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT = 139.319;
 
@@ -216,7 +218,7 @@ export function PowerBanners() {
                 data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
                 style={{
                   backgroundImage: `url("${slide.bg}")`,
-                  backgroundPosition: `${DESIGN_SECTION_BG_POSITION_X_PX}px ${DESIGN_SECTION_BG_POSITION_Y_PX}px`,
+                  backgroundPosition: `${DESIGN_SECTION_BG_POSITION_X_PX}px calc(${DESIGN_SECTION_BG_POSITION_Y_PX}px + ${DESIGN_SECTION_BG_NUDGE_DOWN_PX}px)`,
                   backgroundSize: `${DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT}% ${DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT}%`,
                   backgroundRepeat: "no-repeat",
                 }}
