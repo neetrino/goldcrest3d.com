@@ -58,13 +58,13 @@ section[id] {
   }
 }
 
-/* Hero "Get a Quote" button — move up only this CTA */
+/* Hero section1 «Get a Quote» — միայն այս CTA (մնացած սլայդերի id-ները այլ են) */
 #hero-get-quote {
-  transform: translateY(-3rem);
+  transform: translateY(-0.75rem);
 }
 @media (min-width: 768px) {
   #hero-get-quote {
-    transform: translateY(-3.25rem);
+    transform: translateY(-1rem);
   }
 }
 
