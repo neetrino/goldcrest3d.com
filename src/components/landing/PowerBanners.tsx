@@ -17,7 +17,10 @@ const SECTION1_TAIL_MIN_HEIGHT_PX = 160;
 const SECTION1_HERO_BG_NUDGE_DOWN_PX = 16;
 
 /** Section1 — վերնագիր, ենթավերնագիր, CTA դեպի ներքև (translateY, px) */
-const SECTION1_HERO_TEXT_NUDGE_DOWN_PX = 26;
+const SECTION1_HERO_TEXT_NUDGE_DOWN_PX = 40;
+
+/** Միայն modeling վերնագիր — աննշան վերև (px) */
+const SECTION1_MODELING_TITLE_NUDGE_UP_PX = 7;
 
 /** Explicit two-line copy for Jewelry Rendering subtitle; line break is intentional. */
 const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation";
@@ -128,7 +131,12 @@ export function PowerBanners() {
                     transform: `translateY(${SECTION1_HERO_TEXT_NUDGE_DOWN_PX}px)`,
                   }}
                 >
-                  <h1 className="whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:text-[48px] md:leading-[1.1] md:tracking-[-1.8px]">
+                  <h1
+                    className="inline-block whitespace-nowrap font-black leading-tight text-white text-[24px] tracking-[-0.006em] md:text-[42px] md:leading-[1.1] md:[letter-spacing:-1.28px]"
+                    style={{
+                      transform: `translateY(-${SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
+                    }}
+                  >
                     {slide.title}
                   </h1>
                   <p
