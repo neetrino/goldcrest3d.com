@@ -30,8 +30,13 @@ const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation"
 const RENDERING_SUBTITLE_LINE2 = "and global sales. Perfection in every light ray.";
 
 /**
+ * Jewelry Design (section 3) — միայն բլոկի բարձրություն (նկարի background-* առանձին).
+ */
+const DESIGN_SECTION_BLOCK_MIN_HEIGHT_MOBILE_PX = 440;
+const DESIGN_SECTION_BLOCK_HEIGHT_MD_PX = 640;
+
+/**
  * Jewelry Design (section 3) — ֆոնի պարամետրեր (Figma dev mode).
- * Չափեր. max-width 1920px, բարձրություն md+՝ 712px (տե՛ս className-ը design սլայդի համար).
  */
 const DESIGN_SECTION_BG_POSITION_X_PX = -0.228;
 const DESIGN_SECTION_BG_POSITION_Y_PX = -140.296;
@@ -100,7 +105,7 @@ export function PowerBanners() {
               : slide.id === "rendering"
                 ? "min-h-0"
                 : slide.id === "design"
-                  ? "mx-auto w-full max-w-[1920px] min-h-[460px] bg-[lightgray] md:h-[712px] md:min-h-[712px]"
+                  ? "power-banners-section3-block mx-auto w-full max-w-[1920px] bg-[lightgray]"
                   : "min-h-[460px] md:min-h-[720px]"
           } ${slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""}`}
         >

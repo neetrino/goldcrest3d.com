@@ -196,6 +196,18 @@ section[id] {
   }
 }
 
+/* PowerBanners section3 (Jewelry Design) — միայն բլոկի բարձրություն; նկարը՝ PowerBanners inline bg */
+.power-banners-section3-block {
+  min-height: var(--section3-block-min-h-mobile, 440px);
+}
+
+@media (min-width: 768px) {
+  .power-banners-section3-block {
+    height: var(--section3-block-height-md, 640px);
+    min-height: var(--section3-block-height-md, 640px);
+  }
+}
+
 /* Nav CTA "Request a Quote" — gold gradient from Figma */
 .nav-cta-gradient {
   background: linear-gradient(
