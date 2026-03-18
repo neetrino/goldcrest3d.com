@@ -11,7 +11,7 @@ import {
 import Image from "next/image";
 
 /** Section1 — ներքևի լրացում (px), նկարի ֆրեյմը չի փոխվում */
-const SECTION1_TAIL_MIN_HEIGHT_PX = 160;
+const SECTION1_TAIL_MIN_HEIGHT_PX = 120;
 
 /** Section1 — միայն հերո-նկարը դեպի ներքև (px), background-position Y */
 const SECTION1_HERO_BG_NUDGE_DOWN_PX = 16;

@@ -25,7 +25,7 @@ const REQUEST_QUOTE_BTN_CLASSES =
 export function LandingNav() {
   return (
     <nav
-      className="sticky top-0 z-50 h-[58px] w-full bg-white/95 backdrop-blur-[6px]"
+      className="sticky top-0 z-50 h-[length:var(--landing-nav-height)] w-full bg-white/95 backdrop-blur-[6px]"
       aria-label="Main navigation"
     >
       <div className="flex h-full w-full items-center justify-between pl-[51px] pr-[51px]">
@@ -41,7 +41,7 @@ export function LandingNav() {
               width={104}
               height={58}
               sizes="100vw"
-              className="relative h-[58px] w-[104px] max-h-full max-w-full overflow-hidden object-cover"
+              className="relative h-[length:var(--landing-nav-height)] w-[length:var(--landing-nav-logo-width)] max-h-full max-w-full overflow-hidden object-cover"
               unoptimized
             />
           </Link>

@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --landing-nav-height: 48px;
+  --landing-nav-logo-width: 86px;
 }
 
 @theme inline {
