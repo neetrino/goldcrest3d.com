@@ -51,12 +51,12 @@ section[id] {
 #hero-rendering-subtitle {
   font-size: 18px;
   line-height: 26px;
-  transform: translate(-10px, -24px);
+  transform: translate(-10px, -12px);
 }
 
 @media (min-width: 768px) {
   #hero-rendering-subtitle {
-    transform: translate(-4px, -24px);
+    transform: translate(-4px, -12px);
   }
 }
 
@@ -68,8 +68,9 @@ section[id] {
   transform: translateY(-8px);
 }
 
-/* Hero section1 «Get a Quote» — միայն այս CTA (section2-ը #hero-section2-get-quote) */
-#hero-get-quote {
+/* Հերո gold CTA — section1 և section2 նույն չափ/տիպոգրաֆիա; transform-ը առանձին */
+#hero-get-quote,
+#hero-section2-get-quote {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,21 +91,26 @@ section[id] {
     0 1px 2px 0 rgba(0, 0, 0, 0.05),
     0 0 0 0 rgba(0, 0, 0, 0),
     0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+#hero-get-quote {
   transform: translateY(-1.5rem);
 }
+
 @media (min-width: 768px) {
   #hero-get-quote {
     transform: translateY(-1.75rem);
   }
 }
 
-/* Hero սլայդ 2 (Jewelry Rendering) — վերև + մի քիչ աջ */
+/* Section2 (Jewelry Rendering) — միայն CTA; X-ը փոքր = ավելի ձախ */
 #hero-section2-get-quote {
-  transform: translate(4.75rem, -2.35rem);
+  transform: translate(2.3rem, -1.65rem);
 }
+
 @media (min-width: 768px) {
   #hero-section2-get-quote {
-    transform: translate(5.5rem, -2.6rem);
+    transform: translate(2.8rem, -1.8rem);
   }
 }
 
