@@ -179,7 +179,8 @@ export function PowerBanners() {
                   )}
                 </p>
                 <GetAQuoteButton
-                  className={slide.id === "rendering" ? "w-[190px] shrink-0" : "mt-8 shrink-0"}
+                  variant={slide.id === "rendering" ? "gold" : "default"}
+                  className={slide.id === "rendering" ? "shrink-0" : "mt-8 shrink-0"}
                 />
               </div>
             )}
