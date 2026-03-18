@@ -16,11 +16,11 @@ const SECTION1_TAIL_MIN_HEIGHT_PX = 120;
 /** Section1 — միայն հերո-նկարը դեպի ներքև (px), background-position Y */
 const SECTION1_HERO_BG_NUDGE_DOWN_PX = 16;
 
-/** Section1 — վերնագիր, ենթավերնագիր, CTA դեպի ներքև (translateY, px) */
-const SECTION1_HERO_TEXT_NUDGE_DOWN_PX = 40;
+/** Section1 — վերնագիր, ենթավերնագիր, CTA դեպի ներքև (translateY, px); ցածր արժեք = ավելի վերև */
+const SECTION1_HERO_TEXT_NUDGE_DOWN_PX = 22;
 
-/** Միայն modeling վերնագիր — աննշան վերև (px) */
-const SECTION1_MODELING_TITLE_NUDGE_UP_PX = 7;
+/** Միայն modeling վերնագիր — translateY(-N); ցածր N = ավելի ներքև */
+const SECTION1_MODELING_TITLE_NUDGE_UP_PX = 0;
 
 /** Explicit two-line copy for Jewelry Rendering subtitle; line break is intentional. */
 const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation";
