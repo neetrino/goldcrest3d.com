@@ -92,13 +92,13 @@ export function PowerBanners() {
                   />
                 </div>
               ) : slide.id === "rendering" ? (
-                <div className="absolute inset-y-0 left-1/2 w-[115%] -translate-x-1/2">
+                <div className="absolute inset-y-0 left-1/2 w-[115%] -translate-x-[calc(50%-3.25rem)] md:-translate-x-[calc(50%-5.5rem)]">
                   <Image
                     src={slide.bg}
                     alt=""
                     fill
                     className="object-cover"
-                    style={{ objectPosition: "center 60%" }}
+                    style={{ objectPosition: "66% 60%" }}
                     sizes="100vw"
                     priority={false}
                     unoptimized
