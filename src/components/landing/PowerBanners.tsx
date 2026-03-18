@@ -88,11 +88,13 @@ export function PowerBanners() {
           className={`relative flex w-full shrink-0 flex-col overflow-hidden ${
             slide.id === "modeling"
               ? "items-center bg-[#d8d8d8]"
-              : `min-h-[460px] ${
-                  slide.id === "design"
-                    ? DESIGN_SLIDE_MIN_HEIGHT_MD
-                    : "md:min-h-[720px]"
-                }`
+              : slide.id === "rendering"
+                ? "min-h-0"
+                : `min-h-[460px] ${
+                    slide.id === "design"
+                      ? DESIGN_SLIDE_MIN_HEIGHT_MD
+                      : "md:min-h-[720px]"
+                  }`
           } ${slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""}`}
         >
           {slide.id === "rendering" && (
@@ -154,94 +156,81 @@ export function PowerBanners() {
               </div>
               <div className="power-banners-section1-tail shrink-0" aria-hidden />
             </div>
+          ) : slide.id === "rendering" ? (
+            <div
+              className="power-banners-section2-block relative overflow-hidden"
+              data-landing-image={LANDING_IMAGE_IDS.HERO_RENDERING}
+              style={
+                {
+                  ["--section2-hero-bg" as string]: `url("${slide.bg}")`,
+                } as React.CSSProperties
+              }
+            >
+              <div className="relative z-10 flex h-full w-full flex-col items-end justify-center gap-8 pl-6 pr-6 pt-16 pb-16 text-right text-white md:absolute md:right-0 md:top-[50%] md:max-w-[494px] md:h-auto md:-translate-y-1/2 md:pl-12 md:pr-[153px] md:pt-0 md:pb-0">
+                <h1 className="relative inline-block max-w-full translate-x-1 -translate-y-2.5 whitespace-nowrap font-black leading-[68px] tracking-[-1.8px] text-right text-white text-[52px] md:-translate-x-10 md:-translate-y-2.5 md:text-[48px] md:w-[494px]">
+                  {slide.title}
+                </h1>
+                <p className="relative inline-block w-full max-w-[433px] -translate-x-3 -translate-y-6 text-right font-light italic leading-[26px] text-[rgba(255,255,255,0.9)] text-[17px] md:-translate-x-5 md:-translate-y-6 md:text-[19px]">
+                  <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
+                  <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
+                </p>
+                <GetAQuoteButton
+                  id={HERO_SECTION2_GET_QUOTE_BUTTON_ID}
+                  variant="gold"
+                  className="shrink-0"
+                />
+              </div>
+            </div>
           ) : (
             <>
               <div
-                className="absolute inset-0 pointer-events-none overflow-hidden"
-                data-landing-image={
-                  slide.id === "rendering"
-                    ? LANDING_IMAGE_IDS.HERO_RENDERING
-                    : LANDING_IMAGE_IDS.HERO_DESIGN
-                }
+                className="pointer-events-none absolute inset-0 overflow-hidden"
+                data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
               >
-                {slide.id === "rendering" ? (
-                  <div className="absolute inset-y-0 left-1/2 w-[115%] -translate-x-[calc(50%-3.25rem)] md:-translate-x-[calc(50%-5.5rem)]">
-                    <Image
-                      src={slide.bg}
-                      alt=""
-                      fill
-                      className="object-cover"
-                      style={{ objectPosition: "66% 60%" }}
-                      sizes="100vw"
-                      priority={false}
-                      unoptimized
-                    />
-                  </div>
-                ) : (
-                  <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                    <div className={DESIGN_BRIEF_IMAGE_LAYER_CLASS}>
-                      <div className="relative h-full w-full">
-                        <Image
-                          src={slide.bg}
-                          alt=""
-                          fill
-                          className="object-cover"
-                          sizes="100vw"
-                          priority={false}
-                          unoptimized
-                        />
-                      </div>
+                <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                  <div className={DESIGN_BRIEF_IMAGE_LAYER_CLASS}>
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={slide.bg}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="100vw"
+                        priority={false}
+                        unoptimized
+                      />
                     </div>
                   </div>
-                )}
+                </div>
               </div>
               <div
-                className={
-                  slide.id === "rendering"
-                    ? "relative z-10 flex w-full flex-col items-end justify-center gap-8 pl-6 pr-6 pt-16 pb-16 text-right text-white md:absolute md:right-0 md:top-[50%] md:max-w-[494px] md:-translate-y-1/2 md:pl-12 md:pr-[153px] md:pt-0 md:pb-0"
-                    : `relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
-                        slide.contentAlign === "right"
-                          ? "items-end text-right"
-                          : slide.contentAlign === "left"
-                            ? "items-start text-left"
-                            : "items-center text-center"
-                      } ${slide.darkText ? "text-[#121212]" : "text-white"}`.trim()
-                }
+                className={`relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
+                  slide.contentAlign === "right"
+                    ? "items-end text-right"
+                    : slide.contentAlign === "left"
+                      ? "items-start text-left"
+                      : "items-center text-center"
+                } ${slide.darkText ? "text-[#121212]" : "text-white"}`.trim()}
               >
                 <h1
                   className={
-                    slide.id === "rendering"
-                      ? "relative inline-block max-w-full translate-x-1 -translate-y-2.5 whitespace-nowrap font-black leading-[68px] tracking-[-1.8px] text-right text-white text-[52px] md:-translate-x-10 md:-translate-y-2.5 md:text-[48px] md:w-[494px]"
-                      : slide.darkText
-                        ? "max-w-[494px] font-black leading-[72px] tracking-[-1.8px] text-black text-[56px] md:text-[52px]"
-                        : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
+                    slide.darkText
+                      ? "max-w-[494px] font-black leading-[72px] tracking-[-1.8px] text-black text-[56px] md:text-[52px]"
+                      : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
                   }
                 >
                   {slide.title}
                 </h1>
                 <p
                   className={
-                    slide.id === "rendering"
-                      ? "relative inline-block w-full max-w-[433px] -translate-x-3 -translate-y-6 text-right font-light italic leading-[26px] text-[rgba(255,255,255,0.9)] text-[17px] md:-translate-x-5 md:-translate-y-6 md:text-[19px]"
-                      : slide.darkText
-                        ? "mt-8 max-w-[409px] font-light italic leading-[28px] text-[rgba(18,18,18,0.9)] text-[18px] md:text-[20px]"
-                        : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
+                    slide.darkText
+                      ? "mt-8 max-w-[409px] font-light italic leading-[28px] text-[rgba(18,18,18,0.9)] text-[18px] md:text-[20px]"
+                      : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
                   }
                 >
-                  {slide.id === "rendering" ? (
-                    <>
-                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
-                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
-                    </>
-                  ) : (
-                    slide.subtitle
-                  )}
+                  {slide.subtitle}
                 </p>
-                <GetAQuoteButton
-                  id={slide.id === "rendering" ? HERO_SECTION2_GET_QUOTE_BUTTON_ID : undefined}
-                  variant={slide.id === "rendering" ? "gold" : "default"}
-                  className={slide.id === "rendering" ? "shrink-0" : "mt-8 shrink-0"}
-                />
+                <GetAQuoteButton className="mt-8 shrink-0" />
               </div>
             </>
           )}

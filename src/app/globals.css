@@ -116,6 +116,22 @@ section[id] {
   background-repeat: no-repeat;
 }
 
+/* PowerBanners section2 (Jewelry Rendering) — Figma ֆրեյմ 1920×712 */
+.power-banners-section2-block {
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  margin-inline: auto;
+  height: 712px;
+  flex-shrink: 0;
+  background-color: lightgray;
+  background-image: var(--section2-hero-bg);
+  background-position: center;
+  /* Նկարի բարձրության scale — Figma 151.685%-ից թեթև նվազեցված */
+  background-size: 100% 144%;
+  background-repeat: no-repeat;
+}
+
 /* Nav CTA "Request a Quote" — gold gradient from Figma */
 .nav-cta-gradient {
   background: linear-gradient(
