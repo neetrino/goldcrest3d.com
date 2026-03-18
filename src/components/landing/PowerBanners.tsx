@@ -8,7 +8,6 @@ import {
   HERO_GET_QUOTE_BUTTON_ID,
   HERO_SECTION2_GET_QUOTE_BUTTON_ID,
 } from "./GetAQuoteButton";
-import Image from "next/image";
 
 /** Section1 — ներքևի լրացում (px), նկարի ֆրեյմը չի փոխվում */
 const SECTION1_TAIL_MIN_HEIGHT_PX = 120;
@@ -31,14 +30,13 @@ const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation"
 const RENDERING_SUBTITLE_LINE2 = "and global sales. Perfection in every light ray.";
 
 /**
- * Figma node 222:314 «brief» — նկարի շերտ (w/h/top ՝ dev mode արժեքներ).
- * translate-x — միայն նկարը դեպի աջ (տեքստը ֆիքսված է z-10 շերտում).
+ * Jewelry Design (section 3) — ֆոնի պարամետրեր (Figma dev mode).
+ * Չափեր. max-width 1920px, բարձրություն md+՝ 712px (տե՛ս className-ը design սլայդի համար).
  */
-const DESIGN_BRIEF_IMAGE_LAYER_CLASS =
-  "absolute left-[-0.01%] top-[-19.7%] h-[139.32%] w-[112.31%] max-w-none translate-x-[5%] md:translate-x-[7%]";
-
-/** Figma brief ֆրեյմի բարձրություն (712px) */
-const DESIGN_SLIDE_MIN_HEIGHT_MD = "md:min-h-[712px]";
+const DESIGN_SECTION_BG_POSITION_X_PX = -0.228;
+const DESIGN_SECTION_BG_POSITION_Y_PX = -140.296;
+const DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT = 112.306;
+const DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT = 139.319;
 
 /** Section2 (Jewelry Rendering) — ամբողջ տեքստային բլոկը միասին դեպի ձախ (px) */
 const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX = 56;
@@ -101,11 +99,9 @@ export function PowerBanners() {
               ? "items-center bg-[#d8d8d8]"
               : slide.id === "rendering"
                 ? "min-h-0"
-                : `min-h-[460px] ${
-                    slide.id === "design"
-                      ? DESIGN_SLIDE_MIN_HEIGHT_MD
-                      : "md:min-h-[720px]"
-                  }`
+                : slide.id === "design"
+                  ? "mx-auto w-full max-w-[1920px] min-h-[460px] bg-[lightgray] md:h-[712px] md:min-h-[712px]"
+                  : "min-h-[460px] md:min-h-[720px]"
           } ${slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""}`}
         >
           {slide.id === "rendering" && (
@@ -211,25 +207,16 @@ export function PowerBanners() {
           ) : (
             <>
               <div
-                className="pointer-events-none absolute inset-0 overflow-hidden"
+                className="pointer-events-none absolute inset-0 overflow-hidden bg-[lightgray]"
                 data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
-              >
-                <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                  <div className={DESIGN_BRIEF_IMAGE_LAYER_CLASS}>
-                    <div className="relative h-full w-full">
-                      <Image
-                        src={slide.bg}
-                        alt=""
-                        fill
-                        className="object-cover"
-                        sizes="100vw"
-                        priority={false}
-                        unoptimized
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
+                style={{
+                  backgroundImage: `url("${slide.bg}")`,
+                  backgroundPosition: `${DESIGN_SECTION_BG_POSITION_X_PX}px ${DESIGN_SECTION_BG_POSITION_Y_PX}px`,
+                  backgroundSize: `${DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT}% ${DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT}%`,
+                  backgroundRepeat: "no-repeat",
+                }}
+                aria-hidden
+              />
               <div
                 className={`relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
                   slide.contentAlign === "right"

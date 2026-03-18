@@ -14,7 +14,6 @@ export function LandingSections() {
   return (
     <>
       <PowerBanners />
-      <SectionDivider variant="onLight" />
 
       <SectionPhilosophy />
       <SectionDivider variant="onLight" />
