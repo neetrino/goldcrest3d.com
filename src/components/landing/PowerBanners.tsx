@@ -10,6 +10,12 @@ import {
 } from "./GetAQuoteButton";
 import Image from "next/image";
 
+/** Section1 — ներքևի լրացում (px), նկարի ֆրեյմը չի փոխվում */
+const SECTION1_TAIL_MIN_HEIGHT_PX = 160;
+
+/** Section1 — միայն հերո-նկարը դեպի ներքև (px), background-position Y */
+const SECTION1_HERO_BG_NUDGE_DOWN_PX = 16;
+
 /** Explicit two-line copy for Jewelry Rendering subtitle; line break is intentional. */
 const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation";
 const RENDERING_SUBTITLE_LINE2 = "and global sales. Perfection in every light ray.";
@@ -91,37 +97,48 @@ export function PowerBanners() {
           )}
           {slide.id === "modeling" ? (
             <div
-              className="power-banners-section1-frame mx-auto shrink-0"
-              data-landing-image={LANDING_IMAGE_IDS.HERO_MODELING}
+              className="power-banners-section1-block shrink-0"
+              style={
+                {
+                  ["--section1-tail-min-height" as string]: `${SECTION1_TAIL_MIN_HEIGHT_PX}px`,
+                } as React.CSSProperties
+              }
             >
               <div
-                className="power-banners-section1-bg pointer-events-none absolute inset-0"
-                style={
-                  {
-                    ["--section1-hero-bg" as string]: `url("${slide.bg}")`,
-                  } as React.CSSProperties
-                }
-                aria-hidden
-              />
-              <div
-                id={LANDING_ELEMENT_IDS.HERO_MODELING_TEXT_GROUP}
-                className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center px-6 pb-10 pt-8 text-center md:pb-16 md:pt-12"
+                className="power-banners-section1-image-strip"
+                data-landing-image={LANDING_IMAGE_IDS.HERO_MODELING}
               >
-                <h1 className="whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:text-[48px] md:leading-[1.1] md:tracking-[-1.8px]">
-                  {slide.title}
-                </h1>
-                <p
-                  id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
-                  className="mt-4 whitespace-nowrap font-normal leading-tight text-[#b0b0b0] text-[17px] md:mt-5 md:text-[18px] md:leading-snug"
-                >
-                  {slide.subtitle}
-                </p>
-                <GetAQuoteButton
-                  id={HERO_GET_QUOTE_BUTTON_ID}
-                  variant="gold"
-                  className="mt-6 shrink-0 md:mt-8"
+                <div
+                  className="power-banners-section1-bg pointer-events-none absolute inset-0"
+                  style={
+                    {
+                      ["--section1-hero-bg" as string]: `url("${slide.bg}")`,
+                      ["--section1-bg-nudge-y" as string]: `${SECTION1_HERO_BG_NUDGE_DOWN_PX}px`,
+                    } as React.CSSProperties
+                  }
+                  aria-hidden
                 />
+                <div
+                  id={LANDING_ELEMENT_IDS.HERO_MODELING_TEXT_GROUP}
+                  className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center px-6 pb-10 pt-8 text-center md:pb-16 md:pt-12"
+                >
+                  <h1 className="whitespace-nowrap font-black leading-tight tracking-tight text-white text-[28px] md:text-[48px] md:leading-[1.1] md:tracking-[-1.8px]">
+                    {slide.title}
+                  </h1>
+                  <p
+                    id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
+                    className="mt-4 whitespace-nowrap font-normal leading-tight text-[#b0b0b0] text-[17px] md:mt-5 md:text-[18px] md:leading-snug"
+                  >
+                    {slide.subtitle}
+                  </p>
+                  <GetAQuoteButton
+                    id={HERO_GET_QUOTE_BUTTON_ID}
+                    variant="gold"
+                    className="mt-6 shrink-0 md:mt-8"
+                  />
+                </div>
               </div>
+              <div className="power-banners-section1-tail shrink-0" aria-hidden />
             </div>
           ) : (
             <>

@@ -78,18 +78,32 @@ section[id] {
   }
 }
 
-/* PowerBanners section1 (modeling) — Figma: max 1918×707, aspect 274/101 */
-.power-banners-section1-frame {
-  position: relative;
+/* PowerBanners section1 (modeling) — նկարի ֆրեյմ 1918×707, aspect 274/101 */
+.power-banners-section1-block {
   width: 100%;
   max-width: 1918px;
+  margin-inline: auto;
+}
+
+/* Միայն այս շերտում է հերո-նկարը — չափերը չեն փոխվում */
+.power-banners-section1-image-strip {
+  position: relative;
+  width: 100%;
   aspect-ratio: 274 / 101;
+}
+
+/* Լրացուցիչ բարձրություն նկարի տակ (նկարը չի ձգվում) */
+.power-banners-section1-tail {
+  width: 100%;
+  min-height: var(--section1-tail-min-height, 10rem);
+  background-color: #d8d8d8;
 }
 
 .power-banners-section1-bg {
   background-color: #d3d3d3;
   background-image: var(--section1-hero-bg);
-  background-position: -16px -160.175px;
+  /* Y + nudge — դրական nudge-ը նկարը իջեցնում է ներքև */
+  background-position: -16px calc(-160.175px + var(--section1-bg-nudge-y, 0px));
   background-size: 101.668% 129.633%;
   background-repeat: no-repeat;
 }
