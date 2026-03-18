@@ -68,6 +68,16 @@ section[id] {
   }
 }
 
+/* Hero սլայդ 2 (Jewelry Rendering) — վերև + մի քիչ աջ */
+#hero-section2-get-quote {
+  transform: translate(4.75rem, -2.35rem);
+}
+@media (min-width: 768px) {
+  #hero-section2-get-quote {
+    transform: translate(5.5rem, -2.6rem);
+  }
+}
+
 /* Nav CTA "Request a Quote" — gold gradient from Figma */
 .nav-cta-gradient {
   background: linear-gradient(

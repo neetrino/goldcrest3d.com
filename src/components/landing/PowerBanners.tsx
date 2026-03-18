@@ -2,7 +2,11 @@
 
 import { LANDING_ELEMENT_IDS, LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
-import { GetAQuoteButton, HERO_GET_QUOTE_BUTTON_ID } from "./GetAQuoteButton";
+import {
+  GetAQuoteButton,
+  HERO_GET_QUOTE_BUTTON_ID,
+  HERO_SECTION2_GET_QUOTE_BUTTON_ID,
+} from "./GetAQuoteButton";
 import Image from "next/image";
 
 /** Explicit two-line copy for Jewelry Rendering subtitle; line break is intentional. */
@@ -179,6 +183,7 @@ export function PowerBanners() {
                   )}
                 </p>
                 <GetAQuoteButton
+                  id={slide.id === "rendering" ? HERO_SECTION2_GET_QUOTE_BUTTON_ID : undefined}
                   variant={slide.id === "rendering" ? "gold" : "default"}
                   className={slide.id === "rendering" ? "shrink-0" : "mt-8 shrink-0"}
                 />

@@ -8,6 +8,9 @@ import Link from "next/link";
  */
 export const HERO_GET_QUOTE_BUTTON_ID = "hero-get-quote";
 
+/** Section 2 (Jewelry Rendering slide) — առանձին id CTA-ի համար */
+export const HERO_SECTION2_GET_QUOTE_BUTTON_ID = "hero-section2-get-quote";
+
 export function GetAQuoteButton({
   id,
   className,
