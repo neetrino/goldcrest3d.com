@@ -126,7 +126,8 @@ section[id] {
   flex-shrink: 0;
   background-color: lightgray;
   background-image: var(--section2-hero-bg);
-  background-position: center;
+  /* 22%-ի հակառակ (սիմետրիա կենտրոնի շուրջ) */
+  background-position: center 78%;
   /* Նկարի բարձրության scale — Figma 151.685%-ից թեթև նվազեցված */
   background-size: 100% 144%;
   background-repeat: no-repeat;
