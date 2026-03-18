@@ -124,6 +124,11 @@ section[id] {
 
 /* PowerBanners section2 (Jewelry Rendering) — Figma ֆրեյմ 1920×712 */
 .power-banners-section2-block {
+  /* BG scale — միայն նկար */
+  --section2-bg-size-width: 100%;
+  --section2-bg-size-height: 130%;
+  /* Դրական արժեք — նկարը վեր է (տեքստը չի շարժվում) */
+  --section2-bg-nudge-up: 45px;
   position: relative;
   width: 100%;
   max-width: 1920px;
@@ -132,9 +137,8 @@ section[id] {
   flex-shrink: 0;
   background-color: lightgray;
   background-image: var(--section2-hero-bg);
-  background-position: center 70%;
-  /* Նկարի բարձրության scale — Figma 151.685%-ից թեթև նվազեցված */
-  background-size: 100% 144%;
+  background-position: center calc(70% - var(--section2-bg-nudge-up));
+  background-size: var(--section2-bg-size-width) var(--section2-bg-size-height);
   background-repeat: no-repeat;
 }
 
