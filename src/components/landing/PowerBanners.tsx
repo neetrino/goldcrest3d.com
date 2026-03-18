@@ -152,7 +152,7 @@ export function PowerBanners() {
                 <h1
                   className={
                     slide.id === "rendering"
-                      ? "relative inline-block max-w-full -translate-x-12 whitespace-nowrap font-black leading-[68px] tracking-[-1.8px] text-right text-white text-[52px] md:-translate-x-36 md:text-[48px] md:w-[494px]"
+                      ? "relative inline-block max-w-full translate-x-1 -translate-y-2.5 whitespace-nowrap font-black leading-[68px] tracking-[-1.8px] text-right text-white text-[52px] md:-translate-x-10 md:-translate-y-2.5 md:text-[48px] md:w-[494px]"
                       : slide.darkText
                         ? "max-w-[494px] font-black leading-[72px] tracking-[-1.8px] text-black text-[56px] md:text-[52px]"
                         : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
