@@ -1,8 +1,9 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
+import { getModelingHipHopCardBackgroundStyle } from "./modeling-hiphop-background.constants";
 import { ModelingCard } from "./ModelingCard";
 
-/** Hip-Hop Jewelry block. Tiger pendant on right; keep it visible. */
+/** Hip-Hop Jewelry block — Figma background layer on image area. */
 export function ModelingBlockHipHop() {
   return (
     <ModelingCard
@@ -12,7 +13,7 @@ export function ModelingBlockHipHop() {
       imageId={LANDING_IMAGE_IDS.MODELING_HIPHOP}
       imageOnLeft={false}
       textAlign="left"
-      imagePosition="right center"
+      imageLayerBackground={getModelingHipHopCardBackgroundStyle()}
     />
   );
 }

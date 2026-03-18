@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 
 import {
@@ -23,6 +24,8 @@ export type ModelingCardProps = {
   descriptionMuted?: boolean;
   /** Critical: where the image is anchored (e.g. "right center" so pendant stays visible). */
   imagePosition?: string;
+  /** Figma CSS background on full-bleed layer (replaces next/image when set). */
+  imageLayerBackground?: Pick<CSSProperties, "background">;
 };
 
 const DEFAULT_IMAGE_POSITION = "center center";
@@ -38,6 +41,7 @@ export function ModelingCard({
   titleBold = false,
   descriptionMuted = false,
   imagePosition = DEFAULT_IMAGE_POSITION,
+  imageLayerBackground,
 }: ModelingCardProps) {
   const imageStyle = { objectPosition: imagePosition };
   const textAlignClass =
@@ -58,16 +62,22 @@ export function ModelingCard({
         className="relative min-w-0 w-full overflow-hidden"
         style={overlayFrameStyle}
       >
-        <div className="absolute inset-0" data-landing-image={imageId}>
-          <Image
-            src={imageSrc}
-            alt=""
-            fill
-            className="object-cover"
-            style={imageStyle}
-            sizes="(max-width: 768px) 100vw, 50vw"
-            unoptimized
-          />
+        <div
+          className="absolute inset-0"
+          data-landing-image={imageId}
+          style={imageLayerBackground ?? undefined}
+        >
+          {!imageLayerBackground ? (
+            <Image
+              src={imageSrc}
+              alt=""
+              fill
+              className="object-cover"
+              style={imageStyle}
+              sizes="(max-width: 768px) 100vw, 50vw"
+              unoptimized
+            />
+          ) : null}
         </div>
         <div
           className={`absolute inset-0 z-10 flex flex-col justify-center gap-6 px-6 py-8 text-white md:px-8 md:py-10 ${

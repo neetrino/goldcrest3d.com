@@ -15,8 +15,7 @@ export const LANDING_IMAGES = {
   heroDesign:
     "https://www.figma.com/api/mcp/asset/1cdecab5-207a-4e4a-acaa-963bd712d880",
   /** Modeling Specialization blocks (Figma export) */
-  modelingHipHop:
-    "https://www.figma.com/api/mcp/asset/a672c438-089b-4205-bcb4-b2bee9975e28",
+  modelingHipHop: "/images/modeling/hip-hop.png",
   modelingBridal:
     "https://www.figma.com/api/mcp/asset/8bbfa33e-92f6-4e62-bcfa-becb486ade43",
   modelingHighJewelry:
