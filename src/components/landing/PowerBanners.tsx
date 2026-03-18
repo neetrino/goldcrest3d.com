@@ -7,6 +7,7 @@ import {
   GetAQuoteButton,
   HERO_GET_QUOTE_BUTTON_ID,
   HERO_SECTION2_GET_QUOTE_BUTTON_ID,
+  HERO_SECTION3_GET_QUOTE_BUTTON_ID,
 } from "./GetAQuoteButton";
 
 /** Section1 — ներքևի լրացում (px), նկարի ֆրեյմը չի փոխվում */
@@ -21,13 +22,23 @@ const SECTION1_HERO_TEXT_NUDGE_DOWN_PX = 22;
 /** Միայն modeling վերնագիր — translateY(-N); ցածր N = ավելի ներքև */
 const SECTION1_MODELING_TITLE_NUDGE_UP_PX = 0;
 
-/** Հերո գլխավոր վերնագրի մասշտաբ — modeling և Jewelry Rendering նույնը */
-const HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS =
-  "font-black leading-tight text-white text-[24px] tracking-[-0.006em] md:text-[42px] md:leading-[1.1] md:[letter-spacing:-1.28px]";
+/** Հերո գլխավոր վերնագիր — մասշտաբ (գույնը առանձին) */
+const HERO_PRIMARY_TITLE_TYPOGRAPHY_CORE_CLASS =
+  "font-black leading-tight text-[24px] tracking-[-0.006em] md:text-[42px] md:leading-[1.1] md:[letter-spacing:-1.28px]";
+
+/** Modeling, Jewelry Rendering — սպիտակ ֆոնի վրա */
+const HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS = `${HERO_PRIMARY_TITLE_TYPOGRAPHY_CORE_CLASS} text-white`;
+
+/** Jewelry Design — մուգ տեքստ, նույն տառաչափ */
+const HERO_PRIMARY_TITLE_TYPOGRAPHY_ON_LIGHT_CLASS = `${HERO_PRIMARY_TITLE_TYPOGRAPHY_CORE_CLASS} text-black`;
 
 /** Explicit two-line copy for Jewelry Rendering subtitle; line break is intentional. */
 const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation";
 const RENDERING_SUBTITLE_LINE2 = "and global sales. Perfection in every light ray.";
+
+/** Explicit two-line copy for Jewelry Design subtitle; line break is intentional. */
+const DESIGN_SUBTITLE_LINE1 = "Concept-to-CAD development for legacy";
+const DESIGN_SUBTITLE_LINE2 = "collection building. Your vision, engineered.";
 
 /**
  * Jewelry Design (section 3) — միայն բլոկի բարձրություն (նկարի background-* առանձին).
@@ -42,6 +53,14 @@ const DESIGN_SECTION_BG_POSITION_X_PX = -0.228;
 const DESIGN_SECTION_BG_POSITION_Y_PX = -140.296;
 /** Դրական արժեք — ֆոնի նկարը դեպի ներքև (px) */
 const DESIGN_SECTION_BG_NUDGE_DOWN_PX = 16;
+/** Վերնագիր, ենթատեքստ, CTA — դեպի ձախ (translateX, px) */
+const DESIGN_SECTION_TEXT_NUDGE_LEFT_PX = 185;
+/** Jewelry Design տեքստային բլոկ — դեպի ներքև (translateY, px) */
+const DESIGN_SECTION_TEXT_NUDGE_DOWN_PX = 180;
+/** Միայն Jewelry Design ենթավերնագիր — դեպի վերև (Tailwind -translate-y-4 ≈ 16px) */
+const DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS = "-translate-y-4";
+/** Միայն Jewelry Design «Get a Quote» — դեպի վերև */
+const DESIGN_SECTION_GET_QUOTE_NUDGE_UP_CLASS = "-translate-y-8";
 const DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT = 112.306;
 const DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT = 139.319;
 
@@ -82,8 +101,7 @@ const SLIDES: Array<{
   {
     id: "design",
     title: "Jewelry Design",
-    subtitle:
-      "Concept-to-CAD development for legacy collection building. Your vision, engineered.",
+    subtitle: `${DESIGN_SUBTITLE_LINE1} ${DESIGN_SUBTITLE_LINE2}`,
     bg: LANDING_IMAGES.heroDesign,
     contentAlign: "left",
     useRemote: true,
@@ -232,11 +250,18 @@ export function PowerBanners() {
                       ? "items-start text-left"
                       : "items-center text-center"
                 } ${slide.darkText ? "text-[#121212]" : "text-white"}`.trim()}
+                style={
+                  slide.id === "design"
+                    ? {
+                        transform: `translate(-${DESIGN_SECTION_TEXT_NUDGE_LEFT_PX}px, ${DESIGN_SECTION_TEXT_NUDGE_DOWN_PX}px)`,
+                      }
+                    : undefined
+                }
               >
                 <h1
                   className={
                     slide.darkText
-                      ? "max-w-[494px] font-black leading-[72px] tracking-[-1.8px] text-black text-[56px] md:text-[52px]"
+                      ? `inline-block max-w-[494px] whitespace-nowrap ${HERO_PRIMARY_TITLE_TYPOGRAPHY_ON_LIGHT_CLASS}`
                       : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
                   }
                 >
@@ -245,13 +270,24 @@ export function PowerBanners() {
                 <p
                   className={
                     slide.darkText
-                      ? "mt-8 max-w-[409px] font-light italic leading-[28px] text-[rgba(18,18,18,0.9)] text-[18px] md:text-[20px]"
+                      ? `hero-primary-subtitle-typography-design mt-8 max-w-[433px] ${DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS}`
                       : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
                   }
                 >
-                  {slide.subtitle}
+                  {slide.darkText ? (
+                    <>
+                      <span className="block">{DESIGN_SUBTITLE_LINE1}</span>
+                      <span className="block">{DESIGN_SUBTITLE_LINE2}</span>
+                    </>
+                  ) : (
+                    slide.subtitle
+                  )}
                 </p>
-                <GetAQuoteButton className="mt-8 shrink-0" />
+                <GetAQuoteButton
+                  id={HERO_SECTION3_GET_QUOTE_BUTTON_ID}
+                  variant="gold"
+                  className={`mt-8 shrink-0 ${DESIGN_SECTION_GET_QUOTE_NUDGE_UP_CLASS}`}
+                />
               </div>
             </>
           )}

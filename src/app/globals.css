@@ -54,6 +54,16 @@ section[id] {
   transform: translate(-10px, -12px);
 }
 
+/* Jewelry Design ենթավերնագիր — նույն տառաչափ/line-height ինչ #hero-rendering-subtitle */
+.hero-primary-subtitle-typography-design {
+  color: rgba(18, 18, 18, 0.9);
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 350;
+  line-height: 26px;
+}
+
 @media (min-width: 768px) {
   #hero-rendering-subtitle {
     transform: translate(-4px, -12px);
@@ -70,7 +80,8 @@ section[id] {
 
 /* Հերո gold CTA — section1 և section2 նույն չափ/տիպոգրաֆիա; transform-ը առանձին */
 #hero-get-quote,
-#hero-section2-get-quote {
+#hero-section2-get-quote,
+#hero-section3-get-quote {
   display: flex;
   align-items: center;
   justify-content: center;
