@@ -141,7 +141,7 @@ export function PowerBanners() {
                   </h1>
                   <p
                     id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
-                    className="mt-4 whitespace-nowrap font-normal leading-tight text-[#b0b0b0] text-[17px] md:mt-5 md:text-[18px] md:leading-snug"
+                    className="mt-4 shrink-0 md:mt-5"
                   >
                     {slide.subtitle}
                   </p>

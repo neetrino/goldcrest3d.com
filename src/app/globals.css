@@ -35,27 +35,18 @@ section[id] {
   scroll-margin-top: 4.5rem;
 }
 
-/* Hero modeling subtitle — design spec (ID-only) */
+/* Hero modeling subtitle — Figma: 20/28, #FFFFFFE5, SF Compact italic 350 */
 #hero-modeling-subtitle {
-  transform: translateY(-1.5rem);
-  width: 90%;
-  max-width: 36rem;
+  align-self: stretch;
   margin-inline: auto;
   text-align: center;
   white-space: normal;
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffffe5;
   font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   font-style: italic;
   font-weight: 350;
-  line-height: 31px;
-}
-@media (min-width: 768px) {
-  #hero-modeling-subtitle {
-    transform: translateY(-1.625rem);
-    width: 90%;
-    max-width: 52rem;
-  }
+  line-height: 28px;
 }
 
 /* Hero section1 «Get a Quote» — միայն այս CTA (մնացած սլայդերի id-ները այլ են) */
