@@ -10,20 +10,19 @@ import {
 } from "./modeling";
 
 /**
- * Modeling Specialization section. Figma: title + 2×3 grid of cards (942×495, rounded-16).
- * Each block is a separate component for clear separation.
+ * Modeling Specialization section. 2×3 grid — քարտերը լրիվ սյուն, aspect 83/43, փոքր gap, սուր անկյուններ.
  */
 export function SectionModeling() {
   return (
     <section
       id={LANDING_SECTION_IDS.SPECIALIZATIONS}
-      className="bg-white px-4 py-[67px] md:px-6 md:py-[67px]"
+      className="bg-white px-3 py-[67px] md:px-5 md:py-[67px]"
       aria-labelledby="modeling-heading"
     >
       <div className="mx-auto max-w-[1920px]">
         <ModelingSpecializationTitle />
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:gap-[18px]">
+        <div className="mt-14 grid min-w-0 grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-2.5 lg:gap-2">
           <ModelingBlockHipHop />
           <ModelingBlockBridal />
           <ModelingBlockPortrait />
