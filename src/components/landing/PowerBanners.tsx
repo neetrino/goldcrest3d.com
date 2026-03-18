@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { LANDING_ELEMENT_IDS, LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import {
@@ -60,8 +61,8 @@ export function PowerBanners() {
       aria-label="Hero"
     >
       {SLIDES.map((slide) => (
+        <Fragment key={slide.id}>
         <div
-          key={slide.id}
           className={`relative flex min-h-[460px] w-full shrink-0 flex-col overflow-hidden md:min-h-[720px] ${
             slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""
           }`}
@@ -190,6 +191,13 @@ export function PowerBanners() {
               </div>
             )}
         </div>
+        {slide.id === "rendering" && (
+          <div
+            className="relative z-10 h-2 w-full shrink-0 bg-white"
+            aria-hidden
+          />
+        )}
+        </Fragment>
       ))}
     </section>
   );
