@@ -15,7 +15,7 @@ export function ModelingBlockPortrait() {
       imageId={LANDING_IMAGE_IDS.MODELING_PORTRAIT}
       imageOnLeft={false}
       textAlign="left"
-      titleBold
+      titleCompact
       imagePosition="center center"
       imageLayerBackground={{ background: PORTRAIT_BG }}
       textDark

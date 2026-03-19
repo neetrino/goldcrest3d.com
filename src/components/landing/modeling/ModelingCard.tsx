@@ -23,6 +23,8 @@ export type ModelingCardProps = {
   textAlign: "left" | "right" | "center";
   /** Figma: blocks 1–3 ExtraBold, 4–6 Bold */
   titleBold?: boolean;
+  /** When true, title uses same size as Bridal block: 32px, leading 24px, scale-x-105. */
+  titleCompact?: boolean;
   /** Figma: only Ancient & Heritage uses rgba(255,255,255,0.6) for description */
   descriptionMuted?: boolean;
   /** Critical: where the image is anchored (e.g. "right center" so pendant stays visible). */
@@ -79,6 +81,7 @@ export function ModelingCard({
   imageOnLeft,
   textAlign,
   titleBold = false,
+  titleCompact = false,
   descriptionMuted = false,
   imagePosition = DEFAULT_IMAGE_POSITION,
   imageLayerBackground,
@@ -152,7 +155,11 @@ export function ModelingCard({
         ))
     : description;
   const DescriptionTag = hasLines ? "div" : "p";
-  const titleClassName = `font-manrope ${hasLines ? "text-[32px] leading-[24px] scale-x-105 origin-left" : "text-[40px] leading-[28px]"} ${titleBold ? "font-bold" : "font-extrabold"} ${textColor}`;
+  const titleSizeClass =
+    titleCompact || hasLines
+      ? "text-[32px] leading-[24px] scale-x-105 origin-left"
+      : "text-[40px] leading-[28px]";
+  const titleClassName = `font-manrope ${titleSizeClass} ${titleBold ? "font-bold" : "font-extrabold"} ${textColor}`;
   const descriptionClassName = `font-manrope font-light ${hasLines ? `text-[14px] leading-[22px] ${noDescriptionMaxWidth ? "" : "max-w-[560px]"}` : "text-[16px] leading-[26px] max-w-[407px]"} ${descriptionColor}`;
   const descriptionClassNameGradient = `font-manrope font-light text-[16px] leading-[26px] ${descriptionColor}`;
   const imageStyle = { objectPosition: imagePosition };
