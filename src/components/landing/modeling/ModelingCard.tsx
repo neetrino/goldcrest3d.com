@@ -9,7 +9,10 @@ import {
 /** Props for one Modeling Specialization card. Լրիվ սյուն, aspect 83/43, սուր անկյուններ. */
 export type ModelingCardProps = {
   title: string;
+  /** Single paragraph; ignored when descriptionLines is set. */
   description: string;
+  /** When set, description is rendered as one block per line (e.g. Hip-Hop). */
+  descriptionLines?: string[];
   imageSrc: string;
   /** data-landing-image id for this card's image (section-by-section replacement). */
   imageId: string;
@@ -33,6 +36,7 @@ const DEFAULT_IMAGE_POSITION = "center center";
 export function ModelingCard({
   title,
   description,
+  descriptionLines,
   imageSrc,
   imageId,
   gradient,
@@ -43,6 +47,21 @@ export function ModelingCard({
   imagePosition = DEFAULT_IMAGE_POSITION,
   imageLayerBackground,
 }: ModelingCardProps) {
+  const hasLines = descriptionLines && descriptionLines.length > 0;
+  const descriptionContent = hasLines
+    ? descriptionLines!.map((line, i) => (
+        <span
+          key={i}
+          className="block leading-[22px] whitespace-nowrap"
+        >
+          {line}
+        </span>
+      ))
+    : description;
+  const DescriptionTag = hasLines ? "div" : "p";
+  const titleClassName = `font-manrope ${hasLines ? "text-[32px] leading-[24px] scale-x-105 origin-left" : "text-[40px] leading-[28px]"} ${titleBold ? "font-bold" : "font-extrabold"}`;
+  const descriptionClassName = `font-manrope font-light ${hasLines ? "text-[14px] leading-[22px] max-w-[560px]" : "text-[16px] leading-[26px] max-w-[407px]"} ${descriptionMuted ? "text-white/60" : "text-white"}`;
+  const descriptionClassNameGradient = `font-manrope font-light text-[16px] leading-[26px] ${descriptionMuted ? "text-white/60" : "text-white"}`;
   const imageStyle = { objectPosition: imagePosition };
   const textAlignClass =
     textAlign === "center"
@@ -81,15 +100,21 @@ export function ModelingCard({
         </div>
         <div
           className={`absolute inset-0 z-10 flex flex-col justify-center gap-6 px-6 py-8 text-white md:px-8 md:py-10 ${
-            imageOnLeft ? "items-end pl-[50%]" : "items-start pr-[50%]"
-          } ${textAlignClass}`}
+            imageOnLeft
+              ? hasLines
+                ? "items-end pl-[40%]"
+                : "items-end pl-[50%]"
+              : hasLines
+                ? "items-start pr-[40%]"
+                : "items-start pr-[50%]"
+          } ${textAlignClass} ${hasLines ? "translate-x-6 translate-y-24" : ""}`}
         >
-          <h3 className={`font-manrope text-[40px] leading-[28px] ${titleBold ? "font-bold" : "font-extrabold"}`}>
+          <h3 className={titleClassName}>
             {title}
           </h3>
-          <p className={`font-manrope max-w-[407px] font-light text-[16px] leading-[26px] ${descriptionMuted ? "text-white/60" : "text-white"}`}>
-            {description}
-          </p>
+          <DescriptionTag className={descriptionClassName}>
+            {descriptionContent}
+          </DescriptionTag>
         </div>
       </article>
     );
@@ -131,13 +156,9 @@ export function ModelingCard({
             >
               {title}
             </h3>
-            <p
-              className={`font-manrope font-light text-[16px] leading-[26px] ${
-                descriptionMuted ? "text-white/60" : "text-white"
-              }`}
-            >
-              {description}
-            </p>
+            <DescriptionTag className={descriptionClassNameGradient}>
+              {descriptionContent}
+            </DescriptionTag>
           </div>
         </>
       ) : (
@@ -152,13 +173,9 @@ export function ModelingCard({
             >
               {title}
             </h3>
-            <p
-              className={`font-manrope font-light text-[16px] leading-[26px] ${
-                descriptionMuted ? "text-white/60" : "text-white"
-              }`}
-            >
-              {description}
-            </p>
+            <DescriptionTag className={descriptionClassNameGradient}>
+              {descriptionContent}
+            </DescriptionTag>
           </div>
           <div
             className="relative h-[240px] shrink-0 overflow-hidden md:h-full md:min-h-0 md:w-1/2"
