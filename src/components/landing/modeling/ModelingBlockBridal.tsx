@@ -2,6 +2,9 @@ import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import { ModelingCard } from "./ModelingCard";
 
+/** Figma: 942×488, aspect 83/43; background position/size so ring cluster is centered. */
+const BRIDAL_IMAGE_LAYER_BACKGROUND = `url(${LANDING_IMAGES.modelingBridal}) lightgray -32.94px -65.7px / 106.945% 116.074% no-repeat`;
+
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
 export function ModelingBlockBridal() {
   return (
@@ -13,6 +16,7 @@ export function ModelingBlockBridal() {
       imageOnLeft={true}
       textAlign="right"
       imagePosition="center 55%"
+      imageLayerBackground={{ background: BRIDAL_IMAGE_LAYER_BACKGROUND }}
     />
   );
 }
