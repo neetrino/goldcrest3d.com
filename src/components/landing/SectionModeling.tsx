@@ -9,6 +9,9 @@ import {
   ModelingBlockHeritage,
 } from "./modeling";
 
+/** Fixed height of the Modeling Specialization title block — block does not resize with content. */
+const MODELING_TITLE_BLOCK_HEIGHT_PX = 200;
+
 /**
  * Modeling Specialization section. 2×3 grid — քարտերը լրիվ սյուն, aspect 83/43, փոքր gap, սուր անկյուններ.
  */
@@ -20,7 +23,10 @@ export function SectionModeling() {
       aria-labelledby="modeling-specialization"
     >
       <div className="mx-auto max-w-[1920px]">
-        <div className="flex flex-col items-center justify-center py-20 md:py-24">
+        <div
+          className="flex w-full flex-col items-center justify-center overflow-hidden"
+          style={{ height: `${MODELING_TITLE_BLOCK_HEIGHT_PX}px` }}
+        >
           <ModelingSpecializationTitle />
         </div>
 
