@@ -59,6 +59,8 @@ export type ModelingCardProps = {
   firstDescriptionLineMarginRight?: string;
   /** Translate first description line horizontally (e.g. "-6%" moves it left) in row layout. */
   firstDescriptionLineTranslateX?: string;
+  /** Translate second description line horizontally (e.g. "-4%" moves it left) in row layout. */
+  secondDescriptionLineTranslateX?: string;
 };
 
 const DEFAULT_IMAGE_POSITION = "center center";
@@ -91,6 +93,7 @@ export function ModelingCard({
   firstDescriptionLineId,
   firstDescriptionLineMarginRight,
   firstDescriptionLineTranslateX,
+  secondDescriptionLineTranslateX,
 }: ModelingCardProps) {
   const hasLines = descriptionLines && descriptionLines.length > 0;
   const textColor = textDark ? "text-black" : "text-white";
@@ -122,7 +125,12 @@ export function ModelingCard({
                         }),
                       }
                     : i === 1
-                      ? { marginLeft: "auto" }
+                      ? {
+                          marginLeft: "auto",
+                          ...(secondDescriptionLineTranslateX != null && {
+                            transform: `translateX(${secondDescriptionLineTranslateX})`,
+                          }),
+                        }
                       : undefined
                 }
               >
