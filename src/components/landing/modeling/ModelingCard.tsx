@@ -29,6 +29,36 @@ export type ModelingCardProps = {
   imagePosition?: string;
   /** Figma CSS background on full-bleed layer (replaces next/image when set). */
   imageLayerBackground?: Pick<CSSProperties, "background">;
+  /** When true, title and description use black text (e.g. Bridal on light background). */
+  textDark?: boolean;
+  /** Override left inset for text (e.g. "38%") when imageOnLeft. */
+  textInsetLeft?: string;
+  /** When set with imageOnLeft, shifts the text block left (margin-right on the text container). */
+  textShiftLeft?: string;
+  /** When true and descriptionLines is used, omit max-width so only explicit line breaks apply. */
+  noDescriptionMaxWidth?: boolean;
+  /** When true, no fixed inset/margin; text area uses only padding; use textBlockAlign for position. */
+  fluidTextLayout?: boolean;
+  /** With fluidTextLayout: where the text block sits (start = left, end = right, center). */
+  textBlockAlign?: "start" | "end" | "center";
+  /** When "row" and descriptionLines, render lines side by side; default "stack". */
+  descriptionLayout?: "stack" | "row";
+  /** When "start", only the title aligns to the left; description keeps container alignment. */
+  titleAlignSelf?: "start" | "end";
+  /** Optional margin-right on the title (shifts title left when aligned end). */
+  titleMarginRight?: string;
+  /** With fluidTextLayout: shift the whole text block right (e.g. "8%"). */
+  textBlockMarginLeft?: string;
+  /** With fluidTextLayout: shift the whole text block down (e.g. "6%"). */
+  textBlockMarginTop?: string;
+  /** Margin-top on the description only (moves description down, title unchanged). */
+  descriptionMarginTop?: string;
+  /** Id for the first description line only (when descriptionLines + row); isolates it for styling. */
+  firstDescriptionLineId?: string;
+  /** Margin-right on the first description line only (adds space before second line in row layout). */
+  firstDescriptionLineMarginRight?: string;
+  /** Translate first description line horizontally (e.g. "-6%" moves it left) in row layout. */
+  firstDescriptionLineTranslateX?: string;
 };
 
 const DEFAULT_IMAGE_POSITION = "center center";
@@ -46,22 +76,71 @@ export function ModelingCard({
   descriptionMuted = false,
   imagePosition = DEFAULT_IMAGE_POSITION,
   imageLayerBackground,
+  textDark = false,
+  textInsetLeft,
+  textShiftLeft,
+  noDescriptionMaxWidth = false,
+  fluidTextLayout = false,
+  textBlockAlign = "start",
+  descriptionLayout = "stack",
+  titleAlignSelf,
+  titleMarginRight,
+  textBlockMarginLeft,
+  textBlockMarginTop,
+  descriptionMarginTop,
+  firstDescriptionLineId,
+  firstDescriptionLineMarginRight,
+  firstDescriptionLineTranslateX,
 }: ModelingCardProps) {
   const hasLines = descriptionLines && descriptionLines.length > 0;
+  const textColor = textDark ? "text-black" : "text-white";
+  const descriptionColor = textDark
+    ? descriptionMuted
+      ? "text-black/70"
+      : "text-black"
+    : descriptionMuted
+      ? "text-white/60"
+      : "text-white";
+  const lineWrapClass = noDescriptionMaxWidth ? "leading-[22px]" : "leading-[22px] whitespace-nowrap";
   const descriptionContent = hasLines
-    ? descriptionLines!.map((line, i) => (
-        <span
-          key={i}
-          className="block leading-[22px] whitespace-nowrap"
-        >
-          {line}
-        </span>
-      ))
+    ?         descriptionLayout === "row"
+      ? (
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            {descriptionLines!.map((line, i) => (
+              <span
+                key={i}
+                id={i === 0 ? firstDescriptionLineId : undefined}
+                className={i === 0 ? `${lineWrapClass} whitespace-nowrap` : lineWrapClass}
+                style={
+                  i === 0
+                    ? {
+                        ...(firstDescriptionLineMarginRight != null && {
+                          marginRight: firstDescriptionLineMarginRight,
+                        }),
+                        ...(firstDescriptionLineTranslateX != null && {
+                          transform: `translateX(${firstDescriptionLineTranslateX})`,
+                        }),
+                      }
+                    : i === 1
+                      ? { marginLeft: "auto" }
+                      : undefined
+                }
+              >
+                {line}
+              </span>
+            ))}
+          </div>
+        )
+      : descriptionLines!.map((line, i) => (
+          <span key={i} className={`block ${lineWrapClass}`}>
+            {line}
+          </span>
+        ))
     : description;
   const DescriptionTag = hasLines ? "div" : "p";
-  const titleClassName = `font-manrope ${hasLines ? "text-[32px] leading-[24px] scale-x-105 origin-left" : "text-[40px] leading-[28px]"} ${titleBold ? "font-bold" : "font-extrabold"}`;
-  const descriptionClassName = `font-manrope font-light ${hasLines ? "text-[14px] leading-[22px] max-w-[560px]" : "text-[16px] leading-[26px] max-w-[407px]"} ${descriptionMuted ? "text-white/60" : "text-white"}`;
-  const descriptionClassNameGradient = `font-manrope font-light text-[16px] leading-[26px] ${descriptionMuted ? "text-white/60" : "text-white"}`;
+  const titleClassName = `font-manrope ${hasLines ? "text-[32px] leading-[24px] scale-x-105 origin-left" : "text-[40px] leading-[28px]"} ${titleBold ? "font-bold" : "font-extrabold"} ${textColor}`;
+  const descriptionClassName = `font-manrope font-light ${hasLines ? `text-[14px] leading-[22px] ${noDescriptionMaxWidth ? "" : "max-w-[560px]"}` : "text-[16px] leading-[26px] max-w-[407px]"} ${descriptionColor}`;
+  const descriptionClassNameGradient = `font-manrope font-light text-[16px] leading-[26px] ${descriptionColor}`;
   const imageStyle = { objectPosition: imagePosition };
   const textAlignClass =
     textAlign === "center"
@@ -69,6 +148,38 @@ export function ModelingCard({
       : textAlign === "right"
         ? "text-right"
         : "text-left";
+
+  const fluidAlignClass =
+    textBlockAlign === "center"
+      ? "items-center"
+      : textBlockAlign === "end"
+        ? "items-end"
+        : "items-start";
+  const overlayTextContainerClass = fluidTextLayout
+    ? fluidAlignClass
+    : imageOnLeft
+      ? hasLines
+        ? "items-end pl-[40%]"
+        : textInsetLeft
+          ? "items-end"
+          : "items-end pl-[50%]"
+      : hasLines
+        ? "items-start pr-[40%]"
+        : "items-start pr-[50%]";
+  const overlayTextContainerStyle =
+    fluidTextLayout && (textBlockMarginLeft != null || textBlockMarginTop != null)
+      ? {
+          ...(textBlockMarginLeft != null && { marginLeft: textBlockMarginLeft }),
+          ...(textBlockMarginTop != null && { marginTop: textBlockMarginTop }),
+        }
+      : !fluidTextLayout && imageOnLeft && (textInsetLeft != null || textShiftLeft != null)
+        ? {
+            ...(textInsetLeft != null && { paddingLeft: textInsetLeft }),
+            ...(textShiftLeft != null && { marginRight: textShiftLeft }),
+          }
+        : undefined;
+  const overlayTranslateClass =
+    hasLines && !fluidTextLayout ? "translate-x-6 translate-y-24" : "";
 
   const overlayFrameStyle = {
     ...getModelingCardWidthStyle(),
@@ -99,20 +210,19 @@ export function ModelingCard({
           ) : null}
         </div>
         <div
-          className={`absolute inset-0 z-10 flex flex-col justify-center gap-6 px-6 py-8 text-white md:px-8 md:py-10 ${
-            imageOnLeft
-              ? hasLines
-                ? "items-end pl-[40%]"
-                : "items-end pl-[50%]"
-              : hasLines
-                ? "items-start pr-[40%]"
-                : "items-start pr-[50%]"
-          } ${textAlignClass} ${hasLines ? "translate-x-6 translate-y-24" : ""}`}
+          className={`absolute inset-0 z-10 flex flex-col justify-center gap-6 px-6 py-8 md:px-8 md:py-10 ${textColor} ${overlayTextContainerClass} ${textAlignClass} ${overlayTranslateClass}`}
+          style={overlayTextContainerStyle}
         >
-          <h3 className={titleClassName}>
+          <h3
+            className={`${titleClassName} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""}`}
+            style={titleMarginRight != null ? { marginRight: titleMarginRight } : undefined}
+          >
             {title}
           </h3>
-          <DescriptionTag className={descriptionClassName}>
+          <DescriptionTag
+            className={descriptionClassName}
+            style={descriptionMarginTop != null ? { marginTop: descriptionMarginTop } : undefined}
+          >
             {descriptionContent}
           </DescriptionTag>
         </div>

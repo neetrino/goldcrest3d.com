@@ -10,13 +10,30 @@ export function ModelingBlockBridal() {
   return (
     <ModelingCard
       title="Bridal & Engagement"
-      description="Engineered engagement and bridal settings built for durability, comfort and precise stone alignment. Secure prong architecture developed for long-term wear."
+      description=""
+      descriptionLines={[
+        "Engineered engagement and bridal settings built for durability, comfort and precise stone alignment.",
+        "Secure prong architecture developed for long-term wear.",
+      ]}
       imageSrc={LANDING_IMAGES.modelingBridal}
       imageId={LANDING_IMAGE_IDS.MODELING_BRIDAL}
       imageOnLeft={true}
       textAlign="right"
       imagePosition="center 55%"
       imageLayerBackground={{ background: BRIDAL_IMAGE_LAYER_BACKGROUND }}
+      textDark
+      noDescriptionMaxWidth
+      fluidTextLayout
+      textBlockAlign="end"
+      titleAlignSelf="end"
+      titleMarginRight="32%"
+      descriptionMarginTop="8%"
+      firstDescriptionLineId="bridal-description-first-line"
+      firstDescriptionLineMarginRight="40%"
+      firstDescriptionLineTranslateX="-8%"
+      textBlockMarginLeft="12%"
+      textBlockMarginTop="22%"
+      descriptionLayout="row"
     />
   );
 }
