@@ -273,16 +273,19 @@ export function ModelingCard({
           <div
             className="relative order-2 h-[240px] shrink-0 overflow-hidden md:order-1 md:h-full md:min-h-0 md:w-1/2"
             data-landing-image={imageId}
+            style={imageLayerBackground ?? undefined}
           >
-            <Image
-              src={imageSrc}
-              alt=""
-              fill
-              className="object-cover"
-              style={imageStyle}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized
-            />
+            {!imageLayerBackground ? (
+              <Image
+                src={imageSrc}
+                alt=""
+                fill
+                className="object-cover"
+                style={imageStyle}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                unoptimized
+              />
+            ) : null}
           </div>
           <div
             className={`order-1 flex flex-col justify-center gap-6 px-6 py-8 text-white md:order-2 md:w-1/2 md:px-8 md:py-10 ${textAlignClass}`}
@@ -318,16 +321,19 @@ export function ModelingCard({
           <div
             className="relative h-[240px] shrink-0 overflow-hidden md:h-full md:min-h-0 md:w-1/2"
             data-landing-image={imageId}
+            style={imageLayerBackground ?? undefined}
           >
-            <Image
-              src={imageSrc}
-              alt=""
-              fill
-              className="object-cover"
-              style={imageStyle}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized
-            />
+            {!imageLayerBackground ? (
+              <Image
+                src={imageSrc}
+                alt=""
+                fill
+                className="object-cover"
+                style={imageStyle}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                unoptimized
+              />
+            ) : null}
           </div>
         </>
       )}

@@ -22,8 +22,7 @@ export const LANDING_IMAGES = {
     "https://www.figma.com/api/mcp/asset/dd1f0825-952a-482b-aeb9-66f0ac94056f",
   modelingMechanical:
     "https://www.figma.com/api/mcp/asset/d547c3a3-48a4-4c4b-b752-f38344605292",
-  modelingPortrait:
-    "https://www.figma.com/api/mcp/asset/e990bc93-095e-451c-847a-0404543256b5",
+  modelingPortrait: "/images/modeling/portrait-jewelry.png",
   modelingHeritage:
     "https://www.figma.com/api/mcp/asset/af1471cf-dc06-4aad-ad82-262fc78419c1",
   /** Manufacturing Intelligence section */
