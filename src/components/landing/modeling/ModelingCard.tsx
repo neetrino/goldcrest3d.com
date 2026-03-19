@@ -67,6 +67,18 @@ export type ModelingCardProps = {
   firstDescriptionLineTranslateX?: string;
   /** Translate second description line horizontally (e.g. "-4%" moves it left) in row layout. */
   secondDescriptionLineTranslateX?: string;
+  /** When true, title and description are positioned independently (absolute top/left). */
+  independentTitleDescription?: boolean;
+  /** With independentTitleDescription: title position top (e.g. "18%"). */
+  titleBlockTop?: string;
+  /** With independentTitleDescription: title position left (e.g. "8%"). */
+  titleBlockLeft?: string;
+  /** With independentTitleDescription: description position top (e.g. "32%"). */
+  descriptionBlockTop?: string;
+  /** With independentTitleDescription: description position left (e.g. "8%"). */
+  descriptionBlockLeft?: string;
+  /** When set, overrides textAlign for the description block only (e.g. right-aligned lines for flush-right typography). */
+  descriptionAlign?: "left" | "right";
 };
 
 const DEFAULT_IMAGE_POSITION = "center center";
@@ -103,6 +115,12 @@ export function ModelingCard({
   firstDescriptionLineMarginRight,
   firstDescriptionLineTranslateX,
   secondDescriptionLineTranslateX,
+  independentTitleDescription = false,
+  titleBlockTop,
+  titleBlockLeft,
+  descriptionBlockTop,
+  descriptionBlockLeft,
+  descriptionAlign,
 }: ModelingCardProps) {
   const hasLines = descriptionLines && descriptionLines.length > 0;
   const textColor = textDark ? "text-black" : "text-white";
@@ -169,6 +187,12 @@ export function ModelingCard({
       : textAlign === "right"
         ? "text-right"
         : "text-left";
+  const descriptionBlockAlignClass =
+    descriptionAlign === "right"
+      ? "text-right"
+      : descriptionAlign === "left"
+        ? "text-left"
+        : textAlignClass;
 
   const fluidAlignClass =
     textBlockAlign === "center"
@@ -231,35 +255,66 @@ export function ModelingCard({
           ) : null}
         </div>
         <div
-          className={`absolute inset-0 z-10 flex flex-col justify-center gap-6 px-6 py-8 md:px-8 md:py-10 ${textColor} ${overlayTextContainerClass} ${textAlignClass} ${overlayTranslateClass}`}
+          className={`absolute inset-0 z-10 px-6 py-8 md:px-8 md:py-10 ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-6 ${overlayTextContainerClass} ${textAlignClass} ${overlayTranslateClass}` : ""}`}
           style={overlayTextContainerStyle}
         >
-          <h3
-            className={`${titleClassName} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""}`}
-            style={{
-              ...(titleMarginRight != null && { marginRight: titleMarginRight }),
-              ...(titleMarginTop != null && { marginTop: titleMarginTop }),
-            }}
-          >
-            {title}
-          </h3>
-          <DescriptionTag
-            className={descriptionClassName}
-            style={
-              titleMarginTopCompensate && titleMarginTop != null
-                ? {
-                    marginTop:
-                      descriptionMarginTop != null
-                        ? `calc(${descriptionMarginTop} - ${titleMarginTop})`
-                        : `calc(0px - ${titleMarginTop})`,
-                  }
-                : descriptionMarginTop != null
-                  ? { marginTop: descriptionMarginTop }
-                  : undefined
-            }
-          >
-            {descriptionContent}
-          </DescriptionTag>
+          {independentTitleDescription ? (
+            <>
+              <div
+                className={`${textAlignClass}`}
+                style={{
+                  position: "absolute",
+                  top: titleBlockTop ?? "20%",
+                  left: titleBlockLeft ?? "8%",
+                  right: textAlign === "left" ? undefined : "8%",
+                }}
+              >
+                <h3 className={titleClassName}>{title}</h3>
+              </div>
+              <div
+                className={`max-w-[407px] ${descriptionBlockAlignClass}`}
+                style={{
+                  position: "absolute",
+                  top: descriptionBlockTop ?? "32%",
+                  left: descriptionBlockLeft ?? "14%",
+                  right: descriptionAlign === "right" ? "8%" : textAlign === "left" ? undefined : "8%",
+                }}
+              >
+                <DescriptionTag className={descriptionClassName}>
+                  {descriptionContent}
+                </DescriptionTag>
+              </div>
+            </>
+          ) : (
+            <>
+              <h3
+                className={`${titleClassName} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""}`}
+                style={{
+                  ...(titleMarginRight != null && { marginRight: titleMarginRight }),
+                  ...(titleMarginTop != null && { marginTop: titleMarginTop }),
+                }}
+              >
+                {title}
+              </h3>
+              <DescriptionTag
+                className={descriptionClassName}
+                style={
+                  titleMarginTopCompensate && titleMarginTop != null
+                    ? {
+                        marginTop:
+                          descriptionMarginTop != null
+                            ? `calc(${descriptionMarginTop} - ${titleMarginTop})`
+                            : `calc(0px - ${titleMarginTop})`,
+                      }
+                    : descriptionMarginTop != null
+                      ? { marginTop: descriptionMarginTop }
+                      : undefined
+                }
+              >
+                {descriptionContent}
+              </DescriptionTag>
+            </>
+          )}
         </div>
       </article>
     );
