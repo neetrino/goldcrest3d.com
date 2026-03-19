@@ -47,6 +47,10 @@ export type ModelingCardProps = {
   titleAlignSelf?: "start" | "end";
   /** Optional margin-right on the title (shifts title left when aligned end). */
   titleMarginRight?: string;
+  /** Optional margin-top on the title only (pushes title down). */
+  titleMarginTop?: string;
+  /** When true and titleMarginTop is set, description gets negative margin so it stays in place. */
+  titleMarginTopCompensate?: boolean;
   /** With fluidTextLayout: shift the whole text block right (e.g. "8%"). */
   textBlockMarginLeft?: string;
   /** With fluidTextLayout: shift the whole text block down (e.g. "6%"). */
@@ -87,6 +91,8 @@ export function ModelingCard({
   descriptionLayout = "stack",
   titleAlignSelf,
   titleMarginRight,
+  titleMarginTop,
+  titleMarginTopCompensate,
   textBlockMarginLeft,
   textBlockMarginTop,
   descriptionMarginTop,
@@ -223,13 +229,27 @@ export function ModelingCard({
         >
           <h3
             className={`${titleClassName} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""}`}
-            style={titleMarginRight != null ? { marginRight: titleMarginRight } : undefined}
+            style={{
+              ...(titleMarginRight != null && { marginRight: titleMarginRight }),
+              ...(titleMarginTop != null && { marginTop: titleMarginTop }),
+            }}
           >
             {title}
           </h3>
           <DescriptionTag
             className={descriptionClassName}
-            style={descriptionMarginTop != null ? { marginTop: descriptionMarginTop } : undefined}
+            style={
+              titleMarginTopCompensate && titleMarginTop != null
+                ? {
+                    marginTop:
+                      descriptionMarginTop != null
+                        ? `calc(${descriptionMarginTop} - ${titleMarginTop})`
+                        : `calc(0px - ${titleMarginTop})`,
+                  }
+                : descriptionMarginTop != null
+                  ? { marginTop: descriptionMarginTop }
+                  : undefined
+            }
           >
             {descriptionContent}
           </DescriptionTag>
