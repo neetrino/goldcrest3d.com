@@ -32,8 +32,8 @@ export function ModelingBlockPortrait() {
       imageLayerBackground={{ background: PORTRAIT_BG }}
       textDark
       independentTitleDescription
-      titleBlockTop="24%"
-      titleBlockLeft="8%"
+      titleBlockTop="34%"
+      titleBlockLeft="5%"
       descriptionBlockTop="45%"
       descriptionBlockLeft="-7%"
     />
