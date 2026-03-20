@@ -13,9 +13,10 @@ export type ModelingCardProps = {
   description: string;
   /** When set, description is rendered as one block per line (e.g. Hip-Hop). */
   descriptionLines?: string[];
-  imageSrc: string;
+  /** When omitted, card shows gradient + text only (no image column). */
+  imageSrc?: string;
   /** data-landing-image id for this card's image (section-by-section replacement). */
-  imageId: string;
+  imageId?: string;
   /** If set, card uses gradient background and image in one half; if not, image is full-cover with text overlay. */
   gradient?: string;
   imageOnLeft: boolean;
@@ -325,12 +326,14 @@ export function ModelingCard({
     background: gradient,
   } as const;
 
+  const hasImage = imageSrc != null && imageId != null;
+
   return (
     <article
       className="flex min-h-[320px] min-w-0 w-full flex-col overflow-hidden max-md:min-h-[400px] md:min-h-0 md:flex-row md:items-stretch md:aspect-[83/43]"
       style={gradientFrameStyle}
     >
-      {imageOnLeft ? (
+      {imageOnLeft && hasImage ? (
         <>
           <div
             className="relative order-2 h-[240px] shrink-0 overflow-hidden md:order-1 md:h-full md:min-h-0 md:w-1/2"
@@ -339,7 +342,7 @@ export function ModelingCard({
           >
             {!imageLayerBackground ? (
               <Image
-                src={imageSrc}
+                src={imageSrc!}
                 alt=""
                 fill
                 className="object-cover"
@@ -364,7 +367,7 @@ export function ModelingCard({
             </DescriptionTag>
           </div>
         </>
-      ) : (
+      ) : hasImage ? (
         <>
           <div
             className={`flex flex-col justify-center gap-6 px-6 py-8 text-white md:w-1/2 md:px-8 md:py-10 ${textAlignClass}`}
@@ -387,7 +390,7 @@ export function ModelingCard({
           >
             {!imageLayerBackground ? (
               <Image
-                src={imageSrc}
+                src={imageSrc!}
                 alt=""
                 fill
                 className="object-cover"
@@ -398,6 +401,21 @@ export function ModelingCard({
             ) : null}
           </div>
         </>
+      ) : (
+        <div
+          className={`flex flex-col justify-center gap-6 px-6 py-8 text-white md:w-full md:px-8 md:py-10 ${textAlignClass}`}
+        >
+          <h3
+            className={`font-manrope text-[40px] leading-[28px] ${
+              titleBold ? "font-bold" : "font-extrabold"
+            }`}
+          >
+            {title}
+          </h3>
+          <DescriptionTag className={descriptionClassNameGradient}>
+            {descriptionContent}
+          </DescriptionTag>
+        </div>
       )}
     </article>
   );

@@ -20,6 +20,7 @@ export const LANDING_IMAGES = {
     "https://www.figma.com/api/mcp/asset/8bbfa33e-92f6-4e62-bcfa-becb486ade43",
   modelingHighJewelry:
     "https://www.figma.com/api/mcp/asset/dd1f0825-952a-482b-aeb9-66f0ac94056f",
+  /** Mechanical & Lock Systems — full-bleed block. Use local: put your image at public/images/modeling/mechanical-lock-systems.png and set to "/images/modeling/mechanical-lock-systems.png" */
   modelingMechanical:
     "https://www.figma.com/api/mcp/asset/d547c3a3-48a4-4c4b-b752-f38344605292",
   modelingPortrait: "/images/modeling/portrait-jewelry.png",
