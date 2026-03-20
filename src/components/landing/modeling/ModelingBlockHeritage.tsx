@@ -7,9 +7,14 @@ import {
   getModelingCardWidthStyle,
 } from "./modeling-card.constants";
 
-const TITLE = "Ancient & Heritage Jewelry";
-const DESCRIPTION =
-  "Cultural and historical motifs re-engineered into structurally optimized, production-ready CAD frameworks. Authentic design language preserved through precise digital reconstruction and manufacturing awareness.";
+const TITLE_LINE1 = "Ancient & Heritag";
+const TITLE_LINE2 = "Jewelry";
+const DESCRIPTION_LINES = [
+  "Cultural and historical motifs re-engineered into structurally",
+  "optimized, production-ready CAD frameworks.",
+  "Authentic design language preserved through precise digital",
+  "reconstruction and manufacturing awareness.",
+] as const;
 
 /** Ancient & Heritage Jewelry block. Full-bleed image with title and description overlay (Figma 222:259). */
 export function ModelingBlockHeritage() {
@@ -35,17 +40,27 @@ export function ModelingBlockHeritage() {
         />
       </div>
       <h3
-        className="absolute right-6 top-6 z-10 whitespace-nowrap font-manrope text-[32px] font-bold leading-[24px] text-black md:right-[21rem] md:top-[3.25rem] md:scale-x-105 md:origin-right"
+        className="absolute right-0 top-12 z-10 flex flex-col items-end font-manrope text-[32px] font-bold leading-[24px] text-black md:right-[2rem] md:top-[12.7rem] md:scale-x-105 md:origin-right"
       >
-        {TITLE}
+        <span className="whitespace-nowrap">{TITLE_LINE1}</span>
+        <span className="mt-2 whitespace-nowrap">{TITLE_LINE2}</span>
       </h3>
       <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 py-8 text-black md:flex-row md:justify-end md:px-8 md:py-10">
-        <p
-          className="max-w-[520px] text-right font-manrope text-[14px] font-light leading-[22px] text-black/70 md:mr-[34%] md:mt-[3.75rem]"
+        <div
+          className="max-w-[520px] text-right font-manrope text-[14px] font-light leading-[22px] text-black/70 md:mr-[0%] md:mt-[15.25rem]"
           style={{ overflow: "visible" }}
         >
-          {DESCRIPTION}
-        </p>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap justify-end items-baseline gap-x-2 gap-y-1">
+              <span>{DESCRIPTION_LINES[0]}</span>
+              <span>{DESCRIPTION_LINES[1]}</span>
+            </div>
+            <div className="-mt-2 flex flex-wrap justify-end items-baseline gap-x-2 gap-y-1">
+              <span>{DESCRIPTION_LINES[2]}</span>
+              <span>{DESCRIPTION_LINES[3]}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </article>
   );
