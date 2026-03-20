@@ -18,7 +18,6 @@ export function LandingSections() {
       <SectionPhilosophy />
 
       <SectionModeling />
-      <SectionDivider variant="onLight" />
 
       <SectionManufacturing />
       <SectionDivider variant="onLight" />
