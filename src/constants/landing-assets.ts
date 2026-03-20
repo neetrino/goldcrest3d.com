@@ -24,8 +24,8 @@ export const LANDING_IMAGES = {
   modelingMechanical:
     "https://www.figma.com/api/mcp/asset/d547c3a3-48a4-4c4b-b752-f38344605292",
   modelingPortrait: "/images/modeling/portrait-jewelry.png",
-  modelingHeritage:
-    "https://www.figma.com/api/mcp/asset/af1471cf-dc06-4aad-ad82-262fc78419c1",
+  /** Ancient & Heritage Jewelry — full-bleed, jewelry left, cream background */
+  modelingHeritage: "/images/modeling/ancient-heritage.png",
   /** Manufacturing Intelligence section */
   manufacturing:
     "https://www.figma.com/api/mcp/asset/d7f50152-c702-4b72-82ff-5db03eca5125",
