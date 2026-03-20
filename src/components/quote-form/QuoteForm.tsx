@@ -90,12 +90,12 @@ export function QuoteForm() {
       </div>
 
       {state?.success === false && (
-        <p id="quote-error" className="text-sm text-red-600 dark:text-red-400" role="alert">
+        <p id="quote-error" className="text-sm text-red-600" role="alert">
           {state.error}
         </p>
       )}
       {state?.success === true && (
-        <p id="quote-success" className="text-sm text-green-600 dark:text-green-400" role="status">
+        <p id="quote-success" className="text-sm text-green-600" role="status">
           Հայտը ուղարկված է։ Կկապնվենք ձեզ հետ։
         </p>
       )}
