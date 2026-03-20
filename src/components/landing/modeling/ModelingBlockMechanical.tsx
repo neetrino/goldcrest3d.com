@@ -7,8 +7,12 @@ import {
 } from "./modeling-card.constants";
 
 const TITLE = "Mechanical & Lock Systems";
-const DESCRIPTION =
-  "Tolerance-calibrated clasps, hinges and multi-part articulated structures engineered for controlled movement and secure locking performance. Functional systems developed for durability, precision alignment and long-term mechanical reliability.";
+const DESCRIPTION_LINES = [
+  "Tolerance-calibrated clasps, hinges and multi-part articulated",
+  "structures engineered for controlled movement and secure locking",
+  "performance. Functional systems developed for durability, precision alignment",
+  "and long-term mechanical reliability.",
+] as const;
 
 /** Mechanical & Lock Systems block. Full-bleed image with title and description overlay. */
 export function ModelingBlockMechanical() {
@@ -33,10 +37,17 @@ export function ModelingBlockMechanical() {
       >
         {TITLE}
       </h3>
-      <div className="absolute inset-0 z-10 flex flex-col justify-center gap-6 px-6 py-8 text-right text-white md:items-end md:px-8 md:py-10 md:pl-[50%]">
-        <p className="max-w-[407px] font-manrope text-[16px] font-light leading-[26px]">
-          {DESCRIPTION}
-        </p>
+      <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 py-8 text-white md:flex-row md:justify-end md:px-8 md:py-10">
+        <div
+          className="max-w-[520px] text-left font-manrope text-[14px] font-light leading-[22px] md:mr-[34%] md:mt-[3.75rem]"
+          style={{ overflow: "visible" }}
+        >
+          {DESCRIPTION_LINES.map((line, i) => (
+            <span key={i} className="block whitespace-nowrap">
+              {line}
+            </span>
+          ))}
+        </div>
       </div>
     </article>
   );
