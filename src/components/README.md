@@ -2,7 +2,7 @@
 
 UI կոմպոնենտներ — sections, hero, philosophy, CTA, quote form, admin UI, shadcn.
 
-- `landing/` — landing sections, hero, philosophy, CTA…
+- `landing/` — re-exports from `sections/` (use `@/components/sections` for imports)
 - `quote-form/` — form + validation
 - `admin/` — leads list/detail, orders list/detail
 - `ui/` — shadcn

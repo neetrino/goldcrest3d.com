@@ -1,0 +1,12 @@
+export { Header } from "./Header";
+export { Hero } from "./Hero";
+export { JewelryRendering } from "./JewelryRendering";
+export { JewelryDesign } from "./JewelryDesign";
+export { Philosophy } from "./Philosophy";
+export { ModelingSpecialization } from "./ModelingSpecialization";
+export { ManufacturingIntelligence } from "./ManufacturingIntelligence";
+export { Founder } from "./Founder";
+export { FinishedCreations } from "./FinishedCreations";
+export { Process } from "./Process";
+export { ContactForm } from "./ContactForm";
+export { Footer } from "./Footer";

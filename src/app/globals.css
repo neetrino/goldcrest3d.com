@@ -3,6 +3,22 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Goldcrest design tokens (Figma) */
+  --color-primary: #c69f58;
+  --color-primary-light: #ddab52;
+  --color-charcoal: #181610;
+  --color-charcoal-muted: rgba(24, 22, 16, 0.5);
+  --color-charcoal-soft: rgba(24, 22, 16, 0.6);
+  --color-charcoal-label: rgba(24, 22, 16, 0.4);
+  --color-slate-heading: #0f172a;
+  --color-slate-muted: #64748b;
+  --color-slate-border: #e2e8f0;
+  --color-bg-warm: #f8f7f6;
+  --color-bg-philosophy: #f2f3f4;
+  --color-input-border: #eeeeee;
+  --container-max: 80rem;
+  --section-padding-x: clamp(1rem, 4vw, 2.5rem);
+  --section-padding-y: clamp(2.5rem, 6vw, 4.5rem);
 }
 
 @theme inline {
@@ -14,4 +30,12 @@
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Responsive container: desktop reference, fluid on small screens */
+.container-narrow {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--section-padding-x);
 }
