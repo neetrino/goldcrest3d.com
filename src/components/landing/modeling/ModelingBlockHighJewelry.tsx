@@ -6,8 +6,10 @@ import {
 } from "./modeling-card.constants";
 
 const TITLE = "High Jewelry";
-const DESCRIPTION =
-  "Advanced pavé and fine-setting structures developed with micron-level precision. Invisible settings and ultra-thin tolerances engineered with strict structural discipline.";
+const LINE_1 =
+  "Advanced pavé and fine-setting structures developed with micron-level precision.";
+const LINE_2 =
+  "Invisible settings and ultra-thin tolerances engineered with strict structural discipline.";
 
 /** Figma 222:264 — background with exact position/size so image fills the block. */
 const HIGH_JEWELRY_BACKGROUND = {
@@ -18,7 +20,7 @@ const HIGH_JEWELRY_BACKGROUND = {
   backgroundRepeat: "no-repeat",
 } as const;
 
-/** High Jewelry block. Full-bleed via CSS background (Figma 222:264), overlay left. */
+/** High Jewelry block. Full-bleed background (Figma 222:264), title + 2 lines centered. */
 export function ModelingBlockHighJewelry() {
   return (
     <article
@@ -33,13 +35,22 @@ export function ModelingBlockHighJewelry() {
         data-landing-image={LANDING_IMAGE_IDS.MODELING_HIGH_JEWELRY}
         style={HIGH_JEWELRY_BACKGROUND}
       />
-      <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 py-8 text-black md:px-8 md:py-10">
-        <h3 className="font-manrope text-[32px] font-bold leading-[24px] scale-x-105 origin-left">
+      <div
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black"
+        style={{ marginTop: "-30%" }}
+      >
+        <h3 className="font-manrope text-[32px] font-bold leading-[24px]">
           {TITLE}
         </h3>
-        <p className="mt-4 max-w-[407px] font-manrope text-[16px] font-light leading-[26px] text-black/70">
-          {DESCRIPTION}
-        </p>
+        <div className="mt-4 max-w-[520px] font-manrope text-[14px] font-light leading-[22px] text-black/70">
+          <span className="block">{LINE_1}</span>
+          <span
+            className="mt-0.5 block whitespace-nowrap"
+            style={{ transform: "translateX(-12px)" }}
+          >
+            {LINE_2}
+          </span>
+        </div>
       </div>
     </article>
   );
