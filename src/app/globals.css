@@ -267,3 +267,30 @@ section[id] {
   );
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
+
+/* Manufacturing Intelligence — Figma 110:373, 97:415 */
+.manufacturing-intelligence-heading {
+  color: #000000;
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 58px;
+  font-weight: 400;
+  line-height: 40px;
+}
+
+.manufacturing-intelligence-accordion-label {
+  color: #000000;
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+/* Figma 201:329 — composite image crop inside 750:625 frame */
+.manufacturing-intelligence-photo {
+  height: 153.6% !important;
+  left: -16.02%;
+  max-width: none !important;
+  object-fit: cover;
+  top: -25.92%;
+  width: 134.97% !important;
+}

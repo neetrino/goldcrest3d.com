@@ -243,7 +243,7 @@ export function ModelingCard({
           data-landing-image={imageId}
           style={imageLayerBackground ?? undefined}
         >
-          {!imageLayerBackground ? (
+          {!imageLayerBackground && imageSrc ? (
             <Image
               src={imageSrc}
               alt=""

@@ -27,9 +27,9 @@ export const LANDING_IMAGES = {
   modelingPortrait: "/images/modeling/portrait-jewelry.png",
   /** Ancient & Heritage Jewelry — full-bleed, jewelry left, cream background */
   modelingHeritage: "/images/modeling/ancient-heritage.png",
-  /** Manufacturing Intelligence section */
+  /** Manufacturing Intelligence — Figma node -280 / 201:329 composite */
   manufacturing:
-    "https://www.figma.com/api/mcp/asset/d7f50152-c702-4b72-82ff-5db03eca5125",
+    "https://www.figma.com/api/mcp/asset/f0e2ff65-ab6e-4496-9550-dbb56fe62cca",
   /** Founder photo */
   founder:
     "https://www.figma.com/api/mcp/asset/ed180930-9b00-4258-9974-241824666fae",
@@ -42,7 +42,7 @@ export const LANDING_IMAGES = {
   /** Footer Follow block image */
   footerFollowImage:
     "https://www.figma.com/api/mcp/asset/49e4a149-0329-4a34-8e24-ab60dcafab22",
-  iconDown: "https://www.figma.com/api/mcp/asset/3a8e899e-befc-4c28-a351-937567ee9b6e",
+  iconDown: "https://www.figma.com/api/mcp/asset/7233a83f-d0c0-4701-b67e-01c3bd58b2d4",
   iconUpload: "https://www.figma.com/api/mcp/asset/b0817c9b-645f-47f5-af98-2f1d078348fb",
   iconDots: "https://www.figma.com/api/mcp/asset/f3ba325e-a7bd-4009-b584-c238a58aa721",
   social1: "https://www.figma.com/api/mcp/asset/36864bcd-ec08-4066-85ef-e5a78c94fb63",
