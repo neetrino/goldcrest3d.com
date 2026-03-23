@@ -8,9 +8,14 @@ export const MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX = 653;
 export const MANUFACTURING_DETAIL_IMAGE_PRINTING_STRATEGY_WIDTH_PX = 978;
 export const MANUFACTURING_DETAIL_IMAGE_PRINTING_STRATEGY_HEIGHT_PX = 694;
 
+/** Casting Compensation & Metal Flow — դիզայնային չափեր, aspect 48/53 */
+export const MANUFACTURING_DETAIL_IMAGE_CASTING_COMPENSATION_WIDTH_PX = 682;
+export const MANUFACTURING_DETAIL_IMAGE_CASTING_COMPENSATION_HEIGHT_PX = 753;
+
 export const MANUFACTURING_DETAIL_PHOTO_LAYOUT = {
   STANDARD: "standard",
   PRINTING_STRATEGY_RESIN: "printing-strategy-resin",
+  CASTING_COMPENSATION_METAL_FLOW: "casting-compensation-metal-flow",
 } as const;
 
 export type ManufacturingDetailPhotoLayout =
@@ -29,11 +34,30 @@ export function resolveManufacturingDetailImageDimensions(
       photoLayout: MANUFACTURING_DETAIL_PHOTO_LAYOUT.PRINTING_STRATEGY_RESIN,
     };
   }
+  if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.CASTING_COMPENSATION_METAL_FLOW) {
+    return {
+      widthPx: MANUFACTURING_DETAIL_IMAGE_CASTING_COMPENSATION_WIDTH_PX,
+      heightPx: MANUFACTURING_DETAIL_IMAGE_CASTING_COMPENSATION_HEIGHT_PX,
+      photoLayout: MANUFACTURING_DETAIL_PHOTO_LAYOUT.CASTING_COMPENSATION_METAL_FLOW,
+    };
+  }
   return {
     widthPx: MANUFACTURING_DETAIL_IMAGE_WIDTH_PX,
     heightPx: MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX,
     photoLayout: MANUFACTURING_DETAIL_PHOTO_LAYOUT.STANDARD,
   };
+}
+
+export function getManufacturingDetailPhotoLayoutClassName(
+  layout: ManufacturingDetailPhotoLayout,
+): string {
+  if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.PRINTING_STRATEGY_RESIN) {
+    return "manufacturing-intelligence-photo-detail--printing-strategy-resin";
+  }
+  if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.CASTING_COMPENSATION_METAL_FLOW) {
+    return "manufacturing-intelligence-photo-detail--casting-compensation-metal-flow";
+  }
+  return "";
 }
 
 export const MANUFACTURING_SPECIALIZATION_IDS = {
@@ -96,6 +120,13 @@ export const MANUFACTURING_SPECIALIZATION_ITEMS: readonly ManufacturingSpecializ
     {
       id: MANUFACTURING_SPECIALIZATION_IDS.CASTING_COMPENSATION_METAL_FLOW,
       title: "Casting Compensation & Metal Flow Awareness",
+      description:
+        "Shrinkage compensation and internal volume balance calculated at the CAD stage. Metal flow logic and structural reinforcement zones defined before mold preparation.",
+      detailImageSrc: LANDING_IMAGES.manufacturingCastingCompensationMetalFlowAwareness,
+      detailImageAlt:
+        "CAD rendering of a ring on a casting tree with sprues for investment casting",
+      detailPhotoLayout:
+        MANUFACTURING_DETAIL_PHOTO_LAYOUT.CASTING_COMPENSATION_METAL_FLOW,
     },
     {
       id: MANUFACTURING_SPECIALIZATION_IDS.STONE_SEAT_GEOMETRY_SETTING,

@@ -37,6 +37,10 @@
   --manufacturing-intelligence-photo-scale-lg: 1.26;
   /** 3D Printing Strategy detail — նկարը մի քիչ ցածր frame-ի կենտրոնից */
   --manufacturing-printing-strategy-resin-detail-nudge-y: 16px;
+  /** Casting Compensation detail — միայն նկարը մի քիչ վերև (բացասական = վերև) */
+  --manufacturing-casting-compensation-detail-nudge-y: -25px;
+  /** Casting Compensation detail — դեպի աջ (դրական = աջ) */
+  --manufacturing-casting-compensation-detail-nudge-x: 65px;
 }
 
 /** Tablet: room for inline nav + CTA without overlap. */
@@ -344,6 +348,17 @@ section[id] {
   width: 978px;
 }
 
+/* Casting Compensation & Metal Flow — 682×753, aspect-ratio 48/53 */
+.manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+  aspect-ratio: 48 / 53;
+  height: auto;
+  transform: translate(
+    var(--manufacturing-casting-compensation-detail-nudge-x),
+    var(--manufacturing-casting-compensation-detail-nudge-y)
+  );
+  width: 682px;
+}
+
 .manufacturing-intelligence-image-frame {
   max-width: min(100%, var(--manufacturing-intelligence-image-frame-max-w));
 }
@@ -377,5 +392,12 @@ section[id] {
 
   .manufacturing-intelligence-photo-detail--printing-strategy-resin {
     transform: translateY(var(--manufacturing-printing-strategy-resin-detail-nudge-y));
+  }
+
+  .manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+    transform: translate(
+      var(--manufacturing-casting-compensation-detail-nudge-x),
+      var(--manufacturing-casting-compensation-detail-nudge-y)
+    );
   }
 }

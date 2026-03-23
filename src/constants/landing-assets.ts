@@ -39,6 +39,9 @@ export const LANDING_IMAGES = {
   /** Manufacturing Intelligence — detail: 3D Printing Strategy & Resin Behavior */
   manufacturingPrintingStrategyResinBehavior:
     "/images/manufacturing/3d-printing-strategy-resin-behavior.png",
+  /** Manufacturing Intelligence — detail: Casting Compensation & Metal Flow Awareness */
+  manufacturingCastingCompensationMetalFlowAwareness:
+    "/images/manufacturing/casting-compensation-metal-flow-awareness.png",
   /** Founder photo */
   founder:
     "https://www.figma.com/api/mcp/asset/ed180930-9b00-4258-9974-241824666fae",
