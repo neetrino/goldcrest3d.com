@@ -24,6 +24,7 @@ function ManufacturingAccordionRow({
   onToggle,
 }: ManufacturingAccordionRowProps) {
   const showDescription = isActive && Boolean(item.description);
+  const descriptionHasManualLineBreaks = item.description?.includes("\n") ?? false;
 
   return (
     <>
@@ -59,9 +60,17 @@ function ManufacturingAccordionRow({
       {showDescription ? (
         <div
           id={`manufacturing-detail-${item.id}`}
-          className="border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left"
+          className={
+            descriptionHasManualLineBreaks
+              ? "overflow-x-auto border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left"
+              : "border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left"
+          }
         >
-          <p className="manufacturing-intelligence-accordion-detail text-[15px] font-normal leading-[22px] tracking-normal text-black/80">
+          <p
+            className={`manufacturing-intelligence-accordion-detail text-[15px] font-normal leading-[22px] tracking-normal text-black/80 ${
+              descriptionHasManualLineBreaks ? "whitespace-pre" : ""
+            }`}
+          >
             {item.description}
           </p>
         </div>

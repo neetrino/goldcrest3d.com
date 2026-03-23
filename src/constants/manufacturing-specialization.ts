@@ -34,7 +34,7 @@ export const MANUFACTURING_SPECIALIZATION_ITEMS: readonly ManufacturingSpecializ
       id: MANUFACTURING_SPECIALIZATION_IDS.TOLERANCE_CONTROL_ASSEMBLY_PRECISION,
       title: "Tolerance Control & Assembly Precision",
       description:
-        "Tolerance calibration for multi-part structures, articulated systems and locking mechanisms. Precision alignment developed to ensure smooth mechanical performance after casting.",
+        "Tolerance calibration for multi-part structures, articulated systems and\nlocking mechanisms. Precision alignment developed to ensure smooth\nmechanical performance after casting.",
       detailImageSrc: LANDING_IMAGES.manufacturingToleranceControl,
       detailImageAlt:
         "Technical CAD rendering of a ring with tolerance annotations",
