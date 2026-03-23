@@ -12,10 +12,15 @@ export const MANUFACTURING_DETAIL_IMAGE_PRINTING_STRATEGY_HEIGHT_PX = 694;
 export const MANUFACTURING_DETAIL_IMAGE_CASTING_COMPENSATION_WIDTH_PX = 682;
 export const MANUFACTURING_DETAIL_IMAGE_CASTING_COMPENSATION_HEIGHT_PX = 753;
 
+/** Stone Seat Geometry & Setting Logic — դիզայնային չափեր, aspect 37/39 */
+export const MANUFACTURING_DETAIL_IMAGE_STONE_SEAT_GEOMETRY_WIDTH_PX = 666;
+export const MANUFACTURING_DETAIL_IMAGE_STONE_SEAT_GEOMETRY_HEIGHT_PX = 702;
+
 export const MANUFACTURING_DETAIL_PHOTO_LAYOUT = {
   STANDARD: "standard",
   PRINTING_STRATEGY_RESIN: "printing-strategy-resin",
   CASTING_COMPENSATION_METAL_FLOW: "casting-compensation-metal-flow",
+  STONE_SEAT_GEOMETRY_SETTING: "stone-seat-geometry-setting",
 } as const;
 
 export type ManufacturingDetailPhotoLayout =
@@ -41,6 +46,13 @@ export function resolveManufacturingDetailImageDimensions(
       photoLayout: MANUFACTURING_DETAIL_PHOTO_LAYOUT.CASTING_COMPENSATION_METAL_FLOW,
     };
   }
+  if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.STONE_SEAT_GEOMETRY_SETTING) {
+    return {
+      widthPx: MANUFACTURING_DETAIL_IMAGE_STONE_SEAT_GEOMETRY_WIDTH_PX,
+      heightPx: MANUFACTURING_DETAIL_IMAGE_STONE_SEAT_GEOMETRY_HEIGHT_PX,
+      photoLayout: MANUFACTURING_DETAIL_PHOTO_LAYOUT.STONE_SEAT_GEOMETRY_SETTING,
+    };
+  }
   return {
     widthPx: MANUFACTURING_DETAIL_IMAGE_WIDTH_PX,
     heightPx: MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX,
@@ -56,6 +68,9 @@ export function getManufacturingDetailPhotoLayoutClassName(
   }
   if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.CASTING_COMPENSATION_METAL_FLOW) {
     return "manufacturing-intelligence-photo-detail--casting-compensation-metal-flow";
+  }
+  if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.STONE_SEAT_GEOMETRY_SETTING) {
+    return "manufacturing-intelligence-photo-detail--stone-seat-geometry-setting";
   }
   return "";
 }
@@ -131,6 +146,13 @@ export const MANUFACTURING_SPECIALIZATION_ITEMS: readonly ManufacturingSpecializ
     {
       id: MANUFACTURING_SPECIALIZATION_IDS.STONE_SEAT_GEOMETRY_SETTING,
       title: "Stone Seat Geometry & Setting Logic",
+      description:
+        "Micron-level seat calibration aligned with stone dimensions and intended setting technique. Pavé density planning and prong architecture engineered for secure retention and long-term wear stability. Prongs dimensioned to minimal visual presence while maintaining structural integrity and reliable stone security under daily wear conditions.",
+      detailImageSrc: LANDING_IMAGES.manufacturingStoneSeatGeometrySetting,
+      detailImageAlt:
+        "CAD render of a six-prong gemstone setting with stone seat geometry",
+      detailPhotoLayout:
+        MANUFACTURING_DETAIL_PHOTO_LAYOUT.STONE_SEAT_GEOMETRY_SETTING,
     },
     {
       id: MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING,

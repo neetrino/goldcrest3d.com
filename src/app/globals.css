@@ -41,6 +41,15 @@
   --manufacturing-casting-compensation-detail-nudge-y: -25px;
   /** Casting Compensation detail — դեպի աջ (դրական = աջ) */
   --manufacturing-casting-compensation-detail-nudge-x: 65px;
+  /** Stone Seat Geometry detail — մի քիչ վերև (բացասական = վերև) */
+  --manufacturing-stone-seat-geometry-detail-nudge-y: -12px;
+  /** Stone Seat Geometry detail — մի քիչ աջ (դրական = աջ) */
+  --manufacturing-stone-seat-geometry-detail-nudge-x: 35px;
+  /**
+   * Stone Seat Geometry — ցուցադրման լայնություն (ֆայլը 666×702 է, aspect 37/39).
+   * Միայն այս նկարի վիզուալ սքեյլ — փոքրացնելու համար նվազեցրու արժեքը։
+   */
+  --manufacturing-stone-seat-geometry-detail-display-width: 610px;
 }
 
 /** Tablet: room for inline nav + CTA without overlap. */
@@ -359,6 +368,17 @@ section[id] {
   width: 682px;
 }
 
+/* Stone Seat Geometry & Setting Logic — ֆայլ 666×702, aspect-ratio 37/39, ցուցադրման լայնություն՝ token */
+.manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
+  aspect-ratio: 37 / 39;
+  height: auto;
+  transform: translate(
+    var(--manufacturing-stone-seat-geometry-detail-nudge-x),
+    var(--manufacturing-stone-seat-geometry-detail-nudge-y)
+  );
+  width: var(--manufacturing-stone-seat-geometry-detail-display-width);
+}
+
 .manufacturing-intelligence-image-frame {
   max-width: min(100%, var(--manufacturing-intelligence-image-frame-max-w));
 }
@@ -398,6 +418,13 @@ section[id] {
     transform: translate(
       var(--manufacturing-casting-compensation-detail-nudge-x),
       var(--manufacturing-casting-compensation-detail-nudge-y)
+    );
+  }
+
+  .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
+    transform: translate(
+      var(--manufacturing-stone-seat-geometry-detail-nudge-x),
+      var(--manufacturing-stone-seat-geometry-detail-nudge-y)
     );
   }
 }
