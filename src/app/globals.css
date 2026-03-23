@@ -19,9 +19,10 @@
   --manufacturing-intelligence-heading-indent-start: 91px;
   /** Manufacturing Intelligence — image column vertical tuning (lg+) */
   --manufacturing-intelligence-image-col-padding-top-lg: 24px;
-  --manufacturing-intelligence-image-nudge-y-lg: -10px;
+  /** Positive = shift frame down (was -10px). */
+  --manufacturing-intelligence-image-nudge-y-lg: 20px;
   /** Horizontal shift of the image frame (lg+); positive = right. */
-  --manufacturing-intelligence-image-nudge-x-lg: 80px;
+  --manufacturing-intelligence-image-nudge-x-lg: 30px;
   /** Caps image frame height (lg+); balance vs full aspect-ratio column */
   --manufacturing-intelligence-image-frame-max-h-lg: 684px;
   /**
