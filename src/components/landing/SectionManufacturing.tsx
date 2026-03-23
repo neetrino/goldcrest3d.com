@@ -75,7 +75,7 @@ export function SectionManufacturing() {
         </h2>
 
         <div className="mt-[120px] overflow-hidden rounded-[16px] bg-[linear-gradient(-65.02deg,#f8f7f6_0.94%,#c0c6cd_99.4%)] lg:min-h-[805px]">
-          <div className="grid min-h-0 grid-cols-1 gap-10 py-10 lg:grid-cols-[590px_minmax(0,1fr)] lg:gap-0 lg:py-0 lg:pl-[2.61%] lg:pr-[4.59%]">
+          <div className="grid min-h-0 grid-cols-1 gap-10 py-10 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)] lg:gap-0 lg:py-0 lg:pl-[2.61%] lg:pr-[4.59%]">
             <div className="flex min-w-0 flex-col divide-y divide-black/10 lg:pt-[94px]">
               {ACCORDION_ITEMS.map((item, i) => (
                 <ManufacturingAccordionRow
@@ -89,9 +89,9 @@ export function SectionManufacturing() {
               ))}
             </div>
 
-            <div className="relative min-h-[280px] w-full lg:min-h-0 lg:pt-[69px]">
+            <div className="manufacturing-intelligence-image-column relative min-h-[280px] w-full lg:min-h-0">
               <div
-                className="relative mx-auto aspect-[750/625] w-full max-w-[731px] overflow-hidden lg:ml-auto lg:mr-0"
+                className="manufacturing-intelligence-image-frame relative mx-auto aspect-[750/625] w-full overflow-hidden lg:ml-auto lg:mr-0"
                 data-landing-image={LANDING_IMAGE_IDS.MANUFACTURING_MAIN}
               >
                 <Image

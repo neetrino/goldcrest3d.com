@@ -13,6 +13,14 @@
   --landing-nav-logo-slot: 0px;
   /** Shift logo right inside the slot; does not change flex layout. */
   --landing-nav-logo-offset-x: 0px;
+  /** Manufacturing Intelligence — image column vertical tuning (lg+) */
+  --manufacturing-intelligence-image-col-padding-top-lg: 24px;
+  --manufacturing-intelligence-image-nudge-y-lg: -95px;
+  /**
+   * Caps the image frame only when set BELOW the right column width.
+   * min(100%, this) — if this is larger than the column, the column wins (see grid in SectionManufacturing).
+   */
+  --manufacturing-intelligence-image-frame-max-w: 1612px;
 }
 
 /** Tablet: room for inline nav + CTA without overlap. */
@@ -285,12 +293,32 @@ section[id] {
   line-height: 28px;
 }
 
-/* Figma 201:329 — composite image crop inside 750:625 frame */
+/* Figma 201:329 — 750×625 frame; contain shows full export like Figma (no artificial zoom crop) */
 .manufacturing-intelligence-photo {
-  height: 153.6% !important;
-  left: -16.02%;
+  height: 100% !important;
+  left: 0 !important;
   max-width: none !important;
-  object-fit: cover;
-  top: -25.92%;
-  width: 134.97% !important;
+  object-fit: contain;
+  object-position: center;
+  top: 0 !important;
+  width: 100% !important;
+}
+
+.manufacturing-intelligence-image-frame {
+  max-width: min(100%, var(--manufacturing-intelligence-image-frame-max-w));
+}
+
+/* Image column — nudged up vs initial Figma padding so the composite aligns with the accordion */
+.manufacturing-intelligence-image-column {
+  padding-top: 0;
+}
+
+@media (min-width: 1024px) {
+  .manufacturing-intelligence-image-column {
+    padding-top: var(--manufacturing-intelligence-image-col-padding-top-lg);
+  }
+
+  .manufacturing-intelligence-image-frame {
+    transform: translateY(var(--manufacturing-intelligence-image-nudge-y-lg));
+  }
 }
