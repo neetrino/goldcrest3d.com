@@ -25,27 +25,32 @@ const REQUEST_QUOTE_BTN_CLASSES =
 export function LandingNav() {
   return (
     <nav
-      className="sticky top-0 z-50 h-[length:var(--landing-nav-height)] w-full bg-white/95 backdrop-blur-[6px]"
+      className="sticky top-0 z-50 h-[length:var(--landing-nav-height)] w-full overflow-visible bg-white/95 backdrop-blur-[6px]"
       aria-label="Main navigation"
     >
-      <div className="flex h-full w-full items-center justify-between pl-[51px] pr-[51px]">
-        <div className="flex min-w-0 shrink-0">
-          <Link
-            href={`#${LANDING_SECTION_IDS.HERO}`}
-            className="flex items-center"
-            aria-label="Goldcrest 3D — Home"
-          >
-            <Image
-              src={LOGO_SRC}
-              alt="Goldcrest 3D"
-              width={713}
-              height={386}
-              sizes="(max-width: 768px) 100px, 120px"
-              priority
-              className="h-[length:var(--landing-nav-height)] w-auto max-w-[min(120px,calc(100vw-200px))] object-contain object-left"
-            />
-          </Link>
-        </div>
+      <div className="relative flex h-full w-full items-center justify-between overflow-visible pl-[51px] pr-[51px]">
+        {/* Fixed-width slot: logo is absolutely positioned so size/offset do not shift nav or CTA */}
+        <div
+          className="relative shrink-0"
+          style={{ width: "var(--landing-nav-logo-slot)" }}
+          aria-hidden={true}
+        />
+        <Link
+          href={`#${LANDING_SECTION_IDS.HERO}`}
+          className="absolute top-1/2 z-10 flex -translate-y-1/2 items-center"
+          style={{ left: "calc(51px + var(--landing-nav-logo-offset-x))" }}
+          aria-label="Goldcrest 3D — Home"
+        >
+          <Image
+            src={LOGO_SRC}
+            alt="Goldcrest 3D"
+            width={713}
+            height={386}
+            sizes="(max-width: 768px) 104px, 128px"
+            priority
+            className="h-[length:var(--landing-nav-logo-height)] w-auto max-w-[min(128px,calc(100vw-200px))] object-contain object-left"
+          />
+        </Link>
         <ul
           className="hidden h-5 list-none flex-1 items-start justify-end gap-[80px] md:flex md:max-w-[711px]"
           aria-label="Nav links"

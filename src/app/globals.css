@@ -5,6 +5,12 @@
   --foreground: #171717;
   --landing-nav-height: 48px;
   --landing-nav-logo-width: 86px;
+  /** Logo column width (matches previous content box so nav links stay put). */
+  --landing-nav-logo-slot: 90px;
+  /** Shift logo right inside the slot; does not change flex layout. */
+  --landing-nav-logo-offset-x: 300px;
+  /** Slightly larger than bar height; bar uses overflow-visible. */
+  --landing-nav-logo-height: 42px;
 }
 
 @theme inline {
