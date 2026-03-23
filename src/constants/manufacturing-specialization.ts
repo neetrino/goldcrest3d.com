@@ -16,11 +16,16 @@ export const MANUFACTURING_DETAIL_IMAGE_CASTING_COMPENSATION_HEIGHT_PX = 753;
 export const MANUFACTURING_DETAIL_IMAGE_STONE_SEAT_GEOMETRY_WIDTH_PX = 666;
 export const MANUFACTURING_DETAIL_IMAGE_STONE_SEAT_GEOMETRY_HEIGHT_PX = 702;
 
+/** Wall Thickness Engineering — դիզայնային չափեր, aspect-ratio 151/159 */
+export const MANUFACTURING_DETAIL_IMAGE_WALL_THICKNESS_WIDTH_PX = 560;
+export const MANUFACTURING_DETAIL_IMAGE_WALL_THICKNESS_HEIGHT_PX = 590;
+
 export const MANUFACTURING_DETAIL_PHOTO_LAYOUT = {
   STANDARD: "standard",
   PRINTING_STRATEGY_RESIN: "printing-strategy-resin",
   CASTING_COMPENSATION_METAL_FLOW: "casting-compensation-metal-flow",
   STONE_SEAT_GEOMETRY_SETTING: "stone-seat-geometry-setting",
+  WALL_THICKNESS_ENGINEERING: "wall-thickness-engineering",
 } as const;
 
 export type ManufacturingDetailPhotoLayout =
@@ -53,6 +58,13 @@ export function resolveManufacturingDetailImageDimensions(
       photoLayout: MANUFACTURING_DETAIL_PHOTO_LAYOUT.STONE_SEAT_GEOMETRY_SETTING,
     };
   }
+  if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.WALL_THICKNESS_ENGINEERING) {
+    return {
+      widthPx: MANUFACTURING_DETAIL_IMAGE_WALL_THICKNESS_WIDTH_PX,
+      heightPx: MANUFACTURING_DETAIL_IMAGE_WALL_THICKNESS_HEIGHT_PX,
+      photoLayout: MANUFACTURING_DETAIL_PHOTO_LAYOUT.WALL_THICKNESS_ENGINEERING,
+    };
+  }
   return {
     widthPx: MANUFACTURING_DETAIL_IMAGE_WIDTH_PX,
     heightPx: MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX,
@@ -71,6 +83,9 @@ export function getManufacturingDetailPhotoLayoutClassName(
   }
   if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.STONE_SEAT_GEOMETRY_SETTING) {
     return "manufacturing-intelligence-photo-detail--stone-seat-geometry-setting";
+  }
+  if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.WALL_THICKNESS_ENGINEERING) {
+    return "manufacturing-intelligence-photo-detail--wall-thickness-engineering";
   }
   return "";
 }
@@ -157,5 +172,12 @@ export const MANUFACTURING_SPECIALIZATION_ITEMS: readonly ManufacturingSpecializ
     {
       id: MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING,
       title: "Wall Thickness Engineering",
+      description:
+        "Controlled wall thickness calibration based on material type, casting method and structural load requirements. Optimized to prevent deformation, porosity exposure and weak stress points during production.",
+      detailImageSrc: LANDING_IMAGES.manufacturingWallThicknessEngineering,
+      detailImageAlt:
+        "CAD render of a two-tone ring showing engineered wall thickness and stone settings",
+      detailPhotoLayout:
+        MANUFACTURING_DETAIL_PHOTO_LAYOUT.WALL_THICKNESS_ENGINEERING,
     },
   ];

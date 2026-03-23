@@ -45,6 +45,10 @@
   --manufacturing-stone-seat-geometry-detail-nudge-y: -12px;
   /** Stone Seat Geometry detail — մի քիչ աջ (դրական = աջ) */
   --manufacturing-stone-seat-geometry-detail-nudge-x: 35px;
+  /** Wall Thickness Engineering detail — շատ քիչ դեպի աջ (դրական = աջ) */
+  --manufacturing-wall-thickness-detail-nudge-x: 18px;
+  /** Wall Thickness Engineering detail — մի քիչ ներքև (դրական = ներքև) */
+  --manufacturing-wall-thickness-detail-nudge-y: 12px;
   /**
    * Stone Seat Geometry — ցուցադրման լայնություն (ֆայլը 666×702 է, aspect 37/39).
    * Միայն այս նկարի վիզուալ սքեյլ — փոքրացնելու համար նվազեցրու արժեքը։
@@ -379,6 +383,17 @@ section[id] {
   width: var(--manufacturing-stone-seat-geometry-detail-display-width);
 }
 
+/* Wall Thickness Engineering — 560×590, aspect-ratio 151/159 */
+.manufacturing-intelligence-photo-detail--wall-thickness-engineering {
+  aspect-ratio: 151 / 159;
+  height: auto;
+  transform: translate(
+    var(--manufacturing-wall-thickness-detail-nudge-x),
+    var(--manufacturing-wall-thickness-detail-nudge-y)
+  );
+  width: 560px;
+}
+
 .manufacturing-intelligence-image-frame {
   max-width: min(100%, var(--manufacturing-intelligence-image-frame-max-w));
 }
@@ -425,6 +440,13 @@ section[id] {
     transform: translate(
       var(--manufacturing-stone-seat-geometry-detail-nudge-x),
       var(--manufacturing-stone-seat-geometry-detail-nudge-y)
+    );
+  }
+
+  .manufacturing-intelligence-photo-detail--wall-thickness-engineering {
+    transform: translate(
+      var(--manufacturing-wall-thickness-detail-nudge-x),
+      var(--manufacturing-wall-thickness-detail-nudge-y)
     );
   }
 }
