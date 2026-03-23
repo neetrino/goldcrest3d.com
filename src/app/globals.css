@@ -4,13 +4,45 @@
   --background: #ffffff;
   --foreground: #171717;
   --landing-nav-height: 48px;
-  --landing-nav-logo-width: 86px;
+  /** Figma header logo frame: 71×41, aspect-ratio 71/41. */
+  --landing-nav-logo-width: 71px;
+  --landing-nav-logo-height: 41px;
+  /** Horizontal padding for the landing nav inner row (sync with TSX). */
+  --landing-nav-padding-x: 12px;
   /** Logo column width (matches previous content box so nav links stay put). */
-  --landing-nav-logo-slot: 90px;
+  --landing-nav-logo-slot: 0px;
   /** Shift logo right inside the slot; does not change flex layout. */
-  --landing-nav-logo-offset-x: 300px;
-  /** Slightly larger than bar height; bar uses overflow-visible. */
-  --landing-nav-logo-height: 42px;
+  --landing-nav-logo-offset-x: 0px;
+}
+
+/** Tablet: room for inline nav + CTA without overlap. */
+@media (min-width: 768px) {
+  :root {
+    --landing-nav-padding-x: 24px;
+    --landing-nav-logo-slot: 72px;
+    --landing-nav-logo-offset-x: 64px;
+  }
+}
+
+/** Laptop: denser than full desktop, still horizontal nav. */
+@media (min-width: 1024px) {
+  :root {
+    --landing-nav-padding-x: 40px;
+    --landing-nav-logo-slot: 90px;
+    --landing-nav-logo-offset-x: 180px;
+  }
+}
+
+/**
+ * Full desktop — նույն կազմը ինչ մեկ բազային :root-ում էր նախքան responsive շտկումը
+ * (padding 51px + logo offset 300px, slot 90px).
+ */
+@media (min-width: 1280px) {
+  :root {
+    --landing-nav-padding-x: 51px;
+    --landing-nav-logo-slot: 90px;
+    --landing-nav-logo-offset-x: 300px;
+  }
 }
 
 @theme inline {
