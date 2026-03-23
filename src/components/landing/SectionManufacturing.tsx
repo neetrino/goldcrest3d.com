@@ -79,12 +79,10 @@ export function SectionManufacturing() {
     ? MANUFACTURING_SPECIALIZATION_ITEMS.find((i) => i.id === activeId)
     : undefined;
 
-  const imageSrc =
-    activeItem?.detailImageSrc ?? LANDING_IMAGES.manufacturing;
-  const imageAlt =
-    activeItem?.detailImageAlt ??
-    "CAD workspace and jewelry model";
-  const isDetailImageActive = Boolean(activeItem?.detailImageSrc);
+  /** Detail layer only when the open row has a detail asset; default image stays mounted underneath. */
+  const showDetailImage = Boolean(activeItem?.detailImageSrc);
+
+  const defaultManufacturingAlt = "CAD workspace and jewelry model";
 
   const handleToggle = (id: ManufacturingSpecializationId) => {
     setActiveId((prev) => (prev === id ? null : id));
@@ -123,12 +121,24 @@ export function SectionManufacturing() {
                 className="manufacturing-intelligence-image-frame relative mx-auto aspect-[750/625] w-full overflow-hidden lg:ml-auto lg:mr-0"
                 data-landing-image={LANDING_IMAGE_IDS.MANUFACTURING_MAIN}
               >
-                {isDetailImageActive ? (
-                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <Image
+                  src={LANDING_IMAGES.manufacturing}
+                  alt={defaultManufacturingAlt}
+                  fill
+                  unoptimized
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                  className={`manufacturing-intelligence-photo transition-opacity duration-500 ease-out motion-reduce:transition-none motion-reduce:duration-0 ${
+                    showDetailImage
+                      ? "pointer-events-none opacity-0"
+                      : "opacity-100"
+                  }`}
+                  aria-hidden={showDetailImage}
+                />
+                {showDetailImage && activeItem?.detailImageSrc ? (
+                  <div className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center">
                     <Image
-                      key={imageSrc}
-                      src={imageSrc}
-                      alt={imageAlt}
+                      src={activeItem.detailImageSrc}
+                      alt={activeItem.detailImageAlt ?? ""}
                       width={MANUFACTURING_DETAIL_IMAGE_WIDTH_PX}
                       height={MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX}
                       unoptimized
@@ -136,17 +146,7 @@ export function SectionManufacturing() {
                       className="manufacturing-intelligence-photo-detail relative max-h-full"
                     />
                   </div>
-                ) : (
-                  <Image
-                    key={imageSrc}
-                    src={imageSrc}
-                    alt={imageAlt}
-                    fill
-                    unoptimized
-                    sizes="(max-width: 1024px) 100vw, 45vw"
-                    className="manufacturing-intelligence-photo"
-                  />
-                )}
+                ) : null}
               </div>
             </div>
           </div>
