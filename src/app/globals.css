@@ -17,7 +17,9 @@
   --manufacturing-intelligence-card-max-w: 1421px;
   /** Manufacturing Intelligence — image column vertical tuning (lg+) */
   --manufacturing-intelligence-image-col-padding-top-lg: 24px;
-  --manufacturing-intelligence-image-nudge-y-lg: -96px;
+  --manufacturing-intelligence-image-nudge-y-lg: -10px;
+  /** Horizontal shift of the image frame (lg+); positive = right. */
+  --manufacturing-intelligence-image-nudge-x-lg: 80px;
   /** Caps image frame height (lg+); balance vs full aspect-ratio column */
   --manufacturing-intelligence-image-frame-max-h-lg: 684px;
   /**
@@ -25,6 +27,11 @@
    * min(100%, this) — if this is larger than the column, the column wins (see grid in SectionManufacturing).
    */
   --manufacturing-intelligence-image-frame-max-w: 1612px;
+  /**
+   * Slight zoom for the photo inside the frame (lg+).
+   * Does not change the frame’s layout box or the gradient block height — overflow clips the edges.
+   */
+  --manufacturing-intelligence-photo-scale-lg: 1.26;
 }
 
 /** Tablet: room for inline nav + CTA without overlap. */
@@ -330,6 +337,14 @@ section[id] {
 
   .manufacturing-intelligence-image-frame {
     max-height: var(--manufacturing-intelligence-image-frame-max-h-lg);
-    transform: translateY(var(--manufacturing-intelligence-image-nudge-y-lg));
+    transform: translate(
+      var(--manufacturing-intelligence-image-nudge-x-lg),
+      var(--manufacturing-intelligence-image-nudge-y-lg)
+    );
+  }
+
+  .manufacturing-intelligence-photo {
+    transform: scale(var(--manufacturing-intelligence-photo-scale-lg));
+    transform-origin: center center;
   }
 }
