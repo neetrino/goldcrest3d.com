@@ -121,7 +121,7 @@ export const MANUFACTURING_SPECIALIZATION_ITEMS: readonly ManufacturingSpecializ
       id: MANUFACTURING_SPECIALIZATION_IDS.CASTING_COMPENSATION_METAL_FLOW,
       title: "Casting Compensation & Metal Flow Awareness",
       description:
-        "Shrinkage compensation and internal volume balance calculated at the CAD stage. Metal flow logic and structural reinforcement zones defined before mold preparation.",
+        "Shrinkage compensation and internal volume balance calculated at the\nCAD stage. Metal flow logic and structural reinforcement zones defined\nbefore mold preparation.",
       detailImageSrc: LANDING_IMAGES.manufacturingCastingCompensationMetalFlowAwareness,
       detailImageAlt:
         "CAD rendering of a ring on a casting tree with sprues for investment casting",
