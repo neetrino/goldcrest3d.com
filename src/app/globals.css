@@ -13,9 +13,13 @@
   --landing-nav-logo-slot: 0px;
   /** Shift logo right inside the slot; does not change flex layout. */
   --landing-nav-logo-offset-x: 0px;
+  /** Manufacturing Intelligence — gradient card width (inside max-w 1612 shell) */
+  --manufacturing-intelligence-card-max-w: 1421px;
   /** Manufacturing Intelligence — image column vertical tuning (lg+) */
   --manufacturing-intelligence-image-col-padding-top-lg: 24px;
-  --manufacturing-intelligence-image-nudge-y-lg: -95px;
+  --manufacturing-intelligence-image-nudge-y-lg: -96px;
+  /** Caps image frame height (lg+); balance vs full aspect-ratio column */
+  --manufacturing-intelligence-image-frame-max-h-lg: 684px;
   /**
    * Caps the image frame only when set BELOW the right column width.
    * min(100%, this) — if this is larger than the column, the column wins (see grid in SectionManufacturing).
@@ -277,6 +281,12 @@ section[id] {
 }
 
 /* Manufacturing Intelligence — Figma 110:373, 97:415 */
+.manufacturing-intelligence-card-shell {
+  margin-inline: auto;
+  max-width: min(100%, var(--manufacturing-intelligence-card-max-w));
+  width: 100%;
+}
+
 .manufacturing-intelligence-heading {
   color: #000000;
   font-family: "SF Compact", -apple-system, system-ui, sans-serif;
@@ -319,6 +329,7 @@ section[id] {
   }
 
   .manufacturing-intelligence-image-frame {
+    max-height: var(--manufacturing-intelligence-image-frame-max-h-lg);
     transform: translateY(var(--manufacturing-intelligence-image-nudge-y-lg));
   }
 }

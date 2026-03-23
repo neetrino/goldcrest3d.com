@@ -74,7 +74,7 @@ export function SectionManufacturing() {
           Manufacturing Intelligence
         </h2>
 
-        <div className="mt-[120px] overflow-hidden rounded-[16px] bg-[linear-gradient(-65.02deg,#f8f7f6_0.94%,#c0c6cd_99.4%)] lg:min-h-[805px]">
+        <div className="manufacturing-intelligence-card-shell mt-[76px] overflow-hidden rounded-none bg-[linear-gradient(-65.02deg,#f8f7f6_0.94%,#c0c6cd_99.4%)]">
           <div className="grid min-h-0 grid-cols-1 gap-10 py-10 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)] lg:gap-0 lg:py-0 lg:pl-[2.61%] lg:pr-[4.59%]">
             <div className="flex min-w-0 flex-col divide-y divide-black/10 lg:pt-[94px]">
               {ACCORDION_ITEMS.map((item, i) => (
