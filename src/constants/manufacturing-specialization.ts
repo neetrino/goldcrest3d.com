@@ -42,6 +42,11 @@ export const MANUFACTURING_SPECIALIZATION_ITEMS: readonly ManufacturingSpecializ
     {
       id: MANUFACTURING_SPECIALIZATION_IDS.MECHANICAL_STRESS_LOAD_DISTRIBUTION,
       title: "Mechanical Stress & Load Distribution",
+      description:
+        "Structural stress zones identified and reinforced through balanced\nmass distribution. Engineered for impact resistance, movement stability\nand long-term durability.",
+      detailImageSrc: LANDING_IMAGES.manufacturingMechanicalStressLoadDistribution,
+      detailImageAlt:
+        "Ring finite element analysis showing mechanical stress and load distribution",
     },
     {
       id: MANUFACTURING_SPECIALIZATION_IDS.PRINTING_STRATEGY_RESIN,
