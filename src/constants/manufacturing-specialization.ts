@@ -4,6 +4,38 @@ import { LANDING_IMAGES } from "@/constants/landing-assets";
 export const MANUFACTURING_DETAIL_IMAGE_WIDTH_PX = 980;
 export const MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX = 653;
 
+/** 3D Printing Strategy & Resin Behavior — նկարի նախագծային չափեր (aspect 69/49) */
+export const MANUFACTURING_DETAIL_IMAGE_PRINTING_STRATEGY_WIDTH_PX = 978;
+export const MANUFACTURING_DETAIL_IMAGE_PRINTING_STRATEGY_HEIGHT_PX = 694;
+
+export const MANUFACTURING_DETAIL_PHOTO_LAYOUT = {
+  STANDARD: "standard",
+  PRINTING_STRATEGY_RESIN: "printing-strategy-resin",
+} as const;
+
+export type ManufacturingDetailPhotoLayout =
+  (typeof MANUFACTURING_DETAIL_PHOTO_LAYOUT)[keyof typeof MANUFACTURING_DETAIL_PHOTO_LAYOUT];
+
+/**
+ * Detail նկարի intrinsic չափեր Next/Image-ի համար և CSS մոդիֆիկատորի ընտրություն
+ */
+export function resolveManufacturingDetailImageDimensions(
+  layout: ManufacturingDetailPhotoLayout | undefined,
+): { widthPx: number; heightPx: number; photoLayout: ManufacturingDetailPhotoLayout } {
+  if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.PRINTING_STRATEGY_RESIN) {
+    return {
+      widthPx: MANUFACTURING_DETAIL_IMAGE_PRINTING_STRATEGY_WIDTH_PX,
+      heightPx: MANUFACTURING_DETAIL_IMAGE_PRINTING_STRATEGY_HEIGHT_PX,
+      photoLayout: MANUFACTURING_DETAIL_PHOTO_LAYOUT.PRINTING_STRATEGY_RESIN,
+    };
+  }
+  return {
+    widthPx: MANUFACTURING_DETAIL_IMAGE_WIDTH_PX,
+    heightPx: MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX,
+    photoLayout: MANUFACTURING_DETAIL_PHOTO_LAYOUT.STANDARD,
+  };
+}
+
 export const MANUFACTURING_SPECIALIZATION_IDS = {
   TOLERANCE_CONTROL_ASSEMBLY_PRECISION: "tolerance-control-assembly-precision",
   MECHANICAL_STRESS_LOAD_DISTRIBUTION: "mechanical-stress-load-distribution",
@@ -22,6 +54,8 @@ export type ManufacturingSpecializationItem = {
   description?: string;
   detailImageSrc?: string;
   detailImageAlt?: string;
+  /** Երբ տրված է `detailImageSrc`-ի հետ — detail նկարի intrinsic չափեր և CSS մոդիֆիկատոր */
+  detailPhotoLayout?: ManufacturingDetailPhotoLayout;
 };
 
 /**
@@ -51,6 +85,13 @@ export const MANUFACTURING_SPECIALIZATION_ITEMS: readonly ManufacturingSpecializ
     {
       id: MANUFACTURING_SPECIALIZATION_IDS.PRINTING_STRATEGY_RESIN,
       title: "3D Printing Strategy & Resin Behavior",
+      description:
+        "Support structure planning, overhang control and resin thickness awareness integrated into model architecture. Designed to minimize distortion and reduce post-processing risk.",
+      detailImageSrc: LANDING_IMAGES.manufacturingPrintingStrategyResinBehavior,
+      detailImageAlt:
+        "Jewelry ring SLA model with support structures on a perforated build plate",
+      detailPhotoLayout:
+        MANUFACTURING_DETAIL_PHOTO_LAYOUT.PRINTING_STRATEGY_RESIN,
     },
     {
       id: MANUFACTURING_SPECIALIZATION_IDS.CASTING_COMPENSATION_METAL_FLOW,

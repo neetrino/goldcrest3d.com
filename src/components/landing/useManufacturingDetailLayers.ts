@@ -7,13 +7,20 @@ import {
   useRef,
   useState,
 } from "react";
-import type { ManufacturingSpecializationItem } from "@/constants/manufacturing-specialization";
+import {
+  resolveManufacturingDetailImageDimensions,
+  type ManufacturingDetailPhotoLayout,
+  type ManufacturingSpecializationItem,
+} from "@/constants/manufacturing-specialization";
 import { MANUFACTURING_IMAGE_TRANSITION_MS } from "./manufacturing-image.constants";
 
 export type ManufacturingDetailPayload = {
   id: ManufacturingSpecializationItem["id"];
   src: string;
   alt: string;
+  widthPx: number;
+  heightPx: number;
+  photoLayout: ManufacturingDetailPhotoLayout;
 };
 
 type UseManufacturingDetailLayersArgs = {
@@ -32,10 +39,16 @@ export function useManufacturingDetailLayers({
 }: UseManufacturingDetailLayersArgs) {
   const activeDetail = useMemo<ManufacturingDetailPayload | null>(() => {
     if (!activeItem?.detailImageSrc) return null;
+    const dims = resolveManufacturingDetailImageDimensions(
+      activeItem.detailPhotoLayout,
+    );
     return {
       id: activeItem.id,
       src: activeItem.detailImageSrc,
       alt: activeItem.detailImageAlt ?? "",
+      widthPx: dims.widthPx,
+      heightPx: dims.heightPx,
+      photoLayout: dims.photoLayout,
     };
   }, [activeItem]);
 

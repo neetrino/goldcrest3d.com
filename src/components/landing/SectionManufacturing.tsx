@@ -3,8 +3,7 @@
 import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import {
-  MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX,
-  MANUFACTURING_DETAIL_IMAGE_WIDTH_PX,
+  MANUFACTURING_DETAIL_PHOTO_LAYOUT,
   MANUFACTURING_SPECIALIZATION_ITEMS,
   type ManufacturingSpecializationId,
   type ManufacturingSpecializationItem,
@@ -165,11 +164,16 @@ export function SectionManufacturing() {
                       key="mfg-detail-slot-0"
                       src={slot0.src}
                       alt={slot0.alt}
-                      width={MANUFACTURING_DETAIL_IMAGE_WIDTH_PX}
-                      height={MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX}
+                      width={slot0.widthPx}
+                      height={slot0.heightPx}
                       unoptimized
                       sizes="(max-width: 1024px) 100vw, 45vw"
-                      className={`manufacturing-intelligence-photo-detail relative max-h-full ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
+                      className={`manufacturing-intelligence-photo-detail relative max-h-full ${
+                        slot0.photoLayout ===
+                        MANUFACTURING_DETAIL_PHOTO_LAYOUT.PRINTING_STRATEGY_RESIN
+                          ? "manufacturing-intelligence-photo-detail--printing-strategy-resin"
+                          : ""
+                      } ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
                         slot0Visible ? "opacity-100" : "opacity-0"
                       }`}
                       aria-hidden={!slot0Visible}
@@ -186,11 +190,16 @@ export function SectionManufacturing() {
                       key="mfg-detail-slot-1"
                       src={slot1.src}
                       alt={slot1.alt}
-                      width={MANUFACTURING_DETAIL_IMAGE_WIDTH_PX}
-                      height={MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX}
+                      width={slot1.widthPx}
+                      height={slot1.heightPx}
                       unoptimized
                       sizes="(max-width: 1024px) 100vw, 45vw"
-                      className={`manufacturing-intelligence-photo-detail relative max-h-full ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
+                      className={`manufacturing-intelligence-photo-detail relative max-h-full ${
+                        slot1.photoLayout ===
+                        MANUFACTURING_DETAIL_PHOTO_LAYOUT.PRINTING_STRATEGY_RESIN
+                          ? "manufacturing-intelligence-photo-detail--printing-strategy-resin"
+                          : ""
+                      } ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
                         slot1Visible ? "opacity-100" : "opacity-0"
                       }`}
                       aria-hidden={!slot1Visible}

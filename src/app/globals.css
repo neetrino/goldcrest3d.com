@@ -35,6 +35,8 @@
    * Does not change the frame’s layout box or the gradient block height — overflow clips the edges.
    */
   --manufacturing-intelligence-photo-scale-lg: 1.26;
+  /** 3D Printing Strategy detail — նկարը մի քիչ ցածր frame-ի կենտրոնից */
+  --manufacturing-printing-strategy-resin-detail-nudge-y: 16px;
 }
 
 /** Tablet: room for inline nav + CTA without overlap. */
@@ -335,6 +337,13 @@ section[id] {
   width: 980px;
 }
 
+/* 3D Printing Strategy & Resin — 978×694, aspect-ratio 69/49 */
+.manufacturing-intelligence-photo-detail--printing-strategy-resin {
+  aspect-ratio: 69 / 49;
+  transform: translateY(var(--manufacturing-printing-strategy-resin-detail-nudge-y));
+  width: 978px;
+}
+
 .manufacturing-intelligence-image-frame {
   max-width: min(100%, var(--manufacturing-intelligence-image-frame-max-w));
 }
@@ -364,5 +373,9 @@ section[id] {
 
   .manufacturing-intelligence-photo-detail {
     transform: none;
+  }
+
+  .manufacturing-intelligence-photo-detail--printing-strategy-resin {
+    transform: translateY(var(--manufacturing-printing-strategy-resin-detail-nudge-y));
   }
 }

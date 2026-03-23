@@ -36,6 +36,9 @@ export const LANDING_IMAGES = {
   /** Manufacturing Intelligence — detail: Mechanical Stress & Load Distribution (FEA) */
   manufacturingMechanicalStressLoadDistribution:
     "/images/manufacturing/mechanical-stress-load-distribution.png",
+  /** Manufacturing Intelligence — detail: 3D Printing Strategy & Resin Behavior */
+  manufacturingPrintingStrategyResinBehavior:
+    "/images/manufacturing/3d-printing-strategy-resin-behavior.png",
   /** Founder photo */
   founder:
     "https://www.figma.com/api/mcp/asset/ed180930-9b00-4258-9974-241824666fae",
