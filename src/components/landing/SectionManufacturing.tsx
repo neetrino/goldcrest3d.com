@@ -10,7 +10,9 @@ import {
   type ManufacturingSpecializationItem,
 } from "@/constants/manufacturing-specialization";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { MANUFACTURING_IMAGE_OPACITY_CLASS } from "./manufacturing-image.constants";
+import { useManufacturingDetailLayers } from "./useManufacturingDetailLayers";
 
 type ManufacturingAccordionRowProps = {
   item: ManufacturingSpecializationItem;
@@ -84,12 +86,22 @@ export function SectionManufacturing() {
     null,
   );
 
-  const activeItem = activeId
-    ? MANUFACTURING_SPECIALIZATION_ITEMS.find((i) => i.id === activeId)
-    : undefined;
+  const activeItem = useMemo(
+    () =>
+      activeId
+        ? MANUFACTURING_SPECIALIZATION_ITEMS.find((i) => i.id === activeId)
+        : undefined,
+    [activeId],
+  );
 
-  /** Detail layer only when the open row has a detail asset; default image stays mounted underneath. */
-  const showDetailImage = Boolean(activeItem?.detailImageSrc);
+  const {
+    slot0,
+    slot1,
+    slot0Visible,
+    slot1Visible,
+    elevatedSlot,
+    detailObscuresDefault,
+  } = useManufacturingDetailLayers({ activeItem });
 
   const defaultManufacturingAlt = "CAD workspace and jewelry model";
 
@@ -136,23 +148,52 @@ export function SectionManufacturing() {
                   fill
                   unoptimized
                   sizes="(max-width: 1024px) 100vw, 45vw"
-                  className={`manufacturing-intelligence-photo transition-opacity duration-500 ease-out motion-reduce:transition-none motion-reduce:duration-0 ${
-                    showDetailImage
+                  className={`manufacturing-intelligence-photo ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
+                    detailObscuresDefault
                       ? "pointer-events-none opacity-0"
                       : "opacity-100"
                   }`}
-                  aria-hidden={showDetailImage}
+                  aria-hidden={detailObscuresDefault}
                 />
-                {showDetailImage && activeItem?.detailImageSrc ? (
-                  <div className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center">
+                {slot0 ? (
+                  <div
+                    className={`pointer-events-none absolute inset-0 flex items-center justify-center ${
+                      elevatedSlot === 0 ? "z-[2]" : "z-[1]"
+                    }`}
+                  >
                     <Image
-                      src={activeItem.detailImageSrc}
-                      alt={activeItem.detailImageAlt ?? ""}
+                      key="mfg-detail-slot-0"
+                      src={slot0.src}
+                      alt={slot0.alt}
                       width={MANUFACTURING_DETAIL_IMAGE_WIDTH_PX}
                       height={MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX}
                       unoptimized
                       sizes="(max-width: 1024px) 100vw, 45vw"
-                      className="manufacturing-intelligence-photo-detail relative max-h-full"
+                      className={`manufacturing-intelligence-photo-detail relative max-h-full ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
+                        slot0Visible ? "opacity-100" : "opacity-0"
+                      }`}
+                      aria-hidden={!slot0Visible}
+                    />
+                  </div>
+                ) : null}
+                {slot1 ? (
+                  <div
+                    className={`pointer-events-none absolute inset-0 flex items-center justify-center ${
+                      elevatedSlot === 1 ? "z-[2]" : "z-[1]"
+                    }`}
+                  >
+                    <Image
+                      key="mfg-detail-slot-1"
+                      src={slot1.src}
+                      alt={slot1.alt}
+                      width={MANUFACTURING_DETAIL_IMAGE_WIDTH_PX}
+                      height={MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX}
+                      unoptimized
+                      sizes="(max-width: 1024px) 100vw, 45vw"
+                      className={`manufacturing-intelligence-photo-detail relative max-h-full ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
+                        slot1Visible ? "opacity-100" : "opacity-0"
+                      }`}
+                      aria-hidden={!slot1Visible}
                     />
                   </div>
                 ) : null}
