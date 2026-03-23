@@ -7,8 +7,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-const LOGO_SRC =
-  "https://www.figma.com/api/mcp/asset/ce31ef4f-5914-417c-9ba4-4c47b79e2bff";
+/** Gold bird mark; background removed (see scripts/process-header-logo.mjs). */
+const LOGO_SRC = "/images/header-logo.png";
 
 const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
   { id: LANDING_SECTION_IDS.HERO, label: "Home" },
@@ -29,20 +29,20 @@ export function LandingNav() {
       aria-label="Main navigation"
     >
       <div className="flex h-full w-full items-center justify-between pl-[51px] pr-[51px]">
-        <div className="flex shrink-0">
+        <div className="flex min-w-0 shrink-0">
           <Link
             href={`#${LANDING_SECTION_IDS.HERO}`}
-            className="relative left-[18rem] flex items-center"
+            className="flex items-center"
             aria-label="Goldcrest 3D — Home"
           >
             <Image
               src={LOGO_SRC}
               alt="Goldcrest 3D"
-              width={104}
-              height={58}
-              sizes="100vw"
-              className="relative h-[length:var(--landing-nav-height)] w-[length:var(--landing-nav-logo-width)] max-h-full max-w-full overflow-hidden object-cover"
-              unoptimized
+              width={713}
+              height={386}
+              sizes="(max-width: 768px) 100px, 120px"
+              priority
+              className="h-[length:var(--landing-nav-height)] w-auto max-w-[min(120px,calc(100vw-200px))] object-contain object-left"
             />
           </Link>
         </div>
