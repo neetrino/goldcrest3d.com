@@ -308,6 +308,10 @@ section[id] {
   line-height: 28px;
 }
 
+.manufacturing-intelligence-accordion-detail {
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+}
+
 /* Figma 201:329 — 750×625 frame; contain shows full export like Figma (no artificial zoom crop) */
 .manufacturing-intelligence-photo {
   height: 100% !important;
@@ -317,6 +321,17 @@ section[id] {
   object-position: center;
   top: 0 !important;
   width: 100% !important;
+}
+
+/* Միայն detail նկար (օր. Tolerance Control) — 980×653, frame-ի class-ները չեն փոխվել */
+.manufacturing-intelligence-photo-detail {
+  aspect-ratio: 980 / 653;
+  box-sizing: border-box;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+  width: 980px;
 }
 
 .manufacturing-intelligence-image-frame {
@@ -344,5 +359,9 @@ section[id] {
   .manufacturing-intelligence-photo {
     transform: scale(var(--manufacturing-intelligence-photo-scale-lg));
     transform-origin: center center;
+  }
+
+  .manufacturing-intelligence-photo-detail {
+    transform: none;
   }
 }

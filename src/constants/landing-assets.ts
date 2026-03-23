@@ -30,6 +30,9 @@ export const LANDING_IMAGES = {
   /** Manufacturing Intelligence — Figma node -280 / 201:329 composite */
   manufacturing:
     "https://www.figma.com/api/mcp/asset/f0e2ff65-ab6e-4496-9550-dbb56fe62cca",
+  /** Manufacturing Intelligence — detail: Tolerance Control & Assembly Precision */
+  manufacturingToleranceControl:
+    "/images/manufacturing/tolerance-control-assembly-precision.png",
   /** Founder photo */
   founder:
     "https://www.figma.com/api/mcp/asset/ed180930-9b00-4258-9974-241824666fae",
