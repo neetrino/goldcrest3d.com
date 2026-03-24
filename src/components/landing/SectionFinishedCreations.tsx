@@ -20,16 +20,17 @@ const ROW1_IMAGES: GalleryItem[] = [
   { id: "row1-img-4", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.modelingBridal },
 ];
 
-/** Fixed row — small blocks (480×256), no carousel. */
+/** Carousel: 5 small images that rotate together with row1. */
 const ROW2_ITEM_WIDTH = 420;
 const ROW2_ITEM_HEIGHT = 232;
+const ROW2_GAP = 8;
 
-const ROW2_ITEMS: GalleryItem[] = [
-  { id: "row2-item-1", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: "/images/finished/small-block-bridal-1.png" },
-  { id: "row2-item-2", imageId: LANDING_IMAGE_IDS.FINISHED_5, src: "/images/finished/small-block-bridal-2.png" },
-  { id: "row2-item-3", imageId: LANDING_IMAGE_IDS.FINISHED_6, src: "/images/finished/small-block-portrait.png" },
-  { id: "row2-item-4", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: LANDING_IMAGES.modelingMechanical },
-  { id: "row2-item-5", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: "/images/finished/small-block-bridal-1.png" },
+const ROW2_IMAGES: GalleryItem[] = [
+  { id: "row2-img-1", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: "/images/finished/small-block-bridal-1.png" },
+  { id: "row2-img-2", imageId: LANDING_IMAGE_IDS.FINISHED_5, src: "/images/finished/small-block-bridal-2.png" },
+  { id: "row2-img-3", imageId: LANDING_IMAGE_IDS.FINISHED_6, src: "/images/finished/small-block-portrait.png" },
+  { id: "row2-img-4", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: LANDING_IMAGES.modelingMechanical },
+  { id: "row2-img-5", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: "/images/finished/small-block-bridal-1.png" },
 ];
 
 const TOTAL_PAGES = ROW1_IMAGES.length;
@@ -49,7 +50,11 @@ export function SectionFinishedCreations() {
   }, []);
 
   /** Images rendered once; sliding via transform. Duplicated for seamless loop. */
-  const stripImages = [...ROW1_IMAGES, ...ROW1_IMAGES];
+  const row1StripImages = [...ROW1_IMAGES, ...ROW1_IMAGES];
+  const row2StripImages = [...ROW2_IMAGES, ...ROW2_IMAGES];
+
+  const row2TranslatePerPage = ROW2_ITEM_WIDTH + ROW2_GAP;
+  const row2ViewportWidth = ROW2_ITEM_WIDTH * 5 + ROW2_GAP * 4;
 
   return (
     <section
@@ -75,7 +80,7 @@ export function SectionFinishedCreations() {
                 transform: `translateX(-${(activePage % TOTAL_PAGES) * TRANSLATE_PER_PAGE}px)`,
               }}
             >
-              {stripImages.map((item, index) => (
+              {row1StripImages.map((item, index) => (
                 <div
                   key={`${item.id}-${index}`}
                   data-landing-image={item.imageId}
@@ -95,28 +100,33 @@ export function SectionFinishedCreations() {
             </div>
           </div>
           <div
-            className="flex gap-x-2"
-            style={{
-              width: ROW2_ITEMS.length * ROW2_ITEM_WIDTH + (ROW2_ITEMS.length - 1) * 8,
-            }}
+            className="overflow-hidden"
+            style={{ width: row2ViewportWidth }}
           >
-            {ROW2_ITEMS.map((item) => (
-              <div
-                key={item.id}
-                data-landing-image={item.imageId}
-                className="relative flex-shrink-0 overflow-hidden rounded-none"
-                style={{ width: ROW2_ITEM_WIDTH, height: ROW2_ITEM_HEIGHT }}
-              >
-                <Image
-                  src={item.src}
-                  alt=""
-                  fill
-                  className="object-cover"
-                  sizes="420px"
-                  unoptimized
-                />
-              </div>
-            ))}
+            <div
+              className="flex gap-x-2 transition-transform duration-300 ease-out"
+              style={{
+                transform: `translateX(-${(activePage % ROW2_IMAGES.length) * row2TranslatePerPage}px)`,
+              }}
+            >
+              {row2StripImages.map((item, index) => (
+                <div
+                  key={`${item.id}-${index}`}
+                  data-landing-image={item.imageId}
+                  className="relative flex-shrink-0 overflow-hidden rounded-none"
+                  style={{ width: ROW2_ITEM_WIDTH, height: ROW2_ITEM_HEIGHT }}
+                >
+                  <Image
+                    src={item.src}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="420px"
+                    unoptimized
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <nav
