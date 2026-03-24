@@ -61,7 +61,8 @@ export const LANDING_IMAGES = {
   footerFollowImage:
     "https://www.figma.com/api/mcp/asset/49e4a149-0329-4a34-8e24-ab60dcafab22",
   iconDown: "https://www.figma.com/api/mcp/asset/7233a83f-d0c0-4701-b67e-01c3bd58b2d4",
-  iconUpload: "https://www.figma.com/api/mcp/asset/b0817c9b-645f-47f5-af98-2f1d078348fb",
+  /** Quote form — file upload (document + arrow) */
+  iconUpload: "/images/icon-upload-quote.png",
   iconDots: "https://www.figma.com/api/mcp/asset/f3ba325e-a7bd-4009-b584-c238a58aa721",
   social1: "https://www.figma.com/api/mcp/asset/36864bcd-ec08-4066-85ef-e5a78c94fb63",
   social2: "https://www.figma.com/api/mcp/asset/e4974554-3948-4ee7-8b33-9f53d5c560b4",

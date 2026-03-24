@@ -255,14 +255,14 @@ export function QuoteForm() {
             ) : (
               <>
                 <span
-                  className="flex h-[30px] w-6 items-center justify-center"
+                  className="flex h-[36px] w-8 items-center justify-center"
                   data-landing-image={LANDING_IMAGE_IDS.QUOTE_UPLOAD_ICON}
                 >
                   <Image
                     src={LANDING_IMAGES.iconUpload}
                     alt=""
-                    width={24}
-                    height={30}
+                    width={32}
+                    height={40}
                     className="object-contain"
                     unoptimized
                   />
