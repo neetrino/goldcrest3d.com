@@ -65,7 +65,7 @@ export function SectionFinishedCreations() {
       <div className="mx-auto max-w-[1980px]">
         <h2
           id="finished-heading"
-          className="text-center font-semibold leading-tight tracking-tight text-[#181610] text-[28px]"
+          className="text-center font-manrope text-[28px] font-normal leading-[1.2] tracking-[-0.5px] text-black md:text-[48px] md:leading-[40px] md:tracking-[-0.9px]"
         >
           Finished Creations
         </h2>
