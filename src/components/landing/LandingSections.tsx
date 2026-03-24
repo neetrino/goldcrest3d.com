@@ -20,10 +20,8 @@ export function LandingSections() {
       <SectionModeling />
 
       <SectionManufacturing />
-      <SectionDivider variant="onLight" />
 
       <SectionFounder />
-      <SectionDivider variant="onLight" />
 
       <SectionFinishedCreations />
       <SectionDivider variant="onLight" />
