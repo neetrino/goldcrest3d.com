@@ -25,11 +25,11 @@ const ROW2_ITEM_WIDTH = 420;
 const ROW2_ITEM_HEIGHT = 232;
 
 const ROW2_ITEMS: GalleryItem[] = [
-  { id: "row2-item-1", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.finishedCopper },
-  { id: "row2-item-2", imageId: LANDING_IMAGE_IDS.FINISHED_5, src: LANDING_IMAGES.finishedOpacity },
-  { id: "row2-item-3", imageId: LANDING_IMAGE_IDS.FINISHED_6, src: LANDING_IMAGES.finishedCnc },
-  { id: "row2-item-4", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: LANDING_IMAGES.finishedCopper },
-  { id: "row2-item-5", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: LANDING_IMAGES.modelingHighJewelry },
+  { id: "row2-item-1", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: "/images/finished/small-block-bridal-1.png" },
+  { id: "row2-item-2", imageId: LANDING_IMAGE_IDS.FINISHED_5, src: "/images/finished/small-block-bridal-2.png" },
+  { id: "row2-item-3", imageId: LANDING_IMAGE_IDS.FINISHED_6, src: "/images/finished/small-block-portrait.png" },
+  { id: "row2-item-4", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: LANDING_IMAGES.modelingMechanical },
+  { id: "row2-item-5", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: "/images/finished/small-block-bridal-1.png" },
 ];
 
 const TOTAL_PAGES = ROW1_IMAGES.length;
