@@ -20,12 +20,16 @@ const ROW1_IMAGES: GalleryItem[] = [
   { id: "row1-img-4", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.modelingBridal },
 ];
 
-/** Fixed row — small blocks stay the same, no carousel. */
+/** Fixed row — small blocks (480×256), no carousel. */
+const ROW2_ITEM_WIDTH = 420;
+const ROW2_ITEM_HEIGHT = 232;
+
 const ROW2_ITEMS: GalleryItem[] = [
   { id: "row2-item-1", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.finishedCopper },
   { id: "row2-item-2", imageId: LANDING_IMAGE_IDS.FINISHED_5, src: LANDING_IMAGES.finishedOpacity },
   { id: "row2-item-3", imageId: LANDING_IMAGE_IDS.FINISHED_6, src: LANDING_IMAGES.finishedCnc },
   { id: "row2-item-4", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: LANDING_IMAGES.finishedCopper },
+  { id: "row2-item-5", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: LANDING_IMAGES.modelingHighJewelry },
 ];
 
 const TOTAL_PAGES = ROW1_IMAGES.length;
@@ -90,19 +94,25 @@ export function SectionFinishedCreations() {
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-[412px_412px_412px_412px] gap-x-2 gap-y-4">
+          <div
+            className="flex gap-x-2"
+            style={{
+              width: ROW2_ITEMS.length * ROW2_ITEM_WIDTH + (ROW2_ITEMS.length - 1) * 8,
+            }}
+          >
             {ROW2_ITEMS.map((item) => (
               <div
                 key={item.id}
                 data-landing-image={item.imageId}
-                className="relative h-[235px] w-full min-w-0 overflow-hidden rounded-none"
+                className="relative flex-shrink-0 overflow-hidden rounded-none"
+                style={{ width: ROW2_ITEM_WIDTH, height: ROW2_ITEM_HEIGHT }}
               >
                 <Image
                   src={item.src}
                   alt=""
                   fill
                   className="object-cover"
-                  sizes="412px"
+                  sizes="420px"
                   unoptimized
                 />
               </div>
