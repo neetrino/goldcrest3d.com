@@ -1,7 +1,6 @@
 import { LANDING_SECTION_IDS } from "@/constants";
 import { LandingFooter } from "./LandingFooter";
 import { PowerBanners } from "./PowerBanners";
-import { SectionDivider } from "./SectionDivider";
 import { SectionFinishedCreations } from "./SectionFinishedCreations";
 import { SectionFounder } from "./SectionFounder";
 import { SectionManufacturing } from "./SectionManufacturing";
@@ -28,7 +27,6 @@ export function LandingSections() {
       <SectionProcess />
 
       <SectionQuote />
-      <SectionDivider variant="onLight" />
 
       <footer id={LANDING_SECTION_IDS.FOOTER}>
         <LandingFooter />
