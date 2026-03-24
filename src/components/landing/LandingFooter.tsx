@@ -10,7 +10,7 @@ export function LandingFooter() {
       aria-label="Site footer"
     >
       <div className="mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-4 md:gap-12">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-12">
           <div className="flex max-w-[384px] flex-col gap-[10px]">
             <div
               className="relative h-[63px] w-[111px]"
@@ -31,37 +31,6 @@ export function LandingFooter() {
             <p className="font-manrope font-light leading-[24px] text-[rgba(24,22,16,0.6)] text-[16px]">
               Precision in every dimension.
             </p>
-          </div>
-          <div>
-            <h3 className="font-bold leading-[16px] tracking-[1.2px] text-[#0f172a] text-[12px] uppercase">
-              Links
-            </h3>
-            <nav className="mt-[40px] flex flex-col gap-3" aria-label="Footer navigation">
-              <Link
-                href="/#hero"
-                className="text-[14px] leading-[20px] text-[#64748b] hover:text-[var(--foreground)]"
-              >
-                Home
-              </Link>
-              <Link
-                href="/#founder"
-                className="text-[14px] leading-[20px] text-[#64748b] hover:text-[var(--foreground)]"
-              >
-                About
-              </Link>
-              <Link
-                href="/#specializations"
-                className="text-[14px] leading-[20px] text-[#64748b] hover:text-[var(--foreground)]"
-              >
-                Services
-              </Link>
-              <Link
-                href="/#quote"
-                className="text-[14px] leading-[20px] text-[#64748b] hover:text-[var(--foreground)]"
-              >
-                Contact
-              </Link>
-            </nav>
           </div>
           <div>
             <h3 className="font-bold leading-[16px] tracking-[1.2px] text-[#0f172a] text-[12px] uppercase">
