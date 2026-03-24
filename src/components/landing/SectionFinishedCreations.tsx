@@ -43,8 +43,12 @@ const ROW2_IMAGE_COUNT = ROW2_IMAGES.length;
 
 /** Mobile gallery: taller than desktop slot ratio (same width, more height). */
 const MOBILE_BLOCK_HEIGHT_SCALE = 1.3;
+/** Mobile small row only: extra scale on top of `MOBILE_BLOCK_HEIGHT_SCALE`. */
+const MOBILE_SMALL_BLOCK_SIZE_SCALE = 0.95;
 const MOBILE_ROW1_ASPECT_HEIGHT = Math.round(SLOT_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE);
-const MOBILE_ROW2_ASPECT_HEIGHT = Math.round(ROW2_ITEM_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE);
+const MOBILE_ROW2_ASPECT_HEIGHT = Math.round(
+  ROW2_ITEM_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE * MOBILE_SMALL_BLOCK_SIZE_SCALE,
+);
 
 /** Minimum horizontal distance to count as swipe; ignores small jitter. */
 const MOBILE_SWIPE_THRESHOLD_PX = 48;
@@ -58,6 +62,12 @@ const MOBILE_SWIPE_VERTICAL_TOLERANCE_PX = 45;
  */
 const MOBILE_TOP_ROW_BLEED_CLASS =
   "shrink-0 max-w-none w-[calc(100vw+144px)] ml-[calc(50%-50vw-144px)]";
+
+/**
+ * Mobile small row: full viewport width (symmetric bleed) so 1:2:1 columns align to screen edges.
+ */
+const MOBILE_SMALL_ROW_CLASS =
+  "shrink-0 max-w-none w-[100vw] ml-[calc(50%-50vw)]";
 
 export function SectionFinishedCreations() {
   const [activePage, setActivePage] = useState(0);
@@ -148,7 +158,7 @@ export function SectionFinishedCreations() {
         </h2>
         <div className="mt-9 flex flex-col gap-2 max-md:items-stretch md:items-center">
           <div
-            className="flex w-full max-w-full min-w-0 touch-pan-y flex-col gap-2 md:hidden"
+            className="flex w-full max-w-full min-w-0 touch-pan-y flex-col gap-2 max-md:overflow-x-visible md:hidden"
             onPointerDown={onMobileSwipePointerDown}
             onPointerUp={onMobileSwipePointerUp}
             onPointerCancel={onMobileSwipePointerCancel}
@@ -173,24 +183,35 @@ export function SectionFinishedCreations() {
                 </div>
               ))}
             </div>
-            <div className="grid w-full grid-cols-3 gap-2">
-              {mobileRow2Items.map((item, index) => (
-                <div
-                  key={`mobile-row2-${item.id}-${activePage}-${index}`}
-                  data-landing-image={item.imageId}
-                  className="relative w-full min-w-0 overflow-hidden rounded-none"
-                  style={{ aspectRatio: `${ROW2_ITEM_WIDTH} / ${MOBILE_ROW2_ASPECT_HEIGHT}` }}
-                >
-                  <Image
-                    src={item.src}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 767px) 30vw, 420px"
-                    unoptimized
-                  />
-                </div>
-              ))}
+            <div
+              className={`grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] gap-1 ${MOBILE_SMALL_ROW_CLASS}`}
+            >
+              {mobileRow2Items.map((item, index) => {
+                const sideObjectPositionClass =
+                  index === 0 ? "object-right" : index === 2 ? "object-left" : "object-center";
+                const isCenter = index === 1;
+                return (
+                  <div
+                    key={`mobile-row2-${item.id}-${activePage}-${index}`}
+                    data-landing-image={item.imageId}
+                    className="relative min-h-0 min-w-0 overflow-hidden rounded-none"
+                    style={
+                      isCenter
+                        ? { aspectRatio: `${ROW2_ITEM_WIDTH} / ${MOBILE_ROW2_ASPECT_HEIGHT}` }
+                        : undefined
+                    }
+                  >
+                    <Image
+                      src={item.src}
+                      alt=""
+                      fill
+                      className={`object-cover ${sideObjectPositionClass}`.trim()}
+                      sizes="(max-width: 767px) 50vw, 420px"
+                      unoptimized
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="hidden flex-col items-center gap-2 md:flex">
