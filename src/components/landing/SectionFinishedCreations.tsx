@@ -3,24 +3,49 @@
 import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
-/** Row1: 4 items (large), Row2: 4 items. data-landing-image: finished-1 … finished-7 for section-by-section replacement. */
-const ROW1_ITEMS = [
-  { id: "gallery-item-1", imageId: LANDING_IMAGE_IDS.FINISHED_1, src: "/images/finished/block1-portrait-jewelry.png" },
-  { id: "gallery-item-2", imageId: LANDING_IMAGE_IDS.FINISHED_2, src: "/images/finished/block2-ancient-heritage.png" },
-  { id: "gallery-item-3", imageId: LANDING_IMAGE_IDS.FINISHED_3, src: "/images/finished/block3-hiphop.png" },
-  { id: "gallery-item-4-row1", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.modelingBridal },
+type GalleryItem = {
+  id: string;
+  imageId: string;
+  src: string;
+  objectPositionClass?: string;
+};
+
+/** Carousel: 4 large images that rotate infinitely. Add more to extend. */
+const ROW1_IMAGES: GalleryItem[] = [
+  { id: "row1-img-1", imageId: LANDING_IMAGE_IDS.FINISHED_1, src: "/images/finished/block1-portrait-jewelry.png", objectPositionClass: "gallery-object-position-portrait" },
+  { id: "row1-img-2", imageId: LANDING_IMAGE_IDS.FINISHED_2, src: "/images/finished/block2-ancient-heritage.png" },
+  { id: "row1-img-3", imageId: LANDING_IMAGE_IDS.FINISHED_3, src: "/images/finished/block3-hiphop.png" },
+  { id: "row1-img-4", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.modelingBridal },
 ];
-const ROW2_ITEMS = [
-  { id: "gallery-item-4", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.finishedCopper },
-  { id: "gallery-item-5", imageId: LANDING_IMAGE_IDS.FINISHED_5, src: LANDING_IMAGES.finishedOpacity },
-  { id: "gallery-item-6", imageId: LANDING_IMAGE_IDS.FINISHED_6, src: LANDING_IMAGES.finishedCnc },
-  { id: "gallery-item-7", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: LANDING_IMAGES.finishedCopper },
+
+/** Fixed row — small blocks stay the same, no carousel. */
+const ROW2_ITEMS: GalleryItem[] = [
+  { id: "row2-item-1", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.finishedCopper },
+  { id: "row2-item-2", imageId: LANDING_IMAGE_IDS.FINISHED_5, src: LANDING_IMAGES.finishedOpacity },
+  { id: "row2-item-3", imageId: LANDING_IMAGE_IDS.FINISHED_6, src: LANDING_IMAGES.finishedCnc },
+  { id: "row2-item-4", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: LANDING_IMAGES.finishedCopper },
 ];
+
+const TOTAL_PAGES = ROW1_IMAGES.length;
+const SLOT_WIDTH = 670;
+const SLOT_GAP = 8;
+const TRANSLATE_PER_PAGE = SLOT_WIDTH + SLOT_GAP;
 
 export function SectionFinishedCreations() {
-  const [activeDot, setActiveDot] = useState(0);
+  const [activePage, setActivePage] = useState(0);
+
+  const goPrev = useCallback(() => {
+    setActivePage((p) => (p <= 0 ? TOTAL_PAGES - 1 : p - 1));
+  }, []);
+
+  const goNext = useCallback(() => {
+    setActivePage((p) => (p >= TOTAL_PAGES - 1 ? 0 : p + 1));
+  }, []);
+
+  /** Images rendered once; sliding via transform. Duplicated for seamless loop. */
+  const stripImages = [...ROW1_IMAGES, ...ROW1_IMAGES];
 
   return (
     <section
@@ -36,36 +61,39 @@ export function SectionFinishedCreations() {
           Finished Creations
         </h2>
         <div className="mt-9 flex flex-col items-center gap-2">
-          <div className="grid grid-cols-[670px_670px_670px_670px] gap-x-2 gap-y-4">
-            {ROW1_ITEMS.map((item) => (
-              <div
-                key={item.id}
-                id={item.id}
-                data-landing-image={item.imageId}
-                className="relative h-[370px] w-[670px] overflow-hidden rounded-none"
-              >
-                <Image
-                  src={item.src}
-                  alt=""
-                  fill
-                  className={
-                    item.id === "gallery-item-1"
-                      ? "object-cover object-position-[0_-0.215px]"
-                      : item.id === "gallery-item-2"
-                        ? "object-cover object-position-[0_-176.4975px]"
-                        : "object-cover"
-                  }
-                  sizes="670px"
-                  unoptimized
-                />
-              </div>
-            ))}
+          <div
+            className="overflow-hidden"
+            style={{ width: SLOT_WIDTH * 4 + SLOT_GAP * 3 }}
+          >
+            <div
+              className="flex gap-x-2 transition-transform duration-300 ease-out"
+              style={{
+                transform: `translateX(-${(activePage % TOTAL_PAGES) * TRANSLATE_PER_PAGE}px)`,
+              }}
+            >
+              {stripImages.map((item, index) => (
+                <div
+                  key={`${item.id}-${index}`}
+                  data-landing-image={item.imageId}
+                  className="relative h-[370px] flex-shrink-0 overflow-hidden rounded-none"
+                  style={{ width: SLOT_WIDTH }}
+                >
+                  <Image
+                    src={item.src}
+                    alt=""
+                    fill
+                    className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
+                    sizes="670px"
+                    unoptimized
+                  />
+                </div>
+              ))}
+            </div>
           </div>
           <div className="grid grid-cols-[412px_412px_412px_412px] gap-x-2 gap-y-4">
             {ROW2_ITEMS.map((item) => (
               <div
                 key={item.id}
-                id={item.id}
                 data-landing-image={item.imageId}
                 className="relative h-[235px] w-full min-w-0 overflow-hidden rounded-none"
               >
@@ -81,22 +109,46 @@ export function SectionFinishedCreations() {
             ))}
           </div>
         </div>
-        <div
-          className="mt-10 flex justify-center items-center gap-2 pb-8"
-          aria-label="Carousel indicators"
+        <nav
+          className="mt-10 flex items-center justify-center gap-6 pb-8"
+          aria-label="Carousel navigation"
         >
-          {[0, 1, 2, 3].map((i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setActiveDot(i)}
-              className={`h-2 w-2 rounded-full border-0 transition-colors hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-[#c69f58] ${
-                activeDot === i ? "bg-[#181610]" : "bg-[rgba(24,22,16,0.2)]"
-              }`}
-              aria-current={activeDot === i ? "true" : undefined}
-            />
-          ))}
-        </div>
+          <button
+            type="button"
+            onClick={goPrev}
+            className="flex h-8 w-8 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
+            aria-label="Previous page"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <div className="flex items-center gap-2" role="tablist" aria-label="Page indicators">
+            {Array.from({ length: TOTAL_PAGES }, (_, i) => (
+              <button
+                key={i}
+                type="button"
+                role="tab"
+                aria-selected={activePage === i}
+                aria-label={`Page ${i + 1}`}
+                onClick={() => setActivePage(i)}
+                className={`h-2 rounded-full border-0 transition-all duration-200 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-[#c69f58] focus:ring-offset-2 ${
+                  activePage === i ? "w-6 bg-[#181610]" : "w-2 bg-[#d1d1d1]"
+                }`}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={goNext}
+            className="flex h-8 w-8 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
+            aria-label="Next page"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </nav>
       </div>
     </section>
   );
