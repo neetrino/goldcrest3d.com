@@ -27,7 +27,7 @@ export function SectionFinishedCreations() {
       className="bg-white px-4 pt-[56px] pb-10 md:px-6"
       aria-labelledby="finished-heading"
     >
-      <div className="mx-auto max-w-[1200px]">
+      <div className="mx-auto max-w-[1980px]">
         <h2
           id="finished-heading"
           className="text-center font-semibold leading-tight tracking-tight text-[#181610] text-[28px]"
@@ -35,21 +35,13 @@ export function SectionFinishedCreations() {
           Finished Creations
         </h2>
         <div className="mt-9 flex flex-col items-center gap-2">
-          <div className="grid grid-cols-[540px_575px_540px] gap-x-2 gap-y-4">
+          <div className="grid grid-cols-[650px_650px_650px] gap-x-2 gap-y-4">
             {ROW1_ITEMS.map((item) => (
               <div
                 key={item.id}
                 id={item.id}
                 data-landing-image={item.imageId}
-                className={`relative overflow-hidden rounded-[16px] ${
-                  item.id === "gallery-item-1"
-                    ? "h-[360px] w-[540px] aspect-[145/84]"
-                    : item.id === "gallery-item-2"
-                      ? "h-[360px] w-[575px] aspect-[79/42]"
-                      : item.id === "gallery-item-3"
-                        ? "h-[360px] w-[540px] aspect-[145/84]"
-                        : "aspect-square"
-                }`}
+                className="relative h-[406px] w-[650px] overflow-hidden rounded-none"
               >
                 <Image
                   src={item.src}
@@ -62,15 +54,7 @@ export function SectionFinishedCreations() {
                         ? "object-cover object-position-[0_-176.4975px]"
                         : "object-cover"
                   }
-                  sizes={
-                    item.id === "gallery-item-1"
-                      ? "540px"
-                      : item.id === "gallery-item-2"
-                        ? "575px"
-                        : item.id === "gallery-item-3"
-                          ? "540px"
-                          : "(max-width: 768px) 33vw, 390px"
-                  }
+                  sizes="650px"
                   unoptimized
                 />
               </div>
@@ -82,7 +66,7 @@ export function SectionFinishedCreations() {
                 key={item.id}
                 id={item.id}
                 data-landing-image={item.imageId}
-                className="relative h-[235px] w-full min-w-0 overflow-hidden rounded-[16px]"
+                className="relative h-[235px] w-full min-w-0 overflow-hidden rounded-none"
               >
                 <Image
                   src={item.src}
