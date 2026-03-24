@@ -7,9 +7,9 @@ import { useState } from "react";
 
 /** Row1: 4 items (large), Row2: 4 items. data-landing-image: finished-1 … finished-7 for section-by-section replacement. */
 const ROW1_ITEMS = [
-  { id: "gallery-item-1", imageId: LANDING_IMAGE_IDS.FINISHED_1, src: LANDING_IMAGES.finishedCnc },
-  { id: "gallery-item-2", imageId: LANDING_IMAGE_IDS.FINISHED_2, src: LANDING_IMAGES.finishedCopper },
-  { id: "gallery-item-3", imageId: LANDING_IMAGE_IDS.FINISHED_3, src: LANDING_IMAGES.finishedOpacity },
+  { id: "gallery-item-1", imageId: LANDING_IMAGE_IDS.FINISHED_1, src: "/images/finished/block1-portrait-jewelry.png" },
+  { id: "gallery-item-2", imageId: LANDING_IMAGE_IDS.FINISHED_2, src: "/images/finished/block2-ancient-heritage.png" },
+  { id: "gallery-item-3", imageId: LANDING_IMAGE_IDS.FINISHED_3, src: "/images/finished/block3-hiphop.png" },
   { id: "gallery-item-4-row1", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.modelingBridal },
 ];
 const ROW2_ITEMS = [
