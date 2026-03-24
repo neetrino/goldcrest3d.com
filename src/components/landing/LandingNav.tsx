@@ -38,7 +38,7 @@ export function LandingNav() {
 
   return (
     <nav
-      className="sticky top-0 z-50 h-[length:var(--landing-nav-height)] w-full max-w-full overflow-x-clip bg-white/95 backdrop-blur-[6px] md:overflow-visible"
+      className="fixed inset-x-0 top-0 z-50 h-[length:var(--landing-nav-height)] w-full max-w-full overflow-x-clip bg-white/95 backdrop-blur-[6px] md:overflow-visible"
       aria-label="Main navigation"
     >
       <div className="relative flex h-full w-full min-w-0 max-w-full items-center justify-between overflow-x-clip px-[length:var(--landing-nav-padding-x)] md:overflow-visible">
