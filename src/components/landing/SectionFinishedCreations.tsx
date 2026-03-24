@@ -3,7 +3,7 @@
 import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 type GalleryItem = {
   id: string;
@@ -35,11 +35,33 @@ const ROW2_IMAGES: GalleryItem[] = [
 
 const TOTAL_PAGES = ROW1_IMAGES.length;
 const SLOT_WIDTH = 670;
+const SLOT_HEIGHT = 370;
 const SLOT_GAP = 8;
 const TRANSLATE_PER_PAGE = SLOT_WIDTH + SLOT_GAP;
 
+const ROW2_IMAGE_COUNT = ROW2_IMAGES.length;
+
+/** Mobile gallery: taller than desktop slot ratio (same width, more height). */
+const MOBILE_BLOCK_HEIGHT_SCALE = 1.3;
+const MOBILE_ROW1_ASPECT_HEIGHT = Math.round(SLOT_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE);
+const MOBILE_ROW2_ASPECT_HEIGHT = Math.round(ROW2_ITEM_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE);
+
+/** Minimum horizontal distance to count as swipe; ignores small jitter. */
+const MOBILE_SWIPE_THRESHOLD_PX = 48;
+/** If vertical movement dominates, treat as scroll, not carousel. */
+const MOBILE_SWIPE_VERTICAL_TOLERANCE_PX = 45;
+
+/**
+ * Mobile top row: bleed past the left edge only (shift left; right stays at viewport).
+ * ~144px past the left viewport edge only; extra width matches shift (right at 100vw).
+ * `50%` = parent content width. Literal classes for Tailwind JIT.
+ */
+const MOBILE_TOP_ROW_BLEED_CLASS =
+  "shrink-0 max-w-none w-[calc(100vw+144px)] ml-[calc(50%-50vw-144px)]";
+
 export function SectionFinishedCreations() {
   const [activePage, setActivePage] = useState(0);
+  const mobileSwipeStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const goPrev = useCallback(() => {
     setActivePage((p) => (p <= 0 ? TOTAL_PAGES - 1 : p - 1));
@@ -49,12 +71,67 @@ export function SectionFinishedCreations() {
     setActivePage((p) => (p >= TOTAL_PAGES - 1 ? 0 : p + 1));
   }, []);
 
+  const onMobileSwipePointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === "mouse" && event.button !== 0) {
+      return;
+    }
+    mobileSwipeStartRef.current = { x: event.clientX, y: event.clientY };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }, []);
+
+  const onMobileSwipePointerUp = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      const start = mobileSwipeStartRef.current;
+      mobileSwipeStartRef.current = null;
+      if (start === null) {
+        return;
+      }
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch {
+        // Pointer was already released.
+      }
+      const dx = event.clientX - start.x;
+      const dy = event.clientY - start.y;
+      if (Math.abs(dy) > MOBILE_SWIPE_VERTICAL_TOLERANCE_PX && Math.abs(dy) > Math.abs(dx)) {
+        return;
+      }
+      if (Math.abs(dx) < MOBILE_SWIPE_THRESHOLD_PX) {
+        return;
+      }
+      if (dx < 0) {
+        goNext();
+      } else {
+        goPrev();
+      }
+    },
+    [goNext, goPrev],
+  );
+
+  const onMobileSwipePointerCancel = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    mobileSwipeStartRef.current = null;
+    try {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    } catch {
+      // Pointer was already released.
+    }
+  }, []);
+
   /** Images rendered once; sliding via transform. Duplicated for seamless loop. */
   const row1StripImages = [...ROW1_IMAGES, ...ROW1_IMAGES];
   const row2StripImages = [...ROW2_IMAGES, ...ROW2_IMAGES];
 
   const row2TranslatePerPage = ROW2_ITEM_WIDTH + ROW2_GAP;
   const row2ViewportWidth = ROW2_ITEM_WIDTH * 5 + ROW2_GAP * 4;
+
+  const mobileRow1Left = ROW1_IMAGES[activePage % TOTAL_PAGES];
+  const mobileRow1Right = ROW1_IMAGES[(activePage + 1) % TOTAL_PAGES];
+  const mobileRow2First = activePage % ROW2_IMAGE_COUNT;
+  const mobileRow2Items = [
+    ROW2_IMAGES[mobileRow2First],
+    ROW2_IMAGES[(mobileRow2First + 1) % ROW2_IMAGE_COUNT],
+    ROW2_IMAGES[(mobileRow2First + 2) % ROW2_IMAGE_COUNT],
+  ] as const;
 
   return (
     <section
@@ -69,63 +146,111 @@ export function SectionFinishedCreations() {
         >
           Finished Creations
         </h2>
-        <div className="mt-9 flex flex-col items-center gap-2">
+        <div className="mt-9 flex flex-col gap-2 max-md:items-stretch md:items-center">
           <div
-            className="overflow-hidden"
-            style={{ width: SLOT_WIDTH * 4 + SLOT_GAP * 3 }}
+            className="flex w-full max-w-full min-w-0 touch-pan-y flex-col gap-2 md:hidden"
+            onPointerDown={onMobileSwipePointerDown}
+            onPointerUp={onMobileSwipePointerUp}
+            onPointerCancel={onMobileSwipePointerCancel}
+            role="presentation"
           >
-            <div
-              className="flex gap-x-2 transition-transform duration-300 ease-out"
-              style={{
-                transform: `translateX(-${(activePage % TOTAL_PAGES) * TRANSLATE_PER_PAGE}px)`,
-              }}
-            >
-              {row1StripImages.map((item, index) => (
+            <div className={`grid grid-cols-2 gap-1 ${MOBILE_TOP_ROW_BLEED_CLASS}`}>
+              {[mobileRow1Left, mobileRow1Right].map((item, index) => (
                 <div
-                  key={`${item.id}-${index}`}
+                  key={`mobile-row1-${item.id}-${activePage}-${index}`}
                   data-landing-image={item.imageId}
-                  className="relative h-[370px] flex-shrink-0 overflow-hidden rounded-none"
-                  style={{ width: SLOT_WIDTH }}
+                  className="relative w-full min-w-0 overflow-hidden rounded-none"
+                  style={{ aspectRatio: `${SLOT_WIDTH} / ${MOBILE_ROW1_ASPECT_HEIGHT}` }}
                 >
                   <Image
                     src={item.src}
                     alt=""
                     fill
                     className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
-                    sizes="670px"
+                    sizes="(max-width: 767px) 50vw, 670px"
                     unoptimized
                   />
                 </div>
               ))}
             </div>
-          </div>
-          <div
-            className="overflow-hidden"
-            style={{ width: row2ViewportWidth }}
-          >
-            <div
-              className="flex gap-x-2 transition-transform duration-300 ease-out"
-              style={{
-                transform: `translateX(-${(activePage % ROW2_IMAGES.length) * row2TranslatePerPage}px)`,
-              }}
-            >
-              {row2StripImages.map((item, index) => (
+            <div className="grid w-full grid-cols-3 gap-2">
+              {mobileRow2Items.map((item, index) => (
                 <div
-                  key={`${item.id}-${index}`}
+                  key={`mobile-row2-${item.id}-${activePage}-${index}`}
                   data-landing-image={item.imageId}
-                  className="relative flex-shrink-0 overflow-hidden rounded-none"
-                  style={{ width: ROW2_ITEM_WIDTH, height: ROW2_ITEM_HEIGHT }}
+                  className="relative w-full min-w-0 overflow-hidden rounded-none"
+                  style={{ aspectRatio: `${ROW2_ITEM_WIDTH} / ${MOBILE_ROW2_ASPECT_HEIGHT}` }}
                 >
                   <Image
                     src={item.src}
                     alt=""
                     fill
                     className="object-cover"
-                    sizes="420px"
+                    sizes="(max-width: 767px) 30vw, 420px"
                     unoptimized
                   />
                 </div>
               ))}
+            </div>
+          </div>
+          <div className="hidden flex-col items-center gap-2 md:flex">
+            <div
+              className="overflow-hidden"
+              style={{ width: SLOT_WIDTH * 4 + SLOT_GAP * 3 }}
+            >
+              <div
+                className="flex gap-x-2 transition-transform duration-300 ease-out"
+                style={{
+                  transform: `translateX(-${(activePage % TOTAL_PAGES) * TRANSLATE_PER_PAGE}px)`,
+                }}
+              >
+                {row1StripImages.map((item, index) => (
+                  <div
+                    key={`${item.id}-${index}`}
+                    data-landing-image={item.imageId}
+                    className="relative h-[370px] flex-shrink-0 overflow-hidden rounded-none"
+                    style={{ width: SLOT_WIDTH }}
+                  >
+                    <Image
+                      src={item.src}
+                      alt=""
+                      fill
+                      className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
+                      sizes="670px"
+                      unoptimized
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div
+              className="overflow-hidden"
+              style={{ width: row2ViewportWidth }}
+            >
+              <div
+                className="flex gap-x-2 transition-transform duration-300 ease-out"
+                style={{
+                  transform: `translateX(-${(activePage % ROW2_IMAGES.length) * row2TranslatePerPage}px)`,
+                }}
+              >
+                {row2StripImages.map((item, index) => (
+                  <div
+                    key={`${item.id}-${index}`}
+                    data-landing-image={item.imageId}
+                    className="relative flex-shrink-0 overflow-hidden rounded-none"
+                    style={{ width: ROW2_ITEM_WIDTH, height: ROW2_ITEM_HEIGHT }}
+                  >
+                    <Image
+                      src={item.src}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="420px"
+                      unoptimized
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
