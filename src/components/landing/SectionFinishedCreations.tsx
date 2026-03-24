@@ -5,11 +5,12 @@ import { LANDING_IMAGES } from "@/constants/landing-assets";
 import Image from "next/image";
 import { useState } from "react";
 
-/** Row1: 3 items, Row2: 4 items. data-landing-image: finished-1 … finished-7 for section-by-section replacement. */
+/** Row1: 4 items (large), Row2: 4 items. data-landing-image: finished-1 … finished-7 for section-by-section replacement. */
 const ROW1_ITEMS = [
   { id: "gallery-item-1", imageId: LANDING_IMAGE_IDS.FINISHED_1, src: LANDING_IMAGES.finishedCnc },
   { id: "gallery-item-2", imageId: LANDING_IMAGE_IDS.FINISHED_2, src: LANDING_IMAGES.finishedCopper },
   { id: "gallery-item-3", imageId: LANDING_IMAGE_IDS.FINISHED_3, src: LANDING_IMAGES.finishedOpacity },
+  { id: "gallery-item-4-row1", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.modelingBridal },
 ];
 const ROW2_ITEMS = [
   { id: "gallery-item-4", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.finishedCopper },
@@ -35,13 +36,13 @@ export function SectionFinishedCreations() {
           Finished Creations
         </h2>
         <div className="mt-9 flex flex-col items-center gap-2">
-          <div className="grid grid-cols-[650px_650px_650px] gap-x-2 gap-y-4">
+          <div className="grid grid-cols-[670px_670px_670px_670px] gap-x-2 gap-y-4">
             {ROW1_ITEMS.map((item) => (
               <div
                 key={item.id}
                 id={item.id}
                 data-landing-image={item.imageId}
-                className="relative h-[406px] w-[650px] overflow-hidden rounded-none"
+                className="relative h-[370px] w-[670px] overflow-hidden rounded-none"
               >
                 <Image
                   src={item.src}
@@ -54,7 +55,7 @@ export function SectionFinishedCreations() {
                         ? "object-cover object-position-[0_-176.4975px]"
                         : "object-cover"
                   }
-                  sizes="650px"
+                  sizes="670px"
                   unoptimized
                 />
               </div>
