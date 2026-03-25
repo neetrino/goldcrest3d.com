@@ -282,7 +282,7 @@ export function SectionFinishedCreations() {
           </div>
         </div>
         <nav
-          className="mt-10 flex items-center justify-center gap-6 pb-8"
+          className="mt-16 flex items-center justify-center gap-6 pb-8 md:mt-10"
           aria-label="Carousel navigation"
         >
           <button
