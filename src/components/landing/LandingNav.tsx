@@ -22,9 +22,9 @@ const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
   { id: LANDING_SECTION_IDS.FOOTER, label: "Contact" },
 ];
 
-/** Full desktop (xl+, 1280px): նույն Figma offset-ը ինչ նախկինում `mr-10 -translate-x-56`. */
+/** Full desktop (xl+, 1280px): Figma offset + աջ (`+136px`). */
 const REQUEST_QUOTE_BTN_CLASSES =
-  "nav-cta-gradient flex h-[36px] min-h-[36px] shrink-0 items-center justify-center rounded-full py-[8px] text-sm font-bold leading-5 text-white transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50 max-xl:max-w-[min(190px,calc(100vw-8rem))] max-xl:translate-x-0 max-xl:px-4 max-xl:mr-2 w-[min(190px,calc(100vw-8rem))] px-[28px] xl:mr-10 xl:w-[190px] xl:max-w-none xl:-translate-x-56 xl:px-[28px]";
+  "nav-cta-gradient flex h-[36px] min-h-[36px] shrink-0 items-center justify-center rounded-full py-[8px] text-sm font-bold leading-5 text-white transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50 max-xl:max-w-[min(190px,calc(100vw-8rem))] max-xl:translate-x-0 max-xl:px-4 max-xl:mr-2 w-[min(190px,calc(100vw-8rem))] px-[28px] xl:mr-10 xl:w-[190px] xl:max-w-none xl:translate-x-[calc(-14rem+136px)] xl:px-[28px]";
 
 export function LandingNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -51,7 +51,8 @@ export function LandingNav() {
           href={`#${LANDING_SECTION_IDS.HERO}`}
           className="absolute top-1/2 z-10 flex h-[length:var(--landing-nav-logo-height)] w-[length:var(--landing-nav-logo-width)] min-h-[length:var(--landing-nav-logo-height)] min-w-[length:var(--landing-nav-logo-width)] shrink-0 -translate-y-1/2 items-center"
           style={{
-            left: "calc(var(--landing-nav-padding-x) + var(--landing-nav-logo-offset-x))",
+            left:
+              "calc(var(--landing-nav-padding-x) + var(--landing-nav-logo-offset-x) + var(--landing-nav-logo-nudge-x))",
           }}
           aria-label="Goldcrest 3D — Home"
         >
@@ -66,14 +67,14 @@ export function LandingNav() {
           />
         </Link>
         <ul
-          className="hidden min-w-0 list-none flex-1 items-start justify-end gap-3 md:flex md:h-5 md:max-w-[711px] md:gap-4 md:pr-1 lg:gap-8 lg:pr-2 xl:gap-[80px] xl:pr-0"
+          className="absolute left-[calc(50%-32px)] top-1/2 z-20 hidden min-w-0 -translate-x-1/2 -translate-y-1/2 list-none flex-row items-center justify-center gap-3 md:flex md:h-[18px] md:gap-3 lg:gap-6 xl:gap-[64px]"
           aria-label="Nav links"
         >
           {NAV_ITEMS.map(({ id, label }) => (
-            <li key={id} className="flex shrink-0 items-center md:h-5">
+            <li key={id} className="flex shrink-0 items-center md:h-[18px]">
               <Link
                 href={`#${id}`}
-                className="whitespace-nowrap text-[14px] font-medium leading-5 text-[#0f172a] no-underline transition hover:opacity-80 focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
+                className="whitespace-nowrap text-[13px] font-medium leading-[18px] text-[#0f172a] no-underline transition hover:opacity-80 focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
               >
                 {label}
               </Link>

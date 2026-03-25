@@ -36,7 +36,7 @@ export function LandingNavMobileDrawer({
             <li key={id}>
               <Link
                 href={`#${id}`}
-                className="block rounded-lg px-3 py-3 text-base font-medium text-[#0f172a] no-underline transition hover:bg-black/5 focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
+                className="block rounded-lg px-3 py-3 text-[15px] font-medium text-[#0f172a] no-underline transition hover:bg-black/5 focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
                 onClick={onClose}
               >
                 {label}

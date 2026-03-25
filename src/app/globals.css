@@ -13,6 +13,11 @@
   --landing-nav-logo-slot: 0px;
   /** Shift logo right inside the slot; does not change flex layout. */
   --landing-nav-logo-offset-x: 0px;
+  /**
+   * Extra horizontal shift for the logo only (negative = left); nav/CTA unchanged.
+   * Mobile: 0 — large desktop nudge would pull the mark off-screen (see LandingNav `left` calc).
+   */
+  --landing-nav-logo-nudge-x: 0px;
   /** Manufacturing Intelligence — gradient card width (inside max-w 1612 shell) */
   --manufacturing-intelligence-card-max-w: 1421px;
   /** Nudges the section title “Manufacturing Intelligence” slightly right (LTR). */
@@ -71,6 +76,7 @@
     --landing-nav-padding-x: 40px;
     --landing-nav-logo-slot: 90px;
     --landing-nav-logo-offset-x: 180px;
+    --landing-nav-logo-nudge-x: -116px;
   }
 }
 
