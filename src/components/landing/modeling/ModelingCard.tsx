@@ -9,6 +9,13 @@ import {
 /** With `mobileHipHopTypography`, stack lines from this index are `hidden sm:block` (tail desktop-only on mobile). */
 const HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX = 2;
 
+/** 3D Portrait — `sm:hidden` overlay only; desktop uses existing Manrope + absolute layout. */
+const PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS =
+  "flex w-full flex-col items-end gap-0 font-sans text-[20px] font-bold leading-[20px] tracking-[-0.449px] text-black";
+const PORTRAIT_MOBILE_TITLE_FULL = "3D Portrait Jewelry";
+const PORTRAIT_MOBILE_OVERLAY_DESC_CLASS =
+  "w-[155px] max-w-full text-right font-sans text-[12px] font-light leading-4 text-[#364153]";
+
 /** Props for one Modeling Specialization card. Լրիվ սյուն, aspect 83/43, սուր անկյուններ. */
 export type ModelingCardProps = {
   title: string;
@@ -95,6 +102,10 @@ export type ModelingCardProps = {
    * Bridal block only: below `sm`, Inter title + body (Figma); requires `fluidTextLayout` + `descriptionLayout="row"`.
    */
   mobileBridalTypography?: boolean;
+  /**
+   * 3D Portrait block only: below `sm`, `descriptionLinesMobile` copy; `sm+` keeps absolute title/description + `descriptionLines`.
+   */
+  mobilePortraitTypography?: boolean;
 };
 
 const DEFAULT_IMAGE_POSITION = "center center";
@@ -140,11 +151,18 @@ export function ModelingCard({
   descriptionAlign,
   mobileHipHopTypography = false,
   mobileBridalTypography = false,
+  mobilePortraitTypography = false,
 }: ModelingCardProps) {
   const hasLines = descriptionLines && descriptionLines.length > 0;
   const hipHopMobileLayout = mobileHipHopTypography && hasLines;
   const bridalMobileLayout =
     mobileBridalTypography && hasLines && fluidTextLayout && descriptionLayout === "row";
+  const portraitMobileLayout =
+    mobilePortraitTypography &&
+    hasLines &&
+    independentTitleDescription &&
+    descriptionLinesMobile != null &&
+    descriptionLinesMobile.length > 0;
   const textColor = textDark ? "text-black" : "text-white";
   const descriptionColor = textDark
     ? descriptionMuted
@@ -348,32 +366,82 @@ export function ModelingCard({
           style={overlayTextContainerStyle}
         >
           {independentTitleDescription ? (
-            <>
-              <div
-                className={`${textAlignClass}`}
-                style={{
-                  position: "absolute",
-                  top: titleBlockTop ?? "20%",
-                  left: titleBlockLeft ?? "8%",
-                  right: textAlign === "left" ? undefined : "8%",
-                }}
-              >
-                <h3 className={titleClassName}>{title}</h3>
-              </div>
-              <div
-                className={`max-w-[407px] ${descriptionBlockAlignClass}`}
-                style={{
-                  position: "absolute",
-                  top: descriptionBlockTop ?? "32%",
-                  left: descriptionBlockLeft ?? "14%",
-                  right: descriptionAlign === "right" ? "8%" : textAlign === "left" ? undefined : "8%",
-                }}
-              >
-                <DescriptionTag className={descriptionClassName}>
-                  {descriptionContent}
-                </DescriptionTag>
-              </div>
-            </>
+            portraitMobileLayout ? (
+              <>
+                <div className="absolute inset-0 z-20 flex -translate-x-[11.5rem] -translate-y-4 flex-col items-end justify-end gap-3 px-4 pb-8 sm:hidden">
+                  <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
+                    {title === PORTRAIT_MOBILE_TITLE_FULL ? (
+                      <>
+                        <span className="block whitespace-nowrap">3D Portrait</span>
+                        <span className="block whitespace-nowrap">Jewelry</span>
+                      </>
+                    ) : (
+                      title
+                    )}
+                  </h3>
+                  <div className={PORTRAIT_MOBILE_OVERLAY_DESC_CLASS}>
+                    {descriptionLinesMobile!.map((line, i) => (
+                      <span key={`portrait-mobile-${i}`} className="block">
+                        {line}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="absolute inset-0 hidden sm:block">
+                  <div
+                    className={`${textAlignClass}`}
+                    style={{
+                      position: "absolute",
+                      top: titleBlockTop ?? "20%",
+                      left: titleBlockLeft ?? "8%",
+                      right: textAlign === "left" ? undefined : "8%",
+                    }}
+                  >
+                    <h3 className={titleClassName}>{title}</h3>
+                  </div>
+                  <div
+                    className={`max-w-[407px] ${descriptionBlockAlignClass}`}
+                    style={{
+                      position: "absolute",
+                      top: descriptionBlockTop ?? "32%",
+                      left: descriptionBlockLeft ?? "14%",
+                      right: descriptionAlign === "right" ? "8%" : textAlign === "left" ? undefined : "8%",
+                    }}
+                  >
+                    <DescriptionTag className={descriptionClassName}>
+                      {descriptionContent}
+                    </DescriptionTag>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div
+                  className={`${textAlignClass}`}
+                  style={{
+                    position: "absolute",
+                    top: titleBlockTop ?? "20%",
+                    left: titleBlockLeft ?? "8%",
+                    right: textAlign === "left" ? undefined : "8%",
+                  }}
+                >
+                  <h3 className={titleClassName}>{title}</h3>
+                </div>
+                <div
+                  className={`max-w-[407px] ${descriptionBlockAlignClass}`}
+                  style={{
+                    position: "absolute",
+                    top: descriptionBlockTop ?? "32%",
+                    left: descriptionBlockLeft ?? "14%",
+                    right: descriptionAlign === "right" ? "8%" : textAlign === "left" ? undefined : "8%",
+                  }}
+                >
+                  <DescriptionTag className={descriptionClassName}>
+                    {descriptionContent}
+                  </DescriptionTag>
+                </div>
+              </>
+            )
           ) : (
             <>
               <h3

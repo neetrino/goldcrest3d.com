@@ -16,12 +16,18 @@ const PORTRAIT_DESCRIPTION_LINES = [
   "long-term durability.",
 ] as const;
 
+/** Below `sm` only; desktop unchanged. */
+const PORTRAIT_DESCRIPTION_LINES_MOBILE = [
+  "High-relief sculptural portraits engineered with controlled volume distribution and balanced weight architecture.",
+] as const;
+
 export function ModelingBlockPortrait() {
   return (
     <ModelingCard
       title="3D Portrait Jewelry"
       description=""
       descriptionLines={[...PORTRAIT_DESCRIPTION_LINES]}
+      descriptionLinesMobile={[...PORTRAIT_DESCRIPTION_LINES_MOBILE]}
       imageSrc={LANDING_IMAGES.modelingPortrait}
       imageId={LANDING_IMAGE_IDS.MODELING_PORTRAIT}
       imageOnLeft={false}
@@ -36,6 +42,7 @@ export function ModelingBlockPortrait() {
       titleBlockLeft="5%"
       descriptionBlockTop="45%"
       descriptionBlockLeft="-7%"
+      mobilePortraitTypography
     />
   );
 }
