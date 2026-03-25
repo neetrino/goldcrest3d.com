@@ -2,6 +2,7 @@
 
 import type { LandingSectionId } from "@/constants";
 import Link from "next/link";
+import { createPortal } from "react-dom";
 
 export type LandingNavMobileItem = { id: LandingSectionId; label: string };
 
@@ -11,22 +12,35 @@ type LandingNavMobileDrawerProps = {
   onClose: () => void;
 };
 
+/** Above `LandingNav` (`z-50`) and page overlays; portal avoids `backdrop-filter` / overflow clipping on the nav. */
+const Z_INDEX_MOBILE_NAV_BACKDROP = 100;
+const Z_INDEX_MOBILE_NAV_DRAWER = 101;
+
 export function LandingNavMobileDrawer({
   menuId,
   items,
   onClose,
 }: LandingNavMobileDrawerProps) {
-  return (
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(
     <>
       <button
         type="button"
-        className="fixed inset-0 z-[35] cursor-default bg-black/20 md:hidden"
+        className="fixed inset-0 cursor-default bg-black/20 md:hidden"
+        style={{ zIndex: Z_INDEX_MOBILE_NAV_BACKDROP }}
         aria-label="Close menu"
         onClick={onClose}
       />
       <div
         id={menuId}
-        className="fixed inset-x-0 top-[length:var(--landing-nav-height)] z-40 border-b border-black/10 bg-white/98 py-4 shadow-md md:hidden"
+        className="fixed inset-x-0 border-b border-black/10 bg-white/98 py-4 shadow-md md:hidden"
+        style={{
+          zIndex: Z_INDEX_MOBILE_NAV_DRAWER,
+          top: "var(--landing-nav-height)",
+        }}
         role="dialog"
         aria-modal={true}
         aria-label="Site sections"
@@ -45,6 +59,7 @@ export function LandingNavMobileDrawer({
           ))}
         </ul>
       </div>
-    </>
+    </>,
+    document.body,
   );
 }
