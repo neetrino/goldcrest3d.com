@@ -1,5 +1,22 @@
 import { LANDING_SECTION_IDS } from "@/constants";
 
+/**
+ * Mobile: Inter 24/32, 277px wide, tracking 1.27px.
+ * `md:` — previous desktop heading (Manrope 34px, extrabold, …).
+ */
+const PROCESS_HEADING_CLASS =
+  "mx-auto w-full max-w-[277px] text-center font-sans text-[24px] font-bold uppercase not-italic leading-8 tracking-[1.27px] text-black md:max-w-none md:font-manrope md:text-[34px] md:font-extrabold md:leading-tight md:tracking-[3px] md:text-[#0f172a]";
+
+/** Mobile: Inter; `md:`/`lg:` — previous step typography (Manrope). */
+const PROCESS_STEP_NUM_CLASS =
+  "block font-sans text-[48px] font-normal leading-[48px] tracking-[0.352px] text-[#C69F58] md:font-manrope md:text-[42px] md:leading-none md:tracking-normal lg:text-[44px]";
+
+const PROCESS_STEP_TITLE_CLASS =
+  "font-sans text-[20px] font-bold leading-7 tracking-[-0.449px] text-black md:font-manrope md:leading-tight md:tracking-normal md:text-[#181610] lg:text-[19px]";
+
+const PROCESS_STEP_DESC_CLASS =
+  "max-w-[331px] font-sans text-sm font-light leading-5 tracking-[-0.15px] text-[#4A5565] md:max-w-none md:font-manrope md:text-[16px] md:font-light md:leading-[1.45] md:tracking-normal md:text-[rgba(24,22,16,0.6)] lg:text-[15px]";
+
 const STEPS: Array<{ num: string; title: string; description: string }> = [
   {
     num: "01",
@@ -41,10 +58,7 @@ export function SectionProcess() {
       aria-labelledby="process-heading"
     >
       <div className="mx-auto max-w-[1400px] px-0">
-        <h2
-          id="process-heading"
-          className="font-manrope text-center font-extrabold uppercase leading-tight tracking-[3px] text-[#0f172a] text-[30px] md:text-[34px]"
-        >
+        <h2 id="process-heading" className={PROCESS_HEADING_CLASS}>
           Our Engineering Process
         </h2>
         <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-6 lg:mt-12">
@@ -53,15 +67,9 @@ export function SectionProcess() {
               key={step.num}
               className="flex min-w-0 flex-col space-y-4 lg:space-y-3"
             >
-              <span className="font-manrope block font-normal leading-none text-[#c69f58] text-[42px] lg:text-[44px]">
-                {step.num}
-              </span>
-              <h3 className="font-manrope font-bold leading-tight text-[#181610] text-[20px] lg:text-[19px]">
-                {step.title}
-              </h3>
-              <p className="font-manrope font-light leading-[1.45] text-[rgba(24,22,16,0.6)] text-[16px] lg:text-[15px]">
-                {step.description}
-              </p>
+              <span className={PROCESS_STEP_NUM_CLASS}>{step.num}</span>
+              <h3 className={PROCESS_STEP_TITLE_CLASS}>{step.title}</h3>
+              <p className={PROCESS_STEP_DESC_CLASS}>{step.description}</p>
             </div>
           ))}
         </div>
