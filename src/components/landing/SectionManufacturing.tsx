@@ -117,13 +117,17 @@ export function SectionManufacturing() {
       <div className="mx-auto w-full max-w-[1612px]">
         <h2
           id="manufacturing-heading"
-          className="manufacturing-intelligence-heading text-left font-manrope text-[48px] font-normal leading-[40px] tracking-[-0.9px] text-black"
+          className="manufacturing-intelligence-heading hidden text-left font-manrope text-[48px] font-normal leading-[40px] tracking-[-0.9px] text-black lg:block"
         >
           Manufacturing Intelligence
         </h2>
 
-        <div className="manufacturing-intelligence-card-shell mt-[76px] overflow-hidden rounded-none bg-[linear-gradient(-65.02deg,#f8f7f6_0.94%,#c0c6cd_99.4%)]">
-          <div className="grid min-h-0 grid-cols-1 gap-10 py-10 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)] lg:gap-0 lg:py-0 lg:pl-[2.61%] lg:pr-[4.59%]">
+        <div className="manufacturing-intelligence-card-shell mt-0 overflow-hidden rounded-none bg-[linear-gradient(-65.02deg,#f8f7f6_0.94%,#c0c6cd_99.4%)] lg:mt-[76px]">
+          <div className="grid min-h-0 grid-cols-1 gap-12 py-12 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)] lg:gap-0 lg:py-0 lg:pl-[2.61%] lg:pr-[4.59%]">
+            <h2 className="manufacturing-intelligence-heading mx-auto w-[257px] max-w-full text-center font-sans text-[30px] font-medium leading-[36px] tracking-[0.396px] text-black lg:hidden">
+              Manufacturing Intelligence
+            </h2>
+
             <div className="flex min-w-0 flex-col divide-y divide-black/10 lg:pt-[94px]">
               {MANUFACTURING_SPECIALIZATION_ITEMS.map((item) => (
                 <div key={item.id} className="flex min-w-0 flex-col">

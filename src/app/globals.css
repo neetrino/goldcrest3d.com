@@ -324,8 +324,29 @@ section[id] {
   width: 100%;
 }
 
+/**
+ * Mobile / tablet below `lg`: gradient card breaks out of section horizontal padding
+ * so the block is edge-to-edge (no white side gutters).
+ */
+@media (max-width: 1023px) {
+  .manufacturing-intelligence-card-shell {
+    margin-inline: unset;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    max-width: none;
+    width: 100vw;
+  }
+}
+
+/* Mobile: centered block (Figma); indent from lg — see SectionManufacturing h2 */
 .manufacturing-intelligence-heading {
-  padding-inline-start: var(--manufacturing-intelligence-heading-indent-start);
+  padding-inline-start: 0;
+}
+
+@media (min-width: 1024px) {
+  .manufacturing-intelligence-heading {
+    padding-inline-start: var(--manufacturing-intelligence-heading-indent-start);
+  }
 }
 
 .manufacturing-intelligence-accordion-label {
