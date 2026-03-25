@@ -3,6 +3,19 @@ import { LANDING_IMAGES } from "@/constants/landing-assets";
 import Image from "next/image";
 import Link from "next/link";
 
+/** Mobile: Inter 14/20, 324px. Desktop: SF Compact 16/24, weight 350, 384px. */
+const FOOTER_TAGLINE_CLASS =
+  "w-full max-w-[324px] font-sans text-sm font-light leading-5 tracking-[-0.15px] text-[#4A5565] md:max-w-[384px] md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-base md:font-[350] md:leading-6 md:tracking-normal md:text-[rgba(24,22,16,0.6)]";
+
+const FOOTER_CONTACT_HEADING_CLASS =
+  "font-sans text-xs font-bold uppercase leading-4 tracking-[0.6px] text-[#0A0A0A] md:max-w-[87.152px] md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:font-[790] md:tracking-[1.2px] md:text-[#0F172A]";
+
+const FOOTER_CONTACT_LINE_CLASS =
+  "font-sans text-sm font-normal leading-5 tracking-[-0.15px] text-[#4A5565] transition-colors hover:text-[var(--foreground)] md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:font-[457] md:text-[#64748B] md:tracking-normal";
+
+const FOOTER_CONTACT_LOCATION_BLOCK_CLASS =
+  "flex flex-col gap-[13px] self-start md:self-stretch";
+
 export function LandingFooter() {
   return (
     <footer
@@ -13,47 +26,43 @@ export function LandingFooter() {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-12">
           <div className="flex max-w-[384px] flex-col gap-[10px]">
             <div
-              className="relative h-[63px] w-[111px]"
+              className="relative mt-4 h-[110px] w-[187px] overflow-hidden md:mt-0 md:h-[63px] md:w-[111px] md:overflow-visible"
               data-landing-image={LANDING_IMAGE_IDS.FOOTER_LOGO}
             >
               <Image
                 src={LANDING_IMAGES.footerLogo}
                 alt="Goldcrest 3D"
                 fill
-                className="object-contain object-left"
-                sizes="111px"
+                className="object-contain object-left md:object-contain md:object-left max-md:object-cover max-md:object-[-41.5px_-92px]"
+                sizes="(max-width: 767px) 187px, 111px"
                 unoptimized
               />
             </div>
-            <p className="font-manrope font-bold leading-[20px] text-[#0f172a] text-[14px]">
-              GOLDCREST 3D
-            </p>
-            <p className="font-manrope font-light leading-[24px] text-[rgba(24,22,16,0.6)] text-[16px]">
-              Precision in every dimension.
+            <p className={FOOTER_TAGLINE_CLASS}>
+              Specialized in precision jewelry CAD and structural engineering for high-end manufacturing.
             </p>
           </div>
           <div>
-            <h3 className="font-bold leading-[16px] tracking-[1.2px] text-[#0f172a] text-[12px] uppercase">
-              Contact
-            </h3>
+            <h3 className={FOOTER_CONTACT_HEADING_CLASS}>Contact</h3>
             <div className="mt-[40px] flex flex-col gap-[13px]">
               <a
-                href="mailto:info@goldcrest3d.com"
-                className="text-[14px] leading-[20px] text-[#64748b] hover:text-[var(--foreground)]"
+                href="mailto:hello@ds-jewelry.studio"
+                className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-[206.982px]`}
               >
-                info@goldcrest3d.com
+                hello@ds-jewelry.studio
               </a>
               <a
-                href="tel:+37496301010"
-                className="text-[14px] leading-[20px] text-[#64748b] hover:text-[var(--foreground)]"
+                href="tel:+15559023481"
+                className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-[162.721px]`}
               >
-                +374 96 30-10-10
+                +1 (555) 902-3481
               </a>
-              <p className="text-[14px] leading-[20px] text-[#64748b]">
-                Yerevan, Armenia
-                <br />
-                International collaborations available
-              </p>
+              <div className={FOOTER_CONTACT_LOCATION_BLOCK_CLASS}>
+                <p className={FOOTER_CONTACT_LINE_CLASS}>Yerevan, Armenia</p>
+                <p className={FOOTER_CONTACT_LINE_CLASS}>
+                  International collaborations available
+                </p>
+              </div>
             </div>
           </div>
           <div>
