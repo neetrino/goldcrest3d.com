@@ -6,7 +6,7 @@ import Link from "next/link";
 export function LandingFooter() {
   return (
     <footer
-      className="border-t border-[#e2e8f0] bg-[#f8f7f6] px-4 py-16 md:px-[5.05%] md:pr-[8.23%]"
+      className="-mt-8 border-t border-[#e2e8f0] bg-[#f8f7f6] px-4 py-16 md:mt-0 md:px-[5.05%] md:pr-[8.23%]"
       aria-label="Site footer"
     >
       <div className="mx-auto max-w-7xl">

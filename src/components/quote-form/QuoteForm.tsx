@@ -24,6 +24,10 @@ const inputClass =
 
 const IMAGE_MIME_PREFIX = "image/";
 
+/** Mobile: Figma padding, radius 33px, full width. `md:` — previous submit button. */
+const QUOTE_SUBMIT_BUTTON_CLASS =
+  "font-manrope flex w-full items-center justify-center self-stretch rounded-[33px] bg-[#181610] pt-[16.412px] pr-[102.148px] pb-[15.569px] pl-[102.345px] text-[14px] font-bold uppercase leading-[20px] tracking-[1.4px] text-white transition-colors hover:bg-[#181610]/90 disabled:opacity-60 md:h-[68px] md:min-w-[266px] md:w-auto md:rounded-full md:px-16 md:py-6 md:self-auto";
+
 type FileWithPreview = { file: File; previewUrl: string | null };
 
 function setFileInputFiles(input: HTMLInputElement | null, files: File[]) {
@@ -309,11 +313,11 @@ export function QuoteForm() {
         </p>
       )}
 
-      <div className="flex justify-center">
+      <div className="-mt-4 flex w-full justify-center md:mt-0">
         <button
           type="submit"
           disabled={isPending}
-          className="font-manrope h-[68px] min-w-[266px] rounded-full bg-[#181610] px-16 py-6 text-[14px] font-bold uppercase leading-[20px] tracking-[1.4px] text-white transition-colors hover:bg-[#181610]/90 disabled:opacity-60"
+          className={QUOTE_SUBMIT_BUTTON_CLASS}
         >
           {isPending ? "Sending…" : "Submit Request"}
         </button>
