@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 
 import {
-  MODELING_CARD_ASPECT_RATIO,
+  MODELING_CARD_FRAME_MOBILE_CLASSES,
   getModelingCardWidthStyle,
 } from "./modeling-card.constants";
 
@@ -227,16 +227,10 @@ export function ModelingCard({
   const overlayTranslateClass =
     hasLines && !fluidTextLayout ? "translate-x-6 translate-y-24" : "";
 
-  const overlayFrameStyle = {
-    ...getModelingCardWidthStyle(),
-    aspectRatio: MODELING_CARD_ASPECT_RATIO,
-  } as const;
-
   if (!gradient) {
     return (
       <article
-        className="relative min-w-0 w-full overflow-hidden"
-        style={overlayFrameStyle}
+        className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
       >
         <div
           className="absolute inset-0"

@@ -2,10 +2,7 @@ import Image from "next/image";
 
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
-import {
-  MODELING_CARD_ASPECT_RATIO,
-  getModelingCardWidthStyle,
-} from "./modeling-card.constants";
+import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
 const TITLE_LINE1 = "Ancient & Heritag";
 const TITLE_LINE2 = "Jewelry";
@@ -20,11 +17,7 @@ const DESCRIPTION_LINES = [
 export function ModelingBlockHeritage() {
   return (
     <article
-      className="relative min-w-0 w-full overflow-hidden"
-      style={{
-        ...getModelingCardWidthStyle(),
-        aspectRatio: MODELING_CARD_ASPECT_RATIO,
-      }}
+      className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
     >
       <div
         className="absolute inset-0"

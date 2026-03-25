@@ -24,7 +24,7 @@ export function SectionModeling() {
     >
       <div className="mx-auto max-w-[1920px]">
         <div
-          className="flex w-full flex-col items-center justify-center overflow-hidden"
+          className="flex w-full min-w-0 flex-col items-center justify-center overflow-visible md:overflow-hidden"
           style={{ height: `${MODELING_TITLE_BLOCK_HEIGHT_PX}px` }}
         >
           <ModelingSpecializationTitle />

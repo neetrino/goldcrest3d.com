@@ -1,10 +1,7 @@
 import Image from "next/image";
 
 import { LANDING_IMAGES } from "@/constants/landing-assets";
-import {
-  MODELING_CARD_ASPECT_RATIO,
-  getModelingCardWidthStyle,
-} from "./modeling-card.constants";
+import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
 const TITLE = "Mechanical & Lock Systems";
 const DESCRIPTION_LINES = [
@@ -18,11 +15,7 @@ const DESCRIPTION_LINES = [
 export function ModelingBlockMechanical() {
   return (
     <article
-      className="relative min-w-0 w-full overflow-hidden"
-      style={{
-        ...getModelingCardWidthStyle(),
-        aspectRatio: MODELING_CARD_ASPECT_RATIO,
-      }}
+      className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
     >
       <Image
         src={LANDING_IMAGES.modelingMechanical}
