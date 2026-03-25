@@ -29,20 +29,18 @@ export function ModelingBlockHighJewelry() {
         style={HIGH_JEWELRY_BACKGROUND}
       />
       <div
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black"
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-sm:translate-y-[136px]"
         style={{ marginTop: "-30%" }}
       >
-        <h3 className="font-manrope text-[32px] font-bold leading-[24px]">
+        <h3 className="font-sans text-[20px] font-bold leading-[28px] tracking-[-0.449px] text-black max-sm:translate-y-3 sm:font-manrope sm:text-[32px] sm:leading-[24px] sm:tracking-normal sm:font-bold">
           {TITLE}
         </h3>
-        <div className="mt-4 max-w-[520px] font-manrope text-[14px] font-light leading-[22px] text-black/70">
+        <p className="mt-4 block w-[243px] max-w-full shrink-0 text-center font-sans text-[12px] font-light leading-4 text-[#364153] sm:hidden">
+          {LINE_1}
+        </p>
+        <div className="mt-4 hidden max-w-[520px] font-manrope text-[14px] font-light leading-[22px] text-black/70 sm:block">
           <span className="block">{LINE_1}</span>
-          <span
-            className="mt-0.5 block whitespace-nowrap"
-            style={{ transform: "translateX(-12px)" }}
-          >
-            {LINE_2}
-          </span>
+          <span className="mt-0.5 block -translate-x-3 whitespace-nowrap">{LINE_2}</span>
         </div>
       </div>
     </article>
