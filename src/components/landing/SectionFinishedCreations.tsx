@@ -69,6 +69,13 @@ const MOBILE_TOP_ROW_BLEED_CLASS =
 const MOBILE_SMALL_ROW_CLASS =
   "shrink-0 max-w-none w-[100vw] ml-[calc(50%-50vw)]";
 
+/**
+ * Mobile: SF Compact, 30/40, weight 457, flex item `1 0 0` (parent is flex row).
+ * `md:` restores previous desktop (Manrope 48px, tracking).
+ */
+const FINISHED_HEADING_CLASS =
+  "-mt-4 min-w-0 flex-[1_0_0] text-center text-[30px] not-italic font-[457] leading-[40px] text-black font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:mt-0 md:flex-none md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px]";
+
 export function SectionFinishedCreations() {
   const [activePage, setActivePage] = useState(0);
   const mobileSwipeStartRef = useRef<{ x: number; y: number } | null>(null);
@@ -150,12 +157,11 @@ export function SectionFinishedCreations() {
       aria-labelledby="finished-heading"
     >
       <div className="mx-auto max-w-[1980px]">
-        <h2
-          id="finished-heading"
-          className="text-center font-manrope text-[28px] font-normal leading-[1.2] tracking-[-0.5px] text-black md:text-[48px] md:leading-[40px] md:tracking-[-0.9px]"
-        >
-          Finished Creations
-        </h2>
+        <div className="flex w-full md:contents">
+          <h2 id="finished-heading" className={FINISHED_HEADING_CLASS}>
+            Finished Creations
+          </h2>
+        </div>
         <div className="mt-9 flex flex-col gap-2 max-md:items-stretch md:items-center">
           <div
             className="flex w-full max-w-full min-w-0 touch-pan-y flex-col gap-2 max-md:overflow-x-visible md:hidden"
