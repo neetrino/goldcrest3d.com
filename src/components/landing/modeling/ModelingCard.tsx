@@ -6,6 +6,9 @@ import {
   getModelingCardWidthStyle,
 } from "./modeling-card.constants";
 
+/** With `mobileHipHopTypography`, stack lines from this index are `hidden sm:block` (tail desktop-only on mobile). */
+const HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX = 2;
+
 /** Props for one Modeling Specialization card. Լրիվ սյուն, aspect 83/43, սուր անկյուններ. */
 export type ModelingCardProps = {
   title: string;
@@ -80,6 +83,10 @@ export type ModelingCardProps = {
   descriptionBlockLeft?: string;
   /** When set, overrides textAlign for the description block only (e.g. right-aligned lines for flush-right typography). */
   descriptionAlign?: "left" | "right";
+  /**
+   * Hip-Hop block only: below `sm`, Inter title/body (Figma); `sm+` restores default Manrope layout.
+   */
+  mobileHipHopTypography?: boolean;
 };
 
 const DEFAULT_IMAGE_POSITION = "center center";
@@ -122,8 +129,10 @@ export function ModelingCard({
   descriptionBlockTop,
   descriptionBlockLeft,
   descriptionAlign,
+  mobileHipHopTypography = false,
 }: ModelingCardProps) {
   const hasLines = descriptionLines && descriptionLines.length > 0;
+  const hipHopMobileLayout = mobileHipHopTypography && hasLines;
   const textColor = textDark ? "text-black" : "text-white";
   const descriptionColor = textDark
     ? descriptionMuted
@@ -133,6 +142,11 @@ export function ModelingCard({
       ? "text-white/60"
       : "text-white";
   const lineWrapClass = noDescriptionMaxWidth ? "leading-[22px]" : "leading-[22px] whitespace-nowrap";
+  const hipHopMobileLineClass =
+    "block whitespace-normal leading-[16px] sm:whitespace-nowrap sm:leading-[22px]";
+  /** First two Hip-Hop lines: one visual line each on mobile (no mid-line wrap). */
+  const hipHopMobileLineSingleLineClass =
+    "block max-sm:whitespace-nowrap leading-[16px] sm:whitespace-nowrap sm:leading-[22px]";
   const descriptionContent = hasLines
     ?         descriptionLayout === "row"
       ? (
@@ -168,7 +182,16 @@ export function ModelingCard({
           </div>
         )
       : descriptionLines!.map((line, i) => (
-          <span key={i} className={`block ${lineWrapClass}`}>
+          <span
+            key={i}
+            className={`${
+              hipHopMobileLayout
+                ? i < HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX
+                  ? hipHopMobileLineSingleLineClass
+                  : hipHopMobileLineClass
+                : `block ${lineWrapClass}`
+            }${hipHopMobileLayout && i >= HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX ? " hidden sm:block" : ""}`}
+          >
             {line}
           </span>
         ))
@@ -179,7 +202,12 @@ export function ModelingCard({
       ? "text-[32px] leading-[24px] scale-x-105 origin-left"
       : "text-[40px] leading-[28px]";
   const titleClassName = `font-manrope ${titleSizeClass} ${titleBold ? "font-bold" : "font-extrabold"} ${textColor}`;
-  const descriptionClassName = `font-manrope font-light ${hasLines ? `text-[14px] leading-[22px] ${noDescriptionMaxWidth ? "" : "max-w-[560px]"}` : "text-[16px] leading-[26px] max-w-[407px]"} ${descriptionColor}`;
+  const titleClassNameResolved = hipHopMobileLayout
+    ? `font-sans text-[20px] font-bold leading-[28px] tracking-[-0.449px] ${textColor} sm:font-manrope sm:text-[32px] sm:leading-[24px] sm:scale-x-105 sm:origin-left sm:tracking-normal ${titleBold ? "sm:font-bold" : "sm:font-extrabold"}`
+    : titleClassName;
+  const descriptionClassName = hipHopMobileLayout
+    ? `font-sans w-full text-[12px] font-light leading-[16px] text-center sm:max-w-[560px] sm:font-manrope sm:text-[14px] sm:leading-[22px] sm:text-left ${descriptionColor}`
+    : `font-manrope font-light ${hasLines ? `text-[14px] leading-[22px] ${noDescriptionMaxWidth ? "" : "max-w-[560px]"}` : "text-[16px] leading-[26px] max-w-[407px]"} ${descriptionColor}`;
   const descriptionClassNameGradient = `font-manrope font-light text-[16px] leading-[26px] ${descriptionColor}`;
   const imageStyle = { objectPosition: imagePosition };
   const textAlignClass =
@@ -250,7 +278,7 @@ export function ModelingCard({
           ) : null}
         </div>
         <div
-          className={`absolute inset-0 z-10 px-6 py-8 md:px-8 md:py-10 ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-6 ${overlayTextContainerClass} ${textAlignClass} ${overlayTranslateClass}` : ""}`}
+          className={`absolute inset-0 z-10 px-6 py-8 md:px-8 md:py-10 ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-6 ${hipHopMobileLayout ? "max-sm:items-center max-sm:gap-3 max-sm:translate-x-0 max-sm:translate-y-[72px] max-sm:px-4 max-sm:pb-6 max-sm:text-center sm:items-start sm:gap-6 sm:pr-[40%] sm:translate-x-6 sm:translate-y-24 sm:text-left" : `${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
           style={overlayTextContainerStyle}
         >
           {independentTitleDescription ? (
@@ -283,7 +311,7 @@ export function ModelingCard({
           ) : (
             <>
               <h3
-                className={`${titleClassName} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""}`}
+                className={`${titleClassNameResolved} ${hipHopMobileLayout ? "max-sm:mt-2 max-sm:self-center max-sm:text-center sm:self-auto sm:text-left" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""}`}
                 style={{
                   ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                   ...(titleMarginTop != null && { marginTop: titleMarginTop }),
@@ -292,7 +320,7 @@ export function ModelingCard({
                 {title}
               </h3>
               <DescriptionTag
-                className={descriptionClassName}
+                className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:-mt-2" : ""}`}
                 style={
                   titleMarginTopCompensate && titleMarginTop != null
                     ? {
