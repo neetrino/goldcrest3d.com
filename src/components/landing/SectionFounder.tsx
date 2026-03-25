@@ -12,13 +12,16 @@ export function SectionFounder() {
       <div className="mx-auto max-w-[1440px]">
         <h2
           id="founder-heading"
-          className="mt-8 font-manrope text-left text-[28px] font-normal leading-[1.2] tracking-[-0.5px] text-black md:mt-12 md:text-[48px] md:leading-[40px] md:tracking-[-0.9px]"
+          className="mt-8 -translate-y-3 text-center font-sans text-2xl font-medium leading-8 tracking-[0.07px] text-black md:mt-12 md:translate-y-0 md:text-left md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px]"
         >
-          Founder & Lead Cad Engineer
+          Founder & Lead CAD Engineer
         </h2>
-        <div className="relative mx-auto mt-6 flex min-h-0 w-full max-w-full flex-col overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:h-[680px] md:w-[1440px] md:flex-row">
+        <h3 className="-mt-2 mb-3 text-center font-sans text-[30px] font-black leading-[36px] tracking-[0.396px] text-black md:hidden">
+          Davit Sargsyan
+        </h3>
+        <div className="relative mx-auto flex min-h-0 w-full max-w-full flex-col overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:h-[680px] md:w-[1440px] md:flex-row">
           <div className="flex min-h-0 flex-1 flex-col px-4 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8 md:pl-28 md:pr-12 md:pt-40 md:pb-16 md:min-h-[320px]">
-            <h3 className="font-black leading-tight tracking-[-1.2px] text-[#0f172a] text-[28px] sm:text-[32px] md:leading-[40px] md:text-[36px]">
+            <h3 className="hidden text-left font-black leading-[40px] tracking-[-1.2px] text-[#0f172a] text-[36px] md:block">
               Davit Sargsyan
             </h3>
             <div className="mt-6 space-y-4 font-light italic leading-[22px] text-black text-[14px] sm:mt-8 md:mt-10">
