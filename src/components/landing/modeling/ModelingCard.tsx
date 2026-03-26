@@ -592,3 +592,5 @@ export function ModelingCard({
     </article>
   );
 }
+
+console.log("s")
