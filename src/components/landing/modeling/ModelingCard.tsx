@@ -576,3 +576,5 @@ export function ModelingCard({
     </article>
   );
 }
+
+console.log("asd")
