@@ -1,6 +1,7 @@
 import Image from "next/image";
 
-import { LANDING_IMAGES } from "@/constants/landing-assets";
+import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
+
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
 const TITLE = "Mechanical & Lock Systems";
@@ -16,20 +17,29 @@ const DESCRIPTION_LINES = [
   "and long-term mechanical reliability.",
 ] as const;
 
+type ModelingBlockMechanicalProps = {
+  imageUrl: string;
+};
+
 /** Mechanical & Lock Systems block. Full-bleed image with title and description overlay. */
-export function ModelingBlockMechanical() {
+export function ModelingBlockMechanical({ imageUrl }: ModelingBlockMechanicalProps) {
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
     >
-      <Image
-        src={LANDING_IMAGES.modelingMechanical}
-        alt=""
-        fill
-        className="object-cover object-center"
-        sizes="(max-width: 768px) 100vw, 50vw"
-        unoptimized
-      />
+      <div
+        className="absolute inset-0"
+        style={{ backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }}
+      >
+        <Image
+          src={imageUrl}
+          alt=""
+          fill
+          className="object-contain object-center"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          unoptimized
+        />
+      </div>
       <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 py-8 text-white max-sm:-translate-x-1.5 max-sm:translate-y-[72px] max-sm:gap-4 md:flex-row md:justify-end md:px-8 md:py-10">
         <h3 className="z-10 w-[283px] max-w-full text-left font-sans text-[20px] font-bold leading-[28px] tracking-[-0.449px] text-white max-sm:translate-y-2.5 max-sm:shrink-0 max-sm:whitespace-normal sm:absolute sm:right-6 sm:top-6 sm:max-w-none sm:text-right sm:whitespace-nowrap sm:font-manrope sm:text-[32px] sm:leading-[24px] sm:tracking-normal md:right-[21rem] md:top-[3.25rem] md:scale-x-105 md:origin-right">
           {TITLE}

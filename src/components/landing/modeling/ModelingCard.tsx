@@ -2,6 +2,11 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 
 import {
+  LANDING_MEDIA_CONTAIN_FRAME_BG,
+  LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED,
+} from "@/components/landing/landing-media-frame.constants";
+
+import {
   MODELING_CARD_FRAME_MOBILE_CLASSES,
   getModelingCardWidthStyle,
 } from "./modeling-card.constants";
@@ -347,14 +352,19 @@ export function ModelingCard({
         <div
           className="absolute inset-0"
           data-landing-image={imageId}
-          style={imageLayerBackground ?? undefined}
+          style={{
+            ...(imageLayerBackground ?? undefined),
+            ...(!imageLayerBackground
+              ? { backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }
+              : {}),
+          }}
         >
           {!imageLayerBackground && imageSrc ? (
             <Image
               src={imageSrc}
               alt=""
               fill
-              className="object-cover"
+              className="object-contain"
               style={imageStyle}
               sizes="(max-width: 768px) 100vw, 50vw"
               unoptimized
@@ -494,14 +504,17 @@ export function ModelingCard({
           <div
             className="relative order-2 h-[240px] shrink-0 overflow-hidden md:order-1 md:h-full md:min-h-0 md:w-1/2"
             data-landing-image={imageId}
-            style={imageLayerBackground ?? undefined}
+            style={{
+              ...(imageLayerBackground ?? undefined),
+              ...(!imageLayerBackground ? { backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG } : {}),
+            }}
           >
             {!imageLayerBackground ? (
               <Image
                 src={imageSrc!}
                 alt=""
                 fill
-                className="object-cover"
+                className="object-contain"
                 style={imageStyle}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 unoptimized
@@ -542,14 +555,17 @@ export function ModelingCard({
           <div
             className="relative h-[240px] shrink-0 overflow-hidden md:h-full md:min-h-0 md:w-1/2"
             data-landing-image={imageId}
-            style={imageLayerBackground ?? undefined}
+            style={{
+              ...(imageLayerBackground ?? undefined),
+              ...(!imageLayerBackground ? { backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG } : {}),
+            }}
           >
             {!imageLayerBackground ? (
               <Image
                 src={imageSrc!}
                 alt=""
                 fill
-                className="object-cover"
+                className="object-contain"
                 style={imageStyle}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 unoptimized

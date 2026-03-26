@@ -1,9 +1,15 @@
 /**
- * R2 upload — quote attachments, order product images.
+ * R2 upload — quote attachments, order product images, site media.
  * S3-compatible API via @aws-sdk/client-s3.
  */
 
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+
+import { R2_PREFIXES } from "@/constants";
+import {
+  SITE_MEDIA_IMAGE_ALLOWED_MIME_TYPES,
+  SITE_MEDIA_IMAGE_MAX_BYTES,
+} from "@/lib/validations/siteMediaImage";
 
 const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID;
 const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
@@ -76,4 +82,57 @@ export function getR2PublicUrl(key: string): string | null {
   if (!R2_PUBLIC_URL || !key) return null;
   const base = R2_PUBLIC_URL.replace(/\/$/, "");
   return `${base}/${key}`;
+}
+
+const SITE_MEDIA_TYPES = new Set(SITE_MEDIA_IMAGE_ALLOWED_MIME_TYPES);
+
+/**
+ * Удаляет объект из R2 (замена/удаление медиа). Без ошибки в лог при отсутствии ключа.
+ */
+export async function deleteObjectFromR2(objectKey: string): Promise<boolean> {
+  if (!R2_BUCKET_NAME || !objectKey) return false;
+  const client = getR2Client();
+  if (!client) return false;
+  try {
+    await client.send(
+      new DeleteObjectCommand({
+        Bucket: R2_BUCKET_NAME,
+        Key: objectKey,
+      }),
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Загрузка изображения для лендинга (только image/* из allowlist).
+ */
+export async function uploadSiteMediaToR2(file: File): Promise<string | null> {
+  if (!R2_BUCKET_NAME) return null;
+  const client = getR2Client();
+  if (!client) return null;
+
+  if (file.size > SITE_MEDIA_IMAGE_MAX_BYTES) return null;
+  const contentType = (file.type ?? "").toLowerCase();
+  if (!SITE_MEDIA_TYPES.has(contentType)) return null;
+
+  const ext = file.name.split(".").pop() ?? "bin";
+  const key = `${R2_PREFIXES.SITE_MEDIA}/${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
+
+  try {
+    const body = new Uint8Array(await file.arrayBuffer());
+    await client.send(
+      new PutObjectCommand({
+        Bucket: R2_BUCKET_NAME,
+        Key: key,
+        Body: body,
+        ContentType: contentType,
+      }),
+    );
+    return key;
+  } catch {
+    return null;
+  }
 }

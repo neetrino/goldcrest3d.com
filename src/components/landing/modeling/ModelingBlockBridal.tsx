@@ -1,9 +1,11 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
-import { LANDING_IMAGES } from "@/constants/landing-assets";
+import { LANDING_MEDIA_CONTAIN_FRAME_BG } from "@/components/landing/landing-media-frame.constants";
+
 import { ModelingCard } from "./ModelingCard";
 
-/** Figma: 942×488, aspect 83/43; background position/size so ring cluster is centered. */
-const BRIDAL_IMAGE_LAYER_BACKGROUND = `url(${LANDING_IMAGES.modelingBridal}) lightgray -32.94px -65.7px / 106.945% 116.074% no-repeat`;
+function bridalImageLayerBackground(imageUrl: string): string {
+  return `url("${imageUrl}") ${LANDING_MEDIA_CONTAIN_FRAME_BG} center / contain no-repeat`;
+}
 
 /** Desktop / `sm+`: two logical rows (row layout + transforms). */
 const BRIDAL_DESCRIPTION_LINES = [
@@ -17,20 +19,24 @@ const BRIDAL_DESCRIPTION_LINES_MOBILE = [
   "durability, comfort and precise stone alignment.",
 ] as const;
 
+type ModelingBlockBridalProps = {
+  imageUrl: string;
+};
+
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
-export function ModelingBlockBridal() {
+export function ModelingBlockBridal({ imageUrl }: ModelingBlockBridalProps) {
   return (
     <ModelingCard
       title="Bridal & Engagement"
       description=""
       descriptionLines={[...BRIDAL_DESCRIPTION_LINES]}
       descriptionLinesMobile={[...BRIDAL_DESCRIPTION_LINES_MOBILE]}
-      imageSrc={LANDING_IMAGES.modelingBridal}
+      imageSrc={imageUrl}
       imageId={LANDING_IMAGE_IDS.MODELING_BRIDAL}
       imageOnLeft={true}
       textAlign="right"
       imagePosition="center 55%"
-      imageLayerBackground={{ background: BRIDAL_IMAGE_LAYER_BACKGROUND }}
+      imageLayerBackground={{ background: bridalImageLayerBackground(imageUrl) }}
       textDark
       noDescriptionMaxWidth
       fluidTextLayout

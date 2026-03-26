@@ -1,5 +1,4 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
-import { LANDING_IMAGES } from "@/constants/landing-assets";
 import { getModelingHipHopCardBackgroundStyle } from "./modeling-hiphop-background.constants";
 import { ModelingCard } from "./ModelingCard";
 
@@ -20,18 +19,22 @@ const HIPHOP_DESCRIPTION_LINES = [
   HIPHOP_DESCRIPTION_LINE_4,
 ];
 
+type ModelingBlockHipHopProps = {
+  imageUrl: string;
+};
+
 /** Hip-Hop Jewelry block — Figma background layer on image area. */
-export function ModelingBlockHipHop() {
+export function ModelingBlockHipHop({ imageUrl }: ModelingBlockHipHopProps) {
   return (
     <ModelingCard
       title="Hip-Hop Jewelry"
       description=""
       descriptionLines={HIPHOP_DESCRIPTION_LINES}
-      imageSrc={LANDING_IMAGES.modelingHipHop}
+      imageSrc={imageUrl}
       imageId={LANDING_IMAGE_IDS.MODELING_HIPHOP}
       imageOnLeft={false}
       textAlign="left"
-      imageLayerBackground={getModelingHipHopCardBackgroundStyle()}
+      imageLayerBackground={getModelingHipHopCardBackgroundStyle(imageUrl)}
       mobileHipHopTypography
     />
   );
