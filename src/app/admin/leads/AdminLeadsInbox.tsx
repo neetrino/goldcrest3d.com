@@ -97,8 +97,9 @@ function IconMail({ className }: { className?: string }) {
   );
 }
 
-const ICON_AVATAR_PLACEHOLDER =
-  "https://www.figma.com/api/mcp/asset/2c9038f6-db51-4e83-adcf-172e6e3664e5";
+/** Default lead avatar (public asset). */
+const LEAD_AVATAR_DEFAULT_SRC = "/images/avatar-default.svg";
+
 const ICON_DOWNLOAD =
   "https://www.figma.com/api/mcp/asset/544d8796-9e2e-4766-8756-76ac81306b71";
 const ICON_TRASH =
@@ -277,13 +278,13 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
               <div className="shrink-0 border-b border-slate-200 px-4 pt-4 pb-6 lg:px-5">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100">
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200/80">
                       <Image
-                        src={ICON_AVATAR_PLACEHOLDER}
+                        src={LEAD_AVATAR_DEFAULT_SRC}
                         alt=""
-                        width={28}
-                        height={28}
-                        unoptimized
+                        width={56}
+                        height={56}
+                        className="h-full w-full object-cover"
                       />
                     </div>
                     <div className="min-w-0">
