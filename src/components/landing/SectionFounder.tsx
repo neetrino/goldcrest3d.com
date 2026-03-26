@@ -49,6 +49,7 @@ type FounderBioContentMobileProps = {
   contentTopClassName: string;
 };
 
+
 function FounderBioContentMobile({ contentTopClassName }: FounderBioContentMobileProps) {
   return (
     <div className={contentTopClassName}>

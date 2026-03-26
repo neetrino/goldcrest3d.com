@@ -7,8 +7,26 @@ import { useMemo, useState } from "react";
 import { LeadReplyForm } from "./[id]/LeadReplyForm";
 import type { LeadListItem, LeadWithAttachments } from "./adminLeads.types";
 
-const ICON_SEARCH =
-  "https://www.figma.com/api/mcp/asset/de706219-8803-468d-8707-13c9ba74b52a";
+function IconSearch({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width={15}
+      height={15}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  );
+}
+
 const ICON_OVERLAY_HEADER =
   "https://www.figma.com/api/mcp/asset/835ba48d-c946-4849-879a-3c83113d6291";
 const ICON_FILTER =
@@ -92,14 +110,8 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
       {/* Header: search + New Lead */}
       <header className="flex min-h-[4rem] shrink-0 flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 lg:h-16 lg:flex-nowrap lg:px-6 lg:py-0">
         <div className="relative min-w-0 flex-1 lg:max-w-[448px]">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
-            <Image
-              src={ICON_SEARCH}
-              alt=""
-              width={15}
-              height={15}
-              unoptimized
-            />
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+            <IconSearch />
           </span>
           <input
             type="search"
