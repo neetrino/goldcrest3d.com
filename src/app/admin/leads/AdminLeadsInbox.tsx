@@ -27,8 +27,27 @@ function IconSearch({ className }: { className?: string }) {
   );
 }
 
-const ICON_OVERLAY_HEADER =
-  "https://www.figma.com/api/mcp/asset/835ba48d-c946-4849-879a-3c83113d6291";
+/** Notifications — bell (stroke matches search / admin nav). */
+function IconBell({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width={20}
+      height={20}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
+  );
+}
+
 const ICON_FILTER =
   "https://www.figma.com/api/mcp/asset/6e709847-0d61-4215-9acc-159e3c4cbc7c";
 const ICON_AVATAR_PLACEHOLDER =
@@ -123,15 +142,14 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
           />
         </div>
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <Image
-            src={ICON_OVERLAY_HEADER}
-            alt=""
-            width={32}
-            height={36}
-            className="hidden sm:block"
-            unoptimized
-          />
-          <div className="hidden h-6 w-px bg-slate-200 sm:block" aria-hidden />
+          <button
+            type="button"
+            className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+            aria-label="Notifications"
+          >
+            <IconBell />
+          </button>
+          <div className="h-6 w-px shrink-0 bg-slate-200" aria-hidden />
           <Link
             href="/#contact"
             className="flex min-h-[44px] items-center gap-2 rounded-full bg-[var(--foreground)] px-4 py-2 text-[14px] font-semibold text-white hover:opacity-90 lg:min-h-0 lg:py-1.5"
