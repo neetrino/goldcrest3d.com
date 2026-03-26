@@ -48,8 +48,34 @@ function IconBell({ className }: { className?: string }) {
   );
 }
 
-const ICON_FILTER =
-  "https://www.figma.com/api/mcp/asset/6e709847-0d61-4215-9acc-159e3c4cbc7c";
+/** Filter / sort — horizontal sliders (stroke matches inbox icons). */
+function IconSlidersHorizontal({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width={18}
+      height={18}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <line x1="21" x2="14" y1="4" y2="4" />
+      <line x1="10" x2="3" y1="4" y2="4" />
+      <line x1="21" x2="12" y1="12" y2="12" />
+      <line x1="8" x2="3" y1="12" y2="12" />
+      <line x1="21" x2="16" y1="20" y2="20" />
+      <line x1="12" x2="3" y1="20" y2="20" />
+      <line x1="14" x2="14" y1="2" y2="6" />
+      <line x1="8" x2="8" y1="10" y2="14" />
+      <line x1="16" x2="16" y1="18" y2="22" />
+    </svg>
+  );
+}
+
 const ICON_AVATAR_PLACEHOLDER =
   "https://www.figma.com/api/mcp/asset/2c9038f6-db51-4e83-adcf-172e6e3664e5";
 const ICON_EMAIL =
@@ -169,10 +195,10 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
             <h2 className="text-[16px] font-bold text-slate-800">All Leads</h2>
             <button
               type="button"
-              className="rounded p-1 hover:bg-slate-100"
+              className="flex min-h-10 min-w-10 shrink-0 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700"
               aria-label="Filter or sort"
             >
-              <Image src={ICON_FILTER} alt="" width={15} height={10} unoptimized />
+              <IconSlidersHorizontal />
             </button>
           </div>
           <div className="flex-1 overflow-y-auto">
