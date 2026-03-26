@@ -19,7 +19,7 @@ export function SectionModeling() {
   return (
     <section
       id={LANDING_SECTION_IDS.SPECIALIZATIONS}
-      className="bg-white px-3 py-[67px] md:px-5 md:py-[67px]"
+      className="bg-white px-3 py-6 md:px-5 md:py-[67px]"
       aria-labelledby="modeling-specialization"
     >
       <div className="mx-auto max-w-[1920px]">
