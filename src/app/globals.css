@@ -1,0 +1,487 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --landing-nav-height: 48px;
+  /** Figma header logo frame: 71×41, aspect-ratio 71/41. */
+  --landing-nav-logo-width: 71px;
+  --landing-nav-logo-height: 41px;
+  /** Horizontal padding for the landing nav inner row (sync with TSX). */
+  --landing-nav-padding-x: 12px;
+  /** Logo column width (matches previous content box so nav links stay put). */
+  --landing-nav-logo-slot: 0px;
+  /** Shift logo right inside the slot; does not change flex layout. */
+  --landing-nav-logo-offset-x: 0px;
+  /**
+   * Extra horizontal shift for the logo only (negative = left); nav/CTA unchanged.
+   * Mobile: 0 — large desktop nudge would pull the mark off-screen (see LandingNav `left` calc).
+   */
+  --landing-nav-logo-nudge-x: 0px;
+  /** Manufacturing Intelligence — gradient card width (inside max-w 1612 shell) */
+  --manufacturing-intelligence-card-max-w: 1421px;
+  /** Nudges the section title “Manufacturing Intelligence” slightly right (LTR). */
+  --manufacturing-intelligence-heading-indent-start: 91px;
+  /** Manufacturing Intelligence — image column vertical tuning (lg+) */
+  --manufacturing-intelligence-image-col-padding-top-lg: 24px;
+  /** Positive = shift frame down (was -10px). */
+  --manufacturing-intelligence-image-nudge-y-lg: 20px;
+  /** Horizontal shift of the image frame (lg+); positive = right. */
+  --manufacturing-intelligence-image-nudge-x-lg: 30px;
+  /** Caps image frame height (lg+); balance vs full aspect-ratio column */
+  --manufacturing-intelligence-image-frame-max-h-lg: 684px;
+  /**
+   * Caps the image frame only when set BELOW the right column width.
+   * min(100%, this) — if this is larger than the column, the column wins (see grid in SectionManufacturing).
+   */
+  --manufacturing-intelligence-image-frame-max-w: 1612px;
+  /**
+   * Slight zoom for the photo inside the frame (lg+).
+   * Does not change the frame’s layout box or the gradient block height — overflow clips the edges.
+   */
+  --manufacturing-intelligence-photo-scale-lg: 1.26;
+  /** 3D Printing Strategy detail — նկարը մի քիչ ցածր frame-ի կենտրոնից */
+  --manufacturing-printing-strategy-resin-detail-nudge-y: 16px;
+  /** Casting Compensation detail — միայն նկարը մի քիչ վերև (բացասական = վերև) */
+  --manufacturing-casting-compensation-detail-nudge-y: -25px;
+  /** Casting Compensation detail — դեպի աջ (դրական = աջ) */
+  --manufacturing-casting-compensation-detail-nudge-x: 65px;
+  /** Stone Seat Geometry detail — մի քիչ վերև (բացասական = վերև) */
+  --manufacturing-stone-seat-geometry-detail-nudge-y: -12px;
+  /** Stone Seat Geometry detail — մի քիչ աջ (դրական = աջ) */
+  --manufacturing-stone-seat-geometry-detail-nudge-x: 35px;
+  /** Wall Thickness Engineering detail — շատ քիչ դեպի աջ (դրական = աջ) */
+  --manufacturing-wall-thickness-detail-nudge-x: 18px;
+  /** Wall Thickness Engineering detail — մի քիչ ներքև (դրական = ներքև) */
+  --manufacturing-wall-thickness-detail-nudge-y: 12px;
+  /**
+   * Stone Seat Geometry — ցուցադրման լայնություն (ֆայլը 666×702 է, aspect 37/39).
+   * Միայն այս նկարի վիզուալ սքեյլ — փոքրացնելու համար նվազեցրու արժեքը։
+   */
+  --manufacturing-stone-seat-geometry-detail-display-width: 610px;
+}
+
+/** Tablet: room for inline nav + CTA without overlap. */
+@media (min-width: 768px) {
+  :root {
+    --landing-nav-padding-x: 24px;
+    --landing-nav-logo-slot: 72px;
+    --landing-nav-logo-offset-x: 64px;
+  }
+}
+
+/** Laptop: denser than full desktop, still horizontal nav. */
+@media (min-width: 1024px) {
+  :root {
+    --landing-nav-padding-x: 40px;
+    --landing-nav-logo-slot: 90px;
+    --landing-nav-logo-offset-x: 180px;
+    --landing-nav-logo-nudge-x: -116px;
+  }
+}
+
+/**
+ * Full desktop — նույն կազմը ինչ մեկ բազային :root-ում էր նախքան responsive շտկումը
+ * (padding 51px + logo offset 300px, slot 90px).
+ */
+@media (min-width: 1280px) {
+  :root {
+    --landing-nav-padding-x: 51px;
+    --landing-nav-logo-slot: 90px;
+    --landing-nav-logo-offset-x: 300px;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-manrope: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-family-manrope: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Dark mode ավտո-անցումն անջատված — կայքը միշտ light theme */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+}
+
+/* Scroll margin so fixed nav does not hide section headings */
+section[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+/* Հերո ենթավերնագիր — հիմք (modeling 20/28; rendering-ը ներքևում մի քիչ փոքր) */
+.hero-primary-subtitle-typography {
+  color: #ffffffe5;
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 350;
+  line-height: 28px;
+}
+
+/* translateX — միայն այս ենթավերնագիր; դրական = աջ (Tailwind-ի transform-ը հանված է TSX-ից) */
+#hero-rendering-subtitle {
+  font-size: 18px;
+  line-height: 26px;
+  transform: translate(-10px, -12px);
+}
+
+/* Jewelry Design ենթավերնագիր — նույն տառաչափ/line-height ինչ #hero-rendering-subtitle */
+.hero-primary-subtitle-typography-design {
+  color: rgba(18, 18, 18, 0.9);
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 350;
+  line-height: 26px;
+}
+
+@media (min-width: 768px) {
+  #hero-rendering-subtitle {
+    transform: translate(-4px, -12px);
+  }
+}
+
+#hero-modeling-subtitle {
+  align-self: stretch;
+  margin-inline: auto;
+  text-align: center;
+  white-space: normal;
+  transform: translateY(-8px);
+}
+
+/* Հերո gold CTA — section1 և section2 նույն չափ/տիպոգրաֆիա; transform-ը առանձին */
+#hero-get-quote,
+#hero-section2-get-quote,
+#hero-section3-get-quote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  min-width: unset;
+  padding: 10px 48px 10px 44px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    73deg,
+    #ffcc6f 16.39%,
+    #997a42 46.51%,
+    #ecc06e 100.22%
+  );
+  box-shadow:
+    0 1px 2px 0 rgba(0, 0, 0, 0.05),
+    0 0 0 0 rgba(0, 0, 0, 0),
+    0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+#hero-get-quote {
+  transform: translateY(-1.5rem);
+}
+
+@media (min-width: 768px) {
+  #hero-get-quote {
+    transform: translateY(-1.75rem);
+  }
+}
+
+/* Section2 (Jewelry Rendering) — միայն CTA; X-ը փոքր = ավելի ձախ */
+#hero-section2-get-quote {
+  transform: translate(2.3rem, -1.65rem);
+}
+
+@media (min-width: 768px) {
+  #hero-section2-get-quote {
+    transform: translate(2.8rem, -1.8rem);
+  }
+}
+
+/* PowerBanners section1 (modeling) — նկարի ֆրեյմ 1918×707, aspect 274/101 */
+.power-banners-section1-block {
+  width: 100%;
+  max-width: 1918px;
+  margin-inline: auto;
+}
+
+/* Միայն այս շերտում է հերո-նկարը — չափերը չեն փոխվում */
+.power-banners-section1-image-strip {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 274 / 101;
+}
+
+/* Լրացուցիչ բարձրություն նկարի տակ (նկարը չի ձգվում) */
+.power-banners-section1-tail {
+  width: 100%;
+  min-height: var(--section1-tail-min-height, 10rem);
+  background-color: #d8d8d8;
+}
+
+.power-banners-section1-bg {
+  background-color: #d3d3d3;
+  background-image: var(--section1-hero-bg);
+  /* Y + nudge — դրական nudge-ը նկարը իջեցնում է ներքև */
+  background-position: -16px calc(-160.175px + var(--section1-bg-nudge-y, 0px));
+  background-size: 101.668% 129.633%;
+  background-repeat: no-repeat;
+}
+
+/* PowerBanners section2 (Jewelry Rendering) — Figma ֆրեյմ 1920×712 */
+.power-banners-section2-block {
+  /* BG scale — միայն նկար */
+  --section2-bg-size-width: 100%;
+  --section2-bg-size-height: 130%;
+  /* Դրական արժեք — նկարը վեր է (տեքստը չի շարժվում) */
+  --section2-bg-nudge-up: 45px;
+  /* Նկարի դիրքի հաշվարկ — նույն Figma բարձրությունը (::before-ում) */
+  --section2-bg-layout-height: 712px;
+  /* Տեսանելի բլոկ — կտրվում է միայն ներքևից, նկարի մասշտաբ/դիրք չի փոխվում */
+  --section2-block-visible-height: 615px;
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  margin-inline: auto;
+  height: var(--section2-block-visible-height);
+  flex-shrink: 0;
+  background-color: lightgray;
+  overflow: hidden;
+}
+
+.power-banners-section2-block::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  width: 100%;
+  height: var(--section2-bg-layout-height);
+  pointer-events: none;
+  background-color: lightgray;
+  background-image: var(--section2-hero-bg);
+  background-position: center calc(70% - var(--section2-bg-nudge-up));
+  background-size: var(--section2-bg-size-width) var(--section2-bg-size-height);
+  background-repeat: no-repeat;
+}
+
+/* Section2 տեքստի կլաստեր — միասին դեպի ձախ (--section2-text-cluster-nudge-* PowerBanners-ից) */
+.power-banners-section2-text-cluster {
+  transform: translateX(
+    calc(-1 * var(--section2-text-cluster-nudge-mobile, 56px))
+  );
+}
+
+@media (min-width: 768px) {
+  .power-banners-section2-text-cluster {
+    transform: translateX(
+      calc(-1 * var(--section2-text-cluster-nudge-md, 128px))
+    );
+  }
+}
+
+/* PowerBanners section3 (Jewelry Design) — միայն բլոկի բարձրություն; նկարը՝ PowerBanners inline bg */
+.power-banners-section3-block {
+  min-height: var(--section3-block-min-h-mobile, 440px);
+}
+
+@media (min-width: 768px) {
+  .power-banners-section3-block {
+    height: var(--section3-block-height-md, 640px);
+    min-height: var(--section3-block-height-md, 640px);
+  }
+}
+
+/* Nav CTA "Request a Quote" — gold gradient from Figma */
+.nav-cta-gradient {
+  background: linear-gradient(
+    73deg,
+    #ffcc6f 16.39%,
+    #997a42 46.51%,
+    #ecc06e 100.22%
+  );
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Manufacturing Intelligence — Figma 110:373, 97:415 */
+.manufacturing-intelligence-card-shell {
+  margin-inline: auto;
+  max-width: min(100%, var(--manufacturing-intelligence-card-max-w));
+  width: 100%;
+}
+
+/**
+ * Mobile / tablet below `lg`: gradient card breaks out of section horizontal padding
+ * so the block is edge-to-edge (no white side gutters).
+ */
+@media (max-width: 1023px) {
+  .manufacturing-intelligence-card-shell {
+    margin-inline: unset;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    max-width: none;
+    width: 100vw;
+  }
+}
+
+/* Mobile: centered block (Figma); indent from lg — see SectionManufacturing h2 */
+.manufacturing-intelligence-heading {
+  padding-inline-start: 0;
+}
+
+@media (min-width: 1024px) {
+  .manufacturing-intelligence-heading {
+    padding-inline-start: var(--manufacturing-intelligence-heading-indent-start);
+  }
+}
+
+.manufacturing-intelligence-accordion-label {
+  color: #000000;
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.manufacturing-intelligence-accordion-detail {
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+}
+
+/* Figma 201:329 — 750×625 frame; contain shows full export like Figma (no artificial zoom crop) */
+.manufacturing-intelligence-photo {
+  height: 100% !important;
+  left: 0 !important;
+  max-width: none !important;
+  object-fit: contain;
+  object-position: center;
+  top: 0 !important;
+  width: 100% !important;
+}
+
+/* Միայն detail նկար (օր. Tolerance Control) — 980×653, frame-ի class-ները չեն փոխվել */
+.manufacturing-intelligence-photo-detail {
+  aspect-ratio: 980 / 653;
+  box-sizing: border-box;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+  width: 980px;
+}
+
+/* 3D Printing Strategy & Resin — 978×694, aspect-ratio 69/49 */
+.manufacturing-intelligence-photo-detail--printing-strategy-resin {
+  aspect-ratio: 69 / 49;
+  transform: translateY(var(--manufacturing-printing-strategy-resin-detail-nudge-y));
+  width: 978px;
+}
+
+/* Casting Compensation & Metal Flow — 682×753, aspect-ratio 48/53 */
+.manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+  aspect-ratio: 48 / 53;
+  height: auto;
+  transform: translate(
+    var(--manufacturing-casting-compensation-detail-nudge-x),
+    var(--manufacturing-casting-compensation-detail-nudge-y)
+  );
+  width: 682px;
+}
+
+/* Stone Seat Geometry & Setting Logic — ֆայլ 666×702, aspect-ratio 37/39, ցուցադրման լայնություն՝ token */
+.manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
+  aspect-ratio: 37 / 39;
+  height: auto;
+  transform: translate(
+    var(--manufacturing-stone-seat-geometry-detail-nudge-x),
+    var(--manufacturing-stone-seat-geometry-detail-nudge-y)
+  );
+  width: var(--manufacturing-stone-seat-geometry-detail-display-width);
+}
+
+/* Wall Thickness Engineering — 560×590, aspect-ratio 151/159 */
+.manufacturing-intelligence-photo-detail--wall-thickness-engineering {
+  aspect-ratio: 151 / 159;
+  height: auto;
+  transform: translate(
+    var(--manufacturing-wall-thickness-detail-nudge-x),
+    var(--manufacturing-wall-thickness-detail-nudge-y)
+  );
+  width: 560px;
+}
+
+.manufacturing-intelligence-image-frame {
+  max-width: min(100%, var(--manufacturing-intelligence-image-frame-max-w));
+}
+
+/* Image column — nudged up vs initial Figma padding so the composite aligns with the accordion */
+.manufacturing-intelligence-image-column {
+  padding-top: 0;
+}
+
+@media (min-width: 1024px) {
+  .manufacturing-intelligence-image-column {
+    padding-top: var(--manufacturing-intelligence-image-col-padding-top-lg);
+  }
+
+  .manufacturing-intelligence-image-frame {
+    max-height: var(--manufacturing-intelligence-image-frame-max-h-lg);
+    transform: translate(
+      var(--manufacturing-intelligence-image-nudge-x-lg),
+      var(--manufacturing-intelligence-image-nudge-y-lg)
+    );
+  }
+
+  .manufacturing-intelligence-photo {
+    transform: scale(var(--manufacturing-intelligence-photo-scale-lg));
+    transform-origin: center center;
+  }
+
+  .manufacturing-intelligence-photo-detail {
+    transform: none;
+  }
+
+  .manufacturing-intelligence-photo-detail--printing-strategy-resin {
+    transform: translateY(var(--manufacturing-printing-strategy-resin-detail-nudge-y));
+  }
+
+  .manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+    transform: translate(
+      var(--manufacturing-casting-compensation-detail-nudge-x),
+      var(--manufacturing-casting-compensation-detail-nudge-y)
+    );
+  }
+
+  .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
+    transform: translate(
+      var(--manufacturing-stone-seat-geometry-detail-nudge-x),
+      var(--manufacturing-stone-seat-geometry-detail-nudge-y)
+    );
+  }
+
+  .manufacturing-intelligence-photo-detail--wall-thickness-engineering {
+    transform: translate(
+      var(--manufacturing-wall-thickness-detail-nudge-x),
+      var(--manufacturing-wall-thickness-detail-nudge-y)
+    );
+  }
+}
+
+/* Finished Creations gallery — object-position for specific images */
+.gallery-object-position-portrait {
+  object-position: 0 -0.215px;
+}
+

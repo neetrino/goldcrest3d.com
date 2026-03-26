@@ -267,11 +267,12 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const R2 = new S3Client({
   region: 'auto',
-  endpoint: `https://${process.env.CF_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
   credentials: {
     accessKeyId: process.env.R2_ACCESS_KEY_ID!,
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
   },
+  forcePathStyle: true,
 });
 
 // Ֆայլի բեռնում
@@ -305,11 +306,13 @@ export async function getUploadUrl(key: string, contentType: string) {
 ### Environment Variables.
 
 ```bash
-CF_ACCOUNT_ID=your-account-id
+# S3 endpoint-ում — https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+R2_ACCOUNT_ID=your-account-id
 R2_ACCESS_KEY_ID=your-access-key
 R2_SECRET_ACCESS_KEY=your-secret-key
 R2_BUCKET_NAME=my-bucket
-R2_PUBLIC_URL=files.example.com
+# Bucket → Settings → Public access: Custom domain կամ Public Development URL
+R2_PUBLIC_URL=https://pub-xxx.r2.dev
 ```
 
 ---

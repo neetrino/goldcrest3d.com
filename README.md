@@ -1,54 +1,69 @@
-# Զարգացման կանոնների կաղապար (Cursor AI)
+# Goldcrest 3D
 
-Cursor-ում AI-զարգացման կանոններով repo-ի կաղապար։ Next.js / NestJS, ճարտարապետություն, կոդ, անվտանգություն, թեստեր, դեպլոյ։
+Goldcrest-ի 3D մոդելավորման և արտադրության ծառայությունների պրոմո-կայք — single-page landing (Apple-սթայլ) և admin panel (հայտեր, պատվերներ, վճարման հղումներ Full / 50-50).
 
----
-
-## Ինչպես սկսել
-
-1. **Repo** — GitHub → Use this template → clone, բացի՛ր պրոյեկտի թղթապանակը Cursor-ում։
-2. **BRIEF** — լրացրու՛ `docs/BRIEF.md` (նկարագրություն, ֆունկցիաներ, ինտեգրացիաներ)։
-3. **AI** — chat-ում. «Կարդա՛ docs/BRIEF.md, սկսի՛ր ըստ 21-project-onboarding.mdc. Փուլ 1 — չափը, Փուլ 2 — TECH_CARD. Սպասում եմ հաստատում կոդից առաջ»։
-4. **Հաստատում** — TECH_CARD և ճարտարապետությունը հաստատի՛ր, ապա env։
+**Ֆունկցիոնալ զադրանք.** [project.md](./project.md)  
+**Task-եր (հերթով).** [TASKS.md](./TASKS.md) — անել հերթով, done նշել կողքը  
+**Փաստաթղթեր.** [docs/](./docs/) — BRIEF, TECH_CARD, 01-ARCHITECTURE, 02–05, PROGRESS, DECISIONS
 
 ---
 
-## Մշակողի դերը
+## Կառուցվածք
 
-- **Կոդից առաջ:** BRIEF, TECH_CARD, ճարտարապետություն — AI-ն առաջարկում է, դու հաստատում ես։
-- **Տվյալներ (AI-ն կխնդրի ըստ need-ի):** Neon (DATABASE_URL), R2 (bucket + բանալիներ), Vercel (env), Auth (OAuth), Resend/Stripe/Դոմեն — անհրաժեշտության դեպքում։
-- **Env:** Ստեղծել `.env` + `.env.example` (առանց գաղտնիքների), `.gitignore`-ում — `.env`, `.env.local`. 
-Հերթականություն. 
-Neon → `.env`
-R2 →  `.env`
-Resend / Upstash (եթե պետք է) → `.env`. Գաղտնիքները միայն env-ում, `.env` — չի commit-վում։
-- **Ընթացքում:** Պատասխանի՛ր AI-ի հարցերին, ստուգի՛ր PROGRESS.md, թեստավորի՛ր փուլերը։
-- **Ավարտին:** TECH_CARD ✅, PROGRESS 100%, դեպլոյ + .env.example փաստաթղթավորված։
+- `src/app/` — էջեր, layout (Landing, Admin, Client payment page)
+- `src/components/` — UI (landing, quote-form, admin, ui)
+- `src/lib/` — DB, auth, email, R2, Stripe, validations
+- `prisma/` — ԲԴ սխեմա, միգրացիաներ
+- `public/` — ստատիկ ֆայլեր
+- `docs/` — փաստաթղթեր
 
 ---
 
-## Նախագծերի չափեր
+## Մեկնարկ
 
-| Չափ | Նկարագրություն | Կառուցվածք |
-|-----|-----------------|------------|
-| **A** | 1–3 ամիս, 5–15 ֆիչ | `src/app`, `components`, `lib` |
-| **B** | 3–6 ամիս, 15–50 ֆիչ | `src/features/*`, `shared/*` |
-| **C** | 6+ ամիս, 50+ ֆիչ | Monorepo `apps/*`, `packages/*` |
+```bash
+pnpm install
+cp .env.example .env
+# Լրացրու՛ .env — DATABASE_URL, DIRECT_URL, (R2, Resend, Stripe, Auth)
+pnpm db:generate
+pnpm dev
+```
 
-**Տեղեկատուներ.** `reference/platforms/`, `knowledge-base/`, `templates/` — Vercel, Neon, R2, Render, փաստաթղթերի կաղապարներ։
+Բացվում է http://localhost:3000
 
----
+**ԲԴ (առաջին անգամ).**  
+Neon-ից connection string ավելացրու՛ `.env`-ում, ապա.
 
-## Կանոնների թարմացում
-
-Template-ի կանոնները թարմացվում են։ Գոյություն ունեցող նախագծում. ավելացրու՛ կաղապարը remote, fetch արա՛, ապա merge/checkout արա՛ անհրաժեշտ `.cursor/rules/*.mdc` ֆայլերը (մանրամասներ — Git-ի remote/fetch/checkout ուղեցույցներ)։
-
----
-
-## Quality Automation
-
-Պրոյեկտ ստեղծելուց հետո. AI-ն (onboarding 3.1.1) — prettier, vitest, husky, commitlint, CI workflow. Մշակողը. Branch Protection (`main`), Secret Protection, Dependabot npm։ Մանրամասներ — `docs/QUALITY_AUTOMATION_PLAN.md`։
+```bash
+pnpm db:migrate
+```
 
 ---
 
-[MIT](LICENSE) — ազատ օգտագործում և հարմարեցում։
+## Հրամաններ
+
+| Հրաման | Նշանակություն |
+|--------|----------------|
+| `pnpm dev` | Զարգացման սերվեր |
+| `pnpm build` | Build (Prisma generate + Next build) |
+| `pnpm start` | Production start |
+| `pnpm db:generate` | Prisma client generate |
+| `pnpm db:push` | Schema push (dev) |
+| `pnpm db:migrate` | Միգրացիա (dev) |
+
+---
+
+## Փաստաթղթեր
+
+| Փաստաթուղթ | Նշանակություն |
+|-------------|----------------|
+| [project.md](./project.md) | Ֆունկցիոնալ զադրանք |
+| [docs/BRIEF.md](./docs/BRIEF.md) | Տեխզադրանք |
+| [docs/TECH_CARD.md](./docs/TECH_CARD.md) | Տեխնոլոգիական քարտ |
+| [docs/01-ARCHITECTURE.md](./docs/01-ARCHITECTURE.md) | Ճարտարապետություն |
+| [docs/02-TECH_STACK.md](./docs/02-TECH_STACK.md) | Տեխնոլոգիաների stack |
+| [docs/03-STRUCTURE.md](./docs/03-STRUCTURE.md) | Ֆայլերի կառուցվածք |
+| [docs/04-API.md](./docs/04-API.md) | API / Server Actions |
+| [docs/05-DATABASE.md](./docs/05-DATABASE.md) | ԲԴ սխեմա |
+| [docs/PROGRESS.md](./docs/PROGRESS.md) | Առաջընթաց |
+| [docs/DECISIONS.md](./docs/DECISIONS.md) | Կայացված որոշումներ |

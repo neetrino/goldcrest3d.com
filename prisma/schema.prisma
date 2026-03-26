@@ -1,0 +1,88 @@
+// Goldcrest 3D — Neon PostgreSQL
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ——— Auth.js (admin panel) ———
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String?   @unique
+  username      String?   @unique // Login (email or username)
+  name          String?
+  password      String?   // bcrypt hash; Credentials provider for admin
+  emailVerified DateTime?
+  image         String?
+  role          String?   @default("ADMIN") // ADMIN for admin panel access
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ——— App models ———
+model Lead {
+  id         String   @id @default(cuid())
+  fullName   String
+  email      String
+  message    String   @db.Text
+  attachmentKeys String[] // R2 keys for quote form uploads
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Order {
+  id            String   @id @default(cuid())
+  token         String   @unique // public link token for client payment page
+  clientName    String
+  clientEmail   String
+  productTitle  String
+  productImageKey String? // R2 key
+  priceCents    Int      // custom price in cents
+  paymentType   String   // FULL | SPLIT
+  paidCents     Int      @default(0)
+  status        String   @default("PENDING") // PENDING | PAID
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
