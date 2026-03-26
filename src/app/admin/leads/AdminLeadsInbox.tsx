@@ -27,6 +27,27 @@ function IconSearch({ className }: { className?: string }) {
   );
 }
 
+/** Thin plus for “New Lead” (lighter stroke than other icons). */
+function IconPlusThin({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width={16}
+      height={16}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <line x1="12" x2="12" y1="5" y2="19" />
+      <line x1="5" x2="19" y1="12" y2="12" />
+    </svg>
+  );
+}
+
 /** Notifications — bell (stroke matches search / admin nav). */
 function IconBell({ className }: { className?: string }) {
   return (
@@ -97,7 +118,7 @@ function IconMail({ className }: { className?: string }) {
   );
 }
 
-/** Default lead avatar (public asset). */
+/** Default lead avatar (public/images/avatar-default.svg). */
 const LEAD_AVATAR_DEFAULT_SRC = "/images/avatar-default.svg";
 
 const ICON_DOWNLOAD =
@@ -198,8 +219,9 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
           <div className="h-6 w-px shrink-0 bg-slate-200" aria-hidden />
           <Link
             href="/#contact"
-            className="flex min-h-[44px] items-center gap-2 rounded-full bg-[var(--foreground)] px-4 py-2 text-[14px] font-semibold text-white hover:opacity-90 lg:min-h-0 lg:py-1.5"
+            className="flex min-h-[44px] items-center gap-1.5 rounded-full bg-[var(--foreground)] px-4 py-2 text-[14px] font-medium text-white hover:opacity-90 lg:min-h-0 lg:py-1.5"
           >
+            <IconPlusThin className="shrink-0 text-white" />
             <span>New Lead</span>
           </Link>
         </div>
@@ -278,13 +300,14 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
               <div className="shrink-0 border-b border-slate-200 px-4 pt-4 pb-6 lg:px-5">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200/80">
-                      <Image
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100">
+                      <img
                         src={LEAD_AVATAR_DEFAULT_SRC}
                         alt=""
                         width={56}
                         height={56}
                         className="h-full w-full object-cover"
+                        decoding="async"
                       />
                     </div>
                     <div className="min-w-0">
