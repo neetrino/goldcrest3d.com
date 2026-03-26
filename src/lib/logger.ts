@@ -6,10 +6,8 @@
 function log(level: string, message: string, err?: unknown) {
   const payload = err !== undefined ? { message, err } : { message };
   if (level === "error") {
-    // eslint-disable-next-line no-console
     console.error(`[${level}]`, payload);
   } else {
-    // eslint-disable-next-line no-console
     console.info(`[${level}]`, payload);
   }
 }

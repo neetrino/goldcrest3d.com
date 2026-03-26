@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/db";
 import { getR2PublicUrl } from "@/lib/storage";
 import { formatPriceAmd } from "@/lib/formatPrice";
@@ -69,11 +70,14 @@ export default async function OrderPaymentPage({ params }: Props) {
         )}
 
         {productImageUrl && (
-          <div className="mt-4">
-            <img
+          <div className="relative mt-4 h-40 w-full">
+            <Image
               src={productImageUrl}
               alt={order.productTitle}
-              className="max-h-40 rounded object-contain"
+              fill
+              unoptimized
+              className="rounded object-contain"
+              sizes="(max-width: 32rem) 100vw, 512px"
             />
           </div>
         )}

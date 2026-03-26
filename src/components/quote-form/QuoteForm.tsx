@@ -1,15 +1,19 @@
 "use client";
 
-import { useActionState, useRef, useState, useCallback, useEffect } from "react";
+import {
+  useActionState,
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+  startTransition,
+} from "react";
 import { submitQuote } from "@/app/actions/quote";
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import type { QuoteSubmitResult } from "@/app/actions/quote";
 import Image from "next/image";
-import {
-  QUOTE_ATTACHMENT_ALLOWED_MIME_TYPES,
-  validateQuoteAttachment,
-} from "@/lib/validations/quoteAttachment";
+import { validateQuoteAttachment } from "@/lib/validations/quoteAttachment";
 
 const QUOTE_ATTACHMENT_FIELD_NAME = "attachment";
 /** Picker shows all images + PDF; server still validates PNG, JPG, PDF only */
@@ -116,16 +120,20 @@ export function QuoteForm() {
   }, [items]);
 
   const itemsRef = useRef<FileWithPreview[]>([]);
-  itemsRef.current = items;
   useEffect(() => {
-    if (state?.success === true) {
-      itemsRef.current.forEach((i) => {
+    itemsRef.current = items;
+  }, [items]);
+  useEffect(() => {
+    if (state?.success !== true) return;
+    const toRevoke = itemsRef.current;
+    startTransition(() => {
+      toRevoke.forEach((i) => {
         if (i.previewUrl) URL.revokeObjectURL(i.previewUrl);
       });
       setItems([]);
       setValidationError(null);
       setFileInputFiles(fileInputRef.current, []);
-    }
+    });
   }, [state?.success]);
 
   useEffect(() => {
@@ -228,9 +236,12 @@ export function QuoteForm() {
                     className="flex items-center gap-2 rounded border border-[#EEEEEE] bg-white px-3 py-2"
                   >
                     {item.previewUrl ? (
-                      <img
+                      <Image
                         src={item.previewUrl}
                         alt=""
+                        width={40}
+                        height={40}
+                        unoptimized
                         className="h-10 w-10 shrink-0 rounded object-cover"
                       />
                     ) : (

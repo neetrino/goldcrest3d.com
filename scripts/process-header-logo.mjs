@@ -85,7 +85,6 @@ async function main() {
     .toFile(OUTPUT);
 
   const meta = await sharp(OUTPUT).metadata();
-  // eslint-disable-next-line no-console -- CLI script
   console.log("Wrote", OUTPUT, `${meta.width}x${meta.height}`);
 }
 

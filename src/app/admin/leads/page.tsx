@@ -9,7 +9,7 @@ export default async function AdminLeadsPage({
 }: {
   searchParams: Promise<{ selected?: string }>;
 }) {
-  let { selected: selectedId } = await searchParams;
+  const { selected: selectedId } = await searchParams;
 
   const leads = await prisma.lead.findMany({
     orderBy: { createdAt: "desc" },

@@ -41,13 +41,8 @@ const DESIGN_SUBTITLE_LINE1 = "Concept-to-CAD development for legacy";
 const DESIGN_SUBTITLE_LINE2 = "collection building. Your vision, engineered.";
 
 /**
- * Jewelry Design (section 3) — միայն բլոկի բարձրություն (նկարի background-* առանձին).
- */
-const DESIGN_SECTION_BLOCK_MIN_HEIGHT_MOBILE_PX = 440;
-const DESIGN_SECTION_BLOCK_HEIGHT_MD_PX = 640;
-
-/**
  * Jewelry Design (section 3) — ֆոնի պարամետրեր (Figma dev mode).
+ * Block height: see Tailwind `min-h-[460px] md:min-h-[720px]` on the section wrapper.
  */
 const DESIGN_SECTION_BG_POSITION_X_PX = -0.228;
 const DESIGN_SECTION_BG_POSITION_Y_PX = -140.296;
