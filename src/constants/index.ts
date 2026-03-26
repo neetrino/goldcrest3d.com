@@ -72,6 +72,7 @@ export type LandingImageId =
 export const R2_PREFIXES = {
   QUOTES: "quotes",
   ORDERS: "orders",
+  SITE_MEDIA: "site-media",
 } as const;
 
 /** Rate limit: quote form — requests per window (per IP) */

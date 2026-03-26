@@ -301,13 +301,12 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div className="flex min-w-0 items-center gap-3 sm:gap-4">
                     <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100">
-                      <img
+                      <Image
                         src={LEAD_AVATAR_DEFAULT_SRC}
                         alt=""
                         width={56}
                         height={56}
                         className="h-full w-full object-cover"
-                        decoding="async"
                       />
                     </div>
                     <div className="min-w-0">

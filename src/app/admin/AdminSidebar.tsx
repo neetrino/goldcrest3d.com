@@ -75,6 +75,28 @@ function IconNavReports({ className }: { className?: string }) {
   );
 }
 
+/** Media — image / gallery. */
+function IconNavMedia({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width={ADMIN_NAV_ITEM_ICON_SIZE_PX}
+      height={ADMIN_NAV_ITEM_ICON_SIZE_PX}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none" />
+      <path d="M21 15l-5-5L5 21" />
+    </svg>
+  );
+}
+
 /** Settings — gear (footer link next to logout). */
 function IconNavSettings({ className }: { className?: string }) {
   return (
@@ -127,6 +149,7 @@ const NAV_ITEMS: readonly {
   { href: "/admin/leads", label: "Inbox/Leads", Icon: IconNavInbox, showBadge: true },
   { href: "/admin/orders", label: "Orders", Icon: IconNavOrders, showBadge: false },
   { href: "/admin/reports", label: "Reports", Icon: IconNavReports, showBadge: false },
+  { href: "/admin/media", label: "Media Manager", Icon: IconNavMedia, showBadge: false },
 ];
 
 type AdminSidebarProps = {

@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import { LANDING_IMAGES } from "@/constants/landing-assets";
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
 const TITLE = "Mechanical & Lock Systems";
@@ -16,14 +15,18 @@ const DESCRIPTION_LINES = [
   "and long-term mechanical reliability.",
 ] as const;
 
+type ModelingBlockMechanicalProps = {
+  imageUrl: string;
+};
+
 /** Mechanical & Lock Systems block. Full-bleed image with title and description overlay. */
-export function ModelingBlockMechanical() {
+export function ModelingBlockMechanical({ imageUrl }: ModelingBlockMechanicalProps) {
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
     >
       <Image
-        src={LANDING_IMAGES.modelingMechanical}
+        src={imageUrl}
         alt=""
         fill
         className="object-cover object-center"

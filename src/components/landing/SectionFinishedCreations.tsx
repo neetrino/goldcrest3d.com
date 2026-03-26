@@ -1,45 +1,23 @@
 "use client";
 
-import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
-import { LANDING_IMAGES } from "@/constants/landing-assets";
+import { LANDING_SECTION_IDS } from "@/constants";
+import type { FinishedGalleryItem } from "@/lib/site-media/landing-defaults";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 
-type GalleryItem = {
-  id: string;
-  imageId: string;
-  src: string;
-  objectPositionClass?: string;
-};
-
-/** Carousel: 4 large images that rotate infinitely. Add more to extend. */
-const ROW1_IMAGES: GalleryItem[] = [
-  { id: "row1-img-1", imageId: LANDING_IMAGE_IDS.FINISHED_1, src: "/images/finished/block1-portrait-jewelry.png", objectPositionClass: "gallery-object-position-portrait" },
-  { id: "row1-img-2", imageId: LANDING_IMAGE_IDS.FINISHED_2, src: "/images/finished/block2-ancient-heritage.png" },
-  { id: "row1-img-3", imageId: LANDING_IMAGE_IDS.FINISHED_3, src: "/images/finished/block3-hiphop.png" },
-  { id: "row1-img-4", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: LANDING_IMAGES.modelingBridal },
-];
-
-/** Carousel: 5 small images that rotate together with row1. */
+/** Carousel: large images (row 1). */
 const ROW2_ITEM_WIDTH = 420;
 const ROW2_ITEM_HEIGHT = 232;
 const ROW2_GAP = 8;
 
-const ROW2_IMAGES: GalleryItem[] = [
-  { id: "row2-img-1", imageId: LANDING_IMAGE_IDS.FINISHED_4, src: "/images/finished/small-block-bridal-1.png" },
-  { id: "row2-img-2", imageId: LANDING_IMAGE_IDS.FINISHED_5, src: "/images/finished/small-block-bridal-2.png" },
-  { id: "row2-img-3", imageId: LANDING_IMAGE_IDS.FINISHED_6, src: "/images/finished/small-block-portrait.png" },
-  { id: "row2-img-4", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: LANDING_IMAGES.modelingMechanical },
-  { id: "row2-img-5", imageId: LANDING_IMAGE_IDS.FINISHED_7, src: "/images/finished/small-block-bridal-1.png" },
-];
-
-const TOTAL_PAGES = ROW1_IMAGES.length;
+type SectionFinishedCreationsProps = {
+  row1: FinishedGalleryItem[];
+  row2: FinishedGalleryItem[];
+};
 const SLOT_WIDTH = 670;
 const SLOT_HEIGHT = 370;
 const SLOT_GAP = 8;
 const TRANSLATE_PER_PAGE = SLOT_WIDTH + SLOT_GAP;
-
-const ROW2_IMAGE_COUNT = ROW2_IMAGES.length;
 
 /** Mobile gallery: taller than desktop slot ratio (same width, more height). */
 const MOBILE_BLOCK_HEIGHT_SCALE = 1.3;
@@ -76,17 +54,25 @@ const MOBILE_SMALL_ROW_CLASS =
 const FINISHED_HEADING_CLASS =
   "-mt-4 min-w-0 flex-[1_0_0] text-center text-[30px] not-italic font-[457] leading-[40px] text-black font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:mt-0 md:flex-none md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px]";
 
-export function SectionFinishedCreations() {
+export function SectionFinishedCreations({
+  row1,
+  row2,
+}: SectionFinishedCreationsProps) {
+  const ROW1_IMAGES = row1;
+  const ROW2_IMAGES = row2;
+  const TOTAL_PAGES = Math.max(1, ROW1_IMAGES.length);
+  const ROW2_IMAGE_COUNT = Math.max(1, ROW2_IMAGES.length);
+
   const [activePage, setActivePage] = useState(0);
   const mobileSwipeStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const goPrev = useCallback(() => {
     setActivePage((p) => (p <= 0 ? TOTAL_PAGES - 1 : p - 1));
-  }, []);
+  }, [TOTAL_PAGES]);
 
   const goNext = useCallback(() => {
     setActivePage((p) => (p >= TOTAL_PAGES - 1 ? 0 : p + 1));
-  }, []);
+  }, [TOTAL_PAGES]);
 
   const onMobileSwipePointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) {
@@ -139,7 +125,8 @@ export function SectionFinishedCreations() {
   const row2StripImages = [...ROW2_IMAGES, ...ROW2_IMAGES];
 
   const row2TranslatePerPage = ROW2_ITEM_WIDTH + ROW2_GAP;
-  const row2ViewportWidth = ROW2_ITEM_WIDTH * 5 + ROW2_GAP * 4;
+  const row2ViewportWidth =
+    ROW2_ITEM_WIDTH * ROW2_IMAGE_COUNT + ROW2_GAP * (ROW2_IMAGE_COUNT - 1);
 
   const mobileRow1Left = ROW1_IMAGES[activePage % TOTAL_PAGES];
   const mobileRow1Right = ROW1_IMAGES[(activePage + 1) % TOTAL_PAGES];
@@ -257,7 +244,7 @@ export function SectionFinishedCreations() {
               <div
                 className="flex gap-x-2 transition-transform duration-300 ease-out"
                 style={{
-                  transform: `translateX(-${(activePage % ROW2_IMAGES.length) * row2TranslatePerPage}px)`,
+                  transform: `translateX(-${(activePage % ROW2_IMAGE_COUNT) * row2TranslatePerPage}px)`,
                 }}
               >
                 {row2StripImages.map((item, index) => (

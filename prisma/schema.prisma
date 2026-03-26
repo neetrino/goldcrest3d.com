@@ -86,3 +86,22 @@ model Order {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+/// Site-wide managed images (R2 object keys; public URL via R2_PUBLIC_URL).
+/// Neon-ում սյուների անունները՝ sectionKey / slotId (ոչ թե groupKey / slotKey)։
+model SiteMediaItem {
+  id             String   @id @default(cuid())
+  sectionKey     String
+  /// Modeling slot id (e.g. hip_hop) or UUID for gallery rows — DB-ում GLOBAL UNIQUE։
+  slotId         String   @unique
+  sortOrder      Int      @default(0)
+  r2ObjectKey    String?
+  legacySrc      String?
+  alt            String?
+  layoutMeta     Json?
+  publicLabelKey String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([sectionKey, sortOrder])
+}

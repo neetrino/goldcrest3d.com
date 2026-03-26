@@ -1,7 +1,6 @@
 import Image from "next/image";
 
 import { LANDING_IMAGE_IDS } from "@/constants";
-import { LANDING_IMAGES } from "@/constants/landing-assets";
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
 const TITLE_LINE1 = "Ancient & Heritag";
@@ -21,8 +20,12 @@ const DESCRIPTION_LINES = [
   "reconstruction and manufacturing awareness.",
 ] as const;
 
+type ModelingBlockHeritageProps = {
+  imageUrl: string;
+};
+
 /** Ancient & Heritage Jewelry block. Full-bleed image with title and description overlay (Figma 222:259). */
-export function ModelingBlockHeritage() {
+export function ModelingBlockHeritage({ imageUrl }: ModelingBlockHeritageProps) {
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -32,7 +35,7 @@ export function ModelingBlockHeritage() {
         data-landing-image={LANDING_IMAGE_IDS.MODELING_HERITAGE}
       >
         <Image
-          src={LANDING_IMAGES.modelingHeritage}
+          src={imageUrl}
           alt=""
           fill
           className="object-cover object-left"

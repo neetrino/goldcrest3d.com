@@ -1,4 +1,5 @@
 import { LANDING_SECTION_IDS } from "@/constants";
+import type { LandingSiteMedia } from "@/lib/site-media/get-landing-site-media";
 import { LandingFooter } from "./LandingFooter";
 import { PowerBanners } from "./PowerBanners";
 import { SectionFinishedCreations } from "./SectionFinishedCreations";
@@ -9,20 +10,27 @@ import { SectionPhilosophy } from "./SectionPhilosophy";
 import { SectionProcess } from "./SectionProcess";
 import { SectionQuote } from "./SectionQuote";
 
-export function LandingSections() {
+type LandingSectionsProps = {
+  siteMedia: LandingSiteMedia;
+};
+
+export function LandingSections({ siteMedia }: LandingSectionsProps) {
   return (
     <>
       <PowerBanners />
 
       <SectionPhilosophy />
 
-      <SectionModeling />
+      <SectionModeling modeling={siteMedia.modeling} />
 
       <SectionManufacturing />
 
       <SectionFounder />
 
-      <SectionFinishedCreations />
+      <SectionFinishedCreations
+        row1={siteMedia.finished.row1}
+        row2={siteMedia.finished.row2}
+      />
 
       <SectionProcess />
 
