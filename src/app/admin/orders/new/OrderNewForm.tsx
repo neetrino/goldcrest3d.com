@@ -125,7 +125,7 @@ export function OrderNewForm() {
         <span className="block text-sm font-medium text-[var(--foreground)]">
           Payment type
         </span>
-        <div className="mt-1.5 flex gap-6">
+        <div className="mt-1.5 flex flex-col gap-3 lg:flex-row lg:gap-6">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"

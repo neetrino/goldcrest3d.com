@@ -3,7 +3,7 @@ import { OrderNewForm } from "./OrderNewForm";
 
 export default function AdminOrderNewPage() {
   return (
-    <div className="max-w-2xl space-y-8">
+    <div className="mx-auto max-w-2xl space-y-8 px-4 py-6 sm:px-6">
       <Link
         href="/admin/orders"
         className="inline-flex items-center gap-1 text-sm font-medium text-neutral-600 transition-colors hover:text-[var(--foreground)]"

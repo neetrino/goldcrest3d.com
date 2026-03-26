@@ -29,7 +29,7 @@ export function LeadReplyForm({
       <div className="border border-slate-200 bg-white">
         <form action={formAction}>
           <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-            <span className="text-[12px] font-bold text-slate-400">
+            <span className="min-w-0 break-all text-[12px] font-bold text-slate-400">
               Reply to: {leadEmail}
             </span>
           </div>
@@ -53,20 +53,20 @@ export function LeadReplyForm({
               </p>
             )}
           </div>
-          <div className="flex items-center justify-between border-t border-slate-200 px-4 py-4">
+          <div className="flex flex-col gap-3 border-t border-slate-200 px-4 py-4 lg:flex-row lg:items-center lg:justify-between">
             <span className="text-[10px] font-bold uppercase tracking-tight text-slate-400">
               Automatic signature enabled
             </span>
-            <div className="flex items-center gap-3">
+            <div className="flex w-full flex-col gap-2 sm:flex-row sm:justify-end lg:w-auto">
               <button
                 type="reset"
-                className="rounded-lg px-4 py-2 text-[14px] font-semibold text-slate-600 hover:bg-slate-100"
+                className="min-h-[44px] rounded-lg px-4 py-2 text-[14px] font-semibold text-slate-600 hover:bg-slate-100 lg:min-h-0"
               >
                 Discard
               </button>
               <button
                 type="submit"
-                className="flex items-center gap-2 rounded-lg bg-[var(--foreground)] px-6 py-2 text-[14px] font-bold text-white hover:opacity-90"
+                className="flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-[var(--foreground)] px-6 py-2 text-[14px] font-bold text-white hover:opacity-90 lg:min-h-0"
               >
                 Send Reply
               </button>

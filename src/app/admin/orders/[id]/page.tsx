@@ -34,7 +34,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
     : null;
 
   return (
-    <div className="max-w-2xl space-y-8">
+    <div className="mx-auto max-w-2xl space-y-8 px-4 py-6 sm:px-6">
       <Link
         href="/admin/orders"
         className="inline-flex items-center gap-1 text-sm font-medium text-neutral-600 transition-colors hover:text-[var(--foreground)]"
@@ -60,7 +60,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
               Email
             </dt>
-            <dd className="mt-0.5">
+            <dd className="mt-0.5 min-w-0 break-all">
               <a
                 href={`mailto:${order.clientEmail}`}
                 className="text-[var(--foreground)] underline decoration-neutral-300 underline-offset-2 hover:decoration-[var(--foreground)]"
@@ -92,8 +92,8 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
               Token (payment link)
             </dt>
-            <dd className="mt-0.5">
-              <code className="rounded bg-neutral-100 px-1.5 py-0.5 text-sm font-mono text-neutral-700">
+            <dd className="mt-0.5 min-w-0">
+              <code className="break-all rounded bg-neutral-100 px-1.5 py-0.5 text-sm font-mono text-neutral-700">
                 {order.token}
               </code>
             </dd>

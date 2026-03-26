@@ -88,10 +88,10 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
   };
 
   return (
-    <div className="flex h-full flex-col bg-white">
+    <div className="flex h-full min-h-0 flex-1 flex-col bg-white lg:min-h-0">
       {/* Header: search + New Lead */}
-      <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 px-6">
-        <div className="relative flex-1 max-w-[448px]">
+      <header className="flex min-h-[4rem] shrink-0 flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 lg:h-16 lg:flex-nowrap lg:px-6 lg:py-0">
+        <div className="relative min-w-0 flex-1 lg:max-w-[448px]">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
             <Image
               src={ICON_SEARCH}
@@ -110,31 +110,32 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
             aria-label="Search leads"
           />
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Image
             src={ICON_OVERLAY_HEADER}
             alt=""
             width={32}
             height={36}
+            className="hidden sm:block"
             unoptimized
           />
-          <div className="h-6 w-px bg-slate-200" aria-hidden />
+          <div className="hidden h-6 w-px bg-slate-200 sm:block" aria-hidden />
           <Link
             href="/#contact"
-            className="flex items-center gap-2 rounded-full bg-[var(--foreground)] px-4 py-1.5 text-[14px] font-semibold text-white hover:opacity-90"
+            className="flex min-h-[44px] items-center gap-2 rounded-full bg-[var(--foreground)] px-4 py-2 text-[14px] font-semibold text-white hover:opacity-90 lg:min-h-0 lg:py-1.5"
           >
             <span>New Lead</span>
           </Link>
         </div>
       </header>
 
-      <div className="flex min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
         {/* List column */}
         <section
-          className="flex w-[380px] shrink-0 flex-col border-r border-slate-200"
+          className="flex w-full shrink-0 flex-col border-slate-200 border-b lg:h-auto lg:w-[380px] lg:border-b-0 lg:border-r"
           aria-label="All leads"
         >
-          <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+          <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4 lg:px-6">
             <h2 className="text-[16px] font-bold text-slate-800">All Leads</h2>
             <button
               type="button"
@@ -160,7 +161,7 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                       <button
                         type="button"
                         onClick={() => handleSelectLead(lead.id)}
-                        className={`relative flex w-full flex-col gap-1 px-6 py-4 text-left transition-colors hover:bg-slate-50 ${
+                        className={`relative flex w-full flex-col gap-1 px-4 py-4 text-left transition-colors hover:bg-slate-50 lg:px-6 ${
                           isActive ? "bg-white" : ""
                         }`}
                       >
@@ -194,13 +195,13 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
         </section>
 
         {/* Detail column */}
-        <section className="flex min-w-0 flex-1 flex-col bg-white">
+        <section className="flex min-h-0 min-w-0 flex-1 flex-col bg-white lg:min-h-0">
           {selectedLead ? (
             <>
               {/* Message detail header */}
-              <div className="shrink-0 border-b border-slate-200 px-5 pt-4 pb-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-4">
+              <div className="shrink-0 border-b border-slate-200 px-4 pt-4 pb-6 lg:px-5">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex min-w-0 items-center gap-3 sm:gap-4">
                     <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100">
                       <Image
                         src={ICON_AVATAR_PLACEHOLDER}
@@ -210,11 +211,11 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                         unoptimized
                       />
                     </div>
-                    <div>
-                      <h1 className="text-[24px] font-bold leading-8 text-slate-900">
+                    <div className="min-w-0">
+                      <h1 className="text-xl font-bold leading-7 text-slate-900 lg:text-[24px] lg:leading-8">
                         {selectedLead.fullName}
                       </h1>
-                      <div className="flex items-center gap-1">
+                      <div className="flex min-w-0 items-center gap-1">
                         <Image
                           src={ICON_EMAIL}
                           alt=""
@@ -222,13 +223,13 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                           height={11}
                           unoptimized
                         />
-                        <span className="text-[14px] text-slate-500">
+                        <span className="break-all text-[14px] text-slate-500">
                           {selectedLead.email}
                         </span>
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex shrink-0 gap-2 self-start sm:self-auto">
                     <a
                       href="#"
                       className="flex h-9 w-9 items-center justify-center rounded border border-slate-200 hover:bg-slate-50"
@@ -274,15 +275,15 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                       })}
                     </span>
                   </div>
-                  <h2 className="text-[18px] font-semibold leading-7 text-slate-800">
+                  <h2 className="break-words text-[18px] font-semibold leading-7 text-slate-800">
                     Subject: {getSubject(selectedLead.message)}
                   </h2>
                 </div>
               </div>
 
               {/* Message body */}
-              <div className="min-h-0 flex-1 overflow-y-auto px-12 py-8">
-                <div className="whitespace-pre-wrap text-[16px] leading-[26px] text-slate-700">
+              <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 lg:px-12 lg:py-8">
+                <div className="break-words whitespace-pre-wrap text-[16px] leading-[26px] text-slate-700">
                   {selectedLead.message}
                 </div>
 
@@ -291,7 +292,7 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                     <h3 className="text-[12px] font-bold uppercase tracking-wider text-slate-400">
                       Attachments ({selectedLead.attachmentUrls.length})
                     </h3>
-                    <div className="mt-3 flex flex-wrap gap-3">
+                    <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                       {selectedLead.attachmentUrls.map(({ key, url, isImage }) => {
                         const name = key.split("/").pop() ?? key;
                         return (
@@ -300,7 +301,7 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                             href={url ?? "#"}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex w-[256px] items-center gap-3 rounded-lg border border-slate-200 bg-slate-50/50 p-3 hover:bg-slate-100"
+                            className="flex w-full max-w-[256px] items-center gap-3 rounded-lg border border-slate-200 bg-slate-50/50 p-3 hover:bg-slate-100 sm:w-[256px]"
                           >
                             <div
                               className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${

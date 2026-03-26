@@ -48,6 +48,11 @@ type AdminSidebarProps = {
   leadsCount: number;
   userName: string | null;
   userImage: string | null;
+  /** For mobile drawer: closes the drawer after navigation. */
+  onNavigate?: () => void;
+  /** Mobile drawer open state; desktop layout ignores this. */
+  mobileNavOpen?: boolean;
+  id?: string;
 };
 
 /**
@@ -57,11 +62,22 @@ export function AdminSidebar({
   leadsCount,
   userName,
   userImage,
+  onNavigate,
+  mobileNavOpen = false,
+  id,
 }: AdminSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="flex min-h-screen w-[256px] shrink-0 flex-col border-r border-slate-200 bg-white">
+    <aside
+      id={id}
+      className={
+        "flex min-h-screen w-[256px] shrink-0 flex-col border-r border-slate-200 bg-white " +
+        "fixed inset-y-0 left-0 z-50 transition-transform duration-200 ease-out " +
+        (mobileNavOpen ? "translate-x-0 " : "-translate-x-full ") +
+        "lg:relative lg:inset-auto lg:z-auto lg:translate-x-0"
+      }
+    >
       <div className="flex flex-1 flex-col">
         <div className="p-6">
           <div className="flex items-center gap-3">
@@ -93,6 +109,7 @@ export function AdminSidebar({
               <Link
                 key={href}
                 href={href}
+                onClick={() => onNavigate?.()}
                 className={`flex items-center gap-3 rounded-lg px-4 py-3 text-[14px] font-medium transition-colors ${
                   isActive
                     ? "bg-amber-500/10 text-[var(--foreground)]"
@@ -149,6 +166,7 @@ export function AdminSidebar({
           <div className="flex shrink-0 items-center gap-1">
             <Link
               href="/admin/settings"
+              onClick={() => onNavigate?.()}
               className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
               aria-label="Settings"
             >
