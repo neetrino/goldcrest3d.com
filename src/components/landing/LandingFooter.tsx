@@ -16,6 +16,25 @@ const FOOTER_CONTACT_LINE_CLASS =
 const FOOTER_CONTACT_LOCATION_BLOCK_CLASS =
   "flex flex-col gap-[13px] self-start md:self-stretch";
 
+/** Mobile only: Inter 12/16, 296px, #99A1AF. Desktop uses separate line below. */
+const FOOTER_COPYRIGHT_MOBILE_CLASS =
+  "md:hidden w-[296px] font-sans text-xs font-normal leading-4 tracking-[0.6px] text-[#99A1AF] uppercase";
+
+/** Desktop: SF Compact 10/15, weight 790, 435.762px — DS Studio line. */
+const FOOTER_COPYRIGHT_DESKTOP_CLASS =
+  "hidden md:block md:w-[435.762px] md:shrink-0 md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-[10px] md:font-[790] md:leading-[15px] md:tracking-[1px] md:text-[#94A3B8] md:uppercase";
+
+/** Mobile: Inter 12/16, #99A1AF. Desktop: SF Compact — widths on Privacy / Terms. */
+const FOOTER_LEGAL_LINK_MOBILE_CLASS =
+  "font-sans text-xs font-normal leading-4 tracking-[0.6px] text-[#99A1AF] uppercase transition-colors hover:text-[var(--foreground)]";
+
+const FOOTER_LEGAL_LINK_DESKTOP_SHARED_CLASS =
+  "md:shrink-0 md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-[10px] md:font-[790] md:leading-[15px] md:tracking-[1px] md:text-[#94A3B8] md:uppercase";
+
+const FOOTER_PRIVACY_LINK_CLASS = `${FOOTER_LEGAL_LINK_MOBILE_CLASS} ${FOOTER_LEGAL_LINK_DESKTOP_SHARED_CLASS} md:w-[127.477px]`;
+
+const FOOTER_TERMS_LINK_CLASS = `${FOOTER_LEGAL_LINK_MOBILE_CLASS} ${FOOTER_LEGAL_LINK_DESKTOP_SHARED_CLASS} md:w-[145.688px]`;
+
 export function LandingFooter() {
   return (
     <footer
@@ -140,20 +159,17 @@ export function LandingFooter() {
           </div>
         </div>
         <div className="mt-0 flex flex-col gap-4 border-t border-[#e2e8f0] pt-10 md:flex-row md:items-center md:justify-between">
-          <p className="font-bold leading-[15px] tracking-[1px] text-[#94a3b8] text-[10px] uppercase">
-            © 2024 Goldcrest 3D. All rights reserved.
+          <p className={FOOTER_COPYRIGHT_MOBILE_CLASS}>
+            © 2024 DS Studio Engineering. All Rights Reserved.
+          </p>
+          <p className={FOOTER_COPYRIGHT_DESKTOP_CLASS}>
+            © 2024 DS Studio Engineering. All Rights Reserved.
           </p>
           <div className="flex gap-8">
-            <Link
-              href="/privacy"
-              className="font-bold leading-[15px] tracking-[1px] text-[#94a3b8] text-[10px] uppercase hover:text-[var(--foreground)]"
-            >
+            <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
               Privacy Policy
             </Link>
-            <Link
-              href="/terms"
-              className="font-bold leading-[15px] tracking-[1px] text-[#94a3b8] text-[10px] uppercase hover:text-[var(--foreground)]"
-            >
+            <Link href="/terms" className={FOOTER_TERMS_LINK_CLASS}>
               Terms of Service
             </Link>
           </div>
