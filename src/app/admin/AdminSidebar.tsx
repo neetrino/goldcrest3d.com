@@ -9,13 +9,16 @@ import type { ComponentType } from "react";
 const ICON_SETTINGS =
   "https://www.figma.com/api/mcp/asset/7bd8c9ae-ad6d-4832-a03d-2ef7770b20de";
 
-/** Inbox — incoming messages / leads (15×15), stroke style matches nav. */
+/** Pixel size for Inbox/Leads, Orders, Reports nav icons (must match Tailwind size below). */
+const ADMIN_NAV_ITEM_ICON_SIZE_PX = 18;
+
+/** Inbox — incoming messages / leads, stroke style matches nav. */
 function IconNavInbox({ className }: { className?: string }) {
   return (
     <svg
       className={className}
-      width={15}
-      height={15}
+      width={ADMIN_NAV_ITEM_ICON_SIZE_PX}
+      height={ADMIN_NAV_ITEM_ICON_SIZE_PX}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -35,8 +38,8 @@ function IconNavOrders({ className }: { className?: string }) {
   return (
     <svg
       className={className}
-      width={15}
-      height={15}
+      width={ADMIN_NAV_ITEM_ICON_SIZE_PX}
+      height={ADMIN_NAV_ITEM_ICON_SIZE_PX}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -57,8 +60,8 @@ function IconNavReports({ className }: { className?: string }) {
   return (
     <svg
       className={className}
-      width={15}
-      height={15}
+      width={ADMIN_NAV_ITEM_ICON_SIZE_PX}
+      height={ADMIN_NAV_ITEM_ICON_SIZE_PX}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -179,7 +182,7 @@ export function AdminSidebar({
                     : "text-slate-600 hover:bg-slate-50 hover:text-[var(--foreground)]"
                 }`}
               >
-                <Icon className="h-[15px] w-[15px] shrink-0" aria-hidden />
+                <Icon className="h-[18px] w-[18px] shrink-0" aria-hidden />
                 <span className="flex-1">{label}</span>
                 {showBadge && leadsCount > 0 && (
                   <span className="rounded-full bg-[var(--foreground)] px-1.5 py-0.5 text-[10px] font-medium text-white min-w-[10px] text-center">
