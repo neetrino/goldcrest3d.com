@@ -1,6 +1,8 @@
 import Image from "next/image";
 
 import { LANDING_IMAGE_IDS } from "@/constants";
+import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
+
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
 const TITLE_LINE1 = "Ancient & Heritag";
@@ -33,12 +35,13 @@ export function ModelingBlockHeritage({ imageUrl }: ModelingBlockHeritageProps) 
       <div
         className="absolute inset-0"
         data-landing-image={LANDING_IMAGE_IDS.MODELING_HERITAGE}
+        style={{ backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }}
       >
         <Image
           src={imageUrl}
           alt=""
           fill
-          className="object-cover object-left"
+          className="object-contain object-center"
           sizes="(max-width: 768px) 100vw, 50vw"
           unoptimized
         />

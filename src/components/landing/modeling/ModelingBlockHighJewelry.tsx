@@ -1,6 +1,8 @@
 import type { CSSProperties } from "react";
 
 import { LANDING_IMAGE_IDS } from "@/constants";
+import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
+
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
 const TITLE = "High Jewelry";
@@ -12,9 +14,9 @@ const LINE_2 =
 function highJewelryBackground(imageUrl: string): CSSProperties {
   return {
     backgroundImage: `url("${imageUrl}")`,
-    backgroundColor: "lightgray",
-    backgroundPosition: "-42.124px 0.163px",
-    backgroundSize: "117.217% 127.221%",
+    backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED,
+    backgroundPosition: "center",
+    backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
   };
 }

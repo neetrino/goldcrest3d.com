@@ -1,8 +1,10 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
+import { LANDING_MEDIA_CONTAIN_FRAME_BG } from "@/components/landing/landing-media-frame.constants";
+
 import { ModelingCard } from "./ModelingCard";
 
 function bridalImageLayerBackground(imageUrl: string): string {
-  return `url("${imageUrl}") lightgray -32.94px -65.7px / 106.945% 116.074% no-repeat`;
+  return `url("${imageUrl}") ${LANDING_MEDIA_CONTAIN_FRAME_BG} center / contain no-repeat`;
 }
 
 /** Desktop / `sm+`: two logical rows (row layout + transforms). */

@@ -2,7 +2,7 @@ import { LANDING_IMAGE_IDS } from "@/constants";
 import { ModelingCard } from "./ModelingCard";
 
 function portraitLayerBackground(imageUrl: string): string {
-  return `url("${imageUrl}") #E0F2F1 center / cover no-repeat`;
+  return `url("${imageUrl}") #E0F2F1 center / contain no-repeat`;
 }
 
 const PORTRAIT_DESCRIPTION_LINES = [
