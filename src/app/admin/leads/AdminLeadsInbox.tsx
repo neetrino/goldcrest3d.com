@@ -76,10 +76,29 @@ function IconSlidersHorizontal({ className }: { className?: string }) {
   );
 }
 
+/** Email address — envelope (stroke matches inbox icons). */
+function IconMail({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width={16}
+      height={16}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect width="20" height="16" x="2" y="4" rx="2" />
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+    </svg>
+  );
+}
+
 const ICON_AVATAR_PLACEHOLDER =
   "https://www.figma.com/api/mcp/asset/2c9038f6-db51-4e83-adcf-172e6e3664e5";
-const ICON_EMAIL =
-  "https://www.figma.com/api/mcp/asset/f4033daa-700c-495c-adda-026f4c49ffb7";
 const ICON_DOWNLOAD =
   "https://www.figma.com/api/mcp/asset/544d8796-9e2e-4766-8756-76ac81306b71";
 const ICON_TRASH =
@@ -271,14 +290,8 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                       <h1 className="text-xl font-bold leading-7 text-slate-900 lg:text-[24px] lg:leading-8">
                         {selectedLead.fullName}
                       </h1>
-                      <div className="flex min-w-0 items-center gap-1">
-                        <Image
-                          src={ICON_EMAIL}
-                          alt=""
-                          width={14}
-                          height={11}
-                          unoptimized
-                        />
+                      <div className="flex min-w-0 items-start gap-2">
+                        <IconMail className="mt-0.5 shrink-0 text-slate-400" />
                         <span className="break-all text-[14px] text-slate-500">
                           {selectedLead.email}
                         </span>
