@@ -1,11 +1,9 @@
 "use client";
 
+import { SITE_HEADER_LOGO_SRC } from "@/constants";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AdminSidebar } from "./AdminSidebar";
-
-const SIDEBAR_LOGO_SRC =
-  "https://www.figma.com/api/mcp/asset/9e9a440f-112c-4732-9efd-d56a2f3e2331";
 
 function IconMenu({ className }: { className?: string }) {
   return (
@@ -82,12 +80,12 @@ export function AdminLayoutShell({
         <div className="flex min-w-0 items-center gap-3">
           <div className="relative h-[26px] w-11 shrink-0">
             <Image
-              src={SIDEBAR_LOGO_SRC}
-              alt=""
-              width={44}
-              height={26}
-              className="object-contain"
-              unoptimized
+              src={SITE_HEADER_LOGO_SRC}
+              alt="Goldcrest 3D"
+              width={71}
+              height={41}
+              sizes="44px"
+              className="h-full w-full object-contain object-left"
             />
           </div>
           <div className="flex min-w-0 flex-col">

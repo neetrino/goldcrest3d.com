@@ -2,6 +2,7 @@
 
 import {
   LANDING_SECTION_IDS,
+  SITE_HEADER_LOGO_SRC,
   type LandingSectionId,
 } from "@/constants";
 import Image from "next/image";
@@ -10,9 +11,6 @@ import { useCallback, useId, useState } from "react";
 import { LandingNavMobileDrawer } from "@/components/landing/LandingNavMobileDrawer";
 import { LandingNavMenuIcon } from "@/components/landing/LandingNavMenuIcon";
 import { useLandingNavBodyLock } from "@/components/landing/useLandingNavBodyLock";
-
-/** Gold bird mark; background removed (see scripts/process-header-logo.mjs). */
-const LOGO_SRC = "/images/header-logo.png";
 
 const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
   { id: LANDING_SECTION_IDS.HERO, label: "Home" },
@@ -57,7 +55,7 @@ export function LandingNav() {
           aria-label="Goldcrest 3D — Home"
         >
           <Image
-            src={LOGO_SRC}
+            src={SITE_HEADER_LOGO_SRC}
             alt="Goldcrest 3D"
             width={71}
             height={41}

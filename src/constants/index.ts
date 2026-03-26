@@ -77,3 +77,6 @@ export const R2_PREFIXES = {
 /** Rate limit: quote form — requests per window (per IP) */
 export const RATE_LIMIT_QUOTE_WINDOW_MS = 60_000;
 export const RATE_LIMIT_QUOTE_MAX = 10;
+
+/** Main site header logo (`public/images/header-logo.png`); same asset as `LandingNav`. */
+export const SITE_HEADER_LOGO_SRC = "/images/header-logo.png";
