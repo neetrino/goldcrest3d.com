@@ -142,13 +142,23 @@ section[id] {
 }
 
 /* Jewelry Design ենթավերնագիր — նույն տառաչափ/line-height ինչ #hero-rendering-subtitle */
+.hero-primary-title-typography-design {
+  color: #000;
+  text-align: center;
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 52px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: 72px;
+}
+
 .hero-primary-subtitle-typography-design {
   color: rgba(18, 18, 18, 0.9);
   font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   font-style: italic;
   font-weight: 350;
-  line-height: 26px;
+  line-height: 28px;
 }
 
 @media (min-width: 768px) {

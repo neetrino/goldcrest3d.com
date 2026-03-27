@@ -30,9 +30,6 @@ const HERO_PRIMARY_TITLE_TYPOGRAPHY_CORE_CLASS =
 /** Modeling, Jewelry Rendering — սպիտակ ֆոնի վրա */
 const HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS = `${HERO_PRIMARY_TITLE_TYPOGRAPHY_CORE_CLASS} text-white`;
 
-/** Jewelry Design — մուգ տեքստ, նույն տառաչափ */
-const HERO_PRIMARY_TITLE_TYPOGRAPHY_ON_LIGHT_CLASS = `${HERO_PRIMARY_TITLE_TYPOGRAPHY_CORE_CLASS} text-black`;
-
 /** Explicit two-line copy for Jewelry Rendering subtitle; line break is intentional. */
 const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation";
 const RENDERING_SUBTITLE_LINE2 = "and global sales. Perfection in every light ray.";
@@ -287,7 +284,7 @@ export function PowerBanners() {
                 <h1
                   className={
                     slide.darkText
-                      ? `inline-block max-w-[494px] whitespace-nowrap ${HERO_PRIMARY_TITLE_TYPOGRAPHY_ON_LIGHT_CLASS}`
+                      ? "hero-primary-title-typography-design inline-block max-w-[494px] whitespace-nowrap"
                       : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
                   }
                 >
