@@ -15,6 +15,7 @@ const SECTION1_TAIL_MIN_HEIGHT_PX = 120;
 
 /** Section1 — միայն հերո-նկարը դեպի ներքև (px), background-position Y */
 const SECTION1_HERO_BG_NUDGE_DOWN_PX = 16;
+const SECTION1_HERO_BG_MOBILE_PATH = "/images/modeling/block1-mobile.png";
 
 /** Section1 — վերնագիր, ենթավերնագիր, CTA դեպի ներքև (translateY, px); ցածր արժեք = ավելի վերև */
 const SECTION1_HERO_TEXT_NUDGE_DOWN_PX = 22;
@@ -78,7 +79,7 @@ const SLIDES: Array<{
 }> = [
   {
     id: "modeling",
-    title: "3D Production-Ready Modeling",
+    title: "3D Production-Ready\nModeling",
     subtitle:
       "Engineered for casting, printing and precise stone setting. Every micron accounted for.",
     bg: LANDING_IMAGES.heroModeling,
@@ -148,6 +149,7 @@ export function PowerBanners() {
                   style={
                     {
                       ["--section1-hero-bg" as string]: `url("${slide.bg}")`,
+                      ["--section1-hero-bg-mobile" as string]: `url("${SECTION1_HERO_BG_MOBILE_PATH}")`,
                       ["--section1-bg-nudge-y" as string]: `${SECTION1_HERO_BG_NUDGE_DOWN_PX}px`,
                     } as React.CSSProperties
                   }
@@ -172,7 +174,13 @@ export function PowerBanners() {
                     id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
                     className="hero-primary-subtitle-typography mt-4 shrink-0 md:mt-5"
                   >
-                    {slide.subtitle}
+                    <>
+                      Engineered for casting, printing and
+                      <br className="md:hidden" />
+                      {" "}precise stone setting. Every micron
+                      <br className="md:hidden" />
+                      {" "}accounted for.
+                    </>
                   </p>
                   <GetAQuoteButton
                     id={HERO_GET_QUOTE_BUTTON_ID}
