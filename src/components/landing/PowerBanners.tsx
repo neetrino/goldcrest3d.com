@@ -122,9 +122,9 @@ export function PowerBanners() {
         <div
           className={`relative flex w-full shrink-0 flex-col overflow-hidden ${
             slide.id === "modeling"
-              ? "items-center bg-[#d8d8d8]"
+              ? "items-center bg-white"
               : slide.id === "rendering"
-                ? "min-h-0 h-[760px] md:h-auto"
+                ? "min-h-0 h-[760px] bg-white md:h-auto"
                 : slide.id === "design"
                   ? "power-banners-section3-block mx-auto w-full max-w-[1920px] bg-[lightgray]"
                   : "min-h-[460px] md:min-h-[720px]"
@@ -146,7 +146,7 @@ export function PowerBanners() {
               }
             >
               <div
-                className="power-banners-section1-image-strip"
+                className="power-banners-section1-image-strip bg-white"
                 data-landing-image={LANDING_IMAGE_IDS.HERO_MODELING}
               >
                 <div
