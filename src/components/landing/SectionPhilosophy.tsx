@@ -10,22 +10,24 @@ export function SectionPhilosophy() {
       <div className="mx-auto max-w-4xl px-6 text-center">
         <h2
           id="philosophy-heading"
-          className="font-manrope font-normal leading-[40px] tracking-[-0.9px] text-[48px]"
+          className='text-center text-[38px] font-[457] leading-[40px] font-["SF_Compact",-apple-system,BlinkMacSystemFont,sans-serif] md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px]'
         >
-          <span className="text-[#ddab52]">Goldcrest Engineering </span>
-          <span className="font-bold text-black">Philosophy</span>
+          <span className="block text-[#ddab52] md:inline">Goldcrest </span>
+          <span className="block text-[#ddab52] md:inline">Engineering </span>
+          <span className="block font-[790] text-black md:inline md:font-bold">Philosophy</span>
         </h2>
-        <blockquote className="mt-[42px] font-manrope text-center font-light leading-[36px] text-[rgba(24,22,16,0.8)] text-[30px]">
+        <blockquote className='mt-[42px] text-center text-[16px] font-[350] leading-[24px] text-[rgba(24,22,16,0.8)] font-["SF_Compact",-apple-system,BlinkMacSystemFont,sans-serif] md:font-manrope md:text-[30px] md:font-light md:leading-[36px]'>
           &ldquo;We design with manufacturing awareness.
           <br />
           We engineer with structural responsibility.
           <br />
           We eliminate risks at the digital stage.
           <br />
-          <span className="font-extrabold text-[#181610]">
-            Precision is not optional. It is the standard
+          <br />
+          <span className="font-[790] text-[#181610] md:font-extrabold">
+            Precision is not optional. It is the standard.
           </span>
-          .&rdquo;
+          &rdquo;
         </blockquote>
       </div>
     </section>
