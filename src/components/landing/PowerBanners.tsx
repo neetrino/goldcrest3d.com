@@ -71,7 +71,6 @@ const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
 
 /** Միայն «Jewelry Rendering» վերնագիր — դեպի ներքև (px) */
 const SECTION2_RENDERING_TITLE_NUDGE_DOWN_PX = 10;
-console.log("Q")
 const SLIDES: Array<{
   id: string;
   title: string;
