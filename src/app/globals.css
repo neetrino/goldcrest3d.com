@@ -301,6 +301,59 @@ section[id] {
 
 /* Mobile only: unify largest hero blocks size to 367x679 (20/37). */
 @media (max-width: 767px) {
+  .power-banners-section2-text-cluster > h1 {
+    flex: 1 0 0;
+    top: 24px;
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 36px;
+    letter-spacing: 0.396px;
+  }
+
+  #hero-rendering-subtitle {
+    width: 197px;
+    max-width: 197px;
+    flex-shrink: 0;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 24px;
+    letter-spacing: -0.312px;
+    transform: translate(-64px, 12px);
+  }
+
+  #hero-section2-get-quote {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 32px;
+    border-radius: 110px;
+    background: linear-gradient(
+      90deg,
+      #4b463f 0%,
+      #5c5547 7.14%,
+      #6e644f 14.29%,
+      #807356 21.43%,
+      #93835e 28.57%,
+      #a69466 35.71%,
+      #b9a46d 42.86%,
+      #cdb575 50%,
+      #d4bd82 57.14%,
+      #dbc68f 64.29%,
+      #e2ce9d 71.43%,
+      #e9d7aa 78.57%,
+      #f1e0b7 85.71%,
+      #f8e8c4 92.86%,
+      #fff1d1 100%
+    );
+    transform: translate(-120px, -0.1rem);
+  }
+
   .power-banners-section1-block,
   .power-banners-section2-block,
   .power-banners-section3-block {
@@ -348,7 +401,7 @@ section[id] {
     height: 100%;
     background-image: var(--section2-hero-bg-mobile, var(--section2-hero-bg));
     background-size: 93% auto;
-    background-position: calc(50% - 14px) 0%;
+    background-position: calc(50% - 11px) 0%;
     background-repeat: no-repeat;
   }
 

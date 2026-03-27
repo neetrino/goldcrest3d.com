@@ -36,6 +36,10 @@ const HERO_PRIMARY_TITLE_TYPOGRAPHY_ON_LIGHT_CLASS = `${HERO_PRIMARY_TITLE_TYPOG
 /** Explicit two-line copy for Jewelry Rendering subtitle; line break is intentional. */
 const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation";
 const RENDERING_SUBTITLE_LINE2 = "and global sales. Perfection in every light ray.";
+const RENDERING_SUBTITLE_MOBILE_LINE1 = "High-resolution assets for";
+const RENDERING_SUBTITLE_MOBILE_LINE2 = "brand presentation and";
+const RENDERING_SUBTITLE_MOBILE_LINE3 = "global sales. Perfection in";
+const RENDERING_SUBTITLE_MOBILE_LINE4 = "every light ray.";
 
 /** Explicit two-line copy for Jewelry Design subtitle; line break is intentional. */
 const DESIGN_SUBTITLE_LINE1 = "Concept-to-CAD development for legacy";
@@ -61,7 +65,7 @@ const DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT = 112.306;
 const DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT = 139.319;
 
 /** Section2 (Jewelry Rendering) — ամբողջ տեքստային բլոկը միասին դեպի ձախ (px) */
-const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX = 56;
+const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX = 84;
 const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MD_PX = 128;
 const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
 
@@ -223,8 +227,16 @@ export function PowerBanners() {
                     id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
                     className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] text-right"
                   >
-                    <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
-                    <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
+                    <span className="md:hidden">
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE1}</span>
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE2}</span>
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE3}</span>
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE4}</span>
+                    </span>
+                    <span className="hidden md:block">
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
+                    </span>
                   </p>
                   <GetAQuoteButton
                     id={HERO_SECTION2_GET_QUOTE_BUTTON_ID}
