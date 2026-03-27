@@ -63,6 +63,7 @@ const DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT = 139.319;
 /** Section2 (Jewelry Rendering) — ամբողջ տեքստային բլոկը միասին դեպի ձախ (px) */
 const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX = 56;
 const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MD_PX = 128;
+const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
 
 /** Միայն «Jewelry Rendering» վերնագիր — դեպի ներքև (px) */
 const SECTION2_RENDERING_TITLE_NUDGE_DOWN_PX = 10;
@@ -119,7 +120,7 @@ export function PowerBanners() {
             slide.id === "modeling"
               ? "items-center bg-[#d8d8d8]"
               : slide.id === "rendering"
-                ? "min-h-0"
+                ? "min-h-0 h-[760px] md:h-auto"
                 : slide.id === "design"
                   ? "power-banners-section3-block mx-auto w-full max-w-[1920px] bg-[lightgray]"
                   : "min-h-[460px] md:min-h-[720px]"
@@ -198,6 +199,7 @@ export function PowerBanners() {
               style={
                 {
                   ["--section2-hero-bg" as string]: `url("${slide.bg}")`,
+                  ["--section2-hero-bg-mobile" as string]: `url("${SECTION2_HERO_BG_MOBILE_PATH}")`,
                   ["--section2-text-cluster-nudge-mobile" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX}px`,
                   ["--section2-text-cluster-nudge-md" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MD_PX}px`,
                 } as React.CSSProperties
