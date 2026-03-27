@@ -212,6 +212,26 @@ section[id] {
   }
 }
 
+@media (min-width: 1024px) {
+  #hero-get-quote,
+  #hero-section2-get-quote,
+  #hero-section3-get-quote {
+    border-radius: 9999px;
+    background: linear-gradient(
+      84deg,
+      #4b463f -24.49%,
+      #786f5b -24.49%,
+      #cdb575 12.34%,
+      #eacd8b 82.07%,
+      #fff1d1 103.48%
+    );
+    box-shadow:
+      0 1px 2px 0 rgba(0, 0, 0, 0.05),
+      0 0 0 0 rgba(0, 0, 0, 0),
+      0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
 /* PowerBanners section1 (modeling) — նկարի ֆրեյմ 1918×707, aspect 274/101 */
 .power-banners-section1-block {
   width: 100%;
@@ -559,6 +579,25 @@ section[id] {
     #ecc06e 100.22%
   );
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Desktop nav CTA "Request a Quote" — updated gradient from design */
+@media (min-width: 1024px) {
+  #landing-nav-request-quote {
+    border-radius: 9999px;
+    background: linear-gradient(
+      84deg,
+      #4b463f -24.49%,
+      #786f5b -24.49%,
+      #cdb575 12.34%,
+      #eacd8b 82.07%,
+      #fff1d1 103.48%
+    );
+    box-shadow:
+      0 1px 2px 0 rgba(0, 0, 0, 0.05),
+      0 0 0 0 rgba(0, 0, 0, 0),
+      0 0 0 0 rgba(0, 0, 0, 0);
+  }
 }
 
 /* Manufacturing Intelligence — Figma 110:373, 97:415 */
