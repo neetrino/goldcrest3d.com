@@ -114,7 +114,7 @@ export function PowerBanners() {
   return (
     <section
       id={LANDING_SECTION_IDS.HERO}
-      className="relative w-full bg-[#d8d8d8]"
+      className="relative w-full bg-white"
       aria-label="Hero"
     >
       {SLIDES.map((slide) => (
@@ -126,7 +126,7 @@ export function PowerBanners() {
               : slide.id === "rendering"
                 ? "min-h-0 h-[760px] bg-white md:h-auto"
                 : slide.id === "design"
-                  ? "power-banners-section3-block mx-auto w-full max-w-[1920px] bg-[lightgray]"
+                  ? "power-banners-section3-block mx-auto w-full max-w-[1920px] bg-white"
                   : "min-h-[460px] md:min-h-[720px]"
           } ${slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""}`}
         >
@@ -249,7 +249,7 @@ export function PowerBanners() {
           ) : (
             <>
               <div
-                className="pointer-events-none absolute inset-0 overflow-hidden bg-[lightgray]"
+                className="pointer-events-none absolute inset-0 overflow-hidden bg-white"
                 data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
                 style={{
                   backgroundImage: `url("${slide.bg}")`,
@@ -259,6 +259,16 @@ export function PowerBanners() {
                 }}
                 aria-hidden
               />
+              <div className="relative z-10 flex h-full w-full flex-col items-end justify-end px-6 pt-16 pb-16 text-[#121212] md:hidden">
+                <h1 className="hero-design-mobile-title">Jewelry Design</h1>
+                <p className="hero-design-mobile-subtitle mt-4">
+                  Concept-to-CAD development for legacy collection building. Your vision, engineered.
+                </p>
+                <GetAQuoteButton
+                  variant="gold"
+                  className="hero-section3-mobile-cta shrink-0"
+                />
+              </div>
               <div
                 className={`relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
                   slide.contentAlign === "right"
@@ -266,7 +276,7 @@ export function PowerBanners() {
                     : slide.contentAlign === "left"
                       ? "items-start text-left"
                       : "items-center text-center"
-                } ${slide.darkText ? "text-[#121212]" : "text-white"}`.trim()}
+                } ${slide.darkText ? "text-[#121212]" : "text-white"} ${slide.id === "design" ? "hidden md:flex" : ""}`.trim()}
                 style={
                   slide.id === "design"
                     ? {

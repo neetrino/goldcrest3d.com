@@ -301,6 +301,66 @@ section[id] {
 
 /* Mobile only: unify largest hero blocks size to 367x679 (20/37). */
 @media (max-width: 767px) {
+  .hero-design-mobile-title {
+    flex: 1 0 0;
+    transform: translate(4px, 297px);
+    color: #000;
+    text-align: right;
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 36px;
+    letter-spacing: 0.396px;
+  }
+
+  .hero-design-mobile-subtitle {
+    width: 197px;
+    color: rgba(18, 18, 18, 0.9);
+    text-align: right;
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 350;
+    line-height: 28px;
+    transform: translate(4px, -150px);
+  }
+
+  .hero-section3-mobile-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    min-width: unset;
+    padding: 11px 32px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    gap: 10px;
+    border-radius: 110px;
+    color: #fff !important;
+    background: linear-gradient(
+      90deg,
+      #4b463f 0%,
+      #5c5547 7.14%,
+      #6e644f 14.29%,
+      #807356 21.43%,
+      #93835e 28.57%,
+      #a69466 35.71%,
+      #b9a46d 42.86%,
+      #cdb575 50%,
+      #d4bd82 57.14%,
+      #dbc68f 64.29%,
+      #e2ce9d 71.43%,
+      #e9d7aa 78.57%,
+      #f1e0b7 85.71%,
+      #f8e8c4 92.86%,
+      #fff1d1 100%
+    ) !important;
+    margin-top: 0 !important;
+    transform: translate(4px, -138px) !important;
+  }
+
   .power-banners-section2-text-cluster > h1 {
     flex: 1 0 0;
     top: 24px;
@@ -374,7 +434,15 @@ section[id] {
     min-height: 777px;
   }
 
+  .power-banners-section3-block {
+    background-color: #fff;
+  }
+
   .power-banners-section2-block {
+    width: 390px;
+  }
+
+  .power-banners-section3-block {
     width: 390px;
   }
 
@@ -410,8 +478,12 @@ section[id] {
     left: -7%;
     right: auto;
     width: 114%;
+    height: 100%;
+    background-image: url("/images/design/block3-mobile-original.png") !important;
+    background-color: #fff;
     background-size: 93% auto !important;
-    background-position: center 0% !important;
+    background-position: calc(50% + 10px) 0 !important;
+    background-repeat: no-repeat !important;
   }
 
   #hero-modeling-text-group {
