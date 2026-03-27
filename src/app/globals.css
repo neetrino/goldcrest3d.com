@@ -212,6 +212,26 @@ section[id] {
   }
 }
 
+@media (min-width: 1024px) {
+  #hero-get-quote,
+  #hero-section2-get-quote,
+  #hero-section3-get-quote {
+    border-radius: 9999px;
+    background: linear-gradient(
+      84deg,
+      #4b463f -24.49%,
+      #786f5b -24.49%,
+      #cdb575 12.34%,
+      #eacd8b 82.07%,
+      #fff1d1 103.48%
+    );
+    box-shadow:
+      0 1px 2px 0 rgba(0, 0, 0, 0.05),
+      0 0 0 0 rgba(0, 0, 0, 0),
+      0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
 /* PowerBanners section1 (modeling) — նկարի ֆրեյմ 1918×707, aspect 274/101 */
 .power-banners-section1-block {
   width: 100%;
@@ -299,6 +319,250 @@ section[id] {
   min-height: var(--section3-block-min-h-mobile, 440px);
 }
 
+/* Mobile only: unify largest hero blocks size to 367x679 (20/37). */
+@media (max-width: 767px) {
+  .hero-design-mobile-title {
+    flex: 1 0 0;
+    transform: translate(4px, 297px);
+    color: #000;
+    text-align: right;
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 36px;
+    letter-spacing: 0.396px;
+  }
+
+  .hero-design-mobile-subtitle {
+    width: 197px;
+    color: rgba(18, 18, 18, 0.9);
+    text-align: right;
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 350;
+    line-height: 28px;
+    transform: translate(4px, -150px);
+  }
+
+  .hero-section3-mobile-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    min-width: unset;
+    padding: 11px 32px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    gap: 10px;
+    border-radius: 110px;
+    color: #fff !important;
+    background: linear-gradient(
+      90deg,
+      #4b463f 0%,
+      #5c5547 7.14%,
+      #6e644f 14.29%,
+      #807356 21.43%,
+      #93835e 28.57%,
+      #a69466 35.71%,
+      #b9a46d 42.86%,
+      #cdb575 50%,
+      #d4bd82 57.14%,
+      #dbc68f 64.29%,
+      #e2ce9d 71.43%,
+      #e9d7aa 78.57%,
+      #f1e0b7 85.71%,
+      #f8e8c4 92.86%,
+      #fff1d1 100%
+    ) !important;
+    margin-top: 0 !important;
+    transform: translate(4px, -138px) !important;
+  }
+
+  .power-banners-section2-text-cluster > h1 {
+    flex: 1 0 0;
+    top: 24px;
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 36px;
+    letter-spacing: 0.396px;
+  }
+
+  #hero-rendering-subtitle {
+    width: 197px;
+    max-width: 197px;
+    flex-shrink: 0;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 24px;
+    letter-spacing: -0.312px;
+    transform: translate(-64px, 12px);
+  }
+
+  #hero-section2-get-quote {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 32px;
+    border-radius: 110px;
+    background: linear-gradient(
+      90deg,
+      #4b463f 0%,
+      #5c5547 7.14%,
+      #6e644f 14.29%,
+      #807356 21.43%,
+      #93835e 28.57%,
+      #a69466 35.71%,
+      #b9a46d 42.86%,
+      #cdb575 50%,
+      #d4bd82 57.14%,
+      #dbc68f 64.29%,
+      #e2ce9d 71.43%,
+      #e9d7aa 78.57%,
+      #f1e0b7 85.71%,
+      #f8e8c4 92.86%,
+      #fff1d1 100%
+    );
+    transform: translate(-120px, -0.1rem);
+  }
+
+  .power-banners-section1-block,
+  .power-banners-section2-block,
+  .power-banners-section3-block {
+    width: 367px;
+    height: 679px;
+    aspect-ratio: 20 / 37;
+    margin-inline: auto;
+    max-width: 100%;
+  }
+
+  .power-banners-section1-block {
+    height: 777px;
+  }
+
+  .power-banners-section2-block,
+  .power-banners-section3-block {
+    height: 777px;
+    min-height: 777px;
+  }
+
+  .power-banners-section3-block {
+    background-color: #fff;
+  }
+
+  .power-banners-section2-block {
+    width: 390px;
+  }
+
+  .power-banners-section3-block {
+    width: 390px;
+  }
+
+  .power-banners-section1-image-strip {
+    width: 114%;
+    height: 100%;
+    aspect-ratio: auto;
+    margin-left: -7%;
+  }
+
+  .power-banners-section1-tail {
+    display: none;
+  }
+
+  .power-banners-section1-bg {
+    background-image: var(--section1-hero-bg-mobile, var(--section1-hero-bg));
+    background-color: #fff;
+    background-position: center 0%;
+    background-size: 93% auto;
+  }
+
+  .power-banners-section2-block::before {
+    width: 114%;
+    left: -7%;
+    height: 100%;
+    background-image: var(--section2-hero-bg-mobile, var(--section2-hero-bg));
+    background-size: 93% auto;
+    background-position: calc(50% - 11px) 0%;
+    background-repeat: no-repeat;
+  }
+
+  .power-banners-section3-block [data-landing-image] {
+    left: -7%;
+    right: auto;
+    width: 114%;
+    height: 100%;
+    background-image: url("/images/design/block3-mobile-original.png") !important;
+    background-color: #fff;
+    background-size: 93% auto !important;
+    background-position: calc(50% + 10px) 0 !important;
+    background-repeat: no-repeat !important;
+  }
+
+  #hero-modeling-text-group {
+    transform: translateY(-68px) !important;
+  }
+
+  #hero-modeling-text-group > h1 {
+    align-self: stretch;
+    color: #fff;
+    text-align: center;
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 350;
+    line-height: 32px;
+    white-space: pre-line !important;
+  }
+
+  #hero-modeling-subtitle {
+    height: 72px;
+    align-self: stretch;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 17px;
+    font-style: italic;
+    font-weight: 350;
+    line-height: 25px;
+    transform: translateY(2px);
+  }
+
+  #hero-get-quote {
+    display: flex;
+    padding: 11px 32px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 110px;
+    transform: translateY(-0.1rem);
+    background: linear-gradient(
+      90deg,
+      #4b463f 0%,
+      #5c5547 7.14%,
+      #6e644f 14.29%,
+      #807356 21.43%,
+      #93835e 28.57%,
+      #a69466 35.71%,
+      #b9a46d 42.86%,
+      #cdb575 50%,
+      #d4bd82 57.14%,
+      #dbc68f 64.29%,
+      #e2ce9d 71.43%,
+      #e9d7aa 78.57%,
+      #f1e0b7 85.71%,
+      #f8e8c4 92.86%,
+      #fff1d1 100%
+    );
+  }
+}
+
 @media (min-width: 768px) {
   .power-banners-section3-block {
     height: var(--section3-block-height-md, 640px);
@@ -315,6 +579,49 @@ section[id] {
     #ecc06e 100.22%
   );
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile nav CTA "Request a Quote" — match hero "Get a Quote" gold gradient */
+@media (max-width: 1023px) {
+  #landing-nav-request-quote {
+    background: linear-gradient(
+      90deg,
+      #4b463f 0%,
+      #5c5547 7.14%,
+      #6e644f 14.29%,
+      #807356 21.43%,
+      #93835e 28.57%,
+      #a69466 35.71%,
+      #b9a46d 42.86%,
+      #cdb575 50%,
+      #d4bd82 57.14%,
+      #dbc68f 64.29%,
+      #e2ce9d 71.43%,
+      #e9d7aa 78.57%,
+      #f1e0b7 85.71%,
+      #f8e8c4 92.86%,
+      #fff1d1 100%
+    );
+  }
+}
+
+/* Desktop nav CTA "Request a Quote" — updated gradient from design */
+@media (min-width: 1024px) {
+  #landing-nav-request-quote {
+    border-radius: 9999px;
+    background: linear-gradient(
+      84deg,
+      #4b463f -24.49%,
+      #786f5b -24.49%,
+      #cdb575 12.34%,
+      #eacd8b 82.07%,
+      #fff1d1 103.48%
+    );
+    box-shadow:
+      0 1px 2px 0 rgba(0, 0, 0, 0.05),
+      0 0 0 0 rgba(0, 0, 0, 0),
+      0 0 0 0 rgba(0, 0, 0, 0);
+  }
 }
 
 /* Manufacturing Intelligence — Figma 110:373, 97:415 */

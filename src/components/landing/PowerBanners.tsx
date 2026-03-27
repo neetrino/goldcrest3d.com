@@ -15,6 +15,7 @@ const SECTION1_TAIL_MIN_HEIGHT_PX = 120;
 
 /** Section1 — միայն հերո-նկարը դեպի ներքև (px), background-position Y */
 const SECTION1_HERO_BG_NUDGE_DOWN_PX = 16;
+const SECTION1_HERO_BG_MOBILE_PATH = "/images/modeling/block1-mobile.png";
 
 /** Section1 — վերնագիր, ենթավերնագիր, CTA դեպի ներքև (translateY, px); ցածր արժեք = ավելի վերև */
 const SECTION1_HERO_TEXT_NUDGE_DOWN_PX = 22;
@@ -35,6 +36,10 @@ const HERO_PRIMARY_TITLE_TYPOGRAPHY_ON_LIGHT_CLASS = `${HERO_PRIMARY_TITLE_TYPOG
 /** Explicit two-line copy for Jewelry Rendering subtitle; line break is intentional. */
 const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation";
 const RENDERING_SUBTITLE_LINE2 = "and global sales. Perfection in every light ray.";
+const RENDERING_SUBTITLE_MOBILE_LINE1 = "High-resolution assets for";
+const RENDERING_SUBTITLE_MOBILE_LINE2 = "brand presentation and";
+const RENDERING_SUBTITLE_MOBILE_LINE3 = "global sales. Perfection in";
+const RENDERING_SUBTITLE_MOBILE_LINE4 = "every light ray.";
 
 /** Explicit two-line copy for Jewelry Design subtitle; line break is intentional. */
 const DESIGN_SUBTITLE_LINE1 = "Concept-to-CAD development for legacy";
@@ -60,8 +65,9 @@ const DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT = 112.306;
 const DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT = 139.319;
 
 /** Section2 (Jewelry Rendering) — ամբողջ տեքստային բլոկը միասին դեպի ձախ (px) */
-const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX = 56;
+const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX = 84;
 const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MD_PX = 128;
+const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
 
 /** Միայն «Jewelry Rendering» վերնագիր — դեպի ներքև (px) */
 const SECTION2_RENDERING_TITLE_NUDGE_DOWN_PX = 10;
@@ -78,7 +84,7 @@ const SLIDES: Array<{
 }> = [
   {
     id: "modeling",
-    title: "3D Production-Ready Modeling",
+    title: "3D Production-Ready\nModeling",
     subtitle:
       "Engineered for casting, printing and precise stone setting. Every micron accounted for.",
     bg: LANDING_IMAGES.heroModeling,
@@ -108,7 +114,7 @@ export function PowerBanners() {
   return (
     <section
       id={LANDING_SECTION_IDS.HERO}
-      className="relative w-full bg-[#d8d8d8]"
+      className="relative w-full bg-white"
       aria-label="Hero"
     >
       {SLIDES.map((slide) => (
@@ -116,11 +122,11 @@ export function PowerBanners() {
         <div
           className={`relative flex w-full shrink-0 flex-col overflow-hidden ${
             slide.id === "modeling"
-              ? "items-center bg-[#d8d8d8]"
+              ? "items-center bg-white"
               : slide.id === "rendering"
-                ? "min-h-0"
+                ? "min-h-0 h-[760px] bg-white md:h-auto"
                 : slide.id === "design"
-                  ? "power-banners-section3-block mx-auto w-full max-w-[1920px] bg-[lightgray]"
+                  ? "power-banners-section3-block mx-auto w-full max-w-[1920px] bg-white"
                   : "min-h-[460px] md:min-h-[720px]"
           } ${slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""}`}
         >
@@ -140,7 +146,7 @@ export function PowerBanners() {
               }
             >
               <div
-                className="power-banners-section1-image-strip"
+                className="power-banners-section1-image-strip bg-white"
                 data-landing-image={LANDING_IMAGE_IDS.HERO_MODELING}
               >
                 <div
@@ -148,6 +154,7 @@ export function PowerBanners() {
                   style={
                     {
                       ["--section1-hero-bg" as string]: `url("${slide.bg}")`,
+                      ["--section1-hero-bg-mobile" as string]: `url("${SECTION1_HERO_BG_MOBILE_PATH}")`,
                       ["--section1-bg-nudge-y" as string]: `${SECTION1_HERO_BG_NUDGE_DOWN_PX}px`,
                     } as React.CSSProperties
                   }
@@ -172,7 +179,13 @@ export function PowerBanners() {
                     id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
                     className="hero-primary-subtitle-typography mt-4 shrink-0 md:mt-5"
                   >
-                    {slide.subtitle}
+                    <>
+                      Engineered for casting, printing and
+                      <br className="md:hidden" />
+                      {" "}precise stone setting. Every micron
+                      <br className="md:hidden" />
+                      {" "}accounted for.
+                    </>
                   </p>
                   <GetAQuoteButton
                     id={HERO_GET_QUOTE_BUTTON_ID}
@@ -190,6 +203,7 @@ export function PowerBanners() {
               style={
                 {
                   ["--section2-hero-bg" as string]: `url("${slide.bg}")`,
+                  ["--section2-hero-bg-mobile" as string]: `url("${SECTION2_HERO_BG_MOBILE_PATH}")`,
                   ["--section2-text-cluster-nudge-mobile" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX}px`,
                   ["--section2-text-cluster-nudge-md" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MD_PX}px`,
                 } as React.CSSProperties
@@ -213,8 +227,16 @@ export function PowerBanners() {
                     id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
                     className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] text-right"
                   >
-                    <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
-                    <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
+                    <span className="md:hidden">
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE1}</span>
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE2}</span>
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE3}</span>
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE4}</span>
+                    </span>
+                    <span className="hidden md:block">
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
+                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
+                    </span>
                   </p>
                   <GetAQuoteButton
                     id={HERO_SECTION2_GET_QUOTE_BUTTON_ID}
@@ -227,7 +249,7 @@ export function PowerBanners() {
           ) : (
             <>
               <div
-                className="pointer-events-none absolute inset-0 overflow-hidden bg-[lightgray]"
+                className="pointer-events-none absolute inset-0 overflow-hidden bg-white"
                 data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
                 style={{
                   backgroundImage: `url("${slide.bg}")`,
@@ -237,6 +259,16 @@ export function PowerBanners() {
                 }}
                 aria-hidden
               />
+              <div className="relative z-10 flex h-full w-full flex-col items-end justify-end px-6 pt-16 pb-16 text-[#121212] md:hidden">
+                <h1 className="hero-design-mobile-title">Jewelry Design</h1>
+                <p className="hero-design-mobile-subtitle mt-4">
+                  Concept-to-CAD development for legacy collection building. Your vision, engineered.
+                </p>
+                <GetAQuoteButton
+                  variant="gold"
+                  className="hero-section3-mobile-cta shrink-0"
+                />
+              </div>
               <div
                 className={`relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
                   slide.contentAlign === "right"
@@ -244,7 +276,7 @@ export function PowerBanners() {
                     : slide.contentAlign === "left"
                       ? "items-start text-left"
                       : "items-center text-center"
-                } ${slide.darkText ? "text-[#121212]" : "text-white"}`.trim()}
+                } ${slide.darkText ? "text-[#121212]" : "text-white"} ${slide.id === "design" ? "hidden md:flex" : ""}`.trim()}
                 style={
                   slide.id === "design"
                     ? {
