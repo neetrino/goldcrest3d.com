@@ -5,12 +5,10 @@
  */
 
 export const LANDING_IMAGES = {
-  /** Hero: 3D Production-Ready Modeling */
-  heroModeling:
-    "https://www.figma.com/api/mcp/asset/da1b2a39-ec60-4219-8611-a08a2b4b8a0a",
-  /** Hero: Jewelry Rendering */
-  heroRendering:
-    "https://www.figma.com/api/mcp/asset/96f5db77-f2b8-4aab-b104-eaf5d70426c1",
+  /** Hero: 3D Production-Ready Modeling (Figma 222:210) — локальный PNG, без срока MCP */
+  heroModeling: "/images/modeling/hero-production-ready-jewelry-cad.png",
+  /** Hero: Jewelry Rendering (Figma 222:218) — локальный PNG, без срока MCP */
+  heroRendering: "/images/rendering/hero-jewelry-rendering.png",
   /** Hero: Jewelry Design / brief section */
   heroDesign:
     "https://www.figma.com/api/mcp/asset/1cdecab5-207a-4e4a-acaa-963bd712d880",

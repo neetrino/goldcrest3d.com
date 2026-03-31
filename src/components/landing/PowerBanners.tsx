@@ -85,7 +85,6 @@ const SLIDES: Array<{
       "Engineered for casting, printing and precise stone setting. Every micron accounted for.",
     bg: LANDING_IMAGES.heroModeling,
     contentAlign: "center",
-    useRemote: true,
   },
   {
     id: "rendering",
@@ -93,7 +92,6 @@ const SLIDES: Array<{
     subtitle: `${RENDERING_SUBTITLE_LINE1} ${RENDERING_SUBTITLE_LINE2}`,
     bg: LANDING_IMAGES.heroRendering,
     contentAlign: "right",
-    useRemote: true,
   },
   {
     id: "design",
