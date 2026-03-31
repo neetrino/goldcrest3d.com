@@ -13,6 +13,10 @@ import { useMemo, useState } from "react";
 import { MANUFACTURING_IMAGE_OPACITY_CLASS } from "./manufacturing-image.constants";
 import { useManufacturingDetailLayers } from "./useManufacturingDetailLayers";
 
+/** Accordion chevron — մեծացված ցուցադրում (բազա էր 13.63×24, նույն aspect ≈) */
+const MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX = 40;
+const MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX = 76;
+
 type ManufacturingAccordionRowProps = {
   item: ManufacturingSpecializationItem;
   isActive: boolean;
@@ -40,20 +44,31 @@ function ManufacturingAccordionRow({
           {item.title}
         </span>
         <span
-          className={`flex h-[13.63px] w-6 shrink-0 items-center justify-center transition-transform duration-200 ${
+          className={`flex shrink-0 items-center justify-center transition-transform duration-200 ${
             isActive ? "-rotate-90" : "rotate-90"
           }`}
+          style={{
+            width: MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX,
+            height: MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX,
+          }}
           aria-hidden
           data-landing-image={LANDING_IMAGE_IDS.MANUFACTURING_ICON_DOWN}
         >
-          <span className="relative h-6 w-[13.63px]">
-            <Image
+          <span
+            className="relative block shrink-0"
+            style={{
+              width: MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX,
+              height: MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- local SVG, display size from constants */}
+            <img
               src={LANDING_IMAGES.iconDown}
               alt=""
-              width={24}
-              height={24}
-              className="h-full w-full object-contain"
-              unoptimized
+              width={MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX}
+              height={MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX}
+              className="block h-full w-full object-contain object-center"
+              decoding="async"
             />
           </span>
         </span>

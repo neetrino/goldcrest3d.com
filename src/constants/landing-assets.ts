@@ -54,7 +54,11 @@ export const LANDING_IMAGES = {
   footerLogo: "/images/footer/footer-goldcrest-full-logo.png",
   /** Footer Follow — map (Figma 110:389, 685.818×96, background cover), локальный PNG */
   footerFollowImage: "/images/footer/follow-map-banner.png",
-  iconDown: "https://www.figma.com/api/mcp/asset/7233a83f-d0c0-4701-b67e-01c3bd58b2d4",
+  /**
+   * Manufacturing Intelligence accordion — աջ chevron (Figma 201:329; փակ վիճակում `rotate-90` → ներքև)։
+   * Ներբեռնել Figma-ից ավելի ճշգրիտ համընկնում — `public/images/manufacturing/manufacturing-intelligence-accordion-chevron.svg`
+   */
+  iconDown: "/images/manufacturing/manufacturing-intelligence-accordion-chevron.svg",
   /** Quote form — file upload (document + arrow) */
   iconUpload: "/images/icon-upload-quote.png",
   iconDots: "https://www.figma.com/api/mcp/asset/f3ba325e-a7bd-4009-b584-c238a58aa721",
