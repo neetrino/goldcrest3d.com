@@ -46,10 +46,14 @@ const FOOTER_TAGLINE_CLASS =
   FOOTER_TAGLINE_DESKTOP_NUDGE_LEFT_CLASS;
 
 const FOOTER_CONTACT_HEADING_CLASS =
-  "font-sans text-xs font-bold uppercase leading-4 tracking-[0.6px] text-[#0A0A0A] md:max-w-[87.152px] md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:font-[790] md:tracking-[1.2px] md:text-[#0F172A]";
+  "font-sans text-[11px] font-bold uppercase leading-[14px] tracking-[0.6px] text-[#0A0A0A] md:max-w-[87.152px] md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:font-[790] md:tracking-[1.2px] md:text-[#0F172A]";
 
 const FOOTER_CONTACT_LINE_CLASS =
-  "font-sans text-sm font-normal leading-5 tracking-[-0.15px] text-[#4A5565] transition-colors hover:text-[var(--foreground)] md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:font-[457] md:text-[#64748B] md:tracking-normal";
+  "font-sans text-[13px] font-normal leading-5 tracking-[-0.15px] text-[#4A5565] transition-colors hover:text-[var(--foreground)] md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-[12px] md:font-[457] md:leading-[18px] md:text-[#64748B] md:tracking-normal";
+
+/** Follow վերնագիր — նույն սանդղակով մի քիչ փոքր, ինչ Contact */
+const FOOTER_FOLLOW_HEADING_CLASS =
+  "font-bold text-[11px] uppercase leading-[15px] tracking-[1.2px] text-[#0f172a]";
 
 const FOOTER_CONTACT_LOCATION_BLOCK_CLASS =
   "flex flex-col gap-[13px] self-start md:self-stretch";
@@ -77,9 +81,27 @@ const FOOTER_TERMS_LINK_CLASS = `${FOOTER_LEGAL_LINK_MOBILE_CLASS} ${FOOTER_LEGA
 const FOOTER_GRID_DESKTOP_CLASS =
   "grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,685.818px)] md:gap-12";
 
+/** Desktop — Contact/Follow սյուների հիմնական աջ շեղում (Follow-ը մնում է այստեղ) */
+const FOOTER_CONTACT_FOLLOW_DESKTOP_NUDGE_RIGHT_CLASS = "md:translate-x-64";
+
+const FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS =
+  `min-w-0 ${FOOTER_CONTACT_FOLLOW_DESKTOP_NUDGE_RIGHT_CLASS}`;
+
+/** Միայն desktop — միայն Contact տեքստը մի քիչ ավելի աջ */
+const FOOTER_CONTACT_CONTENT_DESKTOP_NUDGE_RIGHT_CLASS = "md:translate-x-24";
+
+/** Միայն desktop — Follow վերնագիր + սոցիալ (քարտեզը՝ առանձին) */
+const FOOTER_FOLLOW_HEADING_SOCIAL_DESKTOP_NUDGE_RIGHT_CLASS =
+  "md:translate-x-50";
+
+/** Միայն desktop — քարտեզի ֆրեյմը պահում է նախկին ընդհանուր շեղումը */
+const FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS = "md:translate-x-10";
+
 /** Քարտեզի ֆրեյմ — բարձրություն 96px, լայնությունը = Follow սյունը */
 const FOOTER_FOLLOW_MAP_FRAME_CLASS =
   "relative mt-4 h-[96px] w-full overflow-hidden rounded-lg";
+
+const FOOTER_FOLLOW_MAP_FRAME_WRAPPER_CLASS = `${FOOTER_FOLLOW_MAP_FRAME_CLASS} ${FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS}`;
 
 /** Միայն քարտեզի նկարը մի քիչ դեպի աջ (`translate-x` դրական = աջ) */
 const FOOTER_FOLLOW_MAP_IMAGE_NUDGE_RIGHT_CLASS = "translate-x-3";
@@ -118,88 +140,92 @@ export function LandingFooter() {
               Specialized in precision jewelry CAD and structural engineering for high-end manufacturing.
             </p>
           </div>
-          <div className="min-w-0">
-            <h3 className={FOOTER_CONTACT_HEADING_CLASS}>Contact</h3>
-            <div className="mt-[40px] flex flex-col gap-[13px]">
-              <a
-                href="mailto:hello@ds-jewelry.studio"
-                className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-[206.982px]`}
-              >
-                hello@ds-jewelry.studio
-              </a>
-              <a
-                href="tel:+15559023481"
-                className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-[162.721px]`}
-              >
-                +1 (555) 902-3481
-              </a>
-              <div className={FOOTER_CONTACT_LOCATION_BLOCK_CLASS}>
-                <p className={FOOTER_CONTACT_LINE_CLASS}>Yerevan, Armenia</p>
-                <p className={FOOTER_CONTACT_LINE_CLASS}>
-                  International collaborations available
-                </p>
+          <div className={FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS}>
+            <div className={FOOTER_CONTACT_CONTENT_DESKTOP_NUDGE_RIGHT_CLASS}>
+              <h3 className={FOOTER_CONTACT_HEADING_CLASS}>Contact</h3>
+              <div className="mt-[40px] flex flex-col gap-[13px]">
+                <a
+                  href="mailto:hello@ds-jewelry.studio"
+                  className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-[206.982px]`}
+                >
+                  hello@ds-jewelry.studio
+                </a>
+                <a
+                  href="tel:+15559023481"
+                  className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-[162.721px]`}
+                >
+                  +1 (555) 902-3481
+                </a>
+                <div className={FOOTER_CONTACT_LOCATION_BLOCK_CLASS}>
+                  <p className={FOOTER_CONTACT_LINE_CLASS}>Yerevan, Armenia</p>
+                  <p className={FOOTER_CONTACT_LINE_CLASS}>
+                    International collaborations available
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-          <div className="min-w-0">
-            <h3 className="font-bold leading-[16px] tracking-[1.2px] text-[#0f172a] text-[12px] uppercase">
-              Follow
-            </h3>
-            <div className="mt-[35px] flex gap-4">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
-                aria-label="Instagram"
-                data-landing-image={LANDING_IMAGE_IDS.FOOTER_SOCIAL_1}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element -- Follow icons are SVG from Figma */}
-                <img
-                  src={LANDING_IMAGES.social1}
-                  alt=""
-                  width={48}
-                  height={48}
-                  className="rounded-full"
-                />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
-                aria-label="LinkedIn"
-                data-landing-image={LANDING_IMAGE_IDS.FOOTER_SOCIAL_2}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={LANDING_IMAGES.social2}
-                  alt=""
-                  width={48}
-                  height={48}
-                  className="rounded-full"
-                />
-              </a>
-              <a
-                href="https://www.behance.net"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
-                aria-label="Behance"
-                data-landing-image={LANDING_IMAGE_IDS.FOOTER_SOCIAL_3}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={LANDING_IMAGES.social3}
-                  alt=""
-                  width={48}
-                  height={48}
-                  className="rounded-full"
-                />
-              </a>
+          <div className={FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS}>
+            <div
+              className={FOOTER_FOLLOW_HEADING_SOCIAL_DESKTOP_NUDGE_RIGHT_CLASS}
+            >
+              <h3 className={FOOTER_FOLLOW_HEADING_CLASS}>Follow</h3>
+              <div className="mt-[35px] flex gap-4">
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
+                  aria-label="Instagram"
+                  data-landing-image={LANDING_IMAGE_IDS.FOOTER_SOCIAL_1}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- Follow icons are SVG from Figma */}
+                  <img
+                    src={LANDING_IMAGES.social1}
+                    alt=""
+                    width={48}
+                    height={48}
+                    className="rounded-full"
+                  />
+                </a>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
+                  aria-label="LinkedIn"
+                  data-landing-image={LANDING_IMAGE_IDS.FOOTER_SOCIAL_2}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={LANDING_IMAGES.social2}
+                    alt=""
+                    width={48}
+                    height={48}
+                    className="rounded-full"
+                  />
+                </a>
+                <a
+                  href="https://www.behance.net"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
+                  aria-label="Behance"
+                  data-landing-image={LANDING_IMAGE_IDS.FOOTER_SOCIAL_3}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={LANDING_IMAGES.social3}
+                    alt=""
+                    width={48}
+                    height={48}
+                    className="rounded-full"
+                  />
+                </a>
+              </div>
             </div>
             <div
-              className={FOOTER_FOLLOW_MAP_FRAME_CLASS}
+              className={FOOTER_FOLLOW_MAP_FRAME_WRAPPER_CLASS}
               data-landing-image={LANDING_IMAGE_IDS.FOOTER_FOLLOW_IMAGE}
             >
               <Image
