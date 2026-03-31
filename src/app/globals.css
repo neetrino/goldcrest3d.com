@@ -341,10 +341,11 @@ section[id] {
   /* Նկարի դիրքի հաշվարկ — նույն Figma բարձրությունը (::before-ում) */
   --section2-bg-layout-height: 712px;
   /* Տեսանելի բլոկ — լրիվ համընկնում Figma ֆրեյմի հետ */
+  --section2-block-design-width: 1920px;
   --section2-block-visible-height: 712px;
   position: relative;
   width: 100%;
-  max-width: 1920px;
+  max-width: var(--section2-block-design-width);
   margin-inline: auto;
   height: var(--section2-block-visible-height);
   flex-shrink: 0;
@@ -354,7 +355,7 @@ section[id] {
 
 @media (min-width: 768px) {
   .power-banners-section2-block {
-    width: 1920px;
+    width: var(--section2-block-design-width);
     max-width: 100%;
     height: var(--section2-block-visible-height);
   }
