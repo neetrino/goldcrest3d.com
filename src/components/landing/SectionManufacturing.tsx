@@ -13,9 +13,9 @@ import { useMemo, useState } from "react";
 import { MANUFACTURING_IMAGE_OPACITY_CLASS } from "./manufacturing-image.constants";
 import { useManufacturingDetailLayers } from "./useManufacturingDetailLayers";
 
-/** Accordion chevron — մեծացված ցուցադրում (բազա էր 13.63×24, նույն aspect ≈) */
-const MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX = 40;
-const MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX = 76;
+/** Figma accordion chevron — 24×14, ներքևի սլաք */
+const MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX = 24;
+const MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX = 14;
 
 type ManufacturingAccordionRowProps = {
   item: ManufacturingSpecializationItem;
@@ -44,33 +44,26 @@ function ManufacturingAccordionRow({
           {item.title}
         </span>
         <span
-          className={`flex shrink-0 items-center justify-center transition-transform duration-200 ${
-            isActive ? "-rotate-90" : "rotate-90"
+          className={`inline-flex shrink-0 items-center justify-center transition-transform duration-200 ${
+            isActive ? "rotate-180" : ""
           }`}
-          style={{
-            width: MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX,
-            height: MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX,
-          }}
           aria-hidden
           data-landing-image={LANDING_IMAGE_IDS.MANUFACTURING_ICON_DOWN}
         >
-          <span
-            className="relative block shrink-0"
-            style={{
-              width: MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX,
-              height: MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX,
-            }}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX}
+            height={MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX}
+            viewBox="0 0 24 14"
+            fill="none"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element -- local SVG, display size from constants */}
-            <img
-              src={LANDING_IMAGES.iconDown}
-              alt=""
-              width={MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX}
-              height={MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX}
-              className="block h-full w-full object-contain object-center"
-              decoding="async"
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M23.5227 2.78183L13.1523 13.1523C12.5159 13.7887 11.4841 13.7887 10.8477 13.1523L0.477287 2.78183C-0.159096 2.14545 -0.159096 1.11367 0.477287 0.477286C1.11367 -0.159097 2.14545 -0.159097 2.78183 0.477286L12 9.69546L21.2182 0.477287C21.8546 -0.159096 22.8863 -0.159096 23.5227 0.477287C24.1591 1.11367 24.1591 2.14545 23.5227 2.78183Z"
+              fill="black"
             />
-          </span>
+          </svg>
         </span>
       </button>
       {showDescription ? (
