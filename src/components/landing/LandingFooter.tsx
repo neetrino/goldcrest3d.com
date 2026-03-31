@@ -90,9 +90,20 @@ const FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS =
 /** Միայն desktop — միայն Contact տեքստը մի քիչ ավելի աջ */
 const FOOTER_CONTACT_CONTENT_DESKTOP_NUDGE_RIGHT_CLASS = "md:translate-x-24";
 
+/** Միայն desktop — email/հեռախոս/տեղ՝ մի քիչ վերև (վերնագիրը՝ Contact — անշարժ) */
+const FOOTER_CONTACT_LINES_BLOCK_DESKTOP_NUDGE_UP_CLASS = "md:-translate-y-4";
+
+const FOOTER_CONTACT_LINES_BLOCK_CLASS = `mt-[40px] flex flex-col gap-[13px] ${FOOTER_CONTACT_LINES_BLOCK_DESKTOP_NUDGE_UP_CLASS}`;
+
 /** Միայն desktop — Follow վերնագիր + սոցիալ (քարտեզը՝ առանձին) */
 const FOOTER_FOLLOW_HEADING_SOCIAL_DESKTOP_NUDGE_RIGHT_CLASS =
   "md:translate-x-50";
+
+/** Միայն desktop — Follow-ի 3 սոցիալ պատկերակներ՝ մի քիչ վերև, շատ թեթև ձախ */
+const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS =
+  "md:-translate-y-6 md:-translate-x-0.5";
+
+const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS = `mt-[35px] flex gap-4 ${FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS}`;
 
 /** Միայն desktop — քարտեզի ֆրեյմը պահում է նախկին ընդհանուր շեղումը */
 const FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS = "md:translate-x-10";
@@ -143,7 +154,7 @@ export function LandingFooter() {
           <div className={FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS}>
             <div className={FOOTER_CONTACT_CONTENT_DESKTOP_NUDGE_RIGHT_CLASS}>
               <h3 className={FOOTER_CONTACT_HEADING_CLASS}>Contact</h3>
-              <div className="mt-[40px] flex flex-col gap-[13px]">
+              <div className={FOOTER_CONTACT_LINES_BLOCK_CLASS}>
                 <a
                   href="mailto:hello@ds-jewelry.studio"
                   className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-[206.982px]`}
@@ -170,7 +181,7 @@ export function LandingFooter() {
               className={FOOTER_FOLLOW_HEADING_SOCIAL_DESKTOP_NUDGE_RIGHT_CLASS}
             >
               <h3 className={FOOTER_FOLLOW_HEADING_CLASS}>Follow</h3>
-              <div className="mt-[35px] flex gap-4">
+              <div className={FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS}>
                 <a
                   href="https://instagram.com"
                   target="_blank"
