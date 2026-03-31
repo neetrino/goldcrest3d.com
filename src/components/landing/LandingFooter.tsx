@@ -61,9 +61,13 @@ const FOOTER_CONTACT_LOCATION_BLOCK_CLASS =
 const FOOTER_COPYRIGHT_MOBILE_CLASS =
   "md:hidden w-[296px] font-sans text-xs font-normal leading-4 tracking-[0.6px] text-[#99A1AF] uppercase";
 
+/** Միայն desktop — copyright տողը մի քիչ դեպի ձախ */
+const FOOTER_COPYRIGHT_DESKTOP_NUDGE_LEFT_CLASS = "md:-translate-x-24";
+
 /** Desktop: SF Compact 10/15, weight 790, 435.762px — DS Studio line. */
 const FOOTER_COPYRIGHT_DESKTOP_CLASS =
-  "hidden md:block md:w-[435.762px] md:shrink-0 md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-[10px] md:font-[790] md:leading-[15px] md:tracking-[1px] md:text-[#94A3B8] md:uppercase";
+  "hidden md:block md:w-[435.762px] md:shrink-0 md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-[10px] md:font-[790] md:leading-[15px] md:tracking-[1px] md:text-[#94A3B8] md:uppercase " +
+  FOOTER_COPYRIGHT_DESKTOP_NUDGE_LEFT_CLASS;
 
 /** Mobile: Inter 12/16, #99A1AF. Desktop: SF Compact — widths on Privacy / Terms. */
 const FOOTER_LEGAL_LINK_MOBILE_CLASS =
@@ -75,6 +79,11 @@ const FOOTER_LEGAL_LINK_DESKTOP_SHARED_CLASS =
 const FOOTER_PRIVACY_LINK_CLASS = `${FOOTER_LEGAL_LINK_MOBILE_CLASS} ${FOOTER_LEGAL_LINK_DESKTOP_SHARED_CLASS} md:w-[127.477px]`;
 
 const FOOTER_TERMS_LINK_CLASS = `${FOOTER_LEGAL_LINK_MOBILE_CLASS} ${FOOTER_LEGAL_LINK_DESKTOP_SHARED_CLASS} md:w-[145.688px]`;
+
+/** Միայն desktop — Privacy Policy + Terms of Service մի քիչ դեպի աջ */
+const FOOTER_LEGAL_LINKS_ROW_DESKTOP_NUDGE_RIGHT_CLASS = "md:translate-x-20";
+
+const FOOTER_LEGAL_LINKS_ROW_CLASS = `flex gap-8 ${FOOTER_LEGAL_LINKS_ROW_DESKTOP_NUDGE_RIGHT_CLASS}`;
 
 /** Follow սյուն — Figma լայնություն 685.818px (գրիդի երրորդ տողը) */
 const FOOTER_GRID_DESKTOP_CLASS =
@@ -283,7 +292,7 @@ export function LandingFooter() {
           <p className={FOOTER_COPYRIGHT_DESKTOP_CLASS}>
             © 2024 DS Studio Engineering. All Rights Reserved.
           </p>
-          <div className="flex gap-8">
+          <div className={FOOTER_LEGAL_LINKS_ROW_CLASS}>
             <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
               Privacy Policy
             </Link>
