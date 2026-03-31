@@ -45,9 +45,8 @@ export const LANDING_IMAGES = {
   /** Manufacturing Intelligence — detail: Wall Thickness Engineering */
   manufacturingWallThicknessEngineering:
     "/images/manufacturing/wall-thickness-engineering.png",
-  /** Founder photo */
-  founder:
-    "https://www.figma.com/api/mcp/asset/ed180930-9b00-4258-9974-241824666fae",
+  /** Founder photo (Figma 222:305) — локальный PNG */
+  founder: "/images/founder/founder-portrait.png",
   finishedCnc: "https://www.figma.com/api/mcp/asset/5d0da0f6-ca7d-4159-bc93-a7ee35d1cc66",
   finishedCopper: "https://www.figma.com/api/mcp/asset/49857533-5513-4d1c-8d13-ae2ee5816f66",
   finishedOpacity: "https://www.figma.com/api/mcp/asset/2d279336-3d78-48c4-b923-778a5512f889",

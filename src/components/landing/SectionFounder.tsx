@@ -24,6 +24,9 @@ const FOUNDER_BIO_MOBILE_P3 = `Every design decision is informed by how the piec
 
 const FOUNDER_BIO_MOBILE_P4 = `No model leaves the studio without structural verification. Jewelry is approached as a system — where design, engineering and craftsmanship must align with precision`;
 
+/** Դեսքտոփում միայն founder նկարը մի քիչ դեպի ձախ (`-translate-x` = ձախ) */
+const FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS = "md:-translate-x-24";
+
 type FounderBioContentDesktopProps = {
   contentTopClassName: string;
 };
@@ -170,7 +173,7 @@ export function SectionFounder() {
               src={LANDING_IMAGES.founder}
               alt="Davit Sargsyan"
               fill
-              className="object-cover object-top md:-translate-x-24"
+              className={`object-cover object-center ${FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS}`}
               sizes="(max-width: 768px) 100vw, 493px"
               unoptimized
             />
