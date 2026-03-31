@@ -646,8 +646,8 @@ section[id] {
 
 @media (min-width: 768px) {
   .power-banners-section3-block {
-    height: var(--section3-block-height-md, 640px);
-    min-height: var(--section3-block-height-md, 640px);
+    height: var(--section3-block-height-md, 712px);
+    min-height: var(--section3-block-height-md, 712px);
   }
 }
 

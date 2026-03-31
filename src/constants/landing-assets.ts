@@ -9,9 +9,8 @@ export const LANDING_IMAGES = {
   heroModeling: "/images/modeling/hero-production-ready-jewelry-cad.png",
   /** Hero: Jewelry Rendering (Figma 222:218) — локальный PNG, без срока MCP */
   heroRendering: "/images/rendering/hero-jewelry-rendering.png",
-  /** Hero: Jewelry Design / brief section */
-  heroDesign:
-    "https://www.figma.com/api/mcp/asset/1cdecab5-207a-4e4a-acaa-963bd712d880",
+  /** Hero: Jewelry Design — brief (Figma 222:314), локальный PNG */
+  heroDesign: "/images/design/hero-jewelry-design-brief.png",
   /** Modeling Specialization blocks (Figma export) */
   modelingHipHop: "/images/modeling/hip-hop.png",
   modelingBridal:
