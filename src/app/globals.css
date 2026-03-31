@@ -335,23 +335,30 @@ section[id] {
 
 /* PowerBanners section2 (Jewelry Rendering) — Figma ֆրեյմ 1920×712 */
 .power-banners-section2-block {
-  /* BG scale — միայն նկար */
-  --section2-bg-size-width: 100%;
-  --section2-bg-size-height: 130%;
-  /* Դրական արժեք — նկարը վեր է (տեքստը չի շարժվում) */
-  --section2-bg-nudge-up: 45px;
+  /* BG — նույն ինչ Figma img: w 115.61%, h 175.36%, left 0.02%, top -54.17% */
+  --section2-bg-size-width: 115.61%;
+  --section2-bg-size-height: 175.36%;
   /* Նկարի դիրքի հաշվարկ — նույն Figma բարձրությունը (::before-ում) */
   --section2-bg-layout-height: 712px;
-  /* Տեսանելի բլոկ — կտրվում է միայն ներքևից, նկարի մասշտաբ/դիրք չի փոխվում */
-  --section2-block-visible-height: 615px;
+  /* Տեսանելի բլոկ — լրիվ համընկնում Figma ֆրեյմի հետ */
+  --section2-block-design-width: 1920px;
+  --section2-block-visible-height: 712px;
   position: relative;
   width: 100%;
-  max-width: 1920px;
+  max-width: var(--section2-block-design-width);
   margin-inline: auto;
   height: var(--section2-block-visible-height);
   flex-shrink: 0;
-  background-color: lightgray;
+  background-color: #000;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .power-banners-section2-block {
+    width: var(--section2-block-design-width);
+    max-width: 100%;
+    height: var(--section2-block-visible-height);
+  }
 }
 
 .power-banners-section2-block::before {
@@ -363,9 +370,10 @@ section[id] {
   width: 100%;
   height: var(--section2-bg-layout-height);
   pointer-events: none;
-  background-color: lightgray;
+  background-color: #000;
   background-image: var(--section2-hero-bg);
-  background-position: center calc(70% - var(--section2-bg-nudge-up));
+  /* top -54.17% of layout height — համարժեք Figma absolute top */
+  background-position: 0.02% calc(-0.5417 * var(--section2-bg-layout-height));
   background-size: var(--section2-bg-size-width) var(--section2-bg-size-height);
   background-repeat: no-repeat;
 }
@@ -531,6 +539,7 @@ section[id] {
 
   .power-banners-section2-block {
     width: 390px;
+    background-color: #000;
   }
 
   .power-banners-section3-block {
@@ -559,6 +568,7 @@ section[id] {
     width: 114%;
     left: -7%;
     height: 100%;
+    background-color: #000;
     background-image: var(--section2-hero-bg-mobile, var(--section2-hero-bg));
     background-size: 93% auto;
     background-position: calc(50% - 11px) 0%;
@@ -636,8 +646,8 @@ section[id] {
 
 @media (min-width: 768px) {
   .power-banners-section3-block {
-    height: var(--section3-block-height-md, 640px);
-    min-height: var(--section3-block-height-md, 640px);
+    height: var(--section3-block-height-md, 712px);
+    min-height: var(--section3-block-height-md, 712px);
   }
 }
 

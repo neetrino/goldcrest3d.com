@@ -5,15 +5,12 @@
  */
 
 export const LANDING_IMAGES = {
-  /** Hero: 3D Production-Ready Modeling */
-  heroModeling:
-    "https://www.figma.com/api/mcp/asset/da1b2a39-ec60-4219-8611-a08a2b4b8a0a",
-  /** Hero: Jewelry Rendering */
-  heroRendering:
-    "https://www.figma.com/api/mcp/asset/96f5db77-f2b8-4aab-b104-eaf5d70426c1",
-  /** Hero: Jewelry Design / brief section */
-  heroDesign:
-    "https://www.figma.com/api/mcp/asset/1cdecab5-207a-4e4a-acaa-963bd712d880",
+  /** Hero: 3D Production-Ready Modeling (Figma 222:210) — локальный PNG, без срока MCP */
+  heroModeling: "/images/modeling/hero-production-ready-jewelry-cad.png",
+  /** Hero: Jewelry Rendering (Figma 222:218) — локальный PNG, без срока MCP */
+  heroRendering: "/images/rendering/hero-jewelry-rendering.png",
+  /** Hero: Jewelry Design — brief (Figma 222:314), локальный PNG */
+  heroDesign: "/images/design/hero-jewelry-design-brief.png",
   /** Modeling Specialization blocks (Figma export) */
   modelingHipHop: "/images/modeling/hip-hop.png",
   modelingBridal:
@@ -48,23 +45,22 @@ export const LANDING_IMAGES = {
   /** Manufacturing Intelligence — detail: Wall Thickness Engineering */
   manufacturingWallThicknessEngineering:
     "/images/manufacturing/wall-thickness-engineering.png",
-  /** Founder photo */
-  founder:
-    "https://www.figma.com/api/mcp/asset/ed180930-9b00-4258-9974-241824666fae",
+  /** Founder photo (Figma 222:305) — локальный PNG */
+  founder: "/images/founder/founder-portrait.png",
   finishedCnc: "https://www.figma.com/api/mcp/asset/5d0da0f6-ca7d-4159-bc93-a7ee35d1cc66",
   finishedCopper: "https://www.figma.com/api/mcp/asset/49857533-5513-4d1c-8d13-ae2ee5816f66",
   finishedOpacity: "https://www.figma.com/api/mcp/asset/2d279336-3d78-48c4-b923-778a5512f889",
-  /** Footer logo */
-  footerLogo:
-    "https://www.figma.com/api/mcp/asset/6c3d902a-01d7-4cba-b77b-91b31ab5c912",
-  /** Footer Follow block image */
-  footerFollowImage:
-    "https://www.figma.com/api/mcp/asset/49e4a149-0329-4a34-8e24-ab60dcafab22",
-  iconDown: "https://www.figma.com/api/mcp/asset/7233a83f-d0c0-4701-b67e-01c3bd58b2d4",
+  /** Footer — Goldcrest full logo (Figma 92:215 → 92:248), локальный PNG */
+  footerLogo: "/images/footer/footer-goldcrest-full-logo.png",
+  /** Footer Follow — map (Figma 110:389, 685.818×96, background cover), локальный PNG */
+  footerFollowImage: "/images/footer/follow-map-banner.png",
   /** Quote form — file upload (document + arrow) */
   iconUpload: "/images/icon-upload-quote.png",
   iconDots: "https://www.figma.com/api/mcp/asset/f3ba325e-a7bd-4009-b584-c238a58aa721",
-  social1: "https://www.figma.com/api/mcp/asset/36864bcd-ec08-4066-85ef-e5a78c94fb63",
-  social2: "https://www.figma.com/api/mcp/asset/e4974554-3948-4ee7-8b33-9f53d5c560b4",
-  social3: "https://www.figma.com/api/mcp/asset/c03df5e7-6746-4e6d-830c-e08664bf1f80",
+  /** Footer Follow — Instagram (Figma 92:227), ֆայլը SVG է */
+  social1: "/images/footer/follow-social-instagram.svg",
+  /** Footer Follow — LinkedIn (Figma 92:227), ֆայլը SVG է */
+  social2: "/images/footer/follow-social-linkedin.svg",
+  /** Footer Follow — Behance (Figma 92:227), ֆայլը SVG է */
+  social3: "/images/footer/follow-social-behance.svg",
 } as const;

@@ -43,11 +43,16 @@ const DESIGN_SUBTITLE_LINE1 = "Concept-to-CAD development for legacy";
 const DESIGN_SUBTITLE_LINE2 = "collection building. Your vision, engineered.";
 
 /**
- * Jewelry Design (section 3) — ֆոնի պարամետրեր (Figma dev mode).
- * Block height: see Tailwind `min-h-[460px] md:min-h-[720px]` on the section wrapper.
+ * Jewelry Design (section 3) — brief ֆոն (Figma 222:314).
+ * Desktop frame 1920×712 — տե՛ս `globals.css` `--section3-block-height-md`.
  */
-const DESIGN_SECTION_BG_POSITION_X_PX = -0.228;
-const DESIGN_SECTION_BG_POSITION_Y_PX = -140.296;
+const DESIGN_SECTION_DESKTOP_FRAME_HEIGHT_PX = 712;
+/** Figma brief img: left -0.01% */
+const DESIGN_SECTION_BG_POSITION_X = "-0.01%";
+/** Figma brief img: top -19.7% of frame height */
+const DESIGN_SECTION_BG_TOP_OFFSET_RATIO = -0.197;
+const DESIGN_SECTION_BG_POSITION_Y_PX =
+  DESIGN_SECTION_BG_TOP_OFFSET_RATIO * DESIGN_SECTION_DESKTOP_FRAME_HEIGHT_PX;
 /** Դրական արժեք — ֆոնի նկարը դեպի ներքև (px) */
 const DESIGN_SECTION_BG_NUDGE_DOWN_PX = 16;
 /** Վերնագիր, ենթատեքստ, CTA — դեպի ձախ (translateX, px) */
@@ -58,8 +63,9 @@ const DESIGN_SECTION_TEXT_NUDGE_DOWN_PX = 180;
 const DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS = "-translate-y-4";
 /** Միայն Jewelry Design «Get a Quote» — դեպի վերև */
 const DESIGN_SECTION_GET_QUOTE_NUDGE_UP_CLASS = "-translate-y-8";
-const DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT = 112.306;
-const DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT = 139.319;
+/** Figma brief img: w 112.31%, h 139.32% */
+const DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT = 112.31;
+const DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT = 139.32;
 
 /** Section2 (Jewelry Rendering) — ամբողջ տեքստային բլոկը միասին դեպի ձախ (px) */
 const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX = 84;
@@ -74,7 +80,6 @@ const SLIDES: Array<{
   subtitle: string;
   bg: string;
   contentAlign: "left" | "center" | "right";
-  useRemote?: boolean;
   /** Figma: Jewelry Design uses dark text on light bg */
   darkText?: boolean;
 }> = [
@@ -85,7 +90,6 @@ const SLIDES: Array<{
       "Engineered for casting, printing and precise stone setting. Every micron accounted for.",
     bg: LANDING_IMAGES.heroModeling,
     contentAlign: "center",
-    useRemote: true,
   },
   {
     id: "rendering",
@@ -93,7 +97,6 @@ const SLIDES: Array<{
     subtitle: `${RENDERING_SUBTITLE_LINE1} ${RENDERING_SUBTITLE_LINE2}`,
     bg: LANDING_IMAGES.heroRendering,
     contentAlign: "right",
-    useRemote: true,
   },
   {
     id: "design",
@@ -101,7 +104,6 @@ const SLIDES: Array<{
     subtitle: `${DESIGN_SUBTITLE_LINE1} ${DESIGN_SUBTITLE_LINE2}`,
     bg: LANDING_IMAGES.heroDesign,
     contentAlign: "left",
-    useRemote: true,
     darkText: true,
   },
 ];
@@ -249,7 +251,7 @@ export function PowerBanners() {
                 data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
                 style={{
                   backgroundImage: `url("${slide.bg}")`,
-                  backgroundPosition: `${DESIGN_SECTION_BG_POSITION_X_PX}px calc(${DESIGN_SECTION_BG_POSITION_Y_PX}px + ${DESIGN_SECTION_BG_NUDGE_DOWN_PX}px)`,
+                  backgroundPosition: `${DESIGN_SECTION_BG_POSITION_X} calc(${DESIGN_SECTION_BG_POSITION_Y_PX}px + ${DESIGN_SECTION_BG_NUDGE_DOWN_PX}px)`,
                   backgroundSize: `${DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT}% ${DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT}%`,
                   backgroundRepeat: "no-repeat",
                 }}
