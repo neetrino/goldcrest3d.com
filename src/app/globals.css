@@ -333,15 +333,15 @@ section[id] {
   background-repeat: no-repeat;
 }
 
-/* PowerBanners section2 (Jewelry Rendering) — Figma 222:218, ֆրեյմ 1920×712 */
+/* PowerBanners section2 (Jewelry Rendering) — Figma ֆրեյմ 1920×712 */
 .power-banners-section2-block {
   /* BG — նույն ինչ Figma img: w 115.61%, h 175.36%, left 0.02%, top -54.17% */
   --section2-bg-size-width: 115.61%;
   --section2-bg-size-height: 175.36%;
   /* Նկարի դիրքի հաշվարկ — նույն Figma բարձրությունը (::before-ում) */
   --section2-bg-layout-height: 712px;
-  /* Տեսանելի բլոկ — կտրվում է միայն ներքևից, նկարի մասշտաբ/դիրք չի փոխվում */
-  --section2-block-visible-height: 615px;
+  /* Տեսանելի բլոկ — լրիվ համընկնում Figma ֆրեյմի հետ */
+  --section2-block-visible-height: 712px;
   position: relative;
   width: 100%;
   max-width: 1920px;
@@ -350,6 +350,14 @@ section[id] {
   flex-shrink: 0;
   background-color: #000;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .power-banners-section2-block {
+    width: 1920px;
+    max-width: 100%;
+    height: var(--section2-block-visible-height);
+  }
 }
 
 .power-banners-section2-block::before {
