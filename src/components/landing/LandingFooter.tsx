@@ -2,7 +2,6 @@ import type { CSSProperties } from "react";
 
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
-import Image from "next/image";
 import Link from "next/link";
 
 /** Figma 92:248 — ներքին նկարի տոկոսներ (ֆրեյմը՝ FOOTER_LOGO_FRAME_CLASS) */
@@ -105,21 +104,51 @@ const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS =
 
 const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS = `mt-[35px] flex gap-4 ${FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS}`;
 
-/** Միայն desktop — քարտեզի ֆրեյմը պահում է նախկին ընդհանուր շեղումը */
-const FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS = "md:translate-x-10";
+/** Follow քարտեզ — Figma 685.818px-ից մի քիչ նեղ */
+const FOOTER_FOLLOW_MAP_WIDTH_PX = 590;
+const FOOTER_FOLLOW_MAP_HEIGHT_PX = 96;
 
-/** Քարտեզի ֆրեյմ — բարձրություն 96px, լայնությունը = Follow սյունը */
-const FOOTER_FOLLOW_MAP_FRAME_CLASS =
-  "relative mt-4 h-[96px] w-full overflow-hidden rounded-lg";
+/** Միայն desktop — արտաքին շերտ՝ translate (ոչ թե clip-ի հետ նույն տարրում) */
+const FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS = "md:translate-x-14";
 
-const FOOTER_FOLLOW_MAP_FRAME_WRAPPER_CLASS = `${FOOTER_FOLLOW_MAP_FRAME_CLASS} ${FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS}`;
+/** Քարտեզ — Figma-ի նման ուժեղ բութ անկյուններ (1.5rem ≈ 24px) */
+const FOOTER_FOLLOW_MAP_CORNER_CLASS = "rounded-3xl";
 
-/** Միայն քարտեզի նկարը մի քիչ դեպի աջ (`translate-x` դրական = աջ) */
-const FOOTER_FOLLOW_MAP_IMAGE_NUDGE_RIGHT_CLASS = "translate-x-3";
+/** Միայն desktop — քարտեզի նկարը մի թեթև դեպի աջ */
+const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS = "md:translate-x-1.5";
 
-/** Գծի շերտ — լայնությունը footer-ի padding-ի միջև (ոչ թե միայն max-w-7xl) */
-const FOOTER_BOTTOM_BORDER_OUTER_CLASS =
-  "mt-0 w-full border-t border-[#e2e8f0] pt-10";
+/** Միայն desktop — քարտեզը մի քիչ վերև */
+const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS = "md:-translate-y-6";
+
+/** Ներքին ֆրեյմ — overflow + radius; չափերը՝ FOOTER_FOLLOW_MAP_BANNER_LAYOUT_STYLE */
+const FOOTER_FOLLOW_MAP_INNER_FRAME_CLASS = `mt-4 w-full min-w-0 overflow-hidden ${FOOTER_FOLLOW_MAP_CORNER_CLASS} md:shrink-0 ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS} ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS}`;
+
+const FOOTER_FOLLOW_MAP_OUTER_WRAPPER_CLASS = `w-full ${FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS}`;
+
+/**
+ * Figma 110:389 — `background: url(...) lightgray 50% / cover no-repeat`
+ * https://www.figma.com/design/dQx6mBANOqB24VBcCxsLcP/Goldcrest-3D?node-id=110-389
+ */
+const FOOTER_FOLLOW_MAP_BANNER_STYLE: CSSProperties = {
+  background: `lightgray url("${LANDING_IMAGES.footerFollowImage}") 50% / cover no-repeat`,
+};
+
+/** Նույն Figma չափեր՝ inline (Tailwind-ը չի սկանավորում փոփոխական arbitrary class-ները) */
+const FOOTER_FOLLOW_MAP_BANNER_LAYOUT_STYLE: CSSProperties = {
+  height: FOOTER_FOLLOW_MAP_HEIGHT_PX,
+  width: "100%",
+  maxWidth: `min(100%, ${FOOTER_FOLLOW_MAP_WIDTH_PX}px)`,
+};
+
+const FOOTER_FOLLOW_MAP_BANNER_COMBINED_STYLE: CSSProperties = {
+  ...FOOTER_FOLLOW_MAP_BANNER_STYLE,
+  ...FOOTER_FOLLOW_MAP_BANNER_LAYOUT_STYLE,
+};
+
+/** Գծի շերտ — վերևից բացակ (քարտեզը չի կպնում border-ին), լայնությունը padding-ի միջև */
+const FOOTER_BOTTOM_BORDER_OUTER_TOP_SPACING_CLASS = "mt-8 md:mt-10";
+
+const FOOTER_BOTTOM_BORDER_OUTER_CLASS = `${FOOTER_BOTTOM_BORDER_OUTER_TOP_SPACING_CLASS} w-full border-t border-[#e2e8f0] pt-10`;
 
 const FOOTER_BOTTOM_LEGAL_INNER_CLASS =
   "mx-auto flex w-full max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between";
@@ -235,18 +264,12 @@ export function LandingFooter() {
                 </a>
               </div>
             </div>
-            <div
-              className={FOOTER_FOLLOW_MAP_FRAME_WRAPPER_CLASS}
-              data-landing-image={LANDING_IMAGE_IDS.FOOTER_FOLLOW_IMAGE}
-            >
-              <Image
-                src={LANDING_IMAGES.footerFollowImage}
-                alt=""
-                fill
-                className={`object-cover ${FOOTER_FOLLOW_MAP_IMAGE_NUDGE_RIGHT_CLASS}`}
-                sizes="(max-width: 768px) 100vw, 686px"
-                loading="eager"
-                unoptimized
+            <div className={FOOTER_FOLLOW_MAP_OUTER_WRAPPER_CLASS}>
+              <div
+                className={FOOTER_FOLLOW_MAP_INNER_FRAME_CLASS}
+                style={FOOTER_FOLLOW_MAP_BANNER_COMBINED_STYLE}
+                data-landing-image={LANDING_IMAGE_IDS.FOOTER_FOLLOW_IMAGE}
+                aria-hidden
               />
             </div>
           </div>

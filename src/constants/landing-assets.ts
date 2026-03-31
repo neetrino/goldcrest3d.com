@@ -52,7 +52,7 @@ export const LANDING_IMAGES = {
   finishedOpacity: "https://www.figma.com/api/mcp/asset/2d279336-3d78-48c4-b923-778a5512f889",
   /** Footer — Goldcrest full logo (Figma 92:215 → 92:248), локальный PNG */
   footerLogo: "/images/footer/footer-goldcrest-full-logo.png",
-  /** Footer Follow — map (Figma 92:215 / 110:389), локальный PNG */
+  /** Footer Follow — map (Figma 110:389, 685.818×96, background cover), локальный PNG */
   footerFollowImage: "/images/footer/follow-map-banner.png",
   iconDown: "https://www.figma.com/api/mcp/asset/7233a83f-d0c0-4701-b67e-01c3bd58b2d4",
   /** Quote form — file upload (document + arrow) */
