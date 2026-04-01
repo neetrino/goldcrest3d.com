@@ -29,8 +29,8 @@ export type ModelingCardProps = {
   /** When set, description is rendered as one block per line (e.g. Hip-Hop). */
   descriptionLines?: string[];
   /**
-   * Hip-Hop only: when set with `mobileHipHopTypography`, `sm+` uses these lines instead of `descriptionLines`
-   * (mobile keeps `descriptionLines`).
+   * Hip-Hop: with `mobileHipHopTypography`, `sm+` uses these lines instead of `descriptionLines` (mobile unchanged).
+   * Bridal: with `mobileBridalTypography` + row layout, `sm+` can use these as a right-aligned stack instead of the two-line row.
    */
   descriptionLinesDesktop?: string[];
   /**
@@ -211,36 +211,52 @@ export function ModelingCard({
                 </span>
               ))}
             </div>
-            <div className="hidden flex-wrap items-baseline gap-x-4 gap-y-1 sm:flex">
-              {descriptionLines!.map((line, i) => (
-                <span
-                  key={`bridal-desktop-${i}`}
-                  id={i === 0 ? firstDescriptionLineId : undefined}
-                  className={`${bridalRowSpanClassDesktop} ${i === 0 ? `${lineWrapClass} whitespace-nowrap` : lineWrapClass}`}
-                  style={
-                    i === 0
-                      ? {
-                          ...(firstDescriptionLineMarginRight != null && {
-                            marginRight: firstDescriptionLineMarginRight,
-                          }),
-                          ...(firstDescriptionLineTranslateX != null && {
-                            transform: `translateX(${firstDescriptionLineTranslateX})`,
-                          }),
-                        }
-                      : i === 1
+            {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
+              <div className="hidden w-full min-w-0 flex-col items-start sm:flex">
+                <div className="flex w-fit max-w-full flex-col items-start gap-0.5 text-left">
+                  {descriptionLinesDesktop.map((line, i) => (
+                    <span
+                      key={`bridal-desktop-stack-${i}`}
+                      id={i === 0 ? firstDescriptionLineId : undefined}
+                      className="block font-manrope text-[14px] leading-[22px] text-black"
+                    >
+                      {line}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="hidden flex-wrap items-baseline gap-x-4 gap-y-1 sm:flex">
+                {descriptionLines!.map((line, i) => (
+                  <span
+                    key={`bridal-desktop-${i}`}
+                    id={i === 0 ? firstDescriptionLineId : undefined}
+                    className={`${bridalRowSpanClassDesktop} ${i === 0 ? `${lineWrapClass} whitespace-nowrap` : lineWrapClass}`}
+                    style={
+                      i === 0
                         ? {
-                            marginLeft: "auto",
-                            ...(secondDescriptionLineTranslateX != null && {
-                              transform: `translateX(${secondDescriptionLineTranslateX})`,
+                            ...(firstDescriptionLineMarginRight != null && {
+                              marginRight: firstDescriptionLineMarginRight,
+                            }),
+                            ...(firstDescriptionLineTranslateX != null && {
+                              transform: `translateX(${firstDescriptionLineTranslateX})`,
                             }),
                           }
-                        : undefined
-                  }
-                >
-                  {line}
-                </span>
-              ))}
-            </div>
+                        : i === 1
+                          ? {
+                              marginLeft: "auto",
+                              ...(secondDescriptionLineTranslateX != null && {
+                                transform: `translateX(${secondDescriptionLineTranslateX})`,
+                              }),
+                            }
+                          : undefined
+                    }
+                  >
+                    {line}
+                  </span>
+                ))}
+              </div>
+            )}
           </>
         ) : (
           <div className={bridalRowWrapperClass}>
@@ -408,7 +424,7 @@ export function ModelingCard({
           ) : null}
         </div>
         <div
-          className={`absolute inset-0 z-10 px-6 py-8 md:px-8 md:py-10 ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-6 ${hipHopMobileLayout ? "max-sm:items-center max-sm:gap-3 max-sm:translate-x-0 max-sm:translate-y-[72px] max-sm:px-4 max-sm:pb-6 max-sm:text-center sm:items-start sm:gap-6 sm:pr-[40%] sm:translate-x-6 sm:translate-y-[8.5rem] sm:text-left" : bridalMobileLayout ? `max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-20 max-sm:gap-3 max-sm:px-4 max-sm:items-start max-sm:text-left sm:translate-y-0 sm:items-end sm:text-right` : `${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
+          className={`absolute inset-0 z-10 px-6 py-8 md:px-8 md:py-10 ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-6 ${hipHopMobileLayout ? "max-sm:items-center max-sm:gap-3 max-sm:translate-x-0 max-sm:translate-y-[72px] max-sm:px-4 max-sm:pb-6 max-sm:text-center sm:items-start sm:gap-6 sm:pr-[40%] sm:translate-x-6 sm:translate-y-[8.5rem] sm:text-left" : bridalMobileLayout ? `max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-20 max-sm:gap-3 max-sm:px-4 max-sm:items-start max-sm:text-left sm:-translate-x-54 sm:-translate-y-48 sm:items-end sm:text-right` : `${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
           style={overlayTextContainerStyle}
         >
           {independentTitleDescription ? (
@@ -500,7 +516,7 @@ export function ModelingCard({
                 {title}
               </h3>
               <DescriptionTag
-                className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:-mt-2" : ""}${bridalMobileLayout ? " max-sm:!-mt-2 max-sm:w-full" : ""}`}
+                className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:-mt-2" : ""}${bridalMobileLayout ? " max-sm:!-mt-2 max-sm:w-full sm:w-auto sm:self-start sm:ml-28" : ""}`}
                 style={
                   titleMarginTopCompensate && titleMarginTop != null
                     ? {

@@ -7,7 +7,15 @@ function bridalImageLayerBackground(imageUrl: string): string {
   return `url("${imageUrl}") ${LANDING_MEDIA_CONTAIN_FRAME_BG} center / contain no-repeat`;
 }
 
-/** Desktop / `sm+`: two logical rows (row layout + transforms). */
+/** Desktop / `sm+`: stacked lines (controlled breaks); fallback row layout uses `BRIDAL_DESCRIPTION_LINES`. */
+const BRIDAL_DESCRIPTION_LINES_DESKTOP = [
+  "Engineered engagement and bridal",
+  "settings built for durability, comfort and",
+  "precise stone alignment. Secure prong",
+  "architecture developed for long-term wear.",
+] as const;
+
+/** Fallback when `descriptionLinesDesktop` omitted: two logical rows (row layout + transforms). */
 const BRIDAL_DESCRIPTION_LINES = [
   "Engineered engagement and bridal settings built for durability, comfort and precise stone alignment.",
   "Secure prong architecture developed for long-term wear.",
@@ -30,6 +38,7 @@ export function ModelingBlockBridal({ imageUrl }: ModelingBlockBridalProps) {
       title="Bridal & Engagement"
       description=""
       descriptionLines={[...BRIDAL_DESCRIPTION_LINES]}
+      descriptionLinesDesktop={[...BRIDAL_DESCRIPTION_LINES_DESKTOP]}
       descriptionLinesMobile={[...BRIDAL_DESCRIPTION_LINES_MOBILE]}
       imageSrc={imageUrl}
       imageId={LANDING_IMAGE_IDS.MODELING_BRIDAL}
