@@ -292,11 +292,11 @@ export function ModelingCard({
                 </span>
               ))}
             </div>
-            <div className="hidden min-w-0 flex-col sm:flex sm:gap-0">
+            <div className="hidden min-w-0 flex-col sm:flex sm:translate-x-3 sm:gap-0">
               {descriptionLinesDesktop.map((line, i) => (
                 <span
                   key={`hiphop-desktop-${i}`}
-                  className={`block ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i === 1 ? "sm:mt-1.5" : ""} ${i === 2 ? "sm:mt-2" : ""}`}
+                  className={`block ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i === 0 ? "sm:translate-x-2" : ""} ${i === 1 ? "sm:mt-1.5" : ""} ${i === 2 ? "sm:mt-1.5 sm:-translate-y-1 sm:translate-x-75" : ""}`}
                 >
                   {line}
                 </span>
