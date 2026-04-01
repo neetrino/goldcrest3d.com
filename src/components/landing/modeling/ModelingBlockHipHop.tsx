@@ -2,7 +2,7 @@ import { LANDING_IMAGE_IDS } from "@/constants";
 import { getModelingHipHopCardBackgroundStyle } from "./modeling-hiphop-background.constants";
 import { ModelingCard } from "./ModelingCard";
 
-/** Hip-Hop Jewelry — 4 տող, յուրաքանչյուր տողի բառերի քանակը խմբագրելի. */
+/** Hip-Hop Jewelry — mobile: 4 տող (unchanged layout); desktop: 3 structured blocks. */
 const HIPHOP_DESCRIPTION_LINE_1 =
   "High-mass, fully iced-out structures engineered for";
 const HIPHOP_DESCRIPTION_LINE_2 =
@@ -19,6 +19,12 @@ const HIPHOP_DESCRIPTION_LINES = [
   HIPHOP_DESCRIPTION_LINE_4,
 ];
 
+const HIPHOP_DESCRIPTION_LINES_DESKTOP = [
+  "High-mass, fully iced-out structures engineered for structural durability and controlled weight distribution.",
+  "Advanced pavé density calibration and reinforced stone retention designed for intensive wear and long-term",
+  "performance.",
+];
+
 type ModelingBlockHipHopProps = {
   imageUrl: string;
 };
@@ -30,6 +36,7 @@ export function ModelingBlockHipHop({ imageUrl }: ModelingBlockHipHopProps) {
       title="Hip-Hop Jewelry"
       description=""
       descriptionLines={HIPHOP_DESCRIPTION_LINES}
+      descriptionLinesDesktop={HIPHOP_DESCRIPTION_LINES_DESKTOP}
       imageSrc={imageUrl}
       imageId={LANDING_IMAGE_IDS.MODELING_HIPHOP}
       imageOnLeft={false}
