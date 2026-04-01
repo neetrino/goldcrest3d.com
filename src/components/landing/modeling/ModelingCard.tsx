@@ -29,6 +29,11 @@ export type ModelingCardProps = {
   /** When set, description is rendered as one block per line (e.g. Hip-Hop). */
   descriptionLines?: string[];
   /**
+   * Hip-Hop only: when set with `mobileHipHopTypography`, `sm+` uses these lines instead of `descriptionLines`
+   * (mobile keeps `descriptionLines`).
+   */
+  descriptionLinesDesktop?: string[];
+  /**
    * With `mobileBridalTypography`: below `sm`, these lines replace `descriptionLines` (e.g. split first paragraph); `sm+` still uses `descriptionLines`.
    */
   descriptionLinesMobile?: string[];
@@ -119,6 +124,7 @@ export function ModelingCard({
   title,
   description,
   descriptionLines,
+  descriptionLinesDesktop,
   descriptionLinesMobile,
   imageSrc,
   imageId,
@@ -267,6 +273,36 @@ export function ModelingCard({
               </span>
             ))}
           </div>
+        )
+      : hipHopMobileLayout &&
+          descriptionLinesDesktop != null &&
+          descriptionLinesDesktop.length > 0 ? (
+          <>
+            <div className="sm:hidden">
+              {descriptionLines!.map((line, i) => (
+                <span
+                  key={i}
+                  className={`${
+                    i < HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX
+                      ? hipHopMobileLineSingleLineClass
+                      : hipHopMobileLineClass
+                  }${i >= HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX ? " hidden sm:block" : ""}`}
+                >
+                  {line}
+                </span>
+              ))}
+            </div>
+            <div className="hidden min-w-0 flex-col sm:flex sm:gap-0">
+              {descriptionLinesDesktop.map((line, i) => (
+                <span
+                  key={`hiphop-desktop-${i}`}
+                  className={`block ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i === 1 ? "sm:mt-1.5" : ""} ${i === 2 ? "sm:mt-2" : ""}`}
+                >
+                  {line}
+                </span>
+              ))}
+            </div>
+          </>
         )
       : descriptionLines!.map((line, i) => (
           <span
