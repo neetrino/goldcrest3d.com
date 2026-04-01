@@ -17,7 +17,9 @@ export type AdminModelingSlotRow = {
   label: string;
   itemId: string | null;
   r2ObjectKey: string | null;
+  r2ObjectKeyMobile: string | null;
   displayUrl: string | null;
+  displayUrlMobile: string | null;
   altText: string;
 };
 
@@ -44,7 +46,9 @@ function emptyAdminBundle(): AdminSiteMediaBundle {
       label: MODELING_SLOT_LABELS[slotKey],
       itemId: null,
       r2ObjectKey: null,
+      r2ObjectKeyMobile: null,
       displayUrl: null,
+      displayUrlMobile: null,
       altText: "",
     }),
   );
@@ -105,8 +109,12 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
         label: MODELING_SLOT_LABELS[slotKey],
         itemId: row?.id ?? null,
         r2ObjectKey: row?.r2ObjectKey ?? null,
+        r2ObjectKeyMobile: row?.r2ObjectKeyMobile ?? null,
         displayUrl: row?.r2ObjectKey
           ? resolveSiteMediaDisplayUrl(row.r2ObjectKey)
+          : null,
+        displayUrlMobile: row?.r2ObjectKeyMobile
+          ? resolveSiteMediaDisplayUrl(row.r2ObjectKeyMobile)
           : null,
         altText: row?.alt ?? "",
       };

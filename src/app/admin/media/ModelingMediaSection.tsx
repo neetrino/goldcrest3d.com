@@ -1,58 +1,21 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
-
-import {
-  upsertModelingSlotImage,
-  type SiteMediaActionResult,
-} from "@/app/actions/site-media";
 import type { AdminModelingSlotRow } from "@/lib/site-media/get-site-media-admin";
 
-import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
-import { ModelingSlotFormMessages } from "./ModelingSlotFormMessages";
 import { ModelingSlotPreview } from "./ModelingSlotPreview";
-import { ModelingSlotStoredAndUpload } from "./ModelingSlotStoredAndUpload";
+import { ModelingSlotVariantUpload } from "./ModelingSlotVariantUpload";
 
 type ModelingSlotFormProps = {
   row: AdminModelingSlotRow;
 };
 
 function ModelingSlotForm({ row }: ModelingSlotFormProps) {
-  const router = useRouter();
-  const [state, formAction, isPending] = useActionState(
-    async (
-      _prev: SiteMediaActionResult | null,
-      formData: FormData,
-    ): Promise<SiteMediaActionResult | null> => {
-      return upsertModelingSlotImage(row.slotKey, formData);
-    },
-    null,
-  );
-
-  useEffect(() => {
-    if (state?.ok) {
-      router.refresh();
-    }
-  }, [state?.ok, router]);
-
-  const actionVerb = row.itemId ? "Replace image" : "Upload image";
-
   return (
-    <form
-      action={formAction}
-      aria-label={`${actionVerb} for ${row.label}`}
-      className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100"
-    >
+    <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100">
       <ModelingSlotPreview row={row} />
-      <ModelingSlotStoredAndUpload row={row} isPending={isPending} />
-
-      <MediaFormSubmitButton pendingLabel="Uploading…">
-        {row.itemId ? `Replace image` : `Upload image`}
-      </MediaFormSubmitButton>
-
-      <ModelingSlotFormMessages state={state} />
-    </form>
+      <ModelingSlotVariantUpload row={row} variant="desktop" />
+      <ModelingSlotVariantUpload row={row} variant="mobile" />
+    </div>
   );
 }
 
@@ -75,8 +38,9 @@ export function ModelingMediaSection({
           {description}
         </p>
         <p className="mt-3 text-sm text-slate-500">
-          Each card is a fixed place on the site — pick a file and upload; changes go live
-          right after a successful upload.
+          Each block has two slots — desktop/tablet and mobile. Upload both for best results;
+          if mobile is omitted, the desktop file is used on small screens. Changes go live after
+          a successful upload (refresh the homepage if needed).
         </p>
       </div>
       <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

@@ -9,13 +9,23 @@ type ImageUploadControlProps = {
   disabled?: boolean;
   /** Called when user selects or drops a file (for showing filename only) */
   onFileChosen?: (file: File | null) => void;
+  /**
+   * Stable `id` / `htmlFor` for input+label. Prefer on pages with several uploads:
+   * `useId()` can diverge between SSR and hydration when many client trees mount together.
+   */
+  stableDomId?: string;
 };
 
 /**
  * Accessible drop / click target for a single image file input (`name="file"`).
  */
-export function ImageUploadControl({ disabled, onFileChosen }: ImageUploadControlProps) {
-  const inputId = useId();
+export function ImageUploadControl({
+  disabled,
+  onFileChosen,
+  stableDomId,
+}: ImageUploadControlProps) {
+  const generatedId = useId();
+  const inputId = stableDomId ?? generatedId;
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [displayName, setDisplayName] = useState<string | null>(null);

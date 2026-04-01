@@ -21,24 +21,33 @@ const PORTRAIT_DESCRIPTION_LINES_MOBILE = [
 ] as const;
 
 type ModelingBlockPortraitProps = {
-  imageUrl: string;
+  imageUrlDesktop: string;
+  imageUrlMobile: string;
 };
 
-export function ModelingBlockPortrait({ imageUrl }: ModelingBlockPortraitProps) {
+export function ModelingBlockPortrait({
+  imageUrlDesktop,
+  imageUrlMobile,
+}: ModelingBlockPortraitProps) {
+  const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
     <ModelingCard
       title="3D Portrait Jewelry"
       description=""
       descriptionLines={[...PORTRAIT_DESCRIPTION_LINES]}
       descriptionLinesMobile={[...PORTRAIT_DESCRIPTION_LINES_MOBILE]}
-      imageSrc={imageUrl}
+      imageSrc={imageUrlDesktop}
       imageId={LANDING_IMAGE_IDS.MODELING_PORTRAIT}
       imageOnLeft={false}
       textAlign="left"
       descriptionAlign="right"
       titleCompact
       imagePosition="center center"
-      imageLayerBackground={{ background: portraitLayerBackground(imageUrl) }}
+      imageLayerBackground={{ background: portraitLayerBackground(imageUrlDesktop) }}
+      imageLayerBackgroundMobile={
+        sameUrl ? undefined : { background: portraitLayerBackground(imageUrlMobile) }
+      }
+      imagePairBreakpoint="md"
       textDark
       independentTitleDescription
       titleBlockTop="34%"

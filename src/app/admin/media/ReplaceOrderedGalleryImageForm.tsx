@@ -68,7 +68,10 @@ export function ReplaceOrderedGalleryImageForm({
       <p className="text-xs text-slate-500">
         {SITE_MEDIA_FORMATS_LABEL} · max {SITE_MEDIA_MAX_SIZE_MB} MB
       </p>
-      <ImageUploadControl disabled={isPending} />
+      <ImageUploadControl
+        disabled={isPending}
+        stableDomId={`gc-ordered-replace-${item.id}`}
+      />
       <MediaFormSubmitButton
         pendingLabel="Replacing…"
         className="inline-flex min-h-[2.5rem] w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"

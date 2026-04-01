@@ -7,7 +7,7 @@ import {
 } from "@/constants";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useId, useState } from "react";
+import { useCallback, useState } from "react";
 import { LandingNavMobileDrawer } from "@/components/landing/LandingNavMobileDrawer";
 import { LandingNavMenuIcon } from "@/components/landing/LandingNavMenuIcon";
 import { useLandingNavBodyLock } from "@/components/landing/useLandingNavBodyLock";
@@ -24,9 +24,11 @@ const NAV_ITEMS: { id: LandingSectionId; label: string }[] = [
 const REQUEST_QUOTE_BTN_CLASSES =
   "nav-cta-gradient flex h-[36px] min-h-[36px] shrink-0 items-center justify-center rounded-full py-[8px] text-sm font-bold leading-5 text-white transition hover:opacity-95 focus-visible:outline focus-visible:ring-2 focus-visible:ring-white/50 max-xl:max-w-[min(190px,calc(100vw-8rem))] max-xl:translate-x-0 max-xl:px-4 max-xl:mr-2 w-[min(190px,calc(100vw-8rem))] px-[28px] xl:mr-10 xl:w-[190px] xl:max-w-none xl:translate-x-[calc(-14rem+136px)] xl:px-[28px]";
 
+/** Stable DOM id — `useId()` can mismatch SSR vs hydrate when the tree shifts (e.g. after refresh). */
+const LANDING_NAV_MOBILE_MENU_DOM_ID = "landing-nav-mobile-menu";
+
 export function LandingNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const menuId = useId();
 
   const closeMenu = useCallback(() => {
     setMobileOpen(false);
@@ -84,7 +86,7 @@ export function LandingNav() {
             type="button"
             className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-[#0f172a] transition hover:bg-black/5 focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30 md:hidden"
             aria-expanded={mobileOpen}
-            aria-controls={menuId}
+            aria-controls={LANDING_NAV_MOBILE_MENU_DOM_ID}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             onClick={() => setMobileOpen((o) => !o)}
           >
@@ -102,7 +104,7 @@ export function LandingNav() {
       </div>
       {mobileOpen ? (
         <LandingNavMobileDrawer
-          menuId={menuId}
+          menuId={LANDING_NAV_MOBILE_MENU_DOM_ID}
           items={NAV_ITEMS}
           onClose={closeMenu}
         />

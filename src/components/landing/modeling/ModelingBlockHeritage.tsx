@@ -23,11 +23,16 @@ const DESCRIPTION_LINES = [
 ] as const;
 
 type ModelingBlockHeritageProps = {
-  imageUrl: string;
+  imageUrlDesktop: string;
+  imageUrlMobile: string;
 };
 
 /** Ancient & Heritage Jewelry block. Full-bleed image with title and description overlay (Figma 222:259). */
-export function ModelingBlockHeritage({ imageUrl }: ModelingBlockHeritageProps) {
+export function ModelingBlockHeritage({
+  imageUrlDesktop,
+  imageUrlMobile,
+}: ModelingBlockHeritageProps) {
+  const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -37,14 +42,39 @@ export function ModelingBlockHeritage({ imageUrl }: ModelingBlockHeritageProps) 
         data-landing-image={LANDING_IMAGE_IDS.MODELING_HERITAGE}
         style={{ backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }}
       >
-        <Image
-          src={imageUrl}
-          alt=""
-          fill
-          className="h-full w-full object-cover object-center"
-          sizes="(max-width: 639px) 100vw, 50vw"
-          unoptimized
-        />
+        {sameUrl ? (
+          <Image
+            src={imageUrlDesktop}
+            alt=""
+            fill
+            className="h-full w-full object-cover object-center"
+            sizes="(max-width: 767px) 100vw, 50vw"
+            unoptimized
+          />
+        ) : (
+          <>
+            <div className="absolute inset-0 md:hidden">
+              <Image
+                src={imageUrlMobile}
+                alt=""
+                fill
+                className="min-h-0 min-w-0 h-full w-full object-cover object-center"
+                sizes="(max-width: 767px) 100vw, 0px"
+                unoptimized
+              />
+            </div>
+            <div className="absolute inset-0 hidden md:block">
+              <Image
+                src={imageUrlDesktop}
+                alt=""
+                fill
+                className="h-full w-full object-cover object-center"
+                sizes="(max-width: 1280px) 50vw, 33vw"
+                unoptimized
+              />
+            </div>
+          </>
+        )}
       </div>
       <div className="absolute inset-0 z-10 max-sm:translate-x-1.5 max-sm:translate-y-16">
         <h3 className="absolute right-0 top-12 z-10 flex max-w-full flex-col items-end text-black max-sm:-translate-y-6 max-sm:translate-x-0.5 max-sm:right-6 max-sm:w-[151px] max-sm:font-sans max-sm:text-[20px] max-sm:font-bold max-sm:leading-[28px] max-sm:tracking-[-0.449px] sm:font-manrope sm:text-[32px] sm:leading-[24px] sm:tracking-normal sm:font-bold md:right-[2rem] md:top-[12.7rem] md:scale-x-105 md:origin-right">

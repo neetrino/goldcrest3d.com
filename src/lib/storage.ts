@@ -6,6 +6,8 @@
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 import { R2_PREFIXES } from "@/constants";
+import { logger } from "@/lib/logger";
+import { processModelingMobileImageBuffer } from "@/lib/site-media/process-modeling-mobile-image";
 import {
   SITE_MEDIA_IMAGE_ALLOWED_MIME_TYPES,
   SITE_MEDIA_IMAGE_MAX_BYTES,
@@ -129,6 +131,49 @@ export async function uploadSiteMediaToR2(file: File): Promise<string | null> {
         Key: key,
         Body: body,
         ContentType: contentType,
+      }),
+    );
+    return key;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Modeling Specialization — mobile slot: center-crop to card aspect, WebP, then R2.
+ */
+export async function uploadModelingMobileImageToR2(file: File): Promise<string | null> {
+  if (!R2_BUCKET_NAME) return null;
+  const client = getR2Client();
+  if (!client) return null;
+
+  if (file.size > SITE_MEDIA_IMAGE_MAX_BYTES) return null;
+  const contentType = (file.type ?? "").toLowerCase();
+  if (!SITE_MEDIA_TYPES.has(contentType)) return null;
+
+  let body: Buffer;
+  try {
+    const raw = Buffer.from(new Uint8Array(await file.arrayBuffer()));
+    body = await processModelingMobileImageBuffer(raw);
+  } catch (e) {
+    logger.error("uploadModelingMobileImageToR2: process failed", e);
+    return null;
+  }
+
+  if (body.length > SITE_MEDIA_IMAGE_MAX_BYTES) {
+    logger.error("uploadModelingMobileImageToR2: output too large");
+    return null;
+  }
+
+  const key = `${R2_PREFIXES.SITE_MEDIA}/${Date.now()}-${crypto.randomUUID().slice(0, 8)}.webp`;
+
+  try {
+    await client.send(
+      new PutObjectCommand({
+        Bucket: R2_BUCKET_NAME,
+        Key: key,
+        Body: body,
+        ContentType: "image/webp",
       }),
     );
     return key;

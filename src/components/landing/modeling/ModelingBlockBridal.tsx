@@ -1,5 +1,4 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
-import { LANDING_IMAGES } from "@/constants/landing-assets";
 
 import { ModelingCard } from "./ModelingCard";
 
@@ -24,11 +23,15 @@ const BRIDAL_DESCRIPTION_LINES_MOBILE = [
 ] as const;
 
 type ModelingBlockBridalProps = {
-  imageUrl: string;
+  imageUrlDesktop: string;
+  imageUrlMobile: string;
 };
 
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
-export function ModelingBlockBridal({ imageUrl }: ModelingBlockBridalProps) {
+export function ModelingBlockBridal({
+  imageUrlDesktop,
+  imageUrlMobile,
+}: ModelingBlockBridalProps) {
   return (
     <ModelingCard
       title="Bridal & Engagement"
@@ -36,8 +39,9 @@ export function ModelingBlockBridal({ imageUrl }: ModelingBlockBridalProps) {
       descriptionLines={[...BRIDAL_DESCRIPTION_LINES]}
       descriptionLinesDesktop={[...BRIDAL_DESCRIPTION_LINES_DESKTOP]}
       descriptionLinesMobile={[...BRIDAL_DESCRIPTION_LINES_MOBILE]}
-      imageSrc={imageUrl}
-      imageSrcMobile={LANDING_IMAGES.modelingBridal}
+      imageSrc={imageUrlDesktop}
+      imageSrcMobile={imageUrlMobile}
+      imagePairBreakpoint="md"
       imageId={LANDING_IMAGE_IDS.MODELING_BRIDAL}
       imageOnLeft={true}
       textAlign="right"

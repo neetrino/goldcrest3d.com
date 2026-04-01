@@ -12,11 +12,18 @@ const LINE_2 =
   "Invisible settings and ultra-thin tolerances engineered with strict structural discipline.";
 
 type ModelingBlockHighJewelryProps = {
-  imageUrl: string;
+  imageUrlDesktop: string;
+  imageUrlMobile: string;
 };
 
 /** High Jewelry — `object-cover` ամբողջ block-ում; mobile-ում աջ anchor, desktop-ում կենտրոնացված crop։ */
-export function ModelingBlockHighJewelry({ imageUrl }: ModelingBlockHighJewelryProps) {
+export function ModelingBlockHighJewelry({
+  imageUrlDesktop,
+  imageUrlMobile,
+}: ModelingBlockHighJewelryProps) {
+  const sameUrl = imageUrlDesktop === imageUrlMobile;
+  const objectClassName =
+    "h-full w-full object-cover max-md:object-right md:object-[center_48%_center]";
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -26,14 +33,39 @@ export function ModelingBlockHighJewelry({ imageUrl }: ModelingBlockHighJewelryP
         data-landing-image={LANDING_IMAGE_IDS.MODELING_HIGH_JEWELRY}
         style={{ backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }}
       >
-        <Image
-          src={imageUrl}
-          alt=""
-          fill
-          className="h-full w-full object-cover max-sm:object-right sm:object-[center_48%_center]"
-          sizes="(max-width: 639px) 100vw, 50vw"
-          unoptimized
-        />
+        {sameUrl ? (
+          <Image
+            src={imageUrlDesktop}
+            alt=""
+            fill
+            className={objectClassName}
+            sizes="(max-width: 767px) 100vw, 50vw"
+            unoptimized
+          />
+        ) : (
+          <>
+            <div className="absolute inset-0 md:hidden">
+              <Image
+                src={imageUrlMobile}
+                alt=""
+                fill
+                className="min-h-0 min-w-0 h-full w-full object-cover object-right"
+                sizes="(max-width: 767px) 100vw, 0px"
+                unoptimized
+              />
+            </div>
+            <div className="absolute inset-0 hidden md:block">
+              <Image
+                src={imageUrlDesktop}
+                alt=""
+                fill
+                className="h-full w-full object-cover object-[center_48%_center]"
+                sizes="(max-width: 1280px) 50vw, 33vw"
+                unoptimized
+              />
+            </div>
+          </>
+        )}
       </div>
       <div
         className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-sm:translate-y-[136px]"

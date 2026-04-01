@@ -56,11 +56,18 @@ export type ModelingCardProps = {
   imagePosition?: string;
   /** Figma CSS background on full-bleed layer (replaces next/image when set). */
   imageLayerBackground?: Pick<CSSProperties, "background">;
+  /** Second full-bleed background for small viewports when set (with `imageLayerBackground` for `md+`). */
+  imageLayerBackgroundMobile?: Pick<CSSProperties, "background">;
   /**
    * Below `sm`: this URL (static asset); `sm+`: `imageSrc` (CMS / default).
    * Only with `imageSrc` and without `imageLayerBackground`.
    */
   imageSrcMobile?: string;
+  /**
+   * When `imageSrc` + `imageSrcMobile` or dual layer backgrounds: width at which the desktop asset applies.
+   * Use `md` for CMS desktop/mobile pairs so tablets use the desktop file.
+   */
+  imagePairBreakpoint?: "sm" | "md";
   /** When true, title and description use black text (e.g. Bridal on light background). */
   textDark?: boolean;
   /** Override left inset for text (e.g. "38%") when imageOnLeft. */
@@ -148,7 +155,9 @@ export function ModelingCard({
   descriptionMuted = false,
   imagePosition = DEFAULT_IMAGE_POSITION,
   imageLayerBackground,
+  imageLayerBackgroundMobile,
   imageSrcMobile,
+  imagePairBreakpoint = "sm",
   textDark = false,
   textInsetLeft,
   textShiftLeft,
@@ -366,6 +375,14 @@ export function ModelingCard({
     : `font-manrope font-light ${hasLines ? `text-[14px] leading-[22px] ${noDescriptionMaxWidth ? "" : "max-w-[560px]"}` : "text-[16px] leading-[26px] max-w-[407px]"} ${descriptionColor}`;
   const descriptionClassNameGradient = `font-manrope font-light text-[16px] leading-[26px] ${descriptionColor}`;
   const imageStyle = { objectPosition: imagePosition };
+  const imgMobileWrapperClass =
+    imagePairBreakpoint === "md"
+      ? "absolute inset-0 md:hidden"
+      : "absolute inset-0 sm:hidden";
+  const imgDesktopWrapperClass =
+    imagePairBreakpoint === "md"
+      ? "absolute inset-0 hidden md:block"
+      : "absolute inset-0 hidden sm:block";
   const textAlignClass =
     textAlign === "center"
       ? "text-center"
@@ -416,31 +433,38 @@ export function ModelingCard({
       <article
         className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
       >
-        <div
-          className="absolute inset-0"
-          data-landing-image={imageId}
-          style={{
-            ...(imageLayerBackground ?? undefined),
-            ...(!imageLayerBackground
-              ? { backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }
-              : {}),
-          }}
-        >
+        <div className="absolute inset-0" data-landing-image={imageId}>
+          {imageLayerBackground && imageLayerBackgroundMobile ? (
+            <>
+              <div className={imgMobileWrapperClass} style={imageLayerBackgroundMobile} />
+              <div className={imgDesktopWrapperClass} style={imageLayerBackground} />
+            </>
+          ) : (
+            <div
+              className="absolute inset-0"
+              style={{
+                ...(imageLayerBackground ?? undefined),
+                ...(!imageLayerBackground
+                  ? { backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }
+                  : {}),
+              }}
+            />
+          )}
           {!imageLayerBackground && imageSrc ? (
             imageSrcMobile != null ? (
               <>
-                <div className="absolute inset-0 sm:hidden">
+                <div className={imgMobileWrapperClass}>
                   <Image
                     src={imageSrcMobile}
                     alt=""
                     fill
-                    className={imageFillClassName}
+                    className={`min-h-0 min-w-0 ${imageFillClassName}`}
                     style={imageStyle}
-                    sizes="100vw"
+                    sizes="(max-width: 767px) 100vw, 0px"
                     unoptimized
                   />
                 </div>
-                <div className="absolute inset-0 hidden sm:block">
+                <div className={imgDesktopWrapperClass}>
                   <Image
                     src={imageSrc}
                     alt=""

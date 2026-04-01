@@ -96,6 +96,8 @@ model SiteMediaItem {
   slotId         String   @unique
   sortOrder      Int      @default(0)
   r2ObjectKey    String?
+  /// Modeling Specialization only — separate mobile asset; optional when desktop is set (falls back to desktop URL on site).
+  r2ObjectKeyMobile String?
   legacySrc      String?
   alt            String?
   layoutMeta     Json?
