@@ -11,26 +11,22 @@ type ModelingSlotPreviewProps = {
 export function ModelingSlotPreview({ row }: ModelingSlotPreviewProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-gradient-to-b from-slate-50 to-slate-100/80 shadow-inner">
-      <div className="relative aspect-[16/10] w-full min-h-[180px]">
-        {row.displayUrl ? (
-          <Image
-            src={row.displayUrl}
-            alt={`Preview for ${row.label}`}
-            fill
-            className="object-contain"
-            sizes="(max-width: 768px) 100vw, min(520px, 40vw)"
-            unoptimized
-          />
-        ) : (
-          <div className="flex h-full min-h-[180px] flex-col items-center justify-center gap-2 px-4 text-center">
-            <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-slate-500 shadow-sm">
-              Default site image
-            </span>
-            <p className="max-w-[240px] text-sm text-slate-600">
-              No custom image yet — visitors see the built-in placeholder for this block.
-            </p>
-          </div>
-        )}
+      <div className="grid grid-cols-1 gap-px bg-slate-200 sm:grid-cols-2">
+        <PreviewPane
+          label="Desktop / tablet preview"
+          url={row.displayUrl}
+          emptyMessage="No desktop image — default asset on site"
+        />
+        <PreviewPane
+          label="Mobile preview"
+          url={row.displayUrlMobile ?? row.displayUrl}
+          emptyMessage={
+            row.displayUrl
+              ? "No separate mobile — falls back to desktop"
+              : "No mobile image — default asset on site"
+          }
+          isFallback={!row.displayUrlMobile && Boolean(row.displayUrl)}
+        />
       </div>
       <div className="border-t border-slate-200/80 bg-slate-900 px-4 py-3 text-white">
         <p className="text-[15px] font-semibold leading-snug">{row.label}</p>
@@ -40,6 +36,44 @@ export function ModelingSlotPreview({ row }: ModelingSlotPreviewProps) {
           </summary>
           <p className="mt-1 font-mono text-[10px] text-white/60">Slot: {row.slotKey}</p>
         </details>
+      </div>
+    </div>
+  );
+}
+
+type PreviewPaneProps = {
+  label: string;
+  url: string | null;
+  emptyMessage: string;
+  isFallback?: boolean;
+};
+
+function PreviewPane({ label, url, emptyMessage, isFallback }: PreviewPaneProps) {
+  return (
+    <div className="bg-gradient-to-b from-slate-50 to-slate-100/80">
+      <p className="border-b border-slate-200/80 bg-white/90 px-3 py-1.5 text-[11px] font-medium uppercase tracking-wide text-slate-600">
+        {label}
+        {isFallback ? (
+          <span className="ml-1.5 font-normal normal-case text-slate-500">(same as desktop)</span>
+        ) : null}
+      </p>
+      <div className="relative aspect-[16/10] w-full min-h-[140px]">
+        {url ? (
+          <Image
+            src={url}
+            alt=""
+            fill
+            className="object-contain"
+            sizes="(max-width: 768px) 100vw, min(260px, 40vw)"
+            unoptimized
+          />
+        ) : (
+          <div className="flex h-full min-h-[140px] flex-col items-center justify-center gap-2 px-3 text-center">
+            <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-slate-500 shadow-sm">
+              {emptyMessage}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

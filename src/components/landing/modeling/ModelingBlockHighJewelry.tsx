@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import Image from "next/image";
 
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
@@ -11,22 +11,19 @@ const LINE_1 =
 const LINE_2 =
   "Invisible settings and ultra-thin tolerances engineered with strict structural discipline.";
 
-function highJewelryBackground(imageUrl: string): CSSProperties {
-  return {
-    backgroundImage: `url("${imageUrl}")`,
-    backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED,
-    backgroundPosition: "center",
-    backgroundSize: "contain",
-    backgroundRepeat: "no-repeat",
-  };
-}
-
 type ModelingBlockHighJewelryProps = {
-  imageUrl: string;
+  imageUrlDesktop: string;
+  imageUrlMobile: string;
 };
 
-/** High Jewelry block. Full-bleed background (Figma 222:264), title + 2 lines centered. */
-export function ModelingBlockHighJewelry({ imageUrl }: ModelingBlockHighJewelryProps) {
+/** High Jewelry — `object-cover` ամբողջ block-ում; mobile-ում աջ anchor, desktop-ում կենտրոնացված crop։ */
+export function ModelingBlockHighJewelry({
+  imageUrlDesktop,
+  imageUrlMobile,
+}: ModelingBlockHighJewelryProps) {
+  const sameUrl = imageUrlDesktop === imageUrlMobile;
+  const objectClassName =
+    "h-full w-full object-cover max-md:object-right md:object-[center_48%_center]";
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -34,8 +31,42 @@ export function ModelingBlockHighJewelry({ imageUrl }: ModelingBlockHighJewelryP
       <div
         className="absolute inset-0"
         data-landing-image={LANDING_IMAGE_IDS.MODELING_HIGH_JEWELRY}
-        style={highJewelryBackground(imageUrl)}
-      />
+        style={{ backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }}
+      >
+        {sameUrl ? (
+          <Image
+            src={imageUrlDesktop}
+            alt=""
+            fill
+            className={objectClassName}
+            sizes="(max-width: 767px) 100vw, 50vw"
+            unoptimized
+          />
+        ) : (
+          <>
+            <div className="absolute inset-0 md:hidden">
+              <Image
+                src={imageUrlMobile}
+                alt=""
+                fill
+                className="min-h-0 min-w-0 h-full w-full object-cover object-right"
+                sizes="(max-width: 767px) 100vw, 0px"
+                unoptimized
+              />
+            </div>
+            <div className="absolute inset-0 hidden md:block">
+              <Image
+                src={imageUrlDesktop}
+                alt=""
+                fill
+                className="h-full w-full object-cover object-[center_48%_center]"
+                sizes="(max-width: 1280px) 50vw, 33vw"
+                unoptimized
+              />
+            </div>
+          </>
+        )}
+      </div>
       <div
         className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-sm:translate-y-[136px]"
         style={{ marginTop: "-30%" }}

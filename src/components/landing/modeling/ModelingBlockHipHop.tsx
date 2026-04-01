@@ -26,22 +26,31 @@ const HIPHOP_DESCRIPTION_LINES_DESKTOP = [
 ];
 
 type ModelingBlockHipHopProps = {
-  imageUrl: string;
+  imageUrlDesktop: string;
+  imageUrlMobile: string;
 };
 
 /** Hip-Hop Jewelry block — Figma background layer on image area. */
-export function ModelingBlockHipHop({ imageUrl }: ModelingBlockHipHopProps) {
+export function ModelingBlockHipHop({
+  imageUrlDesktop,
+  imageUrlMobile,
+}: ModelingBlockHipHopProps) {
+  const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
     <ModelingCard
       title="Hip-Hop Jewelry"
       description=""
       descriptionLines={HIPHOP_DESCRIPTION_LINES}
       descriptionLinesDesktop={HIPHOP_DESCRIPTION_LINES_DESKTOP}
-      imageSrc={imageUrl}
+      imageSrc={imageUrlDesktop}
       imageId={LANDING_IMAGE_IDS.MODELING_HIPHOP}
       imageOnLeft={false}
       textAlign="left"
-      imageLayerBackground={getModelingHipHopCardBackgroundStyle(imageUrl)}
+      imageLayerBackground={getModelingHipHopCardBackgroundStyle(imageUrlDesktop)}
+      imageLayerBackgroundMobile={
+        sameUrl ? undefined : getModelingHipHopCardBackgroundStyle(imageUrlMobile)
+      }
+      imagePairBreakpoint="md"
       mobileHipHopTypography
     />
   );

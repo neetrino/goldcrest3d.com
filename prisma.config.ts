@@ -1,4 +1,5 @@
 // Prisma 7 — connection URLs here (Neon: use DIRECT_URL for migrations)
+// DIRECT_URL և DATABASE_URL պետք է նույն logical DB-ն լինեն (միայն pooler vs direct host տարբերությունը)։
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 

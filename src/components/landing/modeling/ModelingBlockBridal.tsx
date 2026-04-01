@@ -1,13 +1,16 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
-import { LANDING_MEDIA_CONTAIN_FRAME_BG } from "@/components/landing/landing-media-frame.constants";
 
 import { ModelingCard } from "./ModelingCard";
 
-function bridalImageLayerBackground(imageUrl: string): string {
-  return `url("${imageUrl}") ${LANDING_MEDIA_CONTAIN_FRAME_BG} center / contain no-repeat`;
-}
+/** Desktop / `sm+`: stacked lines (controlled breaks); fallback row layout uses `BRIDAL_DESCRIPTION_LINES`. */
+const BRIDAL_DESCRIPTION_LINES_DESKTOP = [
+  "Engineered engagement and bridal",
+  "settings built for durability, comfort and",
+  "precise stone alignment. Secure prong",
+  "architecture developed for long-term wear.",
+] as const;
 
-/** Desktop / `sm+`: two logical rows (row layout + transforms). */
+/** Fallback when `descriptionLinesDesktop` omitted: two logical rows (row layout + transforms). */
 const BRIDAL_DESCRIPTION_LINES = [
   "Engineered engagement and bridal settings built for durability, comfort and precise stone alignment.",
   "Secure prong architecture developed for long-term wear.",
@@ -20,23 +23,31 @@ const BRIDAL_DESCRIPTION_LINES_MOBILE = [
 ] as const;
 
 type ModelingBlockBridalProps = {
-  imageUrl: string;
+  imageUrlDesktop: string;
+  imageUrlMobile: string;
 };
 
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
-export function ModelingBlockBridal({ imageUrl }: ModelingBlockBridalProps) {
+export function ModelingBlockBridal({
+  imageUrlDesktop,
+  imageUrlMobile,
+}: ModelingBlockBridalProps) {
   return (
     <ModelingCard
       title="Bridal & Engagement"
       description=""
       descriptionLines={[...BRIDAL_DESCRIPTION_LINES]}
+      descriptionLinesDesktop={[...BRIDAL_DESCRIPTION_LINES_DESKTOP]}
       descriptionLinesMobile={[...BRIDAL_DESCRIPTION_LINES_MOBILE]}
-      imageSrc={imageUrl}
+      imageSrc={imageUrlDesktop}
+      imageSrcMobile={imageUrlMobile}
+      imagePairBreakpoint="md"
       imageId={LANDING_IMAGE_IDS.MODELING_BRIDAL}
       imageOnLeft={true}
       textAlign="right"
       imagePosition="center 55%"
-      imageLayerBackground={{ background: bridalImageLayerBackground(imageUrl) }}
+      imageFillClassName="object-cover object-center"
+      imageFillClassNameDesktop="object-contain"
       textDark
       noDescriptionMaxWidth
       fluidTextLayout

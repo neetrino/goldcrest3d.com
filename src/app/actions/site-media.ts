@@ -11,10 +11,16 @@ import {
   type ModelingSlotKey,
   type SiteMediaGroupKey,
 } from "@/lib/site-media/site-media.registry";
-import { deleteObjectFromR2, uploadSiteMediaToR2 } from "@/lib/storage";
+import {
+  deleteObjectFromR2,
+  uploadModelingMobileImageToR2,
+  uploadSiteMediaToR2,
+} from "@/lib/storage";
 import { validateSiteMediaImage } from "@/lib/validations/siteMediaImage";
 
 const MODELING_SLOT_SET = new Set<string>(Object.values(MODELING_SLOT_KEYS));
+
+export type ModelingSlotImageVariant = "desktop" | "mobile";
 
 const ORDERED_GROUPS = new Set<SiteMediaGroupKey>([
   SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1,
@@ -42,6 +48,7 @@ async function requireAdmin(): Promise<SiteMediaActionResult | null> {
 
 export async function upsertModelingSlotImage(
   slotKey: string,
+  variant: ModelingSlotImageVariant,
   formData: FormData,
 ): Promise<SiteMediaActionResult> {
   const denied = await requireAdmin();
@@ -50,6 +57,9 @@ export async function upsertModelingSlotImage(
   if (!MODELING_SLOT_SET.has(slotKey)) {
     return { ok: false, error: "Invalid slot." };
   }
+  if (variant !== "desktop" && variant !== "mobile") {
+    return { ok: false, error: "Invalid variant." };
+  }
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) {
     return { ok: false, error: "Choose an image file." };
@@ -57,9 +67,17 @@ export async function upsertModelingSlotImage(
   const err = validateSiteMediaImage(file);
   if (err) return { ok: false, error: err };
 
-  const newKey = await uploadSiteMediaToR2(file);
+  const isDesktop = variant === "desktop";
+  const newKey = isDesktop
+    ? await uploadSiteMediaToR2(file)
+    : await uploadModelingMobileImageToR2(file);
   if (!newKey) {
-    return { ok: false, error: "Upload failed. Check R2 configuration." };
+    return {
+      ok: false,
+      error: isDesktop
+        ? "Upload failed. Check R2 configuration."
+        : "Upload failed. The image could not be processed (try PNG, JPEG, or WebP) or R2 is misconfigured.",
+    };
   }
 
   const typedSlot = slotKey as ModelingSlotKey;
@@ -69,12 +87,15 @@ export async function upsertModelingSlotImage(
     });
 
     if (existing) {
-      if (existing.r2ObjectKey) {
-        await deleteObjectFromR2(existing.r2ObjectKey);
+      const oldKey = isDesktop ? existing.r2ObjectKey : existing.r2ObjectKeyMobile;
+      if (oldKey) {
+        await deleteObjectFromR2(oldKey);
       }
       await siteMediaItem.update({
         where: { id: existing.id },
-        data: { r2ObjectKey: newKey },
+        data: isDesktop
+          ? { r2ObjectKey: newKey }
+          : { r2ObjectKeyMobile: newKey },
       });
     } else {
       await siteMediaItem.create({
@@ -82,7 +103,8 @@ export async function upsertModelingSlotImage(
           sectionKey: SITE_MEDIA_GROUP_KEYS.MODELING_SPECIALIZATION,
           slotId: typedSlot,
           sortOrder: 0,
-          r2ObjectKey: newKey,
+          r2ObjectKey: isDesktop ? newKey : null,
+          r2ObjectKeyMobile: isDesktop ? null : newKey,
         },
       });
     }

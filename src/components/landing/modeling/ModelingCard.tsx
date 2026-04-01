@@ -29,8 +29,8 @@ export type ModelingCardProps = {
   /** When set, description is rendered as one block per line (e.g. Hip-Hop). */
   descriptionLines?: string[];
   /**
-   * Hip-Hop only: when set with `mobileHipHopTypography`, `sm+` uses these lines instead of `descriptionLines`
-   * (mobile keeps `descriptionLines`).
+   * Hip-Hop: with `mobileHipHopTypography`, `sm+` uses these lines instead of `descriptionLines` (mobile unchanged).
+   * Bridal: with `mobileBridalTypography` + row layout, `sm+` can use these as a right-aligned stack instead of the two-line row.
    */
   descriptionLinesDesktop?: string[];
   /**
@@ -56,6 +56,18 @@ export type ModelingCardProps = {
   imagePosition?: string;
   /** Figma CSS background on full-bleed layer (replaces next/image when set). */
   imageLayerBackground?: Pick<CSSProperties, "background">;
+  /** Second full-bleed background for small viewports when set (with `imageLayerBackground` for `md+`). */
+  imageLayerBackgroundMobile?: Pick<CSSProperties, "background">;
+  /**
+   * Below `sm`: this URL (static asset); `sm+`: `imageSrc` (CMS / default).
+   * Only with `imageSrc` and without `imageLayerBackground`.
+   */
+  imageSrcMobile?: string;
+  /**
+   * When `imageSrc` + `imageSrcMobile` or dual layer backgrounds: width at which the desktop asset applies.
+   * Use `md` for CMS desktop/mobile pairs so tablets use the desktop file.
+   */
+  imagePairBreakpoint?: "sm" | "md";
   /** When true, title and description use black text (e.g. Bridal on light background). */
   textDark?: boolean;
   /** Override left inset for text (e.g. "38%") when imageOnLeft. */
@@ -116,6 +128,13 @@ export type ModelingCardProps = {
    * 3D Portrait block only: below `sm`, `descriptionLinesMobile` copy; `sm+` keeps absolute title/description + `descriptionLines`.
    */
   mobilePortraitTypography?: boolean;
+  /**
+   * Optional `next/image` fill layer classes.
+   * Default: `object-contain`.
+   */
+  imageFillClassName?: string;
+  /** With `imageSrcMobile`: `sm+` image `className` (e.g. `object-contain`). */
+  imageFillClassNameDesktop?: string;
 };
 
 const DEFAULT_IMAGE_POSITION = "center center";
@@ -136,6 +155,9 @@ export function ModelingCard({
   descriptionMuted = false,
   imagePosition = DEFAULT_IMAGE_POSITION,
   imageLayerBackground,
+  imageLayerBackgroundMobile,
+  imageSrcMobile,
+  imagePairBreakpoint = "sm",
   textDark = false,
   textInsetLeft,
   textShiftLeft,
@@ -163,6 +185,8 @@ export function ModelingCard({
   mobileHipHopTypography = false,
   mobileBridalTypography = false,
   mobilePortraitTypography = false,
+  imageFillClassName = "object-cover object-center",
+  imageFillClassNameDesktop = "object-contain",
 }: ModelingCardProps) {
   const hasLines = descriptionLines && descriptionLines.length > 0;
   const hipHopMobileLayout = mobileHipHopTypography && hasLines;
@@ -211,36 +235,52 @@ export function ModelingCard({
                 </span>
               ))}
             </div>
-            <div className="hidden flex-wrap items-baseline gap-x-4 gap-y-1 sm:flex">
-              {descriptionLines!.map((line, i) => (
-                <span
-                  key={`bridal-desktop-${i}`}
-                  id={i === 0 ? firstDescriptionLineId : undefined}
-                  className={`${bridalRowSpanClassDesktop} ${i === 0 ? `${lineWrapClass} whitespace-nowrap` : lineWrapClass}`}
-                  style={
-                    i === 0
-                      ? {
-                          ...(firstDescriptionLineMarginRight != null && {
-                            marginRight: firstDescriptionLineMarginRight,
-                          }),
-                          ...(firstDescriptionLineTranslateX != null && {
-                            transform: `translateX(${firstDescriptionLineTranslateX})`,
-                          }),
-                        }
-                      : i === 1
+            {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
+              <div className="hidden w-full min-w-0 flex-col items-start sm:flex">
+                <div className="flex w-fit max-w-full flex-col items-start gap-0.5 text-left">
+                  {descriptionLinesDesktop.map((line, i) => (
+                    <span
+                      key={`bridal-desktop-stack-${i}`}
+                      id={i === 0 ? firstDescriptionLineId : undefined}
+                      className="block font-manrope text-[14px] leading-[22px] text-black"
+                    >
+                      {line}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="hidden flex-wrap items-baseline gap-x-4 gap-y-1 sm:flex">
+                {descriptionLines!.map((line, i) => (
+                  <span
+                    key={`bridal-desktop-${i}`}
+                    id={i === 0 ? firstDescriptionLineId : undefined}
+                    className={`${bridalRowSpanClassDesktop} ${i === 0 ? `${lineWrapClass} whitespace-nowrap` : lineWrapClass}`}
+                    style={
+                      i === 0
                         ? {
-                            marginLeft: "auto",
-                            ...(secondDescriptionLineTranslateX != null && {
-                              transform: `translateX(${secondDescriptionLineTranslateX})`,
+                            ...(firstDescriptionLineMarginRight != null && {
+                              marginRight: firstDescriptionLineMarginRight,
+                            }),
+                            ...(firstDescriptionLineTranslateX != null && {
+                              transform: `translateX(${firstDescriptionLineTranslateX})`,
                             }),
                           }
-                        : undefined
-                  }
-                >
-                  {line}
-                </span>
-              ))}
-            </div>
+                        : i === 1
+                          ? {
+                              marginLeft: "auto",
+                              ...(secondDescriptionLineTranslateX != null && {
+                                transform: `translateX(${secondDescriptionLineTranslateX})`,
+                              }),
+                            }
+                          : undefined
+                    }
+                  >
+                    {line}
+                  </span>
+                ))}
+              </div>
+            )}
           </>
         ) : (
           <div className={bridalRowWrapperClass}>
@@ -292,11 +332,11 @@ export function ModelingCard({
                 </span>
               ))}
             </div>
-            <div className="hidden min-w-0 flex-col sm:flex sm:gap-0">
+            <div className="hidden min-w-0 flex-col sm:flex sm:translate-x-3 sm:gap-0">
               {descriptionLinesDesktop.map((line, i) => (
                 <span
                   key={`hiphop-desktop-${i}`}
-                  className={`block ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i === 1 ? "sm:mt-1.5" : ""} ${i === 2 ? "sm:mt-2" : ""}`}
+                  className={`block ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i === 0 ? "sm:translate-x-2 sm:translate-y-0.5" : ""} ${i === 1 ? "sm:mt-1.5" : ""} ${i === 2 ? "sm:mt-1.5 sm:-translate-y-1 sm:translate-x-75" : ""}`}
                 >
                   {line}
                 </span>
@@ -335,6 +375,14 @@ export function ModelingCard({
     : `font-manrope font-light ${hasLines ? `text-[14px] leading-[22px] ${noDescriptionMaxWidth ? "" : "max-w-[560px]"}` : "text-[16px] leading-[26px] max-w-[407px]"} ${descriptionColor}`;
   const descriptionClassNameGradient = `font-manrope font-light text-[16px] leading-[26px] ${descriptionColor}`;
   const imageStyle = { objectPosition: imagePosition };
+  const imgMobileWrapperClass =
+    imagePairBreakpoint === "md"
+      ? "absolute inset-0 md:hidden"
+      : "absolute inset-0 sm:hidden";
+  const imgDesktopWrapperClass =
+    imagePairBreakpoint === "md"
+      ? "absolute inset-0 hidden md:block"
+      : "absolute inset-0 hidden sm:block";
   const textAlignClass =
     textAlign === "center"
       ? "text-center"
@@ -385,36 +433,70 @@ export function ModelingCard({
       <article
         className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
       >
-        <div
-          className="absolute inset-0"
-          data-landing-image={imageId}
-          style={{
-            ...(imageLayerBackground ?? undefined),
-            ...(!imageLayerBackground
-              ? { backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }
-              : {}),
-          }}
-        >
-          {!imageLayerBackground && imageSrc ? (
-            <Image
-              src={imageSrc}
-              alt=""
-              fill
-              className="object-contain"
-              style={imageStyle}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized
+        <div className="absolute inset-0" data-landing-image={imageId}>
+          {imageLayerBackground && imageLayerBackgroundMobile ? (
+            <>
+              <div className={imgMobileWrapperClass} style={imageLayerBackgroundMobile} />
+              <div className={imgDesktopWrapperClass} style={imageLayerBackground} />
+            </>
+          ) : (
+            <div
+              className="absolute inset-0"
+              style={{
+                ...(imageLayerBackground ?? undefined),
+                ...(!imageLayerBackground
+                  ? { backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }
+                  : {}),
+              }}
             />
+          )}
+          {!imageLayerBackground && imageSrc ? (
+            imageSrcMobile != null ? (
+              <>
+                <div className={imgMobileWrapperClass}>
+                  <Image
+                    src={imageSrcMobile}
+                    alt=""
+                    fill
+                    className={`min-h-0 min-w-0 ${imageFillClassName}`}
+                    style={imageStyle}
+                    sizes="(max-width: 767px) 100vw, 0px"
+                    unoptimized
+                  />
+                </div>
+                <div className={imgDesktopWrapperClass}>
+                  <Image
+                    src={imageSrc}
+                    alt=""
+                    fill
+                    className={imageFillClassNameDesktop}
+                    style={imageStyle}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    unoptimized
+                  />
+                </div>
+              </>
+            ) : (
+              <Image
+                src={imageSrc}
+                alt=""
+                fill
+                className={imageFillClassName}
+                style={imageStyle}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                unoptimized
+              />
+            )
           ) : null}
         </div>
         <div
-          className={`absolute inset-0 z-10 px-6 py-8 md:px-8 md:py-10 ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-6 ${hipHopMobileLayout ? "max-sm:items-center max-sm:gap-3 max-sm:translate-x-0 max-sm:translate-y-[72px] max-sm:px-4 max-sm:pb-6 max-sm:text-center sm:items-start sm:gap-6 sm:pr-[40%] sm:translate-x-6 sm:translate-y-24 sm:text-left" : bridalMobileLayout ? `max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-20 max-sm:gap-3 max-sm:px-4 max-sm:items-start max-sm:text-left sm:translate-y-0 sm:items-end sm:text-right` : `${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
+          className={`absolute inset-0 z-10 px-6 py-8 md:px-8 md:py-10 ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-6 ${hipHopMobileLayout ? "max-sm:items-center max-sm:gap-3 max-sm:translate-x-0 max-sm:translate-y-[72px] max-sm:px-4 max-sm:pb-6 max-sm:text-center sm:items-start sm:gap-6 sm:pr-[40%] sm:translate-x-6 sm:translate-y-[8.5rem] sm:text-left" : bridalMobileLayout ? `max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-20 max-sm:gap-3 max-sm:px-4 max-sm:items-start max-sm:text-left sm:-translate-x-54 sm:-translate-y-48 sm:items-end sm:text-right` : `${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
           style={overlayTextContainerStyle}
         >
           {independentTitleDescription ? (
             portraitMobileLayout ? (
               <>
-                <div className="absolute inset-0 z-20 flex -translate-x-[11.5rem] -translate-y-4 flex-col items-end justify-end gap-3 px-4 pb-8 sm:hidden">
+                <div className="absolute inset-0 z-20 flex -translate-x-[12.5rem] -translate-y-4 flex-col items-end justify-end gap-3 px-4 pb-8 sm:hidden">
                   <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
                     {title === PORTRAIT_MOBILE_TITLE_FULL ? (
                       <>
@@ -491,7 +573,7 @@ export function ModelingCard({
           ) : (
             <>
               <h3
-                className={`${titleClassNameResolved} ${hipHopMobileLayout ? "max-sm:mt-2 max-sm:self-center max-sm:text-center sm:self-auto sm:text-left" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-2 max-sm:!self-start max-sm:!text-left sm:!self-end sm:!text-right" : ""}`}
+                className={`${titleClassNameResolved} ${hipHopMobileLayout ? "max-sm:mt-2 max-sm:self-center max-sm:text-center sm:self-auto sm:text-left sm:translate-x-55 sm:translate-y-1" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-2 max-sm:!self-start max-sm:!text-left sm:!self-end sm:!text-right" : ""}`}
                 style={{
                   ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                   ...(titleMarginTop != null && { marginTop: titleMarginTop }),
@@ -500,7 +582,7 @@ export function ModelingCard({
                 {title}
               </h3>
               <DescriptionTag
-                className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:-mt-2" : ""}${bridalMobileLayout ? " max-sm:!-mt-2 max-sm:w-full" : ""}`}
+                className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:-mt-2" : ""}${bridalMobileLayout ? " max-sm:!-mt-2 max-sm:w-full sm:w-auto sm:self-start sm:ml-28" : ""}`}
                 style={
                   titleMarginTopCompensate && titleMarginTop != null
                     ? {
@@ -550,7 +632,7 @@ export function ModelingCard({
                 src={imageSrc!}
                 alt=""
                 fill
-                className="object-contain"
+                className={imageFillClassName}
                 style={imageStyle}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 unoptimized
@@ -601,7 +683,7 @@ export function ModelingCard({
                 src={imageSrc!}
                 alt=""
                 fill
-                className="object-contain"
+                className={imageFillClassName}
                 style={imageStyle}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 unoptimized

@@ -19,7 +19,13 @@ import {
   type ModelingSlotKey,
 } from "./site-media.registry";
 
-export type LandingModelingMedia = Record<ModelingSlotKey, string>;
+/** Desktop vs mobile URLs for Modeling Specialization (mobile falls back to desktop when not uploaded). */
+export type ModelingSlotResolvedMedia = {
+  desktop: string;
+  mobile: string;
+};
+
+export type LandingModelingMedia = Record<ModelingSlotKey, ModelingSlotResolvedMedia>;
 
 export type LandingFinishedMedia = {
   row1: FinishedGalleryItem[];
@@ -92,16 +98,33 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       }),
     ]);
 
-    const modelingBySlot = new Map<ModelingSlotKey, string | null>(
+    const modelingBySlot = new Map<
+      ModelingSlotKey,
+      { desktop: string | null; mobile: string | null }
+    >(
       modelingRows.map((r: SiteMediaItemRow) => [
         r.slotId as ModelingSlotKey,
-        r.r2ObjectKey,
+        {
+          desktop: r.r2ObjectKey,
+          mobile: r.r2ObjectKeyMobile,
+        },
       ]),
     );
 
     const modeling = {} as LandingModelingMedia;
     for (const slot of ORDERED_MODELING_SLOT_KEYS) {
-      modeling[slot] = mergeModelingUrl(slot, modelingBySlot.get(slot));
+      const row = modelingBySlot.get(slot);
+      if (!row) {
+        modeling[slot] = {
+          desktop: mergeModelingUrl(slot, undefined),
+          mobile: mergeModelingUrl(slot, undefined),
+        };
+        continue;
+      }
+      const desktopUrl = mergeModelingUrl(slot, row.desktop);
+      const mobileKey = row.mobile ?? row.desktop;
+      const mobileUrl = mergeModelingUrl(slot, mobileKey);
+      modeling[slot] = { desktop: desktopUrl, mobile: mobileUrl };
     }
 
     const finished: LandingFinishedMedia = {
@@ -124,7 +147,8 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
 export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
   const modeling = {} as LandingModelingMedia;
   for (const slot of ORDERED_MODELING_SLOT_KEYS) {
-    modeling[slot] = DEFAULT_MODELING_IMAGE_URL[slot];
+    const url = DEFAULT_MODELING_IMAGE_URL[slot];
+    modeling[slot] = { desktop: url, mobile: url };
   }
   return {
     modeling,

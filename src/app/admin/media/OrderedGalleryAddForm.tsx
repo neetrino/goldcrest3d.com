@@ -67,7 +67,10 @@ export function OrderedGalleryAddForm({
           </p>
         </div>
       </div>
-      <ImageUploadControl disabled={isPending} />
+      <ImageUploadControl
+        disabled={isPending}
+        stableDomId={`gc-ordered-add-${groupKey}`}
+      />
       <div className="mt-4">
         <MediaFormSubmitButton
           pendingLabel="Adding…"

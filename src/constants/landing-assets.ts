@@ -13,11 +13,10 @@ export const LANDING_IMAGES = {
   heroDesign: "/images/design/hero-jewelry-design-brief.png",
   /** Modeling Specialization blocks (Figma export) */
   modelingHipHop: "/images/modeling/hip-hop.png",
-  modelingBridal:
-    "https://www.figma.com/api/mcp/asset/8bbfa33e-92f6-4e62-bcfa-becb486ade43",
-  /** High Jewelry — full-bleed block (Figma 222:264), CSS background */
-  modelingHighJewelry:
-    "https://www.figma.com/api/mcp/asset/002f9765-f5e8-43c9-8293-09281beb4f2f",
+  /** Bridal & Engagement — Figma 378:723, локальный PNG (качество без срока MCP) */
+  modelingBridal: "/images/modeling/bridal-engagement.png",
+  /** High Jewelry — Figma 378:751, локальный PNG (качество без срока MCP) */
+  modelingHighJewelry: "/images/modeling/high-jewelry.png",
   /** Mechanical & Lock Systems — full-bleed block. Use local: put your image at public/images/modeling/mechanical-lock-systems.png and set to "/images/modeling/mechanical-lock-systems.png" */
   modelingMechanical:
     "https://www.figma.com/api/mcp/asset/d547c3a3-48a4-4c4b-b752-f38344605292",

@@ -37,12 +37,30 @@ export function SectionModeling({ modeling }: SectionModelingProps) {
         </div>
 
         <div className="grid min-w-0 grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-2.5 lg:gap-2">
-          <ModelingBlockHipHop imageUrl={modeling[MODELING_SLOT_KEYS.HIP_HOP]} />
-          <ModelingBlockBridal imageUrl={modeling[MODELING_SLOT_KEYS.BRIDAL]} />
-          <ModelingBlockPortrait imageUrl={modeling[MODELING_SLOT_KEYS.PORTRAIT]} />
-          <ModelingBlockMechanical imageUrl={modeling[MODELING_SLOT_KEYS.MECHANICAL]} />
-          <ModelingBlockHeritage imageUrl={modeling[MODELING_SLOT_KEYS.HERITAGE]} />
-          <ModelingBlockHighJewelry imageUrl={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY]} />
+          <ModelingBlockHipHop
+            imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIP_HOP].desktop}
+            imageUrlMobile={modeling[MODELING_SLOT_KEYS.HIP_HOP].mobile}
+          />
+          <ModelingBlockBridal
+            imageUrlDesktop={modeling[MODELING_SLOT_KEYS.BRIDAL].desktop}
+            imageUrlMobile={modeling[MODELING_SLOT_KEYS.BRIDAL].mobile}
+          />
+          <ModelingBlockPortrait
+            imageUrlDesktop={modeling[MODELING_SLOT_KEYS.PORTRAIT].desktop}
+            imageUrlMobile={modeling[MODELING_SLOT_KEYS.PORTRAIT].mobile}
+          />
+          <ModelingBlockMechanical
+            imageUrlDesktop={modeling[MODELING_SLOT_KEYS.MECHANICAL].desktop}
+            imageUrlMobile={modeling[MODELING_SLOT_KEYS.MECHANICAL].mobile}
+          />
+          <ModelingBlockHeritage
+            imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HERITAGE].desktop}
+            imageUrlMobile={modeling[MODELING_SLOT_KEYS.HERITAGE].mobile}
+          />
+          <ModelingBlockHighJewelry
+            imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].desktop}
+            imageUrlMobile={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].mobile}
+          />
         </div>
       </div>
     </section>

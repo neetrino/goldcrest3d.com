@@ -18,11 +18,16 @@ const DESCRIPTION_LINES = [
 ] as const;
 
 type ModelingBlockMechanicalProps = {
-  imageUrl: string;
+  imageUrlDesktop: string;
+  imageUrlMobile: string;
 };
 
 /** Mechanical & Lock Systems block. Full-bleed image with title and description overlay. */
-export function ModelingBlockMechanical({ imageUrl }: ModelingBlockMechanicalProps) {
+export function ModelingBlockMechanical({
+  imageUrlDesktop,
+  imageUrlMobile,
+}: ModelingBlockMechanicalProps) {
+  const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -31,14 +36,39 @@ export function ModelingBlockMechanical({ imageUrl }: ModelingBlockMechanicalPro
         className="absolute inset-0"
         style={{ backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }}
       >
-        <Image
-          src={imageUrl}
-          alt=""
-          fill
-          className="object-contain object-center"
-          sizes="(max-width: 768px) 100vw, 50vw"
-          unoptimized
-        />
+        {sameUrl ? (
+          <Image
+            src={imageUrlDesktop}
+            alt=""
+            fill
+            className="h-full w-full object-cover object-center"
+            sizes="(max-width: 767px) 100vw, 50vw"
+            unoptimized
+          />
+        ) : (
+          <>
+            <div className="absolute inset-0 md:hidden">
+              <Image
+                src={imageUrlMobile}
+                alt=""
+                fill
+                className="min-h-0 min-w-0 h-full w-full object-cover object-center"
+                sizes="(max-width: 767px) 100vw, 0px"
+                unoptimized
+              />
+            </div>
+            <div className="absolute inset-0 hidden md:block">
+              <Image
+                src={imageUrlDesktop}
+                alt=""
+                fill
+                className="h-full w-full object-cover object-center"
+                sizes="(max-width: 1280px) 50vw, 33vw"
+                unoptimized
+              />
+            </div>
+          </>
+        )}
       </div>
       <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 py-8 text-white max-sm:-translate-x-1.5 max-sm:translate-y-[72px] max-sm:gap-4 md:flex-row md:justify-end md:px-8 md:py-10">
         <h3 className="z-10 w-[283px] max-w-full text-left font-sans text-[20px] font-bold leading-[28px] tracking-[-0.449px] text-white max-sm:translate-y-2.5 max-sm:shrink-0 max-sm:whitespace-normal sm:absolute sm:right-6 sm:top-6 sm:max-w-none sm:text-right sm:whitespace-nowrap sm:font-manrope sm:text-[32px] sm:leading-[24px] sm:tracking-normal md:right-[21rem] md:top-[3.25rem] md:scale-x-105 md:origin-right">
