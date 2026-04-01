@@ -35,8 +35,8 @@ export function ModelingBlockMechanical({ imageUrl }: ModelingBlockMechanicalPro
           src={imageUrl}
           alt=""
           fill
-          className="object-contain object-center"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          className="h-full w-full object-cover object-center"
+          sizes="(max-width: 639px) 100vw, 50vw"
           unoptimized
         />
       </div>

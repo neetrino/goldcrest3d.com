@@ -12,11 +12,11 @@ export const MODELING_CARD_MOBILE_HEIGHT_PX = 259;
 
 /**
  * Քարտի արտաքին frame — միայն max-sm.
- * `max-w-full` — նեղ էկրաններում լայնությունը չի անցնի սյունը։
- * sm+ — լրիվ լայնություն + aspect (նախկին վարք)։
+ * Լայնությունը `w-full` — grid-ի սյունը ամբողջությամբ; բարձրությունը aspect-ից (Figma 360×259)։
+ * sm+ — լրիվ լայնություն + 83/43։
  */
 export const MODELING_CARD_FRAME_MOBILE_CLASSES =
-  "mx-auto max-w-full h-[259px] w-[360px] sm:mx-0 sm:h-auto sm:w-full sm:aspect-[83/43]" as const;
+  "mx-auto w-full max-w-full min-h-0 aspect-[360/259] sm:mx-0 sm:h-auto sm:w-full sm:aspect-[83/43]" as const;
 
 /** Քարտը լրիվ լցնում է grid-ի սյունը — ավելի մեծ և ավելի մոտ իրար block-ներ։ */
 export function getModelingCardWidthStyle(): Pick<CSSProperties, "width"> {

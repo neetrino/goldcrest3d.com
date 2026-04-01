@@ -56,6 +56,11 @@ export type ModelingCardProps = {
   imagePosition?: string;
   /** Figma CSS background on full-bleed layer (replaces next/image when set). */
   imageLayerBackground?: Pick<CSSProperties, "background">;
+  /**
+   * Below `sm`: this URL (static asset); `sm+`: `imageSrc` (CMS / default).
+   * Only with `imageSrc` and without `imageLayerBackground`.
+   */
+  imageSrcMobile?: string;
   /** When true, title and description use black text (e.g. Bridal on light background). */
   textDark?: boolean;
   /** Override left inset for text (e.g. "38%") when imageOnLeft. */
@@ -116,6 +121,13 @@ export type ModelingCardProps = {
    * 3D Portrait block only: below `sm`, `descriptionLinesMobile` copy; `sm+` keeps absolute title/description + `descriptionLines`.
    */
   mobilePortraitTypography?: boolean;
+  /**
+   * Optional `next/image` fill layer classes.
+   * Default: `object-contain`.
+   */
+  imageFillClassName?: string;
+  /** With `imageSrcMobile`: `sm+` image `className` (e.g. `object-contain`). */
+  imageFillClassNameDesktop?: string;
 };
 
 const DEFAULT_IMAGE_POSITION = "center center";
@@ -136,6 +148,7 @@ export function ModelingCard({
   descriptionMuted = false,
   imagePosition = DEFAULT_IMAGE_POSITION,
   imageLayerBackground,
+  imageSrcMobile,
   textDark = false,
   textInsetLeft,
   textShiftLeft,
@@ -163,6 +176,8 @@ export function ModelingCard({
   mobileHipHopTypography = false,
   mobileBridalTypography = false,
   mobilePortraitTypography = false,
+  imageFillClassName = "object-cover object-center",
+  imageFillClassNameDesktop = "object-contain",
 }: ModelingCardProps) {
   const hasLines = descriptionLines && descriptionLines.length > 0;
   const hipHopMobileLayout = mobileHipHopTypography && hasLines;
@@ -412,15 +427,42 @@ export function ModelingCard({
           }}
         >
           {!imageLayerBackground && imageSrc ? (
-            <Image
-              src={imageSrc}
-              alt=""
-              fill
-              className="object-contain"
-              style={imageStyle}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized
-            />
+            imageSrcMobile != null ? (
+              <>
+                <div className="absolute inset-0 sm:hidden">
+                  <Image
+                    src={imageSrcMobile}
+                    alt=""
+                    fill
+                    className={imageFillClassName}
+                    style={imageStyle}
+                    sizes="100vw"
+                    unoptimized
+                  />
+                </div>
+                <div className="absolute inset-0 hidden sm:block">
+                  <Image
+                    src={imageSrc}
+                    alt=""
+                    fill
+                    className={imageFillClassNameDesktop}
+                    style={imageStyle}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    unoptimized
+                  />
+                </div>
+              </>
+            ) : (
+              <Image
+                src={imageSrc}
+                alt=""
+                fill
+                className={imageFillClassName}
+                style={imageStyle}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                unoptimized
+              />
+            )
           ) : null}
         </div>
         <div
@@ -430,7 +472,7 @@ export function ModelingCard({
           {independentTitleDescription ? (
             portraitMobileLayout ? (
               <>
-                <div className="absolute inset-0 z-20 flex -translate-x-[11.5rem] -translate-y-4 flex-col items-end justify-end gap-3 px-4 pb-8 sm:hidden">
+                <div className="absolute inset-0 z-20 flex -translate-x-[12.5rem] -translate-y-4 flex-col items-end justify-end gap-3 px-4 pb-8 sm:hidden">
                   <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
                     {title === PORTRAIT_MOBILE_TITLE_FULL ? (
                       <>
@@ -566,7 +608,7 @@ export function ModelingCard({
                 src={imageSrc!}
                 alt=""
                 fill
-                className="object-contain"
+                className={imageFillClassName}
                 style={imageStyle}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 unoptimized
@@ -617,7 +659,7 @@ export function ModelingCard({
                 src={imageSrc!}
                 alt=""
                 fill
-                className="object-contain"
+                className={imageFillClassName}
                 style={imageStyle}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 unoptimized

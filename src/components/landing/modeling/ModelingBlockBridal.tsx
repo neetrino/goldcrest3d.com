@@ -1,11 +1,7 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
-import { LANDING_MEDIA_CONTAIN_FRAME_BG } from "@/components/landing/landing-media-frame.constants";
+import { LANDING_IMAGES } from "@/constants/landing-assets";
 
 import { ModelingCard } from "./ModelingCard";
-
-function bridalImageLayerBackground(imageUrl: string): string {
-  return `url("${imageUrl}") ${LANDING_MEDIA_CONTAIN_FRAME_BG} center / contain no-repeat`;
-}
 
 /** Desktop / `sm+`: stacked lines (controlled breaks); fallback row layout uses `BRIDAL_DESCRIPTION_LINES`. */
 const BRIDAL_DESCRIPTION_LINES_DESKTOP = [
@@ -41,11 +37,13 @@ export function ModelingBlockBridal({ imageUrl }: ModelingBlockBridalProps) {
       descriptionLinesDesktop={[...BRIDAL_DESCRIPTION_LINES_DESKTOP]}
       descriptionLinesMobile={[...BRIDAL_DESCRIPTION_LINES_MOBILE]}
       imageSrc={imageUrl}
+      imageSrcMobile={LANDING_IMAGES.modelingBridal}
       imageId={LANDING_IMAGE_IDS.MODELING_BRIDAL}
       imageOnLeft={true}
       textAlign="right"
       imagePosition="center 55%"
-      imageLayerBackground={{ background: bridalImageLayerBackground(imageUrl) }}
+      imageFillClassName="object-cover object-center"
+      imageFillClassNameDesktop="object-contain"
       textDark
       noDescriptionMaxWidth
       fluidTextLayout
