@@ -15,6 +15,12 @@ const SECTION1_TAIL_MIN_HEIGHT_PX = 120;
 
 /** Section1 — միայն հերո-նկարը դեպի ներքև (px), background-position Y */
 const SECTION1_HERO_BG_NUDGE_DOWN_PX = 16;
+
+/** Section1 — նկարը դեպի վեր (px); բլոկի չափը չի փոխվում, strip-ը overflow:hidden */
+const SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX = 40;
+
+/** Section1 — նկարի մասշտաբ (1 = նույնը); բլոկի չափը չի փոխվում, overflow-ով կտրվում է */
+const SECTION1_HERO_BG_SCALE = 1.08;
 const SECTION1_HERO_BG_MOBILE_PATH = "/images/modeling/block1-mobile.png";
 
 /** Section1 — վերնագիր, ենթավերնագիր, CTA դեպի ներքև (translateY, px); ցածր արժեք = ավելի վերև */
@@ -72,7 +78,7 @@ const SLIDES: Array<{
 }> = [
   {
     id: "modeling",
-    title: "3D Production-Ready\nModeling",
+    title: "3D Production-Ready Modeling",
     subtitle:
       "Engineered for casting, printing and precise stone setting. Every micron accounted for.",
     bg: LANDING_IMAGES.heroModeling,
@@ -141,6 +147,8 @@ export function PowerBanners() {
                       ["--section1-hero-bg" as string]: `url("${slide.bg}")`,
                       ["--section1-hero-bg-mobile" as string]: `url("${SECTION1_HERO_BG_MOBILE_PATH}")`,
                       ["--section1-bg-nudge-y" as string]: `${SECTION1_HERO_BG_NUDGE_DOWN_PX}px`,
+                      ["--section1-hero-bg-translate-y" as string]: `-${SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX}px`,
+                      ["--section1-hero-bg-scale" as string]: String(SECTION1_HERO_BG_SCALE),
                     } as React.CSSProperties
                   }
                   aria-hidden
@@ -153,7 +161,7 @@ export function PowerBanners() {
                   }}
                 >
                   <h1
-                    className={`inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance md:whitespace-pre-line md:max-w-none ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
+                    className={`inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance md:max-w-none ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
                     style={{
                       transform: `translateY(-${SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
                     }}

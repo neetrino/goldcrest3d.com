@@ -317,6 +317,7 @@ section[id] {
 .power-banners-section1-image-strip {
   position: relative;
   width: 100%;
+  overflow: hidden;
   aspect-ratio: 274 / 101;
 }
 
@@ -324,7 +325,6 @@ section[id] {
   .power-banners-section1-image-strip {
     aspect-ratio: unset;
     height: var(--section1-image-strip-height-desktop);
-    overflow: hidden;
   }
 }
 
@@ -345,6 +345,9 @@ section[id] {
   background-size: cover;
   background-position: center calc(50% + var(--section1-bg-nudge-y, 0px));
   background-repeat: no-repeat;
+  transform: translateY(var(--section1-hero-bg-translate-y, 0px))
+    scale(var(--section1-hero-bg-scale, 1));
+  transform-origin: center center;
 }
 
 /* PowerBanners section2 (Jewelry Rendering) — ֆրեյմ 1920×712; ֆոնը միայն cover (առանց դեֆորմացիայի) */
@@ -603,7 +606,6 @@ section[id] {
     font-style: normal;
     font-weight: 350;
     line-height: 32px;
-    white-space: pre-line !important;
   }
 
   #hero-modeling-subtitle {
