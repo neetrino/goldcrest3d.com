@@ -32,6 +32,9 @@ const DESKTOP_ROW2_PEEK_FULL_CENTER_SLIDES = 3;
 /** Fallback if row2 peek params are not used. */
 const DESKTOP_ROW2_VISIBLE_SLOTS_FALLBACK = 3;
 
+/** Desktop carousel: one timing curve for both rows (GPU-friendly transform). */
+const DESKTOP_CAROUSEL_TRANSITION_MS = 420;
+
 /** Mobile gallery: slightly taller than desktop slot ratio so blocks feel larger. */
 const MOBILE_BLOCK_HEIGHT_SCALE = 1.38;
 /** Mobile small row only: extra scale on top of `MOBILE_BLOCK_HEIGHT_SCALE`. */
@@ -42,7 +45,7 @@ const MOBILE_ROW2_ASPECT_HEIGHT = Math.round(
 );
 
 /** Minimum horizontal distance to count as swipe; ignores small jitter. */
-const MOBILE_SWIPE_THRESHOLD_PX = 48;
+const MOBILE_SWIPE_THRESHOLD_PX = 40;
 /** If vertical movement dominates, treat as scroll, not carousel. */
 const MOBILE_SWIPE_VERTICAL_TOLERANCE_PX = 45;
 
@@ -162,6 +165,15 @@ export function SectionFinishedCreations({
     ROW2_IMAGES[(mobileRow2First + 2) % ROW2_IMAGE_COUNT],
   ] as const;
 
+  const desktopRow1TransformPx = Math.round(
+    desktopMetrics.row1PeekOffsetPx +
+      (activePage % TOTAL_PAGES) * desktopMetrics.row1TranslatePx,
+  );
+  const desktopRow2TransformPx = Math.round(
+    desktopMetrics.row2PeekOffsetPx +
+      (activePage % ROW2_IMAGE_COUNT) * desktopMetrics.row2TranslatePx,
+  );
+
   return (
     <section
       id={LANDING_SECTION_IDS.FINISHED_CREATIONS}
@@ -239,12 +251,10 @@ export function SectionFinishedCreations({
             >
               <div className="w-full min-w-0 overflow-hidden">
               <div
-                className="flex gap-2 transition-transform duration-300 ease-out"
+                className="flex gap-2 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
                 style={{
-                  transform: `translateX(-${
-                    desktopMetrics.row1PeekOffsetPx +
-                    (activePage % TOTAL_PAGES) * desktopMetrics.row1TranslatePx
-                  }px)`,
+                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                  transform: `translate3d(-${desktopRow1TransformPx}px, 0, 0)`,
                 }}
               >
                 {row1StripImages.map((item, index) => (
@@ -268,12 +278,10 @@ export function SectionFinishedCreations({
             </div>
             <div className="w-full min-w-0 overflow-hidden">
               <div
-                className="flex gap-2 transition-transform duration-300 ease-out"
+                className="flex gap-2 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
                 style={{
-                  transform: `translateX(-${
-                    desktopMetrics.row2PeekOffsetPx +
-                    (activePage % ROW2_IMAGE_COUNT) * desktopMetrics.row2TranslatePx
-                  }px)`,
+                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                  transform: `translate3d(-${desktopRow2TransformPx}px, 0, 0)`,
                 }}
               >
                 {row2StripImages.map((item, index) => (
@@ -308,7 +316,7 @@ export function SectionFinishedCreations({
           <button
             type="button"
             onClick={goPrev}
-            className="flex h-8 w-8 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
             aria-label="Previous page"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -333,7 +341,7 @@ export function SectionFinishedCreations({
           <button
             type="button"
             onClick={goNext}
-            className="flex h-8 w-8 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
             aria-label="Next page"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
