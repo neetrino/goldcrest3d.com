@@ -69,6 +69,12 @@
   /** Wall Thickness Engineering detail — մի քիչ ներքև (դրական = ներքև) */
   --manufacturing-wall-thickness-detail-nudge-y: 12px;
   /**
+   * Wall Thickness Engineering — only mobile (max-width 767px): negative shifts image left.
+   */
+  --manufacturing-wall-thickness-detail-nudge-x-mobile-offset: -24px;
+  /** Wall Thickness Engineering — mobile-only display width (slightly smaller). */
+  --manufacturing-wall-thickness-detail-display-width-mobile: 520px;
+  /**
    * Stone Seat Geometry — ցուցադրման լայնություն (ֆայլը 666×702 է, aspect 37/39).
    * Միայն այս նկարի վիզուալ սքեյլ — փոքրացնելու համար նվազեցրու արժեքը։
    */
@@ -878,6 +884,18 @@ section[id] {
       scale(0.9);
     transform-origin: center center;
     width: 92% !important;
+  }
+
+  .manufacturing-intelligence-photo-detail--wall-thickness-engineering {
+    transform: translate(
+      calc(
+        var(--manufacturing-wall-thickness-detail-nudge-x) +
+          var(--manufacturing-wall-thickness-detail-nudge-x-mobile-offset)
+      ),
+      var(--manufacturing-wall-thickness-detail-nudge-y)
+    ) scale(0.92);
+    transform-origin: center center;
+    width: 90% !important;
   }
 }
 
