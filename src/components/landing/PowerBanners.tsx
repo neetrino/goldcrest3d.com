@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment } from "react";
+import Image from "next/image";
 import { LANDING_ELEMENT_IDS, LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import {
@@ -150,7 +151,20 @@ export function PowerBanners() {
                 data-landing-image={LANDING_IMAGE_IDS.HERO_MODELING}
               >
                 <div
-                  className="power-banners-section1-bg pointer-events-none absolute inset-0"
+                  className="pointer-events-none absolute inset-0 z-0 overflow-hidden md:hidden"
+                  aria-hidden
+                >
+                  <Image
+                    src={SECTION1_HERO_BG_MOBILE_PATH}
+                    alt=""
+                    fill
+                    priority
+                    sizes="(max-width: 767px) min(100vw, 390px) 0px"
+                    className="h-full w-full object-cover object-center"
+                  />
+                </div>
+                <div
+                  className="power-banners-section1-bg pointer-events-none absolute inset-0 hidden md:block"
                   style={
                     {
                       ["--section1-hero-bg" as string]: `url("${slide.bg}")`,

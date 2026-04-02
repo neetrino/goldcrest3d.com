@@ -567,13 +567,7 @@ section[id] {
     display: none;
   }
 
-  .power-banners-section1-bg {
-    background-image: var(--section1-hero-bg-mobile, var(--section1-hero-bg));
-    background-color: #fff;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-  }
+  /* Section1 mobile hero: `next/image` in PowerBanners (Figma 367×679, block aspect 20/37). */
 
   .power-banners-section2-block::before {
     width: 100%;
