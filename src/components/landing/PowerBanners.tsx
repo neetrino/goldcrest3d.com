@@ -42,26 +42,8 @@ const RENDERING_SUBTITLE_MOBILE_LINE4 = "every light ray.";
 const DESIGN_SUBTITLE_LINE1 = "Concept-to-CAD development for legacy";
 const DESIGN_SUBTITLE_LINE2 = "collection building. Your vision, engineered.";
 
-/**
- * Jewelry Design (section 3) — brief ֆոն (Figma 222:314).
- * Desktop frame 1920×712 — տե՛ս `globals.css` `--section3-block-height-md`.
- */
-const DESIGN_SECTION_DESKTOP_FRAME_HEIGHT_PX = 712;
-/** Figma brief img: left -0.01% */
-const DESIGN_SECTION_BG_POSITION_X = "-0.01%";
-/** Figma brief img: top -19.7% of frame height */
-const DESIGN_SECTION_BG_TOP_OFFSET_RATIO = -0.197;
-const DESIGN_SECTION_BG_POSITION_Y_PX =
-  DESIGN_SECTION_BG_TOP_OFFSET_RATIO * DESIGN_SECTION_DESKTOP_FRAME_HEIGHT_PX;
-/** Դրական արժեք — ֆոնի նկարը դեպի ներքև (px) */
-const DESIGN_SECTION_BG_NUDGE_DOWN_PX = 16;
 /** Միայն Jewelry Design ենթավերնագիր — դեպի վերև (Tailwind -translate-y-4 ≈ 16px) */
 const DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS = "-translate-y-4";
-/** Միայն Jewelry Design «Get a Quote» — դեպի վերև */
-const DESIGN_SECTION_GET_QUOTE_NUDGE_UP_CLASS = "-translate-y-8";
-/** Figma brief img: w 112.31%, h 139.32% */
-const DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT = 112.31;
-const DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT = 139.32;
 
 /** Section2 — text column left; cluster nudge disabled (padding handles inset). */
 const SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX = 0;
@@ -70,6 +52,15 @@ const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
 
 /** Միայն «Jewelry Rendering» վերնագիր — դեպի ներքև (px) */
 const SECTION2_RENDERING_TITLE_NUDGE_DOWN_PX = 10;
+
+const SECTION3_HERO_BG_MOBILE_PATH = "/images/design/block3-mobile-original.png";
+
+/**
+ * md+ anchor for Jewelry Design text column (`top` with `-translate-y-1/2`).
+ * Higher % = block lower in the hero frame.
+ */
+const SECTION3_TEXT_COLUMN_TOP_MD_CLASS = "md:top-[47%]";
+
 const SLIDES: Array<{
   id: string;
   title: string;
@@ -120,7 +111,7 @@ export function PowerBanners() {
               : slide.id === "rendering"
                 ? "min-h-0 bg-white md:h-auto"
                 : slide.id === "design"
-                  ? "power-banners-section3-block mx-auto w-full max-w-[1920px] bg-white"
+                  ? "min-h-0 bg-white md:h-auto"
                   : "min-h-[460px] md:min-h-[720px]"
           } ${slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""}`}
         >
@@ -241,69 +232,39 @@ export function PowerBanners() {
               </div>
             </div>
           ) : (
-            <>
+            <div
+              className="power-banners-section3-block relative overflow-hidden"
+              data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
+              style={
+                {
+                  ["--section3-hero-bg" as string]: `url("${slide.bg}")`,
+                  ["--section3-hero-bg-mobile" as string]: `url("${SECTION3_HERO_BG_MOBILE_PATH}")`,
+                } as React.CSSProperties
+              }
+            >
               <div
-                className="pointer-events-none absolute inset-0 overflow-hidden bg-white"
-                data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
-                style={{
-                  backgroundImage: `url("${slide.bg}")`,
-                  backgroundPosition: `${DESIGN_SECTION_BG_POSITION_X} calc(${DESIGN_SECTION_BG_POSITION_Y_PX}px + ${DESIGN_SECTION_BG_NUDGE_DOWN_PX}px)`,
-                  backgroundSize: `${DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT}% ${DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT}%`,
-                  backgroundRepeat: "no-repeat",
-                }}
-                aria-hidden
-              />
-              <div className="relative z-10 flex h-full w-full flex-col items-end justify-end px-6 pt-16 pb-16 text-[#121212] md:hidden">
-                <h1 className="hero-design-mobile-title">Jewelry Design</h1>
-                <p className="hero-design-mobile-subtitle mt-4">
-                  Concept-to-CAD development for legacy collection building. Your vision, engineered.
-                </p>
-                <GetAQuoteButton
-                  variant="gold"
-                  className="hero-section3-mobile-cta shrink-0"
-                />
-              </div>
-              <div
-                className={`relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
-                  slide.contentAlign === "right"
-                    ? "items-end text-right"
-                    : slide.contentAlign === "left"
-                      ? "items-start text-left"
-                      : "items-center text-center"
-                } ${slide.darkText ? "text-[#121212]" : "text-white"} ${slide.id === "design" ? "power-banners-section3-text-cluster hidden md:flex" : ""}`.trim()}
+                className={`relative z-10 flex h-full w-full flex-col items-start justify-end px-6 pb-16 pt-16 md:absolute md:left-0 md:right-auto ${SECTION3_TEXT_COLUMN_TOP_MD_CLASS} md:max-w-[min(520px,44vw)] md:-translate-y-1/2 md:items-start md:justify-center md:pl-12 md:pr-6 md:pb-0 md:pt-0 lg:pl-20`}
               >
-                <h1
-                  className={
-                    slide.darkText
-                      ? "hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal md:whitespace-nowrap"
-                      : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
-                  }
-                >
-                  {slide.title}
-                </h1>
-                <p
-                  className={
-                    slide.darkText
-                      ? `hero-primary-subtitle-typography-design mt-8 max-w-[433px] ${DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS}`
-                      : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
-                  }
-                >
-                  {slide.darkText ? (
-                    <>
+                <div className="power-banners-section3-text-cluster flex w-full flex-col items-start gap-7 text-left text-[#121212] md:gap-8">
+                  <h1 className="hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal text-balance md:whitespace-nowrap">
+                    {slide.title}
+                  </h1>
+                  <div className="flex w-full flex-col items-start gap-0.5 md:gap-1">
+                    <p
+                      className={`hero-primary-subtitle-typography-design max-w-[433px] self-start text-left ${DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS}`}
+                    >
                       <span className="block">{DESIGN_SUBTITLE_LINE1}</span>
                       <span className="block">{DESIGN_SUBTITLE_LINE2}</span>
-                    </>
-                  ) : (
-                    slide.subtitle
-                  )}
-                </p>
-                <GetAQuoteButton
-                  id={HERO_SECTION3_GET_QUOTE_BUTTON_ID}
-                  variant="gold"
-                  className={`mt-8 shrink-0 ${DESIGN_SECTION_GET_QUOTE_NUDGE_UP_CLASS}`}
-                />
+                    </p>
+                    <GetAQuoteButton
+                      id={HERO_SECTION3_GET_QUOTE_BUTTON_ID}
+                      variant="gold"
+                      className="shrink-0 self-start"
+                    />
+                  </div>
+                </div>
               </div>
-            </>
+            </div>
           )}
         </div>
         {slide.id === "rendering" && (

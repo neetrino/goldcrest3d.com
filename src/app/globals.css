@@ -401,73 +401,69 @@ section[id] {
   }
 }
 
-/* PowerBanners section3 (Jewelry Design) — միայն բլոկի բարձրություն; նկարը՝ PowerBanners inline bg */
+/* PowerBanners section3 (Jewelry Design) — ֆրեյմ ինչպես section2; ֆոնը cover, якорь слева (обрезка справа) */
 .power-banners-section3-block {
-  min-height: var(--section3-block-min-h-mobile, 440px);
+  --section3-bg-layout-height: var(--section3-block-height-md, 712px);
+  --section3-block-design-width: 1920px;
+  --section3-block-visible-height: var(--section3-block-height-md, 712px);
+  position: relative;
+  width: 100%;
+  max-width: var(--section3-block-design-width);
+  margin-inline: auto;
+  height: var(--section3-block-visible-height);
+  flex-shrink: 0;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .power-banners-section3-block {
+    width: var(--section3-block-design-width);
+    max-width: 100%;
+    height: var(--section3-block-visible-height);
+    min-height: var(--section3-block-visible-height);
+  }
+}
+
+.power-banners-section3-block::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  width: 100%;
+  height: var(--section3-bg-layout-height);
+  pointer-events: none;
+  background-color: #fff;
+  background-image: var(--section3-hero-bg);
+  background-size: cover;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+/* Title/subtitle utilities default to center; section3 column is left-aligned */
+.power-banners-section3-text-cluster .hero-primary-title-typography-design,
+.power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
+  text-align: left;
+}
+
+@media (max-width: 767px) {
+  .power-banners-section3-text-cluster .hero-primary-title-typography-design {
+    font-size: 24px;
+    line-height: 1.1;
+    letter-spacing: -0.006em;
+  }
+}
+
+/* Desktop: base .hero-primary-title-typography-design uses 72px line-height — tighten stack */
+@media (min-width: 768px) {
+  .power-banners-section3-text-cluster .hero-primary-title-typography-design {
+    line-height: 1.12;
+  }
 }
 
 /* Mobile only: unify largest hero blocks size to 367x679 (20/37). */
 @media (max-width: 767px) {
-  .hero-design-mobile-title {
-    flex: 1 0 0;
-    transform: translate(4px, 297px);
-    color: #000;
-    text-align: right;
-    font-family: Inter, -apple-system, system-ui, sans-serif;
-    font-size: 30px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 36px;
-    letter-spacing: 0.396px;
-  }
-
-  .hero-design-mobile-subtitle {
-    width: 197px;
-    color: rgba(18, 18, 18, 0.9);
-    text-align: right;
-    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-    font-size: 16px;
-    font-style: italic;
-    font-weight: 350;
-    line-height: 28px;
-    transform: translate(4px, -150px);
-  }
-
-  .hero-section3-mobile-cta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: auto;
-    min-width: unset;
-    padding: 11px 32px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
-    gap: 10px;
-    border-radius: 110px;
-    color: #fff !important;
-    background: linear-gradient(
-      90deg,
-      #4b463f 0%,
-      #5c5547 7.14%,
-      #6e644f 14.29%,
-      #807356 21.43%,
-      #93835e 28.57%,
-      #a69466 35.71%,
-      #b9a46d 42.86%,
-      #cdb575 50%,
-      #d4bd82 57.14%,
-      #dbc68f 64.29%,
-      #e2ce9d 71.43%,
-      #e9d7aa 78.57%,
-      #f1e0b7 85.71%,
-      #f8e8c4 92.86%,
-      #fff1d1 100%
-    ) !important;
-    margin-top: 0 !important;
-    transform: translate(4px, -138px) !important;
-  }
-
   .power-banners-section2-text-cluster > h1 {
     flex: 1 0 0;
     top: 24px;
@@ -583,16 +579,15 @@ section[id] {
     background-repeat: no-repeat;
   }
 
-  .power-banners-section3-block [data-landing-image] {
-    left: 0;
-    right: 0;
+  .power-banners-section3-block::before {
     width: 100%;
+    left: 0;
     height: 100%;
-    background-image: url("/images/design/block3-mobile-original.png") !important;
     background-color: #fff;
-    background-size: 93% auto !important;
-    background-position: calc(50% + 10px) 0 !important;
-    background-repeat: no-repeat !important;
+    background-image: var(--section3-hero-bg-mobile, var(--section3-hero-bg));
+    background-size: cover;
+    background-position: left center;
+    background-repeat: no-repeat;
   }
 
   #hero-modeling-text-group {
@@ -652,20 +647,10 @@ section[id] {
   }
 }
 
-@media (min-width: 768px) {
-  .power-banners-section3-block {
-    height: var(--section3-block-height-md, 712px);
-    min-height: var(--section3-block-height-md, 712px);
-  }
-
-  /** Jewelry Design — Figma offset, clamped so text stays on-canvas on narrow md/lg. */
-  .power-banners-section3-text-cluster {
-    transform: translate(
-      calc(-1 * min(185px, 14vw)),
-      min(180px, 22vh)
-    );
-  }
-}
+/**
+ * md↑ section3 height already from .power-banners-section3-block;
+ * text column uses Tailwind (same pattern as section2) — no extra transform.
+ */
 
 /* Nav CTA "Request a Quote" — gold gradient from Figma */
 .nav-cta-gradient {
