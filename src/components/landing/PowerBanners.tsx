@@ -56,6 +56,15 @@ const SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX = 0;
 const SECTION2_TEXT_CLUSTER_NUDGE_MD_PX = 0;
 const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
 
+/** Section2 — Jewelry Rendering ֆոնի մասշտաբ (լայնություն+բարձրություն համամասնորեն); բլոկը նույնը */
+const SECTION2_HERO_BG_SCALE = 1.22;
+
+/** Section2 — ֆոնի նկարը դեպի վեր (px); միայն նկարը, բլոկը նույնը */
+const SECTION2_HERO_BG_IMAGE_NUDGE_UP_PX = 76;
+
+/** Section2 — ֆոնի նկարը դեպի ձախ (px); translateX բացասական */
+const SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX = 88;
+
 /** Միայն «Jewelry Rendering» վերնագիր — դեպի ներքև (px) */
 const SECTION2_RENDERING_TITLE_NUDGE_DOWN_PX = 10;
 
@@ -197,6 +206,9 @@ export function PowerBanners() {
                 {
                   ["--section2-hero-bg" as string]: `url("${slide.bg}")`,
                   ["--section2-hero-bg-mobile" as string]: `url("${SECTION2_HERO_BG_MOBILE_PATH}")`,
+                  ["--section2-hero-bg-scale" as string]: String(SECTION2_HERO_BG_SCALE),
+                  ["--section2-hero-bg-translate-y" as string]: `-${SECTION2_HERO_BG_IMAGE_NUDGE_UP_PX}px`,
+                  ["--section2-hero-bg-translate-x" as string]: `-${SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX}px`,
                   ["--section2-text-cluster-nudge-mobile" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX}px`,
                   ["--section2-text-cluster-nudge-md" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_MD_PX}px`,
                 } as React.CSSProperties
