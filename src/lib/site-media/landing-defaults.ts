@@ -27,23 +27,23 @@ export const DEFAULT_FINISHED_ROW1: readonly FinishedGalleryItem[] = [
   {
     id: "row1-img-1",
     imageId: LANDING_IMAGE_IDS.FINISHED_1,
-    src: "/images/finished/block1-portrait-jewelry.png",
+    src: "/images/finished/block1-portrait-jewelry.webp",
     objectPositionClass: "gallery-object-position-portrait",
   },
   {
     id: "row1-img-2",
     imageId: LANDING_IMAGE_IDS.FINISHED_2,
-    src: "/images/finished/block2-ancient-heritage.png",
+    src: "/images/finished/block2-ancient-heritage.webp",
   },
   {
     id: "row1-img-3",
     imageId: LANDING_IMAGE_IDS.FINISHED_3,
-    src: "/images/finished/block3-hiphop.png",
+    src: "/images/finished/block3-hiphop.webp",
   },
   {
     id: "row1-img-4",
     imageId: LANDING_IMAGE_IDS.FINISHED_4,
-    src: LANDING_IMAGES.modelingBridal,
+    src: "/images/modeling/bridal-engagement.webp",
   },
 ];
 
@@ -52,26 +52,26 @@ export const DEFAULT_FINISHED_ROW2: readonly FinishedGalleryItem[] = [
   {
     id: "row2-img-1",
     imageId: LANDING_IMAGE_IDS.FINISHED_4,
-    src: "/images/finished/small-block-bridal-1.png",
+    src: "/images/finished/small-block-bridal-1.webp",
   },
   {
     id: "row2-img-2",
     imageId: LANDING_IMAGE_IDS.FINISHED_5,
-    src: "/images/finished/small-block-bridal-2.png",
+    src: "/images/finished/small-block-bridal-2.webp",
   },
   {
     id: "row2-img-3",
     imageId: LANDING_IMAGE_IDS.FINISHED_6,
-    src: "/images/finished/small-block-portrait.png",
+    src: "/images/finished/small-block-portrait.webp",
   },
   {
     id: "row2-img-4",
     imageId: LANDING_IMAGE_IDS.FINISHED_7,
-    src: LANDING_IMAGES.modelingMechanical,
+    src: "/images/modeling/mechanical-lock-systems.webp",
   },
   {
     id: "row2-img-5",
     imageId: LANDING_IMAGE_IDS.FINISHED_7,
-    src: "/images/finished/small-block-bridal-1.png",
+    src: "/images/finished/small-block-bridal-1.webp",
   },
 ];
