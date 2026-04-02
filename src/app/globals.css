@@ -211,14 +211,14 @@ section[id] {
   }
 }
 
-/* Section2 (Jewelry Rendering) — միայն CTA; X-ը փոքր = ավելի ձախ */
+/* Section2 CTA — սյունը կենտրոնից; հիմնականում ուղղահայաց շեղում */
 #hero-section2-get-quote {
-  transform: translate(2.3rem, -1.65rem);
+  transform: translate(0, -1.65rem);
 }
 
 @media (min-width: 768px) {
   #hero-section2-get-quote {
-    transform: translate(2.8rem, -1.8rem);
+    transform: translate(0, -1.8rem);
   }
 }
 
@@ -241,9 +241,8 @@ section[id] {
       0 0 0 0 rgba(0, 0, 0, 0);
   }
 
-  /* Desktop-only: move only section2 CTA slightly to the right. */
   #hero-section2-get-quote {
-    transform: translate(5.1rem, -1.8rem);
+    transform: translate(0, -1.8rem);
   }
 }
 
@@ -279,17 +278,16 @@ section[id] {
     line-height: 20px;
   }
 
-  /* Desktop-only: Hero Jewelry Rendering typography from design spec */
+  /* Desktop-only: Hero Jewelry Rendering — колонка слева, текст по правому краю колонки */
   .power-banners-section2-text-cluster > h1 {
     color: #fff;
-    text-align: center;
+    text-align: right;
     font-family: "SF Compact", -apple-system, system-ui, sans-serif;
     font-size: 52px;
     font-style: normal;
     font-weight: 350;
     line-height: 72px;
-    /* Desktop-only: move only title slightly to the right. */
-    translate: -0.5rem -0.625rem;
+    translate: 0 -0.625rem;
   }
 
   #hero-rendering-subtitle {
@@ -373,8 +371,8 @@ section[id] {
 }
 
 /**
- * Якорь слева: при сужении обрезка справа; важная часть кадра (текст слева в макете) сохраняется.
- * Высота блока на desktop фиксирована — меняется только ширина, фото не растягивается.
+ * Jewelry Rendering: якорь слева — cover обрезает справа при сужении;
+ * текстовая колонка слева остаётся, высота блока 712px.
  */
 .power-banners-section2-block::before {
   content: "";
@@ -392,18 +390,14 @@ section[id] {
   background-repeat: no-repeat;
 }
 
-/* Section2 տեքստի կլաստեր — միասին դեպի ձախ (--section2-text-cluster-nudge-* PowerBanners-ից) */
+/* Section2 cluster — nudge optional via CSS vars from PowerBanners (often 0) */
 .power-banners-section2-text-cluster {
-  transform: translateX(
-    calc(-1 * var(--section2-text-cluster-nudge-mobile, 56px))
-  );
+  transform: translateX(var(--section2-text-cluster-nudge-mobile, 0px));
 }
 
 @media (min-width: 768px) {
   .power-banners-section2-text-cluster {
-    transform: translateX(
-      calc(-1 * var(--section2-text-cluster-nudge-md, 128px))
-    );
+    transform: translateX(var(--section2-text-cluster-nudge-md, 0px));
   }
 }
 
@@ -477,6 +471,7 @@ section[id] {
   .power-banners-section2-text-cluster > h1 {
     flex: 1 0 0;
     top: 24px;
+    text-align: right;
     font-family: Inter, -apple-system, system-ui, sans-serif;
     font-size: 30px;
     font-style: normal;
@@ -486,10 +481,10 @@ section[id] {
   }
 
   #hero-rendering-subtitle {
-    width: 197px;
-    max-width: 197px;
+    width: auto;
+    max-width: 100%;
     flex-shrink: 0;
-    text-align: left;
+    text-align: right;
     color: rgba(255, 255, 255, 0.9);
     font-family: Inter, -apple-system, system-ui, sans-serif;
     font-size: 16px;
@@ -497,7 +492,7 @@ section[id] {
     font-weight: 300;
     line-height: 24px;
     letter-spacing: -0.312px;
-    transform: translate(-64px, 12px);
+    transform: translate(0, 0);
   }
 
   #hero-section2-get-quote {
@@ -524,7 +519,7 @@ section[id] {
       #f8e8c4 92.86%,
       #fff1d1 100%
     );
-    transform: translate(-120px, -0.1rem);
+    transform: translate(0, 0);
   }
 
   /**

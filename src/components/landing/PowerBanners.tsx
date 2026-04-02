@@ -63,9 +63,9 @@ const DESIGN_SECTION_GET_QUOTE_NUDGE_UP_CLASS = "-translate-y-8";
 const DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT = 112.31;
 const DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT = 139.32;
 
-/** Section2 (Jewelry Rendering) — ամբողջ տեքստային բլոկը միասին դեպի ձախ (px) */
-const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX = 84;
-const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MD_PX = 128;
+/** Section2 — text column left; cluster nudge disabled (padding handles inset). */
+const SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX = 0;
+const SECTION2_TEXT_CLUSTER_NUDGE_MD_PX = 0;
 const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
 
 /** Միայն «Jewelry Rendering» վերնագիր — դեպի ներքև (px) */
@@ -198,15 +198,15 @@ export function PowerBanners() {
                 {
                   ["--section2-hero-bg" as string]: `url("${slide.bg}")`,
                   ["--section2-hero-bg-mobile" as string]: `url("${SECTION2_HERO_BG_MOBILE_PATH}")`,
-                  ["--section2-text-cluster-nudge-mobile" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX}px`,
-                  ["--section2-text-cluster-nudge-md" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MD_PX}px`,
+                  ["--section2-text-cluster-nudge-mobile" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX}px`,
+                  ["--section2-text-cluster-nudge-md" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_MD_PX}px`,
                 } as React.CSSProperties
               }
             >
-              <div className="relative z-10 flex h-full w-full flex-col items-end justify-center pl-6 pr-6 pt-16 pb-16 md:absolute md:right-0 md:top-[50%] md:max-w-[494px] md:h-auto md:-translate-y-1/2 md:pl-12 md:pr-[153px] md:pt-0 md:pb-0">
+              <div className="relative z-10 flex h-full w-full flex-col items-start justify-end px-6 pb-16 pt-16 md:absolute md:left-0 md:right-auto md:top-[38%] md:max-w-[min(520px,44vw)] md:-translate-y-1/2 md:items-start md:justify-center md:pl-12 md:pr-6 md:pb-0 md:pt-0 lg:pl-20">
                 <div className="power-banners-section2-text-cluster flex w-full flex-col items-end gap-8 text-right text-white">
                   <h1
-                    className={`relative inline-block max-w-full translate-x-1 -translate-y-2.5 whitespace-normal text-balance text-right md:-translate-x-10 md:-translate-y-2.5 md:whitespace-nowrap ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
+                    className={`relative inline-block max-w-full -translate-y-2.5 whitespace-normal text-balance text-right md:-translate-y-2.5 md:whitespace-nowrap ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
                   >
                     <span
                       className="inline-block"
@@ -219,7 +219,7 @@ export function PowerBanners() {
                   </h1>
                   <p
                     id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
-                    className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] text-right"
+                    className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] self-end text-right"
                   >
                     <span className="md:hidden">
                       <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE1}</span>
@@ -235,7 +235,7 @@ export function PowerBanners() {
                   <GetAQuoteButton
                     id={HERO_SECTION2_GET_QUOTE_BUTTON_ID}
                     variant="gold"
-                    className="shrink-0"
+                    className="shrink-0 self-end"
                   />
                 </div>
               </div>
