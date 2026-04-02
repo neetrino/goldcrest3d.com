@@ -6,10 +6,9 @@ import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 import { useFinishedCreationsCarouselMetrics } from "@/components/landing/useFinishedCreationsCarouselMetrics";
 
-/** Carousel: large images (row 1). */
+/** Carousel: small row (row 2) — design aspect; slide width is fluid from container. */
 const ROW2_ITEM_WIDTH = 420;
 const ROW2_ITEM_HEIGHT = 232;
-const ROW2_GAP = 8;
 
 type SectionFinishedCreationsProps = {
   row1: FinishedGalleryItem[];
@@ -17,12 +16,19 @@ type SectionFinishedCreationsProps = {
 };
 const SLOT_WIDTH = 670;
 const SLOT_HEIGHT = 370;
-const SLOT_GAP = 8;
-/** Desktop carousel: four large slots visible in the measured viewport. */
-const DESKTOP_ROW1_VISIBLE_SLOTS = 4;
+/**
+ * Row1 fallback when peek is off (unused if `DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION` is set).
+ */
+const DESKTOP_ROW1_VISIBLE_SLOTS_FALLBACK = 4;
+/**
+ * Larger value → narrower slides, more of left/right slides visible (peek). Was 0.12.
+ */
+const DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION = 0.20;
+/** Desktop: three small blocks per viewport. */
+const DESKTOP_ROW2_VISIBLE_SLOTS = 3;
 
-/** Mobile gallery: taller than desktop slot ratio (same width, more height). */
-const MOBILE_BLOCK_HEIGHT_SCALE = 1.3;
+/** Mobile gallery: slightly taller than desktop slot ratio so blocks feel larger. */
+const MOBILE_BLOCK_HEIGHT_SCALE = 1.38;
 /** Mobile small row only: extra scale on top of `MOBILE_BLOCK_HEIGHT_SCALE`. */
 const MOBILE_SMALL_BLOCK_SIZE_SCALE = 0.95;
 const MOBILE_ROW1_ASPECT_HEIGHT = Math.round(SLOT_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE);
@@ -55,6 +61,12 @@ const MOBILE_SMALL_ROW_CLASS =
  */
 const FINISHED_HEADING_CLASS =
   "-mt-4 min-w-0 flex-[1_0_0] text-center text-[30px] not-italic font-[457] leading-[40px] text-black font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:mt-0 md:flex-none md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px]";
+
+/**
+ * Edge-to-edge gallery on md+ (`ml` breakout from centered column).
+ */
+const FINISHED_GALLERY_BLEED_OUTER_CLASS =
+  "flex w-full min-w-0 max-w-full flex-col gap-2 max-md:items-stretch md:ml-[calc(50%-50vw)] md:w-[100vw] md:max-w-[100vw] md:shrink-0 md:self-stretch";
 
 export function SectionFinishedCreations({
   row1,
@@ -129,8 +141,9 @@ export function SectionFinishedCreations({
   const desktopCarouselContainerRef = useRef<HTMLDivElement>(null);
   const desktopMetrics = useFinishedCreationsCarouselMetrics(
     desktopCarouselContainerRef,
-    DESKTOP_ROW1_VISIBLE_SLOTS,
-    ROW2_IMAGE_COUNT,
+    DESKTOP_ROW1_VISIBLE_SLOTS_FALLBACK,
+    DESKTOP_ROW2_VISIBLE_SLOTS,
+    DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION,
   );
 
   const mobileRow1Left = ROW1_IMAGES[activePage % TOTAL_PAGES];
@@ -145,7 +158,7 @@ export function SectionFinishedCreations({
   return (
     <section
       id={LANDING_SECTION_IDS.FINISHED_CREATIONS}
-      className="bg-white px-4 pt-[56px] pb-10 md:px-6"
+      className="overflow-x-clip bg-white px-4 pt-[56px] pb-10 md:px-6"
       aria-labelledby="finished-heading"
     >
       <div className="mx-auto max-w-[1980px]">
@@ -154,8 +167,9 @@ export function SectionFinishedCreations({
             Finished Creations
           </h2>
         </div>
-        <div className="mt-9 flex flex-col gap-2 max-md:items-stretch md:items-center">
-          <div
+        <div className="mt-9 flex flex-col gap-2 max-md:items-stretch md:items-stretch">
+          <div className={FINISHED_GALLERY_BLEED_OUTER_CLASS}>
+            <div
             className="flex w-full max-w-full min-w-0 touch-pan-y flex-col gap-2 max-md:overflow-x-visible md:hidden"
             onPointerDown={onMobileSwipePointerDown}
             onPointerUp={onMobileSwipePointerUp}
@@ -175,7 +189,7 @@ export function SectionFinishedCreations({
                     alt=""
                     fill
                     className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
-                    sizes="(max-width: 767px) 50vw, 670px"
+                    sizes="(max-width: 767px) 50vw, 50vw"
                     unoptimized
                   />
                 </div>
@@ -204,23 +218,26 @@ export function SectionFinishedCreations({
                       alt=""
                       fill
                       className={`object-cover ${sideObjectPositionClass}`.trim()}
-                      sizes="(max-width: 767px) 50vw, 420px"
+                      sizes="(max-width: 767px) 33vw, 33vw"
                       unoptimized
                     />
                   </div>
                 );
               })}
             </div>
-          </div>
-          <div
-            ref={desktopCarouselContainerRef}
-            className="hidden w-full min-w-0 max-w-full flex-col items-stretch gap-2 md:flex"
-          >
-            <div className="w-full min-w-0 overflow-hidden">
+            </div>
+            <div
+              ref={desktopCarouselContainerRef}
+              className="hidden w-full min-w-0 max-w-full flex-col items-stretch gap-2 md:flex"
+            >
+              <div className="w-full min-w-0 overflow-hidden">
               <div
                 className="flex gap-2 transition-transform duration-300 ease-out"
                 style={{
-                  transform: `translateX(-${(activePage % TOTAL_PAGES) * desktopMetrics.row1TranslatePx}px)`,
+                  transform: `translateX(-${
+                    desktopMetrics.row1PeekOffsetPx +
+                    (activePage % TOTAL_PAGES) * desktopMetrics.row1TranslatePx
+                  }px)`,
                 }}
               >
                 {row1StripImages.map((item, index) => (
@@ -235,7 +252,7 @@ export function SectionFinishedCreations({
                       alt=""
                       fill
                       className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
-                      sizes="(min-width: 768px) 25vw, 670px"
+                      sizes="(min-width: 768px) 28vw, 670px"
                       unoptimized
                     />
                   </div>
@@ -264,12 +281,13 @@ export function SectionFinishedCreations({
                       alt=""
                       fill
                       className="object-cover"
-                      sizes="(min-width: 768px) 22vw, 420px"
+                      sizes="(min-width: 768px) 33vw, 420px"
                       unoptimized
                     />
                   </div>
                 ))}
               </div>
+            </div>
             </div>
           </div>
         </div>
