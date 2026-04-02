@@ -7,7 +7,7 @@ import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
 const TITLE = "High Jewelry";
 const LINE_1 =
-  "Advanced pavé and fine-setting structures developed with micron-level precision.";
+  "Advanced pavé and fine-setting structures developed with micron-level";
 const LINE_2 =
   "Invisible settings and ultra-thin tolerances engineered with strict structural discipline.";
 
@@ -68,18 +68,18 @@ export function ModelingBlockHighJewelry({
         )}
       </div>
       <div
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-sm:translate-y-[136px]"
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-sm:translate-y-[calc(136px*var(--ms,1))]"
         style={{ marginTop: "-30%" }}
       >
-        <h3 className="font-sans text-[20px] font-bold leading-[28px] tracking-[-0.449px] text-black max-sm:translate-y-3 sm:font-manrope sm:text-[32px] sm:leading-[24px] sm:tracking-normal sm:font-bold">
+        <h3 className="font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
           {TITLE}
         </h3>
-        <p className="mt-4 block w-[243px] max-w-full shrink-0 text-center font-sans text-[12px] font-light leading-4 text-[#364153] sm:hidden">
+        <p className="mt-[calc(1rem*var(--ms,1))] block w-[calc(243px*var(--ms,1))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden">
           {LINE_1}
         </p>
-        <div className="mt-4 hidden max-w-[520px] font-manrope text-[14px] font-light leading-[22px] text-black/70 sm:block">
+        <div className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 sm:block">
           <span className="block">{LINE_1}</span>
-          <span className="mt-0.5 block -translate-x-3 whitespace-nowrap">{LINE_2}</span>
+          <span className="mt-[calc(0.125rem*var(--ms,1))] block -translate-x-[calc(0.75rem*var(--ms,1))] whitespace-nowrap">{LINE_2}</span>
         </div>
       </div>
     </article>

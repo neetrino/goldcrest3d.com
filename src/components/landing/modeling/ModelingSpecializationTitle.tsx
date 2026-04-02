@@ -11,7 +11,7 @@ export function ModelingSpecializationTitle() {
     <div className="flex h-full w-full min-w-0 items-center justify-center px-1">
       <h2
         id="modeling-specialization"
-        className="-translate-y-4 whitespace-nowrap text-center font-sans text-[30px] font-medium leading-[36px] tracking-[0.396px] text-[#DDAB52] md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px] md:-translate-y-8"
+        className="-translate-y-[calc(1rem*var(--ms,1))] whitespace-nowrap text-center font-sans text-[calc(30px*var(--ms,1))] font-medium leading-[calc(36px*var(--ms,1))] tracking-[0.396px] text-[#DDAB52] md:font-manrope md:text-[calc(48px*var(--ms,1))] md:font-normal md:leading-[calc(40px*var(--ms,1))] md:tracking-[-0.9px] md:-translate-y-[calc(2rem*var(--ms,1))]"
       >
         {MODELING_SPECIALIZATION_TITLE}
       </h2>

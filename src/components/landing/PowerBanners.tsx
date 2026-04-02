@@ -15,6 +15,12 @@ const SECTION1_TAIL_MIN_HEIGHT_PX = 120;
 
 /** Section1 — միայն հերո-նկարը դեպի ներքև (px), background-position Y */
 const SECTION1_HERO_BG_NUDGE_DOWN_PX = 16;
+
+/** Section1 — նկարը դեպի վեր (px); բլոկի չափը չի փոխվում, strip-ը overflow:hidden */
+const SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX = 40;
+
+/** Section1 — նկարի մասշտաբ (1 = նույնը); բլոկի չափը չի փոխվում, overflow-ով կտրվում է */
+const SECTION1_HERO_BG_SCALE = 1.08;
 const SECTION1_HERO_BG_MOBILE_PATH = "/images/modeling/block1-mobile.png";
 
 /** Section1 — վերնագիր, ենթավերնագիր, CTA դեպի ներքև (translateY, px); ցածր արժեք = ավելի վերև */
@@ -42,38 +48,34 @@ const RENDERING_SUBTITLE_MOBILE_LINE4 = "every light ray.";
 const DESIGN_SUBTITLE_LINE1 = "Concept-to-CAD development for legacy";
 const DESIGN_SUBTITLE_LINE2 = "collection building. Your vision, engineered.";
 
-/**
- * Jewelry Design (section 3) — brief ֆոն (Figma 222:314).
- * Desktop frame 1920×712 — տե՛ս `globals.css` `--section3-block-height-md`.
- */
-const DESIGN_SECTION_DESKTOP_FRAME_HEIGHT_PX = 712;
-/** Figma brief img: left -0.01% */
-const DESIGN_SECTION_BG_POSITION_X = "-0.01%";
-/** Figma brief img: top -19.7% of frame height */
-const DESIGN_SECTION_BG_TOP_OFFSET_RATIO = -0.197;
-const DESIGN_SECTION_BG_POSITION_Y_PX =
-  DESIGN_SECTION_BG_TOP_OFFSET_RATIO * DESIGN_SECTION_DESKTOP_FRAME_HEIGHT_PX;
-/** Դրական արժեք — ֆոնի նկարը դեպի ներքև (px) */
-const DESIGN_SECTION_BG_NUDGE_DOWN_PX = 16;
-/** Վերնագիր, ենթատեքստ, CTA — դեպի ձախ (translateX, px) */
-const DESIGN_SECTION_TEXT_NUDGE_LEFT_PX = 185;
-/** Jewelry Design տեքստային բլոկ — դեպի ներքև (translateY, px) */
-const DESIGN_SECTION_TEXT_NUDGE_DOWN_PX = 180;
 /** Միայն Jewelry Design ենթավերնագիր — դեպի վերև (Tailwind -translate-y-4 ≈ 16px) */
 const DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS = "-translate-y-4";
-/** Միայն Jewelry Design «Get a Quote» — դեպի վերև */
-const DESIGN_SECTION_GET_QUOTE_NUDGE_UP_CLASS = "-translate-y-8";
-/** Figma brief img: w 112.31%, h 139.32% */
-const DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT = 112.31;
-const DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT = 139.32;
 
-/** Section2 (Jewelry Rendering) — ամբողջ տեքստային բլոկը միասին դեպի ձախ (px) */
-const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX = 84;
-const SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MD_PX = 128;
+/** Section2 — text column left; cluster nudge disabled (padding handles inset). */
+const SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX = 0;
+const SECTION2_TEXT_CLUSTER_NUDGE_MD_PX = 0;
 const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
+
+/** Section2 — Jewelry Rendering ֆոնի մասշտաբ (լայնություն+բարձրություն համամասնորեն); բլոկը նույնը */
+const SECTION2_HERO_BG_SCALE = 1.22;
+
+/** Section2 — ֆոնի նկարը դեպի վեր (px); միայն նկարը, բլոկը նույնը */
+const SECTION2_HERO_BG_IMAGE_NUDGE_UP_PX = 76;
+
+/** Section2 — ֆոնի նկարը դեպի ձախ (px); translateX բացասական */
+const SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX = 88;
 
 /** Միայն «Jewelry Rendering» վերնագիր — դեպի ներքև (px) */
 const SECTION2_RENDERING_TITLE_NUDGE_DOWN_PX = 10;
+
+const SECTION3_HERO_BG_MOBILE_PATH = "/images/design/block3-mobile-original.png";
+
+/**
+ * md+ anchor for Jewelry Design text column (`top` with `-translate-y-1/2`).
+ * Higher % = block lower in the hero frame.
+ */
+const SECTION3_TEXT_COLUMN_TOP_MD_CLASS = "md:top-[47%]";
+
 const SLIDES: Array<{
   id: string;
   title: string;
@@ -85,7 +87,7 @@ const SLIDES: Array<{
 }> = [
   {
     id: "modeling",
-    title: "3D Production-Ready\nModeling",
+    title: "3D Production-Ready Modeling",
     subtitle:
       "Engineered for casting, printing and precise stone setting. Every micron accounted for.",
     bg: LANDING_IMAGES.heroModeling,
@@ -122,9 +124,9 @@ export function PowerBanners() {
             slide.id === "modeling"
               ? "items-center bg-white"
               : slide.id === "rendering"
-                ? "min-h-0 h-[760px] bg-white md:h-auto"
+                ? "min-h-0 bg-white md:h-auto"
                 : slide.id === "design"
-                  ? "power-banners-section3-block mx-auto w-full max-w-[1920px] bg-white"
+                  ? "min-h-0 bg-white md:h-auto"
                   : "min-h-[460px] md:min-h-[720px]"
           } ${slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""}`}
         >
@@ -154,6 +156,8 @@ export function PowerBanners() {
                       ["--section1-hero-bg" as string]: `url("${slide.bg}")`,
                       ["--section1-hero-bg-mobile" as string]: `url("${SECTION1_HERO_BG_MOBILE_PATH}")`,
                       ["--section1-bg-nudge-y" as string]: `${SECTION1_HERO_BG_NUDGE_DOWN_PX}px`,
+                      ["--section1-hero-bg-translate-y" as string]: `-${SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX}px`,
+                      ["--section1-hero-bg-scale" as string]: String(SECTION1_HERO_BG_SCALE),
                     } as React.CSSProperties
                   }
                   aria-hidden
@@ -166,7 +170,7 @@ export function PowerBanners() {
                   }}
                 >
                   <h1
-                    className={`inline-block whitespace-nowrap ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
+                    className={`inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance md:max-w-none ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
                     style={{
                       transform: `translateY(-${SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
                     }}
@@ -202,15 +206,18 @@ export function PowerBanners() {
                 {
                   ["--section2-hero-bg" as string]: `url("${slide.bg}")`,
                   ["--section2-hero-bg-mobile" as string]: `url("${SECTION2_HERO_BG_MOBILE_PATH}")`,
-                  ["--section2-text-cluster-nudge-mobile" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MOBILE_PX}px`,
-                  ["--section2-text-cluster-nudge-md" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_LEFT_MD_PX}px`,
+                  ["--section2-hero-bg-scale" as string]: String(SECTION2_HERO_BG_SCALE),
+                  ["--section2-hero-bg-translate-y" as string]: `-${SECTION2_HERO_BG_IMAGE_NUDGE_UP_PX}px`,
+                  ["--section2-hero-bg-translate-x" as string]: `-${SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX}px`,
+                  ["--section2-text-cluster-nudge-mobile" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX}px`,
+                  ["--section2-text-cluster-nudge-md" as string]: `${SECTION2_TEXT_CLUSTER_NUDGE_MD_PX}px`,
                 } as React.CSSProperties
               }
             >
-              <div className="relative z-10 flex h-full w-full flex-col items-end justify-center pl-6 pr-6 pt-16 pb-16 md:absolute md:right-0 md:top-[50%] md:max-w-[494px] md:h-auto md:-translate-y-1/2 md:pl-12 md:pr-[153px] md:pt-0 md:pb-0">
+              <div className="relative z-10 flex h-full w-full flex-col items-start justify-end px-6 pb-16 pt-16 md:absolute md:left-0 md:right-auto md:top-[38%] md:max-w-[min(520px,44vw)] md:-translate-y-1/2 md:items-start md:justify-center md:pl-12 md:pr-6 md:pb-0 md:pt-0 lg:pl-20">
                 <div className="power-banners-section2-text-cluster flex w-full flex-col items-end gap-8 text-right text-white">
                   <h1
-                    className={`relative inline-block max-w-full translate-x-1 -translate-y-2.5 whitespace-nowrap text-right md:-translate-x-10 md:-translate-y-2.5 ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
+                    className={`relative inline-block max-w-full -translate-y-2.5 whitespace-normal text-balance text-right md:-translate-y-2.5 md:whitespace-nowrap ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
                   >
                     <span
                       className="inline-block"
@@ -223,7 +230,7 @@ export function PowerBanners() {
                   </h1>
                   <p
                     id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
-                    className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] text-right"
+                    className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] self-end text-right"
                   >
                     <span className="md:hidden">
                       <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE1}</span>
@@ -232,89 +239,52 @@ export function PowerBanners() {
                       <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE4}</span>
                     </span>
                     <span className="hidden md:block">
-                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
-                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
+                      <span className="block md:whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
+                      <span className="block md:whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
                     </span>
                   </p>
                   <GetAQuoteButton
                     id={HERO_SECTION2_GET_QUOTE_BUTTON_ID}
                     variant="gold"
-                    className="shrink-0"
+                    className="shrink-0 self-end"
                   />
                 </div>
               </div>
             </div>
           ) : (
-            <>
+            <div
+              className="power-banners-section3-block relative overflow-hidden"
+              data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
+              style={
+                {
+                  ["--section3-hero-bg" as string]: `url("${slide.bg}")`,
+                  ["--section3-hero-bg-mobile" as string]: `url("${SECTION3_HERO_BG_MOBILE_PATH}")`,
+                } as React.CSSProperties
+              }
+            >
               <div
-                className="pointer-events-none absolute inset-0 overflow-hidden bg-white"
-                data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
-                style={{
-                  backgroundImage: `url("${slide.bg}")`,
-                  backgroundPosition: `${DESIGN_SECTION_BG_POSITION_X} calc(${DESIGN_SECTION_BG_POSITION_Y_PX}px + ${DESIGN_SECTION_BG_NUDGE_DOWN_PX}px)`,
-                  backgroundSize: `${DESIGN_SECTION_BG_SIZE_WIDTH_PERCENT}% ${DESIGN_SECTION_BG_SIZE_HEIGHT_PERCENT}%`,
-                  backgroundRepeat: "no-repeat",
-                }}
-                aria-hidden
-              />
-              <div className="relative z-10 flex h-full w-full flex-col items-end justify-end px-6 pt-16 pb-16 text-[#121212] md:hidden">
-                <h1 className="hero-design-mobile-title">Jewelry Design</h1>
-                <p className="hero-design-mobile-subtitle mt-4">
-                  Concept-to-CAD development for legacy collection building. Your vision, engineered.
-                </p>
-                <GetAQuoteButton
-                  variant="gold"
-                  className="hero-section3-mobile-cta shrink-0"
-                />
-              </div>
-              <div
-                className={`relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-6 py-16 md:px-12 ${
-                  slide.contentAlign === "right"
-                    ? "items-end text-right"
-                    : slide.contentAlign === "left"
-                      ? "items-start text-left"
-                      : "items-center text-center"
-                } ${slide.darkText ? "text-[#121212]" : "text-white"} ${slide.id === "design" ? "hidden md:flex" : ""}`.trim()}
-                style={
-                  slide.id === "design"
-                    ? {
-                        transform: `translate(-${DESIGN_SECTION_TEXT_NUDGE_LEFT_PX}px, ${DESIGN_SECTION_TEXT_NUDGE_DOWN_PX}px)`,
-                      }
-                    : undefined
-                }
+                className={`relative z-10 flex h-full w-full flex-col items-start justify-end px-6 pb-16 pt-16 md:absolute md:left-0 md:right-auto ${SECTION3_TEXT_COLUMN_TOP_MD_CLASS} md:max-w-[min(520px,44vw)] md:-translate-y-1/2 md:items-start md:justify-center md:pl-12 md:pr-6 md:pb-0 md:pt-0 lg:pl-20`}
               >
-                <h1
-                  className={
-                    slide.darkText
-                      ? "hero-primary-title-typography-design inline-block max-w-[494px] whitespace-nowrap"
-                      : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
-                  }
-                >
-                  {slide.title}
-                </h1>
-                <p
-                  className={
-                    slide.darkText
-                      ? `hero-primary-subtitle-typography-design mt-8 max-w-[433px] ${DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS}`
-                      : "mt-8 max-w-[672px] font-light italic leading-[28px] text-[rgba(255,255,255,0.9)] text-[18px] md:text-[20px]"
-                  }
-                >
-                  {slide.darkText ? (
-                    <>
+                <div className="power-banners-section3-text-cluster flex w-full flex-col items-start gap-7 text-left text-[#121212] md:gap-8">
+                  <h1 className="hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal text-balance md:whitespace-nowrap">
+                    {slide.title}
+                  </h1>
+                  <div className="flex w-full flex-col items-start gap-0.5 md:gap-1">
+                    <p
+                      className={`hero-primary-subtitle-typography-design max-w-[433px] self-start text-left ${DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS}`}
+                    >
                       <span className="block">{DESIGN_SUBTITLE_LINE1}</span>
                       <span className="block">{DESIGN_SUBTITLE_LINE2}</span>
-                    </>
-                  ) : (
-                    slide.subtitle
-                  )}
-                </p>
-                <GetAQuoteButton
-                  id={HERO_SECTION3_GET_QUOTE_BUTTON_ID}
-                  variant="gold"
-                  className={`mt-8 shrink-0 ${DESIGN_SECTION_GET_QUOTE_NUDGE_UP_CLASS}`}
-                />
+                    </p>
+                    <GetAQuoteButton
+                      id={HERO_SECTION3_GET_QUOTE_BUTTON_ID}
+                      variant="gold"
+                      className="shrink-0 self-start"
+                    />
+                  </div>
+                </div>
               </div>
-            </>
+            </div>
           )}
         </div>
         {slide.id === "rendering" && (

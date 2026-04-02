@@ -4,11 +4,11 @@ import { LANDING_SECTION_IDS } from "@/constants";
 import type { FinishedGalleryItem } from "@/lib/site-media/landing-defaults";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
+import { useFinishedCreationsCarouselMetrics } from "@/components/landing/useFinishedCreationsCarouselMetrics";
 
-/** Carousel: large images (row 1). */
+/** Carousel: small row (row 2) — design aspect; slide width is fluid from container. */
 const ROW2_ITEM_WIDTH = 420;
 const ROW2_ITEM_HEIGHT = 232;
-const ROW2_GAP = 8;
 
 type SectionFinishedCreationsProps = {
   row1: FinishedGalleryItem[];
@@ -16,11 +16,27 @@ type SectionFinishedCreationsProps = {
 };
 const SLOT_WIDTH = 670;
 const SLOT_HEIGHT = 370;
-const SLOT_GAP = 8;
-const TRANSLATE_PER_PAGE = SLOT_WIDTH + SLOT_GAP;
+/**
+ * Row1 fallback when peek is off (unused if `DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION` is set).
+ */
+const DESKTOP_ROW1_VISIBLE_SLOTS_FALLBACK = 4;
+/**
+ * Larger value → narrower slides, more of left/right slides visible (peek). Was 0.12.
+ */
+const DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION = 0.2;
+/**
+ * Row2 desktop: 5 slides in view — 3 full + ½+½ on left/right (`p` = edge fraction).
+ */
+const DESKTOP_ROW2_PEEK_EDGE_VISIBLE_FRACTION = 0.5;
+const DESKTOP_ROW2_PEEK_FULL_CENTER_SLIDES = 3;
+/** Fallback if row2 peek params are not used. */
+const DESKTOP_ROW2_VISIBLE_SLOTS_FALLBACK = 3;
 
-/** Mobile gallery: taller than desktop slot ratio (same width, more height). */
-const MOBILE_BLOCK_HEIGHT_SCALE = 1.3;
+/** Desktop carousel: one timing curve for both rows (GPU-friendly transform). */
+const DESKTOP_CAROUSEL_TRANSITION_MS = 420;
+
+/** Mobile gallery: slightly taller than desktop slot ratio so blocks feel larger. */
+const MOBILE_BLOCK_HEIGHT_SCALE = 1.38;
 /** Mobile small row only: extra scale on top of `MOBILE_BLOCK_HEIGHT_SCALE`. */
 const MOBILE_SMALL_BLOCK_SIZE_SCALE = 0.95;
 const MOBILE_ROW1_ASPECT_HEIGHT = Math.round(SLOT_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE);
@@ -29,7 +45,7 @@ const MOBILE_ROW2_ASPECT_HEIGHT = Math.round(
 );
 
 /** Minimum horizontal distance to count as swipe; ignores small jitter. */
-const MOBILE_SWIPE_THRESHOLD_PX = 48;
+const MOBILE_SWIPE_THRESHOLD_PX = 40;
 /** If vertical movement dominates, treat as scroll, not carousel. */
 const MOBILE_SWIPE_VERTICAL_TOLERANCE_PX = 45;
 
@@ -53,6 +69,12 @@ const MOBILE_SMALL_ROW_CLASS =
  */
 const FINISHED_HEADING_CLASS =
   "-mt-4 min-w-0 flex-[1_0_0] text-center text-[30px] not-italic font-[457] leading-[40px] text-black font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:mt-0 md:flex-none md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px]";
+
+/**
+ * Edge-to-edge gallery on md+ (`ml` breakout from centered column).
+ */
+const FINISHED_GALLERY_BLEED_OUTER_CLASS =
+  "flex w-full min-w-0 max-w-full flex-col gap-2 max-md:items-stretch md:ml-[calc(50%-50vw)] md:w-[100vw] md:max-w-[100vw] md:shrink-0 md:self-stretch";
 
 export function SectionFinishedCreations({
   row1,
@@ -124,9 +146,15 @@ export function SectionFinishedCreations({
   const row1StripImages = [...ROW1_IMAGES, ...ROW1_IMAGES];
   const row2StripImages = [...ROW2_IMAGES, ...ROW2_IMAGES];
 
-  const row2TranslatePerPage = ROW2_ITEM_WIDTH + ROW2_GAP;
-  const row2ViewportWidth =
-    ROW2_ITEM_WIDTH * ROW2_IMAGE_COUNT + ROW2_GAP * (ROW2_IMAGE_COUNT - 1);
+  const desktopCarouselContainerRef = useRef<HTMLDivElement>(null);
+  const desktopMetrics = useFinishedCreationsCarouselMetrics(
+    desktopCarouselContainerRef,
+    DESKTOP_ROW1_VISIBLE_SLOTS_FALLBACK,
+    DESKTOP_ROW2_VISIBLE_SLOTS_FALLBACK,
+    DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION,
+    DESKTOP_ROW2_PEEK_EDGE_VISIBLE_FRACTION,
+    DESKTOP_ROW2_PEEK_FULL_CENTER_SLIDES,
+  );
 
   const mobileRow1Left = ROW1_IMAGES[activePage % TOTAL_PAGES];
   const mobileRow1Right = ROW1_IMAGES[(activePage + 1) % TOTAL_PAGES];
@@ -137,10 +165,19 @@ export function SectionFinishedCreations({
     ROW2_IMAGES[(mobileRow2First + 2) % ROW2_IMAGE_COUNT],
   ] as const;
 
+  const desktopRow1TransformPx = Math.round(
+    desktopMetrics.row1PeekOffsetPx +
+      (activePage % TOTAL_PAGES) * desktopMetrics.row1TranslatePx,
+  );
+  const desktopRow2TransformPx = Math.round(
+    desktopMetrics.row2PeekOffsetPx +
+      (activePage % ROW2_IMAGE_COUNT) * desktopMetrics.row2TranslatePx,
+  );
+
   return (
     <section
       id={LANDING_SECTION_IDS.FINISHED_CREATIONS}
-      className="bg-white px-4 pt-[56px] pb-10 md:px-6"
+      className="overflow-x-clip bg-white px-4 pt-[56px] pb-10 md:px-6"
       aria-labelledby="finished-heading"
     >
       <div className="mx-auto max-w-[1980px]">
@@ -149,8 +186,9 @@ export function SectionFinishedCreations({
             Finished Creations
           </h2>
         </div>
-        <div className="mt-9 flex flex-col gap-2 max-md:items-stretch md:items-center">
-          <div
+        <div className="mt-9 flex flex-col gap-2 max-md:items-stretch md:items-stretch">
+          <div className={FINISHED_GALLERY_BLEED_OUTER_CLASS}>
+            <div
             className="flex w-full max-w-full min-w-0 touch-pan-y flex-col gap-2 max-md:overflow-x-visible md:hidden"
             onPointerDown={onMobileSwipePointerDown}
             onPointerUp={onMobileSwipePointerUp}
@@ -170,7 +208,7 @@ export function SectionFinishedCreations({
                     alt=""
                     fill
                     className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
-                    sizes="(max-width: 767px) 50vw, 670px"
+                    sizes="(max-width: 767px) 50vw, 50vw"
                     unoptimized
                   />
                 </div>
@@ -199,72 +237,75 @@ export function SectionFinishedCreations({
                       alt=""
                       fill
                       className={`object-cover ${sideObjectPositionClass}`.trim()}
-                      sizes="(max-width: 767px) 50vw, 420px"
+                      sizes="(max-width: 767px) 33vw, 33vw"
                       unoptimized
                     />
                   </div>
                 );
               })}
             </div>
-          </div>
-          <div className="hidden flex-col items-center gap-2 md:flex">
+            </div>
             <div
-              className="overflow-hidden"
-              style={{ width: SLOT_WIDTH * 4 + SLOT_GAP * 3 }}
+              ref={desktopCarouselContainerRef}
+              className="hidden w-full min-w-0 max-w-full flex-col items-stretch gap-2 md:flex"
             >
+              <div className="w-full min-w-0 overflow-hidden">
               <div
-                className="flex gap-x-2 transition-transform duration-300 ease-out"
+                className="flex gap-2 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
                 style={{
-                  transform: `translateX(-${(activePage % TOTAL_PAGES) * TRANSLATE_PER_PAGE}px)`,
+                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                  transform: `translate3d(-${desktopRow1TransformPx}px, 0, 0)`,
                 }}
               >
                 {row1StripImages.map((item, index) => (
                   <div
                     key={`${item.id}-${index}`}
                     data-landing-image={item.imageId}
-                    className="relative h-[370px] flex-shrink-0 overflow-hidden rounded-none"
-                    style={{ width: SLOT_WIDTH }}
+                    className="relative aspect-[670/370] shrink-0 overflow-hidden rounded-none"
+                    style={{ width: desktopMetrics.row1SlideWidth }}
                   >
                     <Image
                       src={item.src}
                       alt=""
                       fill
                       className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
-                      sizes="670px"
+                      sizes="(min-width: 768px) 28vw, 670px"
                       unoptimized
                     />
                   </div>
                 ))}
               </div>
             </div>
-            <div
-              className="overflow-hidden"
-              style={{ width: row2ViewportWidth }}
-            >
+            <div className="w-full min-w-0 overflow-hidden">
               <div
-                className="flex gap-x-2 transition-transform duration-300 ease-out"
+                className="flex gap-2 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
                 style={{
-                  transform: `translateX(-${(activePage % ROW2_IMAGE_COUNT) * row2TranslatePerPage}px)`,
+                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                  transform: `translate3d(-${desktopRow2TransformPx}px, 0, 0)`,
                 }}
               >
                 {row2StripImages.map((item, index) => (
                   <div
                     key={`${item.id}-${index}`}
                     data-landing-image={item.imageId}
-                    className="relative flex-shrink-0 overflow-hidden rounded-none"
-                    style={{ width: ROW2_ITEM_WIDTH, height: ROW2_ITEM_HEIGHT }}
+                    className="relative shrink-0 overflow-hidden rounded-none"
+                    style={{
+                      width: desktopMetrics.row2SlideWidth,
+                      aspectRatio: `${ROW2_ITEM_WIDTH} / ${ROW2_ITEM_HEIGHT}`,
+                    }}
                   >
                     <Image
                       src={item.src}
                       alt=""
                       fill
                       className="object-cover"
-                      sizes="420px"
+                      sizes="(min-width: 768px) 20vw, 420px"
                       unoptimized
                     />
                   </div>
                 ))}
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -275,7 +316,7 @@ export function SectionFinishedCreations({
           <button
             type="button"
             onClick={goPrev}
-            className="flex h-8 w-8 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
             aria-label="Previous page"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -300,7 +341,7 @@ export function SectionFinishedCreations({
           <button
             type="button"
             onClick={goNext}
-            className="flex h-8 w-8 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
             aria-label="Next page"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

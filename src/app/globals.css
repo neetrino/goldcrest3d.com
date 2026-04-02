@@ -211,14 +211,14 @@ section[id] {
   }
 }
 
-/* Section2 (Jewelry Rendering) — միայն CTA; X-ը փոքր = ավելի ձախ */
+/* Section2 CTA — սյունը կենտրոնից; հիմնականում ուղղահայաց շեղում */
 #hero-section2-get-quote {
-  transform: translate(2.3rem, -1.65rem);
+  transform: translate(0, -1.65rem);
 }
 
 @media (min-width: 768px) {
   #hero-section2-get-quote {
-    transform: translate(2.8rem, -1.8rem);
+    transform: translate(0, -1.8rem);
   }
 }
 
@@ -241,9 +241,8 @@ section[id] {
       0 0 0 0 rgba(0, 0, 0, 0);
   }
 
-  /* Desktop-only: move only section2 CTA slightly to the right. */
   #hero-section2-get-quote {
-    transform: translate(5.1rem, -1.8rem);
+    transform: translate(0, -1.8rem);
   }
 }
 
@@ -279,17 +278,16 @@ section[id] {
     line-height: 20px;
   }
 
-  /* Desktop-only: Hero Jewelry Rendering typography from design spec */
+  /* Desktop-only: Hero Jewelry Rendering — колонка слева, текст по правому краю колонки */
   .power-banners-section2-text-cluster > h1 {
     color: #fff;
-    text-align: center;
+    text-align: right;
     font-family: "SF Compact", -apple-system, system-ui, sans-serif;
     font-size: 52px;
     font-style: normal;
     font-weight: 350;
     line-height: 72px;
-    /* Desktop-only: move only title slightly to the right. */
-    translate: -0.5rem -0.625rem;
+    translate: 0 -0.625rem;
   }
 
   #hero-rendering-subtitle {
@@ -303,18 +301,31 @@ section[id] {
   }
 }
 
-/* PowerBanners section1 (modeling) — նկարի ֆրեյմ 1918×707, aspect 274/101 */
+/**
+ * Section1 Modeling — max frame ~1918×707 (274:101).
+ * Height must NOT shrink when viewport narrows: only horizontal crop (cover + center).
+ * aspect-ratio on the strip tied height to width — removed from md↑ in favor of fixed height.
+ */
 .power-banners-section1-block {
   width: 100%;
   max-width: 1918px;
   margin-inline: auto;
+  --section1-image-strip-height-desktop: 707px;
 }
 
-/* Միայն այս շերտում է հերո-նկարը — չափերը չեն փոխվում */
+/* Base (mobile-first): proportional strip until md override */
 .power-banners-section1-image-strip {
   position: relative;
   width: 100%;
+  overflow: hidden;
   aspect-ratio: 274 / 101;
+}
+
+@media (min-width: 768px) {
+  .power-banners-section1-image-strip {
+    aspect-ratio: unset;
+    height: var(--section1-image-strip-height-desktop);
+  }
 }
 
 /* Լրացուցիչ բարձրություն նկարի տակ (նկարը չի ձգվում) */
@@ -324,23 +335,24 @@ section[id] {
   background-color: #d8d8d8;
 }
 
+/**
+ * Section1 Modeling — uniform scale only (no non-uniform % width/height = no stretch).
+ * cover + center: сужение экрана обрезает по краям, центр композиции остаётся в кадре.
+ */
 .power-banners-section1-bg {
   background-color: #d3d3d3;
   background-image: var(--section1-hero-bg);
-  /* Y + nudge — դրական nudge-ը նկարը իջեցնում է ներքև */
-  background-position: -16px calc(-160.175px + var(--section1-bg-nudge-y, 0px));
-  background-size: 101.668% 129.633%;
+  background-size: cover;
+  background-position: center calc(50% + var(--section1-bg-nudge-y, 0px));
   background-repeat: no-repeat;
+  transform: translateY(var(--section1-hero-bg-translate-y, 0px))
+    scale(var(--section1-hero-bg-scale, 1));
+  transform-origin: center center;
 }
 
-/* PowerBanners section2 (Jewelry Rendering) — Figma ֆրեյմ 1920×712 */
+/* PowerBanners section2 (Jewelry Rendering) — ֆրեյմ 1920×712; ֆոնը միայն cover (առանց դեֆորմացիայի) */
 .power-banners-section2-block {
-  /* BG — նույն ինչ Figma img: w 115.61%, h 175.36%, left 0.02%, top -54.17% */
-  --section2-bg-size-width: 115.61%;
-  --section2-bg-size-height: 175.36%;
-  /* Նկարի դիրքի հաշվարկ — նույն Figma բարձրությունը (::before-ում) */
   --section2-bg-layout-height: 712px;
-  /* Տեսանելի բլոկ — լրիվ համընկնում Figma ֆրեյմի հետ */
   --section2-block-design-width: 1920px;
   --section2-block-visible-height: 712px;
   position: relative;
@@ -361,6 +373,10 @@ section[id] {
   }
 }
 
+/**
+ * Jewelry Rendering: якорь слева — cover обрезает справа при сужении;
+ * текстовая колонка слева остаётся, высота блока 712px.
+ */
 .power-banners-section2-block::before {
   content: "";
   position: absolute;
@@ -372,97 +388,93 @@ section[id] {
   pointer-events: none;
   background-color: #000;
   background-image: var(--section2-hero-bg);
-  /* top -54.17% of layout height — համարժեք Figma absolute top */
-  background-position: 0.02% calc(-0.5417 * var(--section2-bg-layout-height));
-  background-size: var(--section2-bg-size-width) var(--section2-bg-size-height);
+  background-size: cover;
+  background-position: left center;
   background-repeat: no-repeat;
+  transform: translateX(var(--section2-hero-bg-translate-x, 0px))
+    translateY(var(--section2-hero-bg-translate-y, 0px))
+    scale(var(--section2-hero-bg-scale, 1));
+  transform-origin: left center;
 }
 
-/* Section2 տեքստի կլաստեր — միասին դեպի ձախ (--section2-text-cluster-nudge-* PowerBanners-ից) */
+/* Section2 cluster — nudge optional via CSS vars from PowerBanners (often 0) */
 .power-banners-section2-text-cluster {
-  transform: translateX(
-    calc(-1 * var(--section2-text-cluster-nudge-mobile, 56px))
-  );
+  transform: translateX(var(--section2-text-cluster-nudge-mobile, 0px));
 }
 
 @media (min-width: 768px) {
   .power-banners-section2-text-cluster {
-    transform: translateX(
-      calc(-1 * var(--section2-text-cluster-nudge-md, 128px))
-    );
+    transform: translateX(var(--section2-text-cluster-nudge-md, 0px));
   }
 }
 
-/* PowerBanners section3 (Jewelry Design) — միայն բլոկի բարձրություն; նկարը՝ PowerBanners inline bg */
+/* PowerBanners section3 (Jewelry Design) — ֆրեյմ ինչպես section2; ֆոնը cover, якорь слева (обрезка справа) */
 .power-banners-section3-block {
-  min-height: var(--section3-block-min-h-mobile, 440px);
+  --section3-bg-layout-height: var(--section3-block-height-md, 712px);
+  --section3-block-design-width: 1920px;
+  --section3-block-visible-height: var(--section3-block-height-md, 712px);
+  position: relative;
+  width: 100%;
+  max-width: var(--section3-block-design-width);
+  margin-inline: auto;
+  height: var(--section3-block-visible-height);
+  flex-shrink: 0;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .power-banners-section3-block {
+    width: var(--section3-block-design-width);
+    max-width: 100%;
+    height: var(--section3-block-visible-height);
+    min-height: var(--section3-block-visible-height);
+  }
+}
+
+.power-banners-section3-block::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  width: 100%;
+  height: var(--section3-bg-layout-height);
+  pointer-events: none;
+  background-color: #fff;
+  background-image: var(--section3-hero-bg);
+  background-size: cover;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+/* Title/subtitle utilities default to center; section3 column is left-aligned */
+.power-banners-section3-text-cluster .hero-primary-title-typography-design,
+.power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
+  text-align: left;
+}
+
+@media (max-width: 767px) {
+  .power-banners-section3-text-cluster .hero-primary-title-typography-design {
+    font-size: 24px;
+    line-height: 1.1;
+    letter-spacing: -0.006em;
+  }
+}
+
+/* Desktop: base .hero-primary-title-typography-design uses 72px line-height — tighten stack */
+@media (min-width: 768px) {
+  .power-banners-section3-text-cluster .hero-primary-title-typography-design {
+    line-height: 1.12;
+  }
 }
 
 /* Mobile only: unify largest hero blocks size to 367x679 (20/37). */
 @media (max-width: 767px) {
-  .hero-design-mobile-title {
-    flex: 1 0 0;
-    transform: translate(4px, 297px);
-    color: #000;
-    text-align: right;
-    font-family: Inter, -apple-system, system-ui, sans-serif;
-    font-size: 30px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 36px;
-    letter-spacing: 0.396px;
-  }
-
-  .hero-design-mobile-subtitle {
-    width: 197px;
-    color: rgba(18, 18, 18, 0.9);
-    text-align: right;
-    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-    font-size: 16px;
-    font-style: italic;
-    font-weight: 350;
-    line-height: 28px;
-    transform: translate(4px, -150px);
-  }
-
-  .hero-section3-mobile-cta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: auto;
-    min-width: unset;
-    padding: 11px 32px;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
-    gap: 10px;
-    border-radius: 110px;
-    color: #fff !important;
-    background: linear-gradient(
-      90deg,
-      #4b463f 0%,
-      #5c5547 7.14%,
-      #6e644f 14.29%,
-      #807356 21.43%,
-      #93835e 28.57%,
-      #a69466 35.71%,
-      #b9a46d 42.86%,
-      #cdb575 50%,
-      #d4bd82 57.14%,
-      #dbc68f 64.29%,
-      #e2ce9d 71.43%,
-      #e9d7aa 78.57%,
-      #f1e0b7 85.71%,
-      #f8e8c4 92.86%,
-      #fff1d1 100%
-    ) !important;
-    margin-top: 0 !important;
-    transform: translate(4px, -138px) !important;
-  }
-
   .power-banners-section2-text-cluster > h1 {
     flex: 1 0 0;
     top: 24px;
+    text-align: right;
     font-family: Inter, -apple-system, system-ui, sans-serif;
     font-size: 30px;
     font-style: normal;
@@ -472,10 +484,10 @@ section[id] {
   }
 
   #hero-rendering-subtitle {
-    width: 197px;
-    max-width: 197px;
+    width: auto;
+    max-width: 100%;
     flex-shrink: 0;
-    text-align: left;
+    text-align: right;
     color: rgba(255, 255, 255, 0.9);
     font-family: Inter, -apple-system, system-ui, sans-serif;
     font-size: 16px;
@@ -483,7 +495,7 @@ section[id] {
     font-weight: 300;
     line-height: 24px;
     letter-spacing: -0.312px;
-    transform: translate(-64px, 12px);
+    transform: translate(0, 0);
   }
 
   #hero-section2-get-quote {
@@ -510,27 +522,28 @@ section[id] {
       #f8e8c4 92.86%,
       #fff1d1 100%
     );
-    transform: translate(-120px, -0.1rem);
+    transform: translate(0, 0);
   }
 
+  /**
+   * Hero slides — fluid width on narrow viewports (avoid fixed 367/390px + scroll).
+   * Single aspect source: 20/37; height comes from width × ratio.
+   */
   .power-banners-section1-block,
   .power-banners-section2-block,
   .power-banners-section3-block {
-    width: 367px;
-    height: 679px;
-    aspect-ratio: 20 / 37;
+    width: 100%;
+    max-width: 390px;
     margin-inline: auto;
-    max-width: 100%;
+    aspect-ratio: 20 / 37;
+    height: auto;
+    min-height: 0;
   }
 
   .power-banners-section1-block {
-    height: 777px;
-  }
-
-  .power-banners-section2-block,
-  .power-banners-section3-block {
-    height: 777px;
-    min-height: 777px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 
   .power-banners-section3-block {
@@ -538,19 +551,16 @@ section[id] {
   }
 
   .power-banners-section2-block {
-    width: 390px;
     background-color: #000;
   }
 
-  .power-banners-section3-block {
-    width: 390px;
-  }
-
   .power-banners-section1-image-strip {
-    width: 114%;
+    width: 100%;
+    margin-left: 0;
+    flex: 1 1 auto;
+    min-height: 0;
+    aspect-ratio: unset;
     height: 100%;
-    aspect-ratio: auto;
-    margin-left: -7%;
   }
 
   .power-banners-section1-tail {
@@ -560,31 +570,31 @@ section[id] {
   .power-banners-section1-bg {
     background-image: var(--section1-hero-bg-mobile, var(--section1-hero-bg));
     background-color: #fff;
-    background-position: center 0%;
-    background-size: 93% auto;
-  }
-
-  .power-banners-section2-block::before {
-    width: 114%;
-    left: -7%;
-    height: 100%;
-    background-color: #000;
-    background-image: var(--section2-hero-bg-mobile, var(--section2-hero-bg));
-    background-size: 93% auto;
-    background-position: calc(50% - 11px) 0%;
+    background-size: cover;
+    background-position: center center;
     background-repeat: no-repeat;
   }
 
-  .power-banners-section3-block [data-landing-image] {
-    left: -7%;
-    right: auto;
-    width: 114%;
+  .power-banners-section2-block::before {
+    width: 100%;
+    left: 0;
     height: 100%;
-    background-image: url("/images/design/block3-mobile-original.png") !important;
+    background-color: #000;
+    background-image: var(--section2-hero-bg-mobile, var(--section2-hero-bg));
+    background-size: cover;
+    background-position: left center;
+    background-repeat: no-repeat;
+  }
+
+  .power-banners-section3-block::before {
+    width: 100%;
+    left: 0;
+    height: 100%;
     background-color: #fff;
-    background-size: 93% auto !important;
-    background-position: calc(50% + 10px) 0 !important;
-    background-repeat: no-repeat !important;
+    background-image: var(--section3-hero-bg-mobile, var(--section3-hero-bg));
+    background-size: cover;
+    background-position: left center;
+    background-repeat: no-repeat;
   }
 
   #hero-modeling-text-group {
@@ -600,7 +610,6 @@ section[id] {
     font-style: normal;
     font-weight: 350;
     line-height: 32px;
-    white-space: pre-line !important;
   }
 
   #hero-modeling-subtitle {
@@ -644,12 +653,10 @@ section[id] {
   }
 }
 
-@media (min-width: 768px) {
-  .power-banners-section3-block {
-    height: var(--section3-block-height-md, 712px);
-    min-height: var(--section3-block-height-md, 712px);
-  }
-}
+/**
+ * md↑ section3 height already from .power-banners-section3-block;
+ * text column uses Tailwind (same pattern as section2) — no extra transform.
+ */
 
 /* Nav CTA "Request a Quote" — gold gradient from Figma */
 .nav-cta-gradient {

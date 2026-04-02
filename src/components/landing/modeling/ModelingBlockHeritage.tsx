@@ -76,29 +76,29 @@ export function ModelingBlockHeritage({
           </>
         )}
       </div>
-      <div className="absolute inset-0 z-10 max-sm:translate-x-1.5 max-sm:translate-y-16">
-        <h3 className="absolute right-0 top-12 z-10 flex max-w-full flex-col items-end text-black max-sm:-translate-y-6 max-sm:translate-x-0.5 max-sm:right-6 max-sm:w-[151px] max-sm:font-sans max-sm:text-[20px] max-sm:font-bold max-sm:leading-[28px] max-sm:tracking-[-0.449px] sm:font-manrope sm:text-[32px] sm:leading-[24px] sm:tracking-normal sm:font-bold md:right-[2rem] md:top-[12.7rem] md:scale-x-105 md:origin-right">
-          <span className="max-sm:translate-y-1 whitespace-nowrap sm:hidden">
+      <div className="absolute inset-0 z-10 max-sm:translate-x-[calc(0.375rem*var(--ms,1))] max-sm:translate-y-[calc(4rem*var(--ms,1))]">
+        <h3 className="absolute right-0 top-[calc(3rem*var(--ms,1))] z-10 flex max-w-full flex-col items-end text-black max-sm:-translate-y-[calc(1.5rem*var(--ms,1))] max-sm:translate-x-[calc(0.125rem*var(--ms,1))] max-sm:right-[calc(1.5rem*var(--ms,1))] max-sm:w-[calc(151px*var(--ms,1))] max-sm:font-sans max-sm:text-[calc(20px*var(--ms,1)*var(--mt,1))] max-sm:font-bold max-sm:leading-[calc(28px*var(--ms,1)*var(--mt,1))] max-sm:tracking-[-0.449px] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold md:right-[calc(2rem*var(--ms,1))] md:top-[calc(12.7rem*var(--ms,1))] md:scale-x-105 md:origin-right">
+          <span className="max-sm:translate-y-[calc(0.25rem*var(--ms,1))] whitespace-nowrap sm:hidden">
             {TITLE_MOBILE_LINE1}
           </span>
-          <span className="mt-1 whitespace-nowrap sm:hidden">{TITLE_MOBILE_LINE2}</span>
+          <span className="mt-[calc(0.25rem*var(--ms,1))] whitespace-nowrap sm:hidden">{TITLE_MOBILE_LINE2}</span>
           <span className="hidden whitespace-nowrap sm:block">{TITLE_LINE1}</span>
-          <span className="mt-2 hidden whitespace-nowrap sm:block">{TITLE_LINE2}</span>
+          <span className="mt-[calc(0.5rem*var(--ms,1))] hidden whitespace-nowrap sm:block">{TITLE_LINE2}</span>
         </h3>
-        <div className="absolute inset-0 z-10 flex flex-col justify-center px-6 py-8 text-black md:flex-row md:justify-end md:px-8 md:py-10">
-          <p className="w-[151px] max-w-full self-end text-right font-sans text-[12px] font-light leading-4 text-[#364153] sm:hidden">
+        <div className="absolute inset-0 z-10 flex flex-col justify-center px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-black md:flex-row md:justify-end md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))]">
+          <p className="w-[calc(151px*var(--ms,1))] max-w-full self-end text-right font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden">
             {DESCRIPTION_MOBILE}
           </p>
           <div
-            className="hidden max-w-[520px] text-right font-manrope text-[14px] font-light leading-[22px] text-black/70 sm:block md:mr-[0%] md:mt-[15.25rem]"
+            className="hidden max-w-[calc(520px*var(--ms,1))] text-right font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 sm:block md:mr-[0%] md:mt-[calc(15.25rem*var(--ms,1))]"
             style={{ overflow: "visible" }}
           >
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-[calc(0.75rem*var(--ms,1))]">
               <div className="flex flex-wrap justify-end items-baseline gap-x-2 gap-y-1">
                 <span>{DESCRIPTION_LINES[0]}</span>
                 <span>{DESCRIPTION_LINES[1]}</span>
               </div>
-              <div className="-mt-2 flex flex-wrap justify-end items-baseline gap-x-2 gap-y-1">
+              <div className="-mt-[calc(0.5rem*var(--ms,1))] flex flex-wrap justify-end items-baseline gap-x-2 gap-y-1">
                 <span>{DESCRIPTION_LINES[2]}</span>
                 <span>{DESCRIPTION_LINES[3]}</span>
               </div>

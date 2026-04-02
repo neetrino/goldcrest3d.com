@@ -11,8 +11,7 @@ import {
   ModelingBlockHeritage,
 } from "./modeling";
 
-/** Fixed height of the Modeling Specialization title block — block does not resize with content. */
-const MODELING_TITLE_BLOCK_HEIGHT_PX = 200;
+import "./modeling/modeling-section-scale.css";
 
 type SectionModelingProps = {
   modeling: LandingModelingMedia;
@@ -25,18 +24,16 @@ export function SectionModeling({ modeling }: SectionModelingProps) {
   return (
     <section
       id={LANDING_SECTION_IDS.SPECIALIZATIONS}
-      className="bg-white px-3 py-6 md:px-5 md:py-[67px]"
+      className="bg-white px-3 md:px-5"
       aria-labelledby="modeling-specialization"
     >
-      <div className="mx-auto max-w-[1920px]">
-        <div
-          className="flex w-full min-w-0 flex-col items-center justify-center overflow-visible md:overflow-hidden"
-          style={{ height: `${MODELING_TITLE_BLOCK_HEIGHT_PX}px` }}
-        >
-          <ModelingSpecializationTitle />
-        </div>
+      <div className="modeling-specialization-cq mx-auto w-full max-w-[1920px]">
+        <div className="modeling-specialization-scale py-6 md:py-[calc(67px*var(--ms,1))]">
+          <div className="flex min-h-[calc(140px*var(--ms,1))] w-full min-w-0 flex-col items-center justify-center overflow-visible py-6 md:min-h-[calc(200px*var(--ms,1))] md:overflow-hidden md:py-0">
+            <ModelingSpecializationTitle />
+          </div>
 
-        <div className="grid min-w-0 grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-2.5 lg:gap-2">
+          <div className="modeling-specialization-card-text-scale grid min-w-0 grid-cols-1 gap-[calc(0.625rem*var(--ms,1))] sm:grid-cols-2 lg:gap-[calc(0.5rem*var(--ms,1))]">
           <ModelingBlockHipHop
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIP_HOP].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.HIP_HOP].mobile}
@@ -61,6 +58,7 @@ export function SectionModeling({ modeling }: SectionModelingProps) {
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].mobile}
           />
+          </div>
         </div>
       </div>
     </section>

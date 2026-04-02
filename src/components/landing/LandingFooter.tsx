@@ -19,30 +19,21 @@ const FOOTER_LOGO_FULL_BLEED_STYLE: CSSProperties = {
   top: `${FOOTER_LOGO_FIGMA_IMG_TOP_PCT}%`,
 };
 
-/** Միայն desktop — լոգոն մի քիչ դեպի ձախ */
-const FOOTER_LOGO_DESKTOP_NUDGE_LEFT_CLASS = "md:-translate-x-24";
-
 /**
  * Լոգոյի ֆրեյմ — Figma 92:248 299×171, միշտ նույն aspect (գեղեցիկ և մոբայլ, և դեսքտոփ).
+ * No horizontal translate on md (was clipping at viewport edge).
  */
 const FOOTER_LOGO_FRAME_CLASS =
-  "relative mt-4 aspect-[299/171] w-full max-w-[299px] shrink-0 overflow-hidden self-start md:mt-0 " +
-  FOOTER_LOGO_DESKTOP_NUDGE_LEFT_CLASS;
+  "relative mt-4 aspect-[299/171] w-full max-w-[299px] shrink-0 overflow-hidden self-start md:mt-0";
 
 /** Figma-ի ներքին overflow-շերտ — նկարը կտրվում է ֆրեյմի մեջ */
 const FOOTER_LOGO_INNER_CLIP_CLASS =
   "pointer-events-none absolute inset-0 overflow-hidden";
 
-/**
- * Desktop — width 384px, SF Compact, rgba(24,22,16,0.6); տառ՝ մի քիչ փոքր Figma 16px-ից։
- * Մոբայլ՝ Inter, նույնպես մի փոքր փոքրացված։
- */
-const FOOTER_TAGLINE_DESKTOP_NUDGE_LEFT_CLASS = "md:-translate-x-24";
-
+/** SF Compact desktop; fluid max-width — no negative translate (was clipping). */
 const FOOTER_TAGLINE_CLASS =
-  "w-full max-w-[324px] font-sans text-[13px] font-light not-italic leading-5 tracking-[-0.15px] text-[#4A5565] " +
-  "md:w-[384px] md:max-w-[384px] md:shrink-0 md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-[15px] md:font-[350] md:not-italic md:leading-[22px] md:tracking-normal md:text-[rgba(24,22,16,0.6)] " +
-  FOOTER_TAGLINE_DESKTOP_NUDGE_LEFT_CLASS;
+  "w-full min-w-0 max-w-[min(100%,384px)] font-sans text-[13px] font-light not-italic leading-5 tracking-[-0.15px] text-[#4A5565] " +
+  "md:shrink-0 md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-[15px] md:font-[350] md:not-italic md:leading-[22px] md:tracking-normal md:text-[rgba(24,22,16,0.6)]";
 
 const FOOTER_CONTACT_HEADING_CLASS =
   "font-sans text-[11px] font-bold uppercase leading-[14px] tracking-[0.6px] text-[#0A0A0A] md:max-w-[87.152px] md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:font-[790] md:tracking-[1.2px] md:text-[#0F172A]";
@@ -57,17 +48,13 @@ const FOOTER_FOLLOW_HEADING_CLASS =
 const FOOTER_CONTACT_LOCATION_BLOCK_CLASS =
   "flex flex-col gap-[13px] self-start md:self-stretch";
 
-/** Mobile only: Inter 12/16, 296px, #99A1AF. Desktop uses separate line below. */
+/** Mobile only: Inter 12/16, #99A1AF; centered with legal row, left on md+. */
 const FOOTER_COPYRIGHT_MOBILE_CLASS =
-  "md:hidden w-[296px] font-sans text-xs font-normal leading-4 tracking-[0.6px] text-[#99A1AF] uppercase";
+  "md:hidden w-full min-w-0 font-sans text-xs font-normal leading-4 tracking-[0.6px] text-[#99A1AF] uppercase";
 
-/** Միայն desktop — copyright տողը մի քիչ դեպի ձախ */
-const FOOTER_COPYRIGHT_DESKTOP_NUDGE_LEFT_CLASS = "md:-translate-x-24";
-
-/** Desktop: SF Compact 10/15, weight 790, 435.762px — DS Studio line. */
+/** Desktop: SF Compact — fluid width (no fixed px) to avoid clipping. */
 const FOOTER_COPYRIGHT_DESKTOP_CLASS =
-  "hidden md:block md:w-[435.762px] md:shrink-0 md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-[10px] md:font-[790] md:leading-[15px] md:tracking-[1px] md:text-[#94A3B8] md:uppercase " +
-  FOOTER_COPYRIGHT_DESKTOP_NUDGE_LEFT_CLASS;
+  "hidden min-w-0 md:block md:max-w-[min(100%,28rem)] md:shrink md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-[10px] md:font-[790] md:leading-[15px] md:tracking-[1px] md:text-[#94A3B8] md:uppercase";
 
 /** Mobile: Inter 12/16, #99A1AF. Desktop: SF Compact — widths on Privacy / Terms. */
 const FOOTER_LEGAL_LINK_MOBILE_CLASS =
@@ -76,40 +63,33 @@ const FOOTER_LEGAL_LINK_MOBILE_CLASS =
 const FOOTER_LEGAL_LINK_DESKTOP_SHARED_CLASS =
   "md:shrink-0 md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-[10px] md:font-[790] md:leading-[15px] md:tracking-[1px] md:text-[#94A3B8] md:uppercase";
 
-const FOOTER_PRIVACY_LINK_CLASS = `${FOOTER_LEGAL_LINK_MOBILE_CLASS} ${FOOTER_LEGAL_LINK_DESKTOP_SHARED_CLASS} md:w-[127.477px]`;
+const FOOTER_PRIVACY_LINK_CLASS = `${FOOTER_LEGAL_LINK_MOBILE_CLASS} ${FOOTER_LEGAL_LINK_DESKTOP_SHARED_CLASS} md:min-w-0`;
 
-const FOOTER_TERMS_LINK_CLASS = `${FOOTER_LEGAL_LINK_MOBILE_CLASS} ${FOOTER_LEGAL_LINK_DESKTOP_SHARED_CLASS} md:w-[145.688px]`;
+const FOOTER_TERMS_LINK_CLASS = `${FOOTER_LEGAL_LINK_MOBILE_CLASS} ${FOOTER_LEGAL_LINK_DESKTOP_SHARED_CLASS} md:min-w-0`;
 
-/** Միայն desktop — Privacy Policy + Terms of Service մի քիչ դեպի աջ */
-const FOOTER_LEGAL_LINKS_ROW_DESKTOP_NUDGE_RIGHT_CLASS = "md:translate-x-20";
+const FOOTER_LEGAL_LINKS_ROW_CLASS =
+  "flex flex-wrap items-center justify-center gap-8 md:justify-end";
 
-const FOOTER_LEGAL_LINKS_ROW_CLASS = `flex gap-8 ${FOOTER_LEGAL_LINKS_ROW_DESKTOP_NUDGE_RIGHT_CLASS}`;
+/** Stack (mobile/tablet) → 3 columns from lg (matches Figma desktop). */
+const FOOTER_GRID_CLASS =
+  "grid min-w-0 grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-0 xl:gap-x-12";
 
-/** Follow սյուն — Figma լայնություն 685.818px (գրիդի երրորդ տողը) */
-const FOOTER_GRID_DESKTOP_CLASS =
-  "grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,685.818px)] md:gap-12";
+/** Horizontal page padding — ~5–8% on large screens like design. */
+const FOOTER_OUTER_PADDING_CLASS =
+  "px-4 py-12 sm:px-6 sm:py-14 md:mt-0 md:py-16 md:px-[5%] lg:px-[6%] xl:px-[7%]";
 
-/** Desktop — Contact/Follow սյուների հիմնական աջ շեղում (Follow-ը մնում է այստեղ) */
-const FOOTER_CONTACT_FOLLOW_DESKTOP_NUDGE_RIGHT_CLASS = "md:translate-x-64";
-
-const FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS =
-  `min-w-0 ${FOOTER_CONTACT_FOLLOW_DESKTOP_NUDGE_RIGHT_CLASS}`;
-
-/** Միայն desktop — միայն Contact տեքստը մի քիչ ավելի աջ */
-const FOOTER_CONTACT_CONTENT_DESKTOP_NUDGE_RIGHT_CLASS = "md:translate-x-24";
+const FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS = "min-w-0";
 
 /** Միայն desktop — email/հեռախոս/տեղ՝ մի քիչ վերև (վերնագիրը՝ Contact — անշարժ) */
-const FOOTER_CONTACT_LINES_BLOCK_DESKTOP_NUDGE_UP_CLASS = "md:-translate-y-4";
+const FOOTER_CONTACT_LINES_BLOCK_DESKTOP_NUDGE_UP_CLASS = "lg:-translate-y-1";
 
 const FOOTER_CONTACT_LINES_BLOCK_CLASS = `mt-[40px] flex flex-col gap-[13px] ${FOOTER_CONTACT_LINES_BLOCK_DESKTOP_NUDGE_UP_CLASS}`;
 
-/** Միայն desktop — Follow վերնագիր + սոցիալ (քարտեզը՝ առանձին) */
-const FOOTER_FOLLOW_HEADING_SOCIAL_DESKTOP_NUDGE_RIGHT_CLASS =
-  "md:translate-x-50";
+const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS = "lg:-translate-y-1";
 
-/** Միայն desktop — Follow-ի 3 սոցիալ պատկերակներ՝ մի քիչ վերև, շատ թեթև ձախ */
-const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS =
-  "md:-translate-y-6 md:-translate-x-0.5";
+/** Follow վերնագիր + 3 պատկերակ — մի քիչ աջ (քարտեզը՝ առանց շարժման) */
+const FOOTER_FOLLOW_HEADING_AND_SOCIAL_NUDGE_RIGHT_CLASS =
+  "pl-8 sm:pl-9 lg:pl-14 xl:pl-16 2xl:pl-20 lg:translate-x-3";
 
 const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS = `mt-[35px] flex gap-4 ${FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS}`;
 
@@ -117,17 +97,13 @@ const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS = `mt-[35px] flex gap-4 ${FOOTER_FOLL
 const FOOTER_FOLLOW_MAP_WIDTH_PX = 590;
 const FOOTER_FOLLOW_MAP_HEIGHT_PX = 96;
 
-/** Միայն desktop — արտաքին շերտ՝ translate (ոչ թե clip-ի հետ նույն տարրում) */
-const FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS = "md:translate-x-14";
+const FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS = "";
 
-/** Քարտեզ — Figma-ի նման ուժեղ բութ անկյուններ (1.5rem ≈ 24px) */
 const FOOTER_FOLLOW_MAP_CORNER_CLASS = "rounded-3xl";
 
-/** Միայն desktop — քարտեզի նկարը մի թեթև դեպի աջ */
-const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS = "md:translate-x-1.5";
+const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS = "lg:translate-x-1";
 
-/** Միայն desktop — քարտեզը մի քիչ վերև */
-const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS = "md:-translate-y-6";
+const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS = "lg:-translate-y-2";
 
 /** Ներքին ֆրեյմ — overflow + radius; չափերը՝ FOOTER_FOLLOW_MAP_BANNER_LAYOUT_STYLE */
 const FOOTER_FOLLOW_MAP_INNER_FRAME_CLASS = `mt-4 w-full min-w-0 overflow-hidden ${FOOTER_FOLLOW_MAP_CORNER_CLASS} md:shrink-0 ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS} ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS}`;
@@ -160,17 +136,34 @@ const FOOTER_BOTTOM_BORDER_OUTER_TOP_SPACING_CLASS = "mt-8 md:mt-10";
 const FOOTER_BOTTOM_BORDER_OUTER_CLASS = `${FOOTER_BOTTOM_BORDER_OUTER_TOP_SPACING_CLASS} w-full border-t border-[#e2e8f0] pt-10`;
 
 const FOOTER_BOTTOM_LEGAL_INNER_CLASS =
-  "mx-auto flex w-full max-w-7xl flex-col gap-4 md:flex-row md:items-center md:justify-between";
+  "mx-auto flex w-full min-w-0 max-w-7xl flex-col items-center gap-5 text-center md:flex-row md:items-center md:justify-between md:gap-8 md:text-left";
+
+const FOOTER_LOCATION_ROW_CLASS = "flex items-start gap-2";
+
+const FOOTER_COPYRIGHT_YEAR = new Date().getFullYear();
+
+function FooterLocationIcon() {
+  return (
+    <svg
+      className="mt-0.5 size-4 shrink-0 text-[#64748B]"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5s2.5-1.12 2.5-2.5z" />
+    </svg>
+  );
+}
 
 export function LandingFooter() {
   return (
     <footer
-      className="-mt-8 border-t border-[#e2e8f0] bg-[#f8f7f6] px-4 py-16 md:mt-0 md:px-[5.05%] md:pr-[8.23%]"
+      className={`-mt-8 overflow-x-clip border-t border-[#e2e8f0] bg-[#f8f7f6] ${FOOTER_OUTER_PADDING_CLASS}`}
       aria-label="Site footer"
     >
       <div className="mx-auto max-w-7xl">
-        <div className={FOOTER_GRID_DESKTOP_CLASS}>
-          <div className="flex min-w-0 w-full max-w-[384px] flex-col items-start gap-[10px]">
+        <div className={FOOTER_GRID_CLASS}>
+          <div className="flex min-w-0 w-full flex-col items-start gap-[10px] lg:max-w-none">
             <div
               className={FOOTER_LOGO_FRAME_CLASS}
               data-landing-image={LANDING_IMAGE_IDS.FOOTER_LOGO}
@@ -189,35 +182,38 @@ export function LandingFooter() {
               Specialized in precision jewelry CAD and structural engineering for high-end manufacturing.
             </p>
           </div>
-          <div className={FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS}>
-            <div className={FOOTER_CONTACT_CONTENT_DESKTOP_NUDGE_RIGHT_CLASS}>
-              <h3 className={FOOTER_CONTACT_HEADING_CLASS}>Contact</h3>
-              <div className={FOOTER_CONTACT_LINES_BLOCK_CLASS}>
-                <a
-                  href="mailto:hello@ds-jewelry.studio"
-                  className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-[206.982px]`}
-                >
-                  hello@ds-jewelry.studio
-                </a>
-                <a
-                  href="tel:+15559023481"
-                  className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-[162.721px]`}
-                >
-                  +1 (555) 902-3481
-                </a>
-                <div className={FOOTER_CONTACT_LOCATION_BLOCK_CLASS}>
+          <div
+            className={`${FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS} flex flex-col`}
+          >
+            <h3 className={FOOTER_CONTACT_HEADING_CLASS}>Contact</h3>
+            <div className={FOOTER_CONTACT_LINES_BLOCK_CLASS}>
+              <a
+                href="mailto:hello@ds-jewelry.studio"
+                className={`${FOOTER_CONTACT_LINE_CLASS} break-all md:max-w-none`}
+              >
+                hello@ds-jewelry.studio
+              </a>
+              <a
+                href="tel:+15559023481"
+                className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-none`}
+              >
+                +1 (555) 902-3481
+              </a>
+              <div className={FOOTER_CONTACT_LOCATION_BLOCK_CLASS}>
+                <div className={FOOTER_LOCATION_ROW_CLASS}>
+                  <FooterLocationIcon />
                   <p className={FOOTER_CONTACT_LINE_CLASS}>Yerevan, Armenia</p>
-                  <p className={FOOTER_CONTACT_LINE_CLASS}>
-                    International collaborations available
-                  </p>
                 </div>
+                <p className={FOOTER_CONTACT_LINE_CLASS}>
+                  International collaborations available
+                </p>
               </div>
             </div>
           </div>
-          <div className={FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS}>
-            <div
-              className={FOOTER_FOLLOW_HEADING_SOCIAL_DESKTOP_NUDGE_RIGHT_CLASS}
-            >
+          <div
+            className={`${FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS} flex flex-col`}
+          >
+            <div className={FOOTER_FOLLOW_HEADING_AND_SOCIAL_NUDGE_RIGHT_CLASS}>
               <h3 className={FOOTER_FOLLOW_HEADING_CLASS}>Follow</h3>
               <div className={FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS}>
                 <a
@@ -287,10 +283,10 @@ export function LandingFooter() {
       <div className={FOOTER_BOTTOM_BORDER_OUTER_CLASS}>
         <div className={FOOTER_BOTTOM_LEGAL_INNER_CLASS}>
           <p className={FOOTER_COPYRIGHT_MOBILE_CLASS}>
-            © 2024 DS Studio Engineering. All Rights Reserved.
+            © {FOOTER_COPYRIGHT_YEAR} DS Studio Engineering. All Rights Reserved.
           </p>
           <p className={FOOTER_COPYRIGHT_DESKTOP_CLASS}>
-            © 2024 DS Studio Engineering. All Rights Reserved.
+            © {FOOTER_COPYRIGHT_YEAR} DS Studio Engineering. All Rights Reserved.
           </p>
           <div className={FOOTER_LEGAL_LINKS_ROW_CLASS}>
             <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
