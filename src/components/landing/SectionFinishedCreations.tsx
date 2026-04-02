@@ -23,9 +23,14 @@ const DESKTOP_ROW1_VISIBLE_SLOTS_FALLBACK = 4;
 /**
  * Larger value → narrower slides, more of left/right slides visible (peek). Was 0.12.
  */
-const DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION = 0.20;
-/** Desktop: three small blocks per viewport. */
-const DESKTOP_ROW2_VISIBLE_SLOTS = 3;
+const DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION = 0.2;
+/**
+ * Row2 desktop: 5 slides in view — 3 full + ½+½ on left/right (`p` = edge fraction).
+ */
+const DESKTOP_ROW2_PEEK_EDGE_VISIBLE_FRACTION = 0.5;
+const DESKTOP_ROW2_PEEK_FULL_CENTER_SLIDES = 3;
+/** Fallback if row2 peek params are not used. */
+const DESKTOP_ROW2_VISIBLE_SLOTS_FALLBACK = 3;
 
 /** Mobile gallery: slightly taller than desktop slot ratio so blocks feel larger. */
 const MOBILE_BLOCK_HEIGHT_SCALE = 1.38;
@@ -142,8 +147,10 @@ export function SectionFinishedCreations({
   const desktopMetrics = useFinishedCreationsCarouselMetrics(
     desktopCarouselContainerRef,
     DESKTOP_ROW1_VISIBLE_SLOTS_FALLBACK,
-    DESKTOP_ROW2_VISIBLE_SLOTS,
+    DESKTOP_ROW2_VISIBLE_SLOTS_FALLBACK,
     DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION,
+    DESKTOP_ROW2_PEEK_EDGE_VISIBLE_FRACTION,
+    DESKTOP_ROW2_PEEK_FULL_CENTER_SLIDES,
   );
 
   const mobileRow1Left = ROW1_IMAGES[activePage % TOTAL_PAGES];
@@ -263,7 +270,10 @@ export function SectionFinishedCreations({
               <div
                 className="flex gap-2 transition-transform duration-300 ease-out"
                 style={{
-                  transform: `translateX(-${(activePage % ROW2_IMAGE_COUNT) * desktopMetrics.row2TranslatePx}px)`,
+                  transform: `translateX(-${
+                    desktopMetrics.row2PeekOffsetPx +
+                    (activePage % ROW2_IMAGE_COUNT) * desktopMetrics.row2TranslatePx
+                  }px)`,
                 }}
               >
                 {row2StripImages.map((item, index) => (
@@ -281,7 +291,7 @@ export function SectionFinishedCreations({
                       alt=""
                       fill
                       className="object-cover"
-                      sizes="(min-width: 768px) 33vw, 420px"
+                      sizes="(min-width: 768px) 20vw, 420px"
                       unoptimized
                     />
                   </div>
