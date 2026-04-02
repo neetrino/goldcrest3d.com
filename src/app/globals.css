@@ -448,24 +448,20 @@ section[id] {
   background-repeat: no-repeat;
 }
 
-/* Title/subtitle utilities default to center; section3 column is left-aligned */
-.power-banners-section3-text-cluster .hero-primary-title-typography-design,
-.power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
-  text-align: left;
-}
-
-@media (max-width: 767px) {
-  .power-banners-section3-text-cluster .hero-primary-title-typography-design {
-    font-size: 24px;
-    line-height: 1.1;
-    letter-spacing: -0.006em;
-  }
-}
-
-/* Desktop: base .hero-primary-title-typography-design uses 72px line-height — tighten stack */
+/* Desktop (md+): section3 title/subtitle — left-aligned */
 @media (min-width: 768px) {
+  .power-banners-section3-text-cluster .hero-primary-title-typography-design,
+  .power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
+    text-align: left;
+  }
+
   .power-banners-section3-text-cluster .hero-primary-title-typography-design {
     line-height: 1.12;
+  }
+
+  .power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
+    width: auto;
+    max-width: 433px;
   }
 }
 
@@ -483,6 +479,31 @@ section[id] {
     letter-spacing: 0.396px;
   }
 
+  /* Jewelry Design (section3) — mobile Figma: right-aligned, same title scale as Rendering */
+  .power-banners-section3-text-cluster > h1.hero-primary-title-typography-design {
+    flex: 1 0 0;
+    color: #000;
+    text-align: right;
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 36px;
+    letter-spacing: 0.396px;
+  }
+
+  .power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
+    width: 197px;
+    max-width: 197px;
+    color: rgba(18, 18, 18, 0.9);
+    text-align: right;
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 350;
+    line-height: 28px;
+  }
+
   #hero-rendering-subtitle {
     width: auto;
     max-width: 100%;
@@ -498,7 +519,9 @@ section[id] {
     transform: translate(0, 0);
   }
 
-  #hero-section2-get-quote {
+  /* Jewelry Rendering + Jewelry Design — same CTA size, padding, gradient (mobile) */
+  #hero-section2-get-quote,
+  #hero-section3-get-quote {
     display: flex;
     align-items: center;
     gap: 10px;
