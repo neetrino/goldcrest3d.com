@@ -16,10 +16,10 @@ const HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX = 2;
 
 /** 3D Portrait — `sm:hidden` overlay only; desktop uses existing Manrope + absolute layout. */
 const PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS =
-  "flex w-full flex-col items-end gap-0 font-sans text-[20px] font-bold leading-[20px] tracking-[-0.449px] text-black";
+  "flex w-full flex-col items-end gap-0 font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(20px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black";
 const PORTRAIT_MOBILE_TITLE_FULL = "3D Portrait Jewelry";
 const PORTRAIT_MOBILE_OVERLAY_DESC_CLASS =
-  "w-[155px] max-w-full text-right font-sans text-[12px] font-light leading-4 text-[#364153]";
+  "w-[calc(155px*var(--ms,1))] max-w-full text-right font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153]";
 
 /** Props for one Modeling Specialization card. Լրիվ սյուն, aspect 83/43, սուր անկյուններ. */
 export type ModelingCardProps = {
@@ -206,19 +206,21 @@ export function ModelingCard({
     : descriptionMuted
       ? "text-white/60"
       : "text-white";
-  const lineWrapClass = noDescriptionMaxWidth ? "leading-[22px]" : "leading-[22px] whitespace-nowrap";
+  const lineWrapClass = noDescriptionMaxWidth
+    ? "leading-[calc(22px*var(--ms,1)*var(--mt,1))]"
+    : "leading-[calc(22px*var(--ms,1)*var(--mt,1))] whitespace-nowrap";
   const hipHopMobileLineClass =
-    "block whitespace-normal leading-[16px] sm:whitespace-nowrap sm:leading-[22px]";
+    "block whitespace-normal leading-[calc(16px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
   /** First two Hip-Hop lines: one visual line each on mobile (no mid-line wrap). */
   const hipHopMobileLineSingleLineClass =
-    "block max-sm:whitespace-nowrap leading-[16px] sm:whitespace-nowrap sm:leading-[22px]";
+    "block max-sm:whitespace-nowrap leading-[calc(16px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
   const bridalRowWrapperClass = bridalMobileLayout
     ? "flex w-full flex-col items-end gap-2 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-4 sm:gap-y-1"
     : "flex flex-wrap items-baseline gap-x-4 gap-y-1";
   const bridalRowSpanClass = bridalMobileLayout
-    ? "max-sm:!m-0 max-sm:!translate-x-0 max-sm:block max-sm:w-[291px] max-sm:max-w-full max-sm:text-left max-sm:font-sans max-sm:text-[12px] max-sm:font-light max-sm:!leading-4 max-sm:text-[#364153] sm:inline"
+    ? "max-sm:!m-0 max-sm:!translate-x-0 max-sm:block max-sm:w-[calc(291px*var(--ms,1))] max-sm:max-w-full max-sm:text-left max-sm:font-sans max-sm:text-[calc(12px*var(--ms,1)*var(--mt,1))] max-sm:font-light max-sm:!leading-[calc(1rem*var(--ms,1)*var(--mt,1))] max-sm:text-[#364153] sm:inline"
     : "";
-  const bridalRowSpanClassDesktop = `${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[14px] sm:leading-[22px] sm:text-black" : ""}`;
+  const bridalRowSpanClassDesktop = `${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""}`;
   const descriptionContent = hasLines
     ?         descriptionLayout === "row"
       ? bridalMobileLayout &&
@@ -229,7 +231,7 @@ export function ModelingCard({
               {descriptionLinesMobile.map((line, i) => (
                 <span
                   key={`bridal-mobile-${i}`}
-                  className={`${bridalRowSpanClass} ${lineWrapClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[14px] sm:leading-[22px] sm:text-black" : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
+                  className={`${bridalRowSpanClass} ${lineWrapClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
                 >
                   {line}
                 </span>
@@ -242,7 +244,7 @@ export function ModelingCard({
                     <span
                       key={`bridal-desktop-stack-${i}`}
                       id={i === 0 ? firstDescriptionLineId : undefined}
-                      className="block font-manrope text-[14px] leading-[22px] text-black"
+                      className="block font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black"
                     >
                       {line}
                     </span>
@@ -288,7 +290,7 @@ export function ModelingCard({
               <span
                 key={i}
                 id={i === 0 ? firstDescriptionLineId : undefined}
-                className={`${bridalRowSpanClass} ${i === 0 ? `${lineWrapClass} whitespace-nowrap` : lineWrapClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[14px] sm:leading-[22px] sm:text-black" : ""}`}
+                className={`${bridalRowSpanClass} ${i === 0 ? `${lineWrapClass} whitespace-nowrap` : lineWrapClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""}`}
                 style={
                   i === 0
                     ? {
@@ -332,11 +334,11 @@ export function ModelingCard({
                 </span>
               ))}
             </div>
-            <div className="hidden min-w-0 flex-col sm:flex sm:translate-x-3 sm:gap-0">
+            <div className="hidden min-w-0 flex-col sm:flex sm:translate-x-[calc(1.5rem*var(--ms,1))] sm:gap-0">
               {descriptionLinesDesktop.map((line, i) => (
                 <span
                   key={`hiphop-desktop-${i}`}
-                  className={`block ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i === 0 ? "sm:translate-x-2 sm:translate-y-0.5" : ""} ${i === 1 ? "sm:mt-1.5" : ""} ${i === 2 ? "sm:mt-1.5 sm:-translate-y-1 sm:translate-x-[min(18rem,38vw)]" : ""}`}
+                  className={`block ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i === 0 ? "sm:translate-x-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(0.125rem*var(--ms,1))]" : ""} ${i === 1 ? "sm:mt-[calc(0.375rem*var(--ms,1))]" : ""} ${i === 2 ? "sm:mt-[calc(0.375rem*var(--ms,1))] sm:-translate-y-[calc(0.25rem*var(--ms,1))] sm:translate-x-[min(calc(19rem*var(--ms,1)),40vw)]" : ""}`}
                 >
                   {line}
                 </span>
@@ -362,18 +364,18 @@ export function ModelingCard({
   const DescriptionTag = hasLines ? "div" : "p";
   const titleSizeClass =
     titleCompact || hasLines
-      ? "text-[32px] leading-[24px] scale-x-105 origin-left"
-      : "text-[40px] leading-[28px]";
+      ? "text-[calc(32px*var(--ms,1)*var(--mt,1))] leading-[calc(24px*var(--ms,1)*var(--mt,1))] scale-x-105 origin-left"
+      : "text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))]";
   const titleClassName = `font-manrope ${titleSizeClass} ${titleBold ? "font-bold" : "font-extrabold"} ${textColor}`;
   const titleClassNameResolved = hipHopMobileLayout
-    ? `font-sans text-[20px] font-bold leading-[28px] tracking-[-0.449px] ${textColor} sm:font-manrope sm:text-[32px] sm:leading-[24px] sm:scale-x-105 sm:origin-left sm:tracking-normal ${titleBold ? "sm:font-bold" : "sm:font-extrabold"}`
+    ? `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] ${textColor} sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-left sm:tracking-normal ${titleBold ? "sm:font-bold" : "sm:font-extrabold"}`
     : bridalMobileLayout
-      ? `font-sans text-[20px] font-bold leading-[28px] tracking-[-0.449px] text-black sm:font-manrope sm:text-[32px] sm:leading-[24px] sm:scale-x-105 sm:origin-left sm:tracking-normal ${titleBold ? "sm:font-bold" : "sm:font-extrabold"} sm:text-black`
+      ? `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-left sm:tracking-normal ${titleBold ? "sm:font-bold" : "sm:font-extrabold"} sm:text-black`
       : titleClassName;
   const descriptionClassName = hipHopMobileLayout
-    ? `font-sans w-full text-[12px] font-light leading-[16px] text-center sm:max-w-[560px] sm:font-manrope sm:text-[14px] sm:leading-[22px] sm:text-left ${descriptionColor}`
-    : `font-manrope font-light ${hasLines ? `text-[14px] leading-[22px] ${noDescriptionMaxWidth ? "" : "max-w-[560px]"}` : "text-[16px] leading-[26px] max-w-[407px]"} ${descriptionColor}`;
-  const descriptionClassNameGradient = `font-manrope font-light text-[16px] leading-[26px] ${descriptionColor}`;
+    ? `font-sans w-full text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(16px*var(--ms,1)*var(--mt,1))] text-center sm:max-w-[calc(560px*var(--ms,1))] sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-left ${descriptionColor}`
+    : `font-manrope font-light ${hasLines ? `text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] ${noDescriptionMaxWidth ? "" : "max-w-[calc(560px*var(--ms,1))]"}` : "text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] max-w-[calc(407px*var(--ms,1))]"} ${descriptionColor}`;
+  const descriptionClassNameGradient = `font-manrope font-light text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] ${descriptionColor}`;
   const imageStyle = { objectPosition: imagePosition };
   const imgMobileWrapperClass =
     imagePairBreakpoint === "md"
@@ -426,7 +428,9 @@ export function ModelingCard({
           }
         : undefined;
   const overlayTranslateClass =
-    hasLines && !fluidTextLayout ? "translate-x-6 translate-y-24" : "";
+    hasLines && !fluidTextLayout
+      ? "translate-x-[calc(1.5rem*var(--ms,1))] translate-y-[calc(6rem*var(--ms,1))]"
+      : "";
 
   if (!gradient) {
     return (
@@ -490,13 +494,13 @@ export function ModelingCard({
           ) : null}
         </div>
         <div
-          className={`absolute inset-0 z-10 px-6 py-8 md:px-8 md:py-10 ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-6 ${hipHopMobileLayout ? "max-sm:items-center max-sm:gap-3 max-sm:translate-x-0 max-sm:translate-y-[72px] max-sm:px-4 max-sm:pb-6 max-sm:text-center sm:items-start sm:gap-6 sm:pr-[40%] sm:translate-x-6 sm:translate-y-[8.5rem] sm:text-left" : bridalMobileLayout ? "max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-20 max-sm:gap-3 max-sm:px-4 max-sm:items-start max-sm:text-left sm:-translate-x-[min(13.5rem,32vw)] sm:-translate-y-[min(12rem,28vh)] sm:items-end sm:text-right" : `${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
+          className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "max-sm:items-center max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:translate-x-[calc(1.125rem*var(--ms,1))] max-sm:translate-y-[calc(72px*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:pb-[calc(1.5rem*var(--ms,1))] max-sm:text-center sm:items-start sm:gap-[calc(1.5rem*var(--ms,1))] sm:pr-[40%] sm:translate-x-[calc(3.75rem*var(--ms,1))] sm:translate-y-[calc(8.5rem*var(--ms,1))] sm:text-left" : bridalMobileLayout ? "max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-[calc(5rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(13.5rem*var(--ms,1)),32vw)] sm:-translate-y-[min(calc(12rem*var(--ms,1)),28vh)] sm:items-end sm:text-right" : `${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
           style={overlayTextContainerStyle}
         >
           {independentTitleDescription ? (
             portraitMobileLayout ? (
               <>
-                <div className="absolute inset-0 z-20 flex -translate-x-[min(12.5rem,45vw)] -translate-y-4 flex-col items-end justify-end gap-3 px-4 pb-8 sm:hidden">
+                <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(1rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:hidden">
                   <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
                     {title === PORTRAIT_MOBILE_TITLE_FULL ? (
                       <>
@@ -528,7 +532,7 @@ export function ModelingCard({
                     <h3 className={titleClassName}>{title}</h3>
                   </div>
                   <div
-                    className={`max-w-[407px] ${descriptionBlockAlignClass}`}
+                    className={`max-w-[calc(407px*var(--ms,1))] ${descriptionBlockAlignClass}`}
                     style={{
                       position: "absolute",
                       top: descriptionBlockTop ?? "32%",
@@ -556,7 +560,7 @@ export function ModelingCard({
                   <h3 className={titleClassName}>{title}</h3>
                 </div>
                 <div
-                  className={`max-w-[407px] ${descriptionBlockAlignClass}`}
+                  className={`max-w-[calc(407px*var(--ms,1))] ${descriptionBlockAlignClass}`}
                   style={{
                     position: "absolute",
                     top: descriptionBlockTop ?? "32%",
@@ -573,7 +577,7 @@ export function ModelingCard({
           ) : (
             <>
               <h3
-                className={`${titleClassNameResolved} ${hipHopMobileLayout ? "max-sm:mt-2 max-sm:self-center max-sm:text-center sm:self-auto sm:text-left sm:translate-x-[min(13.75rem,28vw)] sm:translate-y-1" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-2 max-sm:!self-start max-sm:!text-left sm:!self-end sm:!text-right" : ""}`}
+                className={`${titleClassNameResolved} ${hipHopMobileLayout ? "max-sm:mt-[calc(0.5rem*var(--ms,1))] max-sm:self-center max-sm:text-center sm:self-auto sm:text-left sm:translate-x-[min(calc(15.25rem*var(--ms,1)),32vw)] sm:translate-y-[calc(0.25rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                 style={{
                   ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                   ...(titleMarginTop != null && { marginTop: titleMarginTop }),
@@ -582,7 +586,7 @@ export function ModelingCard({
                 {title}
               </h3>
               <DescriptionTag
-                className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:-mt-2" : ""}${bridalMobileLayout ? " max-sm:!-mt-2 max-sm:w-full sm:w-auto sm:self-start sm:ml-28" : ""}`}
+                className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:-mt-[calc(0.5rem*var(--ms,1))]" : ""}${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                 style={
                   titleMarginTopCompensate && titleMarginTop != null
                     ? {
@@ -614,13 +618,13 @@ export function ModelingCard({
 
   return (
     <article
-      className="flex min-h-[320px] min-w-0 w-full flex-col overflow-hidden max-md:min-h-[400px] md:min-h-0 md:flex-row md:items-stretch md:aspect-[83/43]"
+      className="flex min-h-[calc(320px*var(--ms,1))] min-w-0 w-full flex-col overflow-hidden max-md:min-h-[calc(400px*var(--ms,1))] md:min-h-0 md:flex-row md:items-stretch md:aspect-[83/43]"
       style={gradientFrameStyle}
     >
       {imageOnLeft && hasImage ? (
         <>
           <div
-            className="relative order-2 h-[240px] shrink-0 overflow-hidden md:order-1 md:h-full md:min-h-0 md:w-1/2"
+            className="relative order-2 h-[calc(240px*var(--ms,1))] shrink-0 overflow-hidden md:order-1 md:h-full md:min-h-0 md:w-1/2"
             data-landing-image={imageId}
             style={{
               ...(imageLayerBackground ?? undefined),
@@ -640,10 +644,10 @@ export function ModelingCard({
             ) : null}
           </div>
           <div
-            className={`order-1 flex flex-col justify-center gap-6 px-6 py-8 text-white md:order-2 md:w-1/2 md:px-8 md:py-10 ${textAlignClass}`}
+            className={`order-1 flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white md:order-2 md:w-1/2 md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
           >
             <h3
-              className={`font-manrope text-[40px] leading-[28px] ${
+              className={`font-manrope text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${
                 titleBold ? "font-bold" : "font-extrabold"
               }`}
             >
@@ -657,10 +661,10 @@ export function ModelingCard({
       ) : hasImage ? (
         <>
           <div
-            className={`flex flex-col justify-center gap-6 px-6 py-8 text-white md:w-1/2 md:px-8 md:py-10 ${textAlignClass}`}
+            className={`flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white md:w-1/2 md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
           >
             <h3
-              className={`font-manrope text-[40px] leading-[28px] ${
+              className={`font-manrope text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${
                 titleBold ? "font-bold" : "font-extrabold"
               }`}
             >
@@ -671,7 +675,7 @@ export function ModelingCard({
             </DescriptionTag>
           </div>
           <div
-            className="relative h-[240px] shrink-0 overflow-hidden md:h-full md:min-h-0 md:w-1/2"
+            className="relative h-[calc(240px*var(--ms,1))] shrink-0 overflow-hidden md:h-full md:min-h-0 md:w-1/2"
             data-landing-image={imageId}
             style={{
               ...(imageLayerBackground ?? undefined),
@@ -693,10 +697,10 @@ export function ModelingCard({
         </>
       ) : (
         <div
-          className={`flex flex-col justify-center gap-6 px-6 py-8 text-white md:w-full md:px-8 md:py-10 ${textAlignClass}`}
+          className={`flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white md:w-full md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
         >
           <h3
-            className={`font-manrope text-[40px] leading-[28px] ${
+            className={`font-manrope text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${
               titleBold ? "font-bold" : "font-extrabold"
             }`}
           >

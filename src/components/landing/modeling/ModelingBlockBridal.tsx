@@ -52,9 +52,8 @@ export function ModelingBlockBridal({
       noDescriptionMaxWidth
       fluidTextLayout
       textBlockAlign="end"
-      titleAlignSelf="end"
-      titleMarginRight="34%"
-      titleMarginTop="3.4rem"
+      titleAlignSelf="start"
+      titleMarginTop="calc(3.4rem * var(--ms, 1))"
       titleMarginTopCompensate
       descriptionMarginTop="8%"
       firstDescriptionLineId="bridal-description-first-line"

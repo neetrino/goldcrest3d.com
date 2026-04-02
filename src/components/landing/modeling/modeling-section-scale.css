@@ -1,0 +1,28 @@
+/**
+ * Modeling Specialization — proportional scale vs 1920px-wide content shell.
+ * At max-width 1920px, --ms = 1 (matches 2560×1600 centered layout baseline).
+ * Below sm, --ms stays 1 so existing mobile Figma typography wins.
+ */
+.modeling-specialization-cq {
+  container-type: inline-size;
+  container-name: modeling;
+}
+
+.modeling-specialization-scale {
+  width: 100%;
+  --ms: 1;
+}
+
+@media (min-width: 640px) {
+  .modeling-specialization-scale {
+    --ms: min(1, max(0.5, calc(100cqw / 1920px)));
+  }
+}
+
+/**
+ * Card overlay typography only — subtle bump vs section title (default --mt: 1).
+ * Applied on the modeling grid wrapper in SectionModeling.
+ */
+.modeling-specialization-card-text-scale {
+  --mt: 1.04;
+}
