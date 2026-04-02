@@ -59,6 +59,11 @@
   --manufacturing-stone-seat-geometry-detail-nudge-y: -12px;
   /** Stone Seat Geometry detail — մի քիչ աջ (դրական = աջ) */
   --manufacturing-stone-seat-geometry-detail-nudge-x: 35px;
+  /**
+   * Stone Seat Geometry — only mobile (max-width 767px): negative shifts image left.
+   * Default 0 keeps desktop unchanged.
+   */
+  --manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset: -40px;
   /** Wall Thickness Engineering detail — շատ քիչ դեպի աջ (դրական = աջ) */
   --manufacturing-wall-thickness-detail-nudge-x: 18px;
   /** Wall Thickness Engineering detail — մի քիչ ներքև (դրական = ներքև) */
@@ -68,6 +73,8 @@
    * Միայն այս նկարի վիզուալ սքեյլ — փոքրացնելու համար նվազեցրու արժեքը։
    */
   --manufacturing-stone-seat-geometry-detail-display-width: 610px;
+  /** Stone Seat Geometry — mobile-only display width (slightly smaller than desktop token). */
+  --manufacturing-stone-seat-geometry-detail-display-width-mobile: 520px;
 }
 
 /** Tablet: room for inline nav + CTA without overlap. */
@@ -857,6 +864,21 @@ section[id] {
     var(--manufacturing-wall-thickness-detail-nudge-y)
   );
   width: 560px;
+}
+
+@media (max-width: 767px) {
+  .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
+    transform: translate(
+        calc(
+          var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
+            var(--manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset)
+        ),
+        var(--manufacturing-stone-seat-geometry-detail-nudge-y)
+      )
+      scale(0.9);
+    transform-origin: center center;
+    width: 92% !important;
+  }
 }
 
 .manufacturing-intelligence-image-frame {
