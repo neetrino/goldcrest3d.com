@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment } from "react";
+import Image from "next/image";
 import { LANDING_ELEMENT_IDS, LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import {
@@ -47,9 +48,6 @@ const RENDERING_SUBTITLE_MOBILE_LINE4 = "every light ray.";
 /** Explicit two-line copy for Jewelry Design subtitle; line break is intentional. */
 const DESIGN_SUBTITLE_LINE1 = "Concept-to-CAD development for legacy";
 const DESIGN_SUBTITLE_LINE2 = "collection building. Your vision, engineered.";
-
-/** Միայն Jewelry Design ենթավերնագիր — դեպի վերև (Tailwind -translate-y-4 ≈ 16px) */
-const DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS = "-translate-y-4";
 
 /** Section2 — text column left; cluster nudge disabled (padding handles inset). */
 const SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX = 0;
@@ -150,7 +148,20 @@ export function PowerBanners() {
                 data-landing-image={LANDING_IMAGE_IDS.HERO_MODELING}
               >
                 <div
-                  className="power-banners-section1-bg pointer-events-none absolute inset-0"
+                  className="pointer-events-none absolute inset-0 z-0 overflow-hidden md:hidden"
+                  aria-hidden
+                >
+                  <Image
+                    src={SECTION1_HERO_BG_MOBILE_PATH}
+                    alt=""
+                    fill
+                    priority
+                    sizes="(max-width: 767px) min(100vw, 390px) 0px"
+                    className="h-full w-full object-cover object-center"
+                  />
+                </div>
+                <div
+                  className="power-banners-section1-bg pointer-events-none absolute inset-0 hidden md:block"
                   style={
                     {
                       ["--section1-hero-bg" as string]: `url("${slide.bg}")`,
@@ -265,13 +276,13 @@ export function PowerBanners() {
               <div
                 className={`relative z-10 flex h-full w-full flex-col items-start justify-end px-6 pb-16 pt-16 md:absolute md:left-0 md:right-auto ${SECTION3_TEXT_COLUMN_TOP_MD_CLASS} md:max-w-[min(520px,44vw)] md:-translate-y-1/2 md:items-start md:justify-center md:pl-12 md:pr-6 md:pb-0 md:pt-0 lg:pl-20`}
               >
-                <div className="power-banners-section3-text-cluster flex w-full flex-col items-start gap-7 text-left text-[#121212] md:gap-8">
+                <div className="power-banners-section3-text-cluster flex w-full flex-col items-end gap-7 text-right text-[#121212] max-md:-translate-y-24 md:translate-y-0 md:items-start md:gap-8 md:text-left">
                   <h1 className="hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal text-balance md:whitespace-nowrap">
                     {slide.title}
                   </h1>
-                  <div className="flex w-full flex-col items-start gap-0.5 md:gap-1">
+                  <div className="flex w-full flex-col items-end gap-0.5 md:items-start md:gap-1">
                     <p
-                      className={`hero-primary-subtitle-typography-design max-w-[433px] self-start text-left ${DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS}`}
+                      className="hero-primary-subtitle-typography-design max-w-[433px] self-end text-right max-md:-translate-y-5 md:max-w-[433px] md:-translate-y-4 md:self-start md:text-left"
                     >
                       <span className="block">{DESIGN_SUBTITLE_LINE1}</span>
                       <span className="block">{DESIGN_SUBTITLE_LINE2}</span>
@@ -279,7 +290,7 @@ export function PowerBanners() {
                     <GetAQuoteButton
                       id={HERO_SECTION3_GET_QUOTE_BUTTON_ID}
                       variant="gold"
-                      className="shrink-0 self-start"
+                      className="shrink-0 self-end md:self-start"
                     />
                   </div>
                 </div>

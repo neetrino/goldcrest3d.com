@@ -46,19 +46,41 @@
   --manufacturing-casting-compensation-detail-nudge-y: -25px;
   /** Casting Compensation detail — դեպի աջ (դրական = աջ) */
   --manufacturing-casting-compensation-detail-nudge-x: 65px;
+  /**
+   * Casting Compensation — միայն mobile (max-width 767px): ավելացնել բացասական = նկարը ձախ.
+   * Լռելյայն 0 — lg-ում չի կիրառվում։
+   */
+  --manufacturing-casting-compensation-detail-nudge-x-mobile-offset: -66px;
+  /**
+   * Casting Compensation — միայն mobile: դրական = նկարը ներքև։
+   */
+  --manufacturing-casting-compensation-detail-nudge-y-mobile-offset: 14px;
   /** Stone Seat Geometry detail — մի քիչ վերև (բացասական = վերև) */
   --manufacturing-stone-seat-geometry-detail-nudge-y: -12px;
   /** Stone Seat Geometry detail — մի քիչ աջ (դրական = աջ) */
   --manufacturing-stone-seat-geometry-detail-nudge-x: 35px;
+  /**
+   * Stone Seat Geometry — only mobile (max-width 767px): negative shifts image left.
+   * Default 0 keeps desktop unchanged.
+   */
+  --manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset: -40px;
   /** Wall Thickness Engineering detail — շատ քիչ դեպի աջ (դրական = աջ) */
   --manufacturing-wall-thickness-detail-nudge-x: 18px;
   /** Wall Thickness Engineering detail — մի քիչ ներքև (դրական = ներքև) */
   --manufacturing-wall-thickness-detail-nudge-y: 12px;
   /**
+   * Wall Thickness Engineering — only mobile (max-width 767px): negative shifts image left.
+   */
+  --manufacturing-wall-thickness-detail-nudge-x-mobile-offset: -24px;
+  /** Wall Thickness Engineering — mobile-only display width (slightly smaller). */
+  --manufacturing-wall-thickness-detail-display-width-mobile: 520px;
+  /**
    * Stone Seat Geometry — ցուցադրման լայնություն (ֆայլը 666×702 է, aspect 37/39).
    * Միայն այս նկարի վիզուալ սքեյլ — փոքրացնելու համար նվազեցրու արժեքը։
    */
   --manufacturing-stone-seat-geometry-detail-display-width: 610px;
+  /** Stone Seat Geometry — mobile-only display width (slightly smaller than desktop token). */
+  --manufacturing-stone-seat-geometry-detail-display-width-mobile: 520px;
 }
 
 /** Tablet: room for inline nav + CTA without overlap. */
@@ -448,24 +470,20 @@ section[id] {
   background-repeat: no-repeat;
 }
 
-/* Title/subtitle utilities default to center; section3 column is left-aligned */
-.power-banners-section3-text-cluster .hero-primary-title-typography-design,
-.power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
-  text-align: left;
-}
-
-@media (max-width: 767px) {
-  .power-banners-section3-text-cluster .hero-primary-title-typography-design {
-    font-size: 24px;
-    line-height: 1.1;
-    letter-spacing: -0.006em;
-  }
-}
-
-/* Desktop: base .hero-primary-title-typography-design uses 72px line-height — tighten stack */
+/* Desktop (md+): section3 title/subtitle — left-aligned */
 @media (min-width: 768px) {
+  .power-banners-section3-text-cluster .hero-primary-title-typography-design,
+  .power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
+    text-align: left;
+  }
+
   .power-banners-section3-text-cluster .hero-primary-title-typography-design {
     line-height: 1.12;
+  }
+
+  .power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
+    width: auto;
+    max-width: 433px;
   }
 }
 
@@ -483,6 +501,31 @@ section[id] {
     letter-spacing: 0.396px;
   }
 
+  /* Jewelry Design (section3) — mobile Figma: right-aligned, same title scale as Rendering */
+  .power-banners-section3-text-cluster > h1.hero-primary-title-typography-design {
+    flex: 1 0 0;
+    color: #000;
+    text-align: right;
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 36px;
+    letter-spacing: 0.396px;
+  }
+
+  .power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
+    width: 197px;
+    max-width: 197px;
+    color: rgba(18, 18, 18, 0.9);
+    text-align: right;
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 350;
+    line-height: 28px;
+  }
+
   #hero-rendering-subtitle {
     width: auto;
     max-width: 100%;
@@ -498,7 +541,9 @@ section[id] {
     transform: translate(0, 0);
   }
 
-  #hero-section2-get-quote {
+  /* Jewelry Rendering + Jewelry Design — same CTA size, padding, gradient (mobile) */
+  #hero-section2-get-quote,
+  #hero-section3-get-quote {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -567,13 +612,7 @@ section[id] {
     display: none;
   }
 
-  .power-banners-section1-bg {
-    background-image: var(--section1-hero-bg-mobile, var(--section1-hero-bg));
-    background-color: #fff;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-  }
+  /* Section1 mobile hero: `next/image` in PowerBanners (Figma 367×679, block aspect 20/37). */
 
   .power-banners-section2-block::before {
     width: 100%;
@@ -796,6 +835,21 @@ section[id] {
   width: 682px;
 }
 
+@media (max-width: 767px) {
+  .manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+    transform: translate(
+      calc(
+        var(--manufacturing-casting-compensation-detail-nudge-x) +
+          var(--manufacturing-casting-compensation-detail-nudge-x-mobile-offset)
+      ),
+      calc(
+        var(--manufacturing-casting-compensation-detail-nudge-y) +
+          var(--manufacturing-casting-compensation-detail-nudge-y-mobile-offset)
+      )
+    );
+  }
+}
+
 /* Stone Seat Geometry & Setting Logic — ֆայլ 666×702, aspect-ratio 37/39, ցուցադրման լայնություն՝ token */
 .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
   aspect-ratio: 37 / 39;
@@ -816,6 +870,33 @@ section[id] {
     var(--manufacturing-wall-thickness-detail-nudge-y)
   );
   width: 560px;
+}
+
+@media (max-width: 767px) {
+  .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
+    transform: translate(
+        calc(
+          var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
+            var(--manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset)
+        ),
+        var(--manufacturing-stone-seat-geometry-detail-nudge-y)
+      )
+      scale(0.9);
+    transform-origin: center center;
+    width: 92% !important;
+  }
+
+  .manufacturing-intelligence-photo-detail--wall-thickness-engineering {
+    transform: translate(
+      calc(
+        var(--manufacturing-wall-thickness-detail-nudge-x) +
+          var(--manufacturing-wall-thickness-detail-nudge-x-mobile-offset)
+      ),
+      var(--manufacturing-wall-thickness-detail-nudge-y)
+    ) scale(0.92);
+    transform-origin: center center;
+    width: 90% !important;
+  }
 }
 
 .manufacturing-intelligence-image-frame {
