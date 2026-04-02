@@ -11,9 +11,6 @@ import {
   ModelingBlockHeritage,
 } from "./modeling";
 
-/** Fixed height of the Modeling Specialization title block — block does not resize with content. */
-const MODELING_TITLE_BLOCK_HEIGHT_PX = 200;
-
 type SectionModelingProps = {
   modeling: LandingModelingMedia;
 };
@@ -29,10 +26,7 @@ export function SectionModeling({ modeling }: SectionModelingProps) {
       aria-labelledby="modeling-specialization"
     >
       <div className="mx-auto max-w-[1920px]">
-        <div
-          className="flex w-full min-w-0 flex-col items-center justify-center overflow-visible md:overflow-hidden"
-          style={{ height: `${MODELING_TITLE_BLOCK_HEIGHT_PX}px` }}
-        >
+        <div className="flex min-h-[140px] w-full min-w-0 flex-col items-center justify-center overflow-visible py-6 md:min-h-[200px] md:overflow-hidden md:py-0">
           <ModelingSpecializationTitle />
         </div>
 

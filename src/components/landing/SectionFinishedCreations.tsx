@@ -4,6 +4,7 @@ import { LANDING_SECTION_IDS } from "@/constants";
 import type { FinishedGalleryItem } from "@/lib/site-media/landing-defaults";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
+import { useFinishedCreationsCarouselMetrics } from "@/components/landing/useFinishedCreationsCarouselMetrics";
 
 /** Carousel: large images (row 1). */
 const ROW2_ITEM_WIDTH = 420;
@@ -17,7 +18,8 @@ type SectionFinishedCreationsProps = {
 const SLOT_WIDTH = 670;
 const SLOT_HEIGHT = 370;
 const SLOT_GAP = 8;
-const TRANSLATE_PER_PAGE = SLOT_WIDTH + SLOT_GAP;
+/** Desktop carousel: four large slots visible in the measured viewport. */
+const DESKTOP_ROW1_VISIBLE_SLOTS = 4;
 
 /** Mobile gallery: taller than desktop slot ratio (same width, more height). */
 const MOBILE_BLOCK_HEIGHT_SCALE = 1.3;
@@ -124,9 +126,12 @@ export function SectionFinishedCreations({
   const row1StripImages = [...ROW1_IMAGES, ...ROW1_IMAGES];
   const row2StripImages = [...ROW2_IMAGES, ...ROW2_IMAGES];
 
-  const row2TranslatePerPage = ROW2_ITEM_WIDTH + ROW2_GAP;
-  const row2ViewportWidth =
-    ROW2_ITEM_WIDTH * ROW2_IMAGE_COUNT + ROW2_GAP * (ROW2_IMAGE_COUNT - 1);
+  const desktopCarouselContainerRef = useRef<HTMLDivElement>(null);
+  const desktopMetrics = useFinishedCreationsCarouselMetrics(
+    desktopCarouselContainerRef,
+    DESKTOP_ROW1_VISIBLE_SLOTS,
+    ROW2_IMAGE_COUNT,
+  );
 
   const mobileRow1Left = ROW1_IMAGES[activePage % TOTAL_PAGES];
   const mobileRow1Right = ROW1_IMAGES[(activePage + 1) % TOTAL_PAGES];
@@ -207,59 +212,59 @@ export function SectionFinishedCreations({
               })}
             </div>
           </div>
-          <div className="hidden flex-col items-center gap-2 md:flex">
-            <div
-              className="overflow-hidden"
-              style={{ width: SLOT_WIDTH * 4 + SLOT_GAP * 3 }}
-            >
+          <div
+            ref={desktopCarouselContainerRef}
+            className="hidden w-full min-w-0 max-w-full flex-col items-stretch gap-2 md:flex"
+          >
+            <div className="w-full min-w-0 overflow-hidden">
               <div
-                className="flex gap-x-2 transition-transform duration-300 ease-out"
+                className="flex gap-2 transition-transform duration-300 ease-out"
                 style={{
-                  transform: `translateX(-${(activePage % TOTAL_PAGES) * TRANSLATE_PER_PAGE}px)`,
+                  transform: `translateX(-${(activePage % TOTAL_PAGES) * desktopMetrics.row1TranslatePx}px)`,
                 }}
               >
                 {row1StripImages.map((item, index) => (
                   <div
                     key={`${item.id}-${index}`}
                     data-landing-image={item.imageId}
-                    className="relative h-[370px] flex-shrink-0 overflow-hidden rounded-none"
-                    style={{ width: SLOT_WIDTH }}
+                    className="relative aspect-[670/370] shrink-0 overflow-hidden rounded-none"
+                    style={{ width: desktopMetrics.row1SlideWidth }}
                   >
                     <Image
                       src={item.src}
                       alt=""
                       fill
                       className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
-                      sizes="670px"
+                      sizes="(min-width: 768px) 25vw, 670px"
                       unoptimized
                     />
                   </div>
                 ))}
               </div>
             </div>
-            <div
-              className="overflow-hidden"
-              style={{ width: row2ViewportWidth }}
-            >
+            <div className="w-full min-w-0 overflow-hidden">
               <div
-                className="flex gap-x-2 transition-transform duration-300 ease-out"
+                className="flex gap-2 transition-transform duration-300 ease-out"
                 style={{
-                  transform: `translateX(-${(activePage % ROW2_IMAGE_COUNT) * row2TranslatePerPage}px)`,
+                  transform: `translateX(-${(activePage % ROW2_IMAGE_COUNT) * desktopMetrics.row2TranslatePx}px)`,
                 }}
               >
                 {row2StripImages.map((item, index) => (
                   <div
                     key={`${item.id}-${index}`}
                     data-landing-image={item.imageId}
-                    className="relative flex-shrink-0 overflow-hidden rounded-none"
-                    style={{ width: ROW2_ITEM_WIDTH, height: ROW2_ITEM_HEIGHT }}
+                    className="relative shrink-0 overflow-hidden rounded-none"
+                    style={{
+                      width: desktopMetrics.row2SlideWidth,
+                      aspectRatio: `${ROW2_ITEM_WIDTH} / ${ROW2_ITEM_HEIGHT}`,
+                    }}
                   >
                     <Image
                       src={item.src}
                       alt=""
                       fill
                       className="object-cover"
-                      sizes="420px"
+                      sizes="(min-width: 768px) 22vw, 420px"
                       unoptimized
                     />
                   </div>

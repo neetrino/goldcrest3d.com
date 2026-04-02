@@ -154,7 +154,7 @@ export function SectionFounder() {
         <h3 className="-mt-2 mb-3 text-center font-sans text-[30px] font-black leading-[36px] tracking-[0.396px] text-black md:hidden">
           Davit Sargsyan
         </h3>
-        <div className="relative mx-auto flex h-[431.867px] min-h-0 w-full max-w-full shrink-0 flex-col self-stretch overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:h-[680px] md:w-[1440px] md:shrink md:flex-row md:self-auto">
+        <div className="relative mx-auto flex h-[431.867px] min-h-0 w-full max-w-full shrink-0 flex-col self-stretch overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:h-[680px] md:w-full md:max-w-[1440px] md:shrink md:flex-row md:self-auto">
           <div className="hidden min-h-0 flex-1 flex-col px-4 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8 md:flex md:pl-28 md:pr-12 md:pt-40 md:pb-16 md:min-h-[320px]">
             <h3 className="text-left font-black leading-[40px] tracking-[-1.2px] text-[#0f172a] text-[36px]">
               Davit Sargsyan

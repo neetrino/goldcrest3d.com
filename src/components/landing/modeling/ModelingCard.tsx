@@ -336,7 +336,7 @@ export function ModelingCard({
               {descriptionLinesDesktop.map((line, i) => (
                 <span
                   key={`hiphop-desktop-${i}`}
-                  className={`block ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i === 0 ? "sm:translate-x-2 sm:translate-y-0.5" : ""} ${i === 1 ? "sm:mt-1.5" : ""} ${i === 2 ? "sm:mt-1.5 sm:-translate-y-1 sm:translate-x-75" : ""}`}
+                  className={`block ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i === 0 ? "sm:translate-x-2 sm:translate-y-0.5" : ""} ${i === 1 ? "sm:mt-1.5" : ""} ${i === 2 ? "sm:mt-1.5 sm:-translate-y-1 sm:translate-x-[min(18rem,38vw)]" : ""}`}
                 >
                   {line}
                 </span>
@@ -490,13 +490,13 @@ export function ModelingCard({
           ) : null}
         </div>
         <div
-          className={`absolute inset-0 z-10 px-6 py-8 md:px-8 md:py-10 ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-6 ${hipHopMobileLayout ? "max-sm:items-center max-sm:gap-3 max-sm:translate-x-0 max-sm:translate-y-[72px] max-sm:px-4 max-sm:pb-6 max-sm:text-center sm:items-start sm:gap-6 sm:pr-[40%] sm:translate-x-6 sm:translate-y-[8.5rem] sm:text-left" : bridalMobileLayout ? `max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-20 max-sm:gap-3 max-sm:px-4 max-sm:items-start max-sm:text-left sm:-translate-x-54 sm:-translate-y-48 sm:items-end sm:text-right` : `${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
+          className={`absolute inset-0 z-10 px-6 py-8 md:px-8 md:py-10 ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-6 ${hipHopMobileLayout ? "max-sm:items-center max-sm:gap-3 max-sm:translate-x-0 max-sm:translate-y-[72px] max-sm:px-4 max-sm:pb-6 max-sm:text-center sm:items-start sm:gap-6 sm:pr-[40%] sm:translate-x-6 sm:translate-y-[8.5rem] sm:text-left" : bridalMobileLayout ? "max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-20 max-sm:gap-3 max-sm:px-4 max-sm:items-start max-sm:text-left sm:-translate-x-[min(13.5rem,32vw)] sm:-translate-y-[min(12rem,28vh)] sm:items-end sm:text-right" : `${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
           style={overlayTextContainerStyle}
         >
           {independentTitleDescription ? (
             portraitMobileLayout ? (
               <>
-                <div className="absolute inset-0 z-20 flex -translate-x-[12.5rem] -translate-y-4 flex-col items-end justify-end gap-3 px-4 pb-8 sm:hidden">
+                <div className="absolute inset-0 z-20 flex -translate-x-[min(12.5rem,45vw)] -translate-y-4 flex-col items-end justify-end gap-3 px-4 pb-8 sm:hidden">
                   <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
                     {title === PORTRAIT_MOBILE_TITLE_FULL ? (
                       <>
@@ -573,7 +573,7 @@ export function ModelingCard({
           ) : (
             <>
               <h3
-                className={`${titleClassNameResolved} ${hipHopMobileLayout ? "max-sm:mt-2 max-sm:self-center max-sm:text-center sm:self-auto sm:text-left sm:translate-x-55 sm:translate-y-1" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-2 max-sm:!self-start max-sm:!text-left sm:!self-end sm:!text-right" : ""}`}
+                className={`${titleClassNameResolved} ${hipHopMobileLayout ? "max-sm:mt-2 max-sm:self-center max-sm:text-center sm:self-auto sm:text-left sm:translate-x-[min(13.75rem,28vw)] sm:translate-y-1" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-2 max-sm:!self-start max-sm:!text-left sm:!self-end sm:!text-right" : ""}`}
                 style={{
                   ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                   ...(titleMarginTop != null && { marginTop: titleMarginTop }),

@@ -55,10 +55,6 @@ const DESIGN_SECTION_BG_POSITION_Y_PX =
   DESIGN_SECTION_BG_TOP_OFFSET_RATIO * DESIGN_SECTION_DESKTOP_FRAME_HEIGHT_PX;
 /** Դրական արժեք — ֆոնի նկարը դեպի ներքև (px) */
 const DESIGN_SECTION_BG_NUDGE_DOWN_PX = 16;
-/** Վերնագիր, ենթատեքստ, CTA — դեպի ձախ (translateX, px) */
-const DESIGN_SECTION_TEXT_NUDGE_LEFT_PX = 185;
-/** Jewelry Design տեքստային բլոկ — դեպի ներքև (translateY, px) */
-const DESIGN_SECTION_TEXT_NUDGE_DOWN_PX = 180;
 /** Միայն Jewelry Design ենթավերնագիր — դեպի վերև (Tailwind -translate-y-4 ≈ 16px) */
 const DESIGN_SECTION_SUBTITLE_NUDGE_UP_CLASS = "-translate-y-4";
 /** Միայն Jewelry Design «Get a Quote» — դեպի վերև */
@@ -122,7 +118,7 @@ export function PowerBanners() {
             slide.id === "modeling"
               ? "items-center bg-white"
               : slide.id === "rendering"
-                ? "min-h-0 h-[760px] bg-white md:h-auto"
+                ? "min-h-0 bg-white md:h-auto"
                 : slide.id === "design"
                   ? "power-banners-section3-block mx-auto w-full max-w-[1920px] bg-white"
                   : "min-h-[460px] md:min-h-[720px]"
@@ -166,7 +162,7 @@ export function PowerBanners() {
                   }}
                 >
                   <h1
-                    className={`inline-block whitespace-nowrap ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
+                    className={`inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance md:whitespace-pre-line md:max-w-none ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
                     style={{
                       transform: `translateY(-${SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
                     }}
@@ -210,7 +206,7 @@ export function PowerBanners() {
               <div className="relative z-10 flex h-full w-full flex-col items-end justify-center pl-6 pr-6 pt-16 pb-16 md:absolute md:right-0 md:top-[50%] md:max-w-[494px] md:h-auto md:-translate-y-1/2 md:pl-12 md:pr-[153px] md:pt-0 md:pb-0">
                 <div className="power-banners-section2-text-cluster flex w-full flex-col items-end gap-8 text-right text-white">
                   <h1
-                    className={`relative inline-block max-w-full translate-x-1 -translate-y-2.5 whitespace-nowrap text-right md:-translate-x-10 md:-translate-y-2.5 ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
+                    className={`relative inline-block max-w-full translate-x-1 -translate-y-2.5 whitespace-normal text-balance text-right md:-translate-x-10 md:-translate-y-2.5 md:whitespace-nowrap ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
                   >
                     <span
                       className="inline-block"
@@ -232,8 +228,8 @@ export function PowerBanners() {
                       <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE4}</span>
                     </span>
                     <span className="hidden md:block">
-                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
-                      <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
+                      <span className="block md:whitespace-nowrap">{RENDERING_SUBTITLE_LINE1}</span>
+                      <span className="block md:whitespace-nowrap">{RENDERING_SUBTITLE_LINE2}</span>
                     </span>
                   </p>
                   <GetAQuoteButton
@@ -274,19 +270,12 @@ export function PowerBanners() {
                     : slide.contentAlign === "left"
                       ? "items-start text-left"
                       : "items-center text-center"
-                } ${slide.darkText ? "text-[#121212]" : "text-white"} ${slide.id === "design" ? "hidden md:flex" : ""}`.trim()}
-                style={
-                  slide.id === "design"
-                    ? {
-                        transform: `translate(-${DESIGN_SECTION_TEXT_NUDGE_LEFT_PX}px, ${DESIGN_SECTION_TEXT_NUDGE_DOWN_PX}px)`,
-                      }
-                    : undefined
-                }
+                } ${slide.darkText ? "text-[#121212]" : "text-white"} ${slide.id === "design" ? "power-banners-section3-text-cluster hidden md:flex" : ""}`.trim()}
               >
                 <h1
                   className={
                     slide.darkText
-                      ? "hero-primary-title-typography-design inline-block max-w-[494px] whitespace-nowrap"
+                      ? "hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal md:whitespace-nowrap"
                       : "max-w-[896px] font-black leading-[72px] tracking-[-1.8px] text-white text-[56px] md:text-[72px]"
                   }
                 >
