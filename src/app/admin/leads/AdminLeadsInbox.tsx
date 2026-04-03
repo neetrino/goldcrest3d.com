@@ -7,17 +7,17 @@ import { useMemo, useState } from "react";
 
 import { LeadReplyForm } from "./[id]/LeadReplyForm";
 import type { LeadListItem, LeadWithAttachments } from "./adminLeads.types";
+import { DeleteLeadButton, LEAD_DELETE_CONFIRM_QUERY } from "./DeleteLeadButton";
 import {
-  ICON_DOWNLOAD,
   ICON_IMAGE,
   ICON_PDF,
-  ICON_TRASH,
   LEAD_AVATAR_DEFAULT_SRC,
   formatListTime,
   getPreview,
   getSubject,
 } from "./adminLeadsInbox.helpers";
 import {
+  IconArchiveBox,
   IconBell,
   IconMail,
   IconPlusThin,
@@ -51,6 +51,7 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
   const handleSelectLead = (id: string) => {
     const next = new URLSearchParams(searchParams.toString());
     next.set("selected", id);
+    next.delete(LEAD_DELETE_CONFIRM_QUERY);
     router.push(`/admin/leads?${next.toString()}`);
   };
 
@@ -187,30 +188,15 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                   <div className="flex shrink-0 gap-2 self-start sm:self-auto">
                     <a
                       href="#"
-                      className="flex h-9 w-9 items-center justify-center rounded border border-slate-200 hover:bg-slate-50"
-                      aria-label="Download"
+                      className="flex h-9 w-9 items-center justify-center rounded border border-slate-200 text-slate-700 hover:bg-slate-50"
+                      aria-label="Archive"
                     >
-                      <Image
-                        src={ICON_DOWNLOAD}
-                        alt=""
-                        width={18}
-                        height={18}
-                        unoptimized
-                      />
+                      <IconArchiveBox />
                     </a>
-                    <button
-                      type="button"
-                      className="flex h-9 w-9 items-center justify-center rounded border border-slate-200 hover:bg-slate-50"
-                      aria-label="Delete"
-                    >
-                      <Image
-                        src={ICON_TRASH}
-                        alt=""
-                        width={16}
-                        height={18}
-                        unoptimized
-                      />
-                    </button>
+                    <DeleteLeadButton
+                      leadId={selectedLead.id}
+                      leadName={selectedLead.fullName}
+                    />
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col gap-4">

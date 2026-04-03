@@ -1,10 +1,6 @@
 /** Default lead avatar (public/images/avatar-default.svg). */
 export const LEAD_AVATAR_DEFAULT_SRC = "/images/avatar-default.svg";
 
-export const ICON_DOWNLOAD =
-  "https://www.figma.com/api/mcp/asset/544d8796-9e2e-4766-8756-76ac81306b71";
-export const ICON_TRASH =
-  "https://www.figma.com/api/mcp/asset/6b5d20c5-3c21-4c20-af9d-8fabe3b789a0";
 export const ICON_PDF =
   "https://www.figma.com/api/mcp/asset/b01bcc0e-3b49-47f5-abd1-f2f04513a605";
 export const ICON_IMAGE =

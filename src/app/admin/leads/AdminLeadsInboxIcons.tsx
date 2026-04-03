@@ -108,3 +108,52 @@ export function IconMail({ className }: { className?: string }) {
     </svg>
   );
 }
+
+const STROKE_BOLD = 2.5;
+
+/** Archive into box — thick stroke (lead detail toolbar). */
+export function IconArchiveBox({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width={18}
+      height={18}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={STROKE_BOLD}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="3.5" y="4" width="17" height="5" rx="1.25" />
+      <rect x="5" y="9" width="14" height="12" rx="1.25" />
+      <path d="M12 12v5M9 15l3 3 3-3" />
+    </svg>
+  );
+}
+
+/** Trash — thick stroke (lead detail toolbar). */
+export function IconTrashBin({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width={18}
+      height={18}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={STROKE_BOLD}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M3 6h18" />
+      <path d="M8 6V5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1" />
+      <rect x="10" y="3" width="4" height="1.5" rx="0.35" />
+      <path d="M6 6v14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6" />
+      <line x1="10" y1="10" x2="10" y2="17" />
+      <line x1="14" y1="10" x2="14" y2="17" />
+    </svg>
+  );
+}
