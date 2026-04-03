@@ -92,6 +92,19 @@
   /** Wall Thickness Engineering — mobile-only display width (slightly smaller). */
   --manufacturing-wall-thickness-detail-display-width-mobile: 520px;
   /**
+   * Wall Thickness Engineering — միայն lg+ (min-width 1024px): ցուցադրման լայնություն (բազային 560px)։
+   */
+  --manufacturing-wall-thickness-detail-display-width-lg: 500px;
+  /**
+   * Wall Thickness Engineering — միայն lg+։ վիզուալ սքեյլ (1 = առանց փոփոխության)։
+   * Պարտադիր, երբ նկարը `max-h-full`-ով կպչում է կադրի բարձրությանը — միայն `width` token-ը կարող է չերևալ։
+   */
+  --manufacturing-wall-thickness-detail-scale-lg: 0.88;
+  /**
+   * Wall Thickness Engineering — միայն lg+ (min-width 1024px): լրացուցիչ translateX (դրական = աջ)։
+   */
+  --manufacturing-wall-thickness-detail-nudge-x-lg-offset: 125px;
+  /**
    * Stone Seat Geometry — ցուցադրման լայնություն (ֆայլը 666×702 է, aspect 37/39).
    * Նկատի ունեցիր՝ lg+ շատ հաճախ սահմանափակվում է `max-h-full`-ով (կադրի բարձրություն),
    * այդ դեպքում միայն width token-ը տեսողական փոփոխություն չի տա — տե՛ս `--manufacturing-stone-seat-geometry-detail-scale-lg`։
@@ -1008,11 +1021,16 @@ section[id] {
     transform-origin: left center;
   }
 
-  .manufacturing-intelligence-photo-detail--wall-thickness-engineering {
+  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--wall-thickness-engineering {
     transform: translate(
-      var(--manufacturing-wall-thickness-detail-nudge-x),
+      calc(
+        var(--manufacturing-wall-thickness-detail-nudge-x) +
+          var(--manufacturing-wall-thickness-detail-nudge-x-lg-offset)
+      ),
       var(--manufacturing-wall-thickness-detail-nudge-y)
-    );
+    ) scale(var(--manufacturing-wall-thickness-detail-scale-lg));
+    transform-origin: left center;
+    width: var(--manufacturing-wall-thickness-detail-display-width-lg);
   }
 }
 
