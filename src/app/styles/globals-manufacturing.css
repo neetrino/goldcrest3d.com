@@ -1,0 +1,242 @@
+/* Manufacturing Intelligence — Figma 110:373, 97:415 */
+.manufacturing-intelligence-card-shell {
+  margin-inline: auto;
+  max-width: min(100%, var(--manufacturing-intelligence-card-max-w));
+  width: 100%;
+}
+
+/**
+ * Mobile / tablet below `lg`: gradient card breaks out of section horizontal padding
+ * so the block is edge-to-edge (no white side gutters).
+ */
+@media (max-width: 1023px) {
+  .manufacturing-intelligence-card-shell {
+    margin-inline: unset;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    max-width: none;
+    width: 100vw;
+  }
+}
+
+/* Mobile: centered block (Figma); indent from lg — see SectionManufacturing h2 */
+.manufacturing-intelligence-heading {
+  padding-inline-start: 0;
+}
+
+@media (min-width: 1024px) {
+  .manufacturing-intelligence-heading {
+    padding-inline-start: var(--manufacturing-intelligence-heading-indent-start);
+  }
+}
+
+.manufacturing-intelligence-accordion-label {
+  color: #000000;
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.manufacturing-intelligence-accordion-detail {
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+}
+
+/* Figma 201:329 — 750×625 frame; contain shows full export like Figma (no artificial zoom crop) */
+.manufacturing-intelligence-photo {
+  height: 100% !important;
+  left: 0 !important;
+  max-width: none !important;
+  object-fit: contain;
+  object-position: center;
+  top: 0 !important;
+  width: 100% !important;
+}
+
+/* Միայն detail նկար (օր. Tolerance Control) — 980×653, frame-ի class-ները չեն փոխվել */
+.manufacturing-intelligence-photo-detail {
+  aspect-ratio: 980 / 653;
+  box-sizing: border-box;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+  width: 980px;
+}
+
+/* 3D Printing Strategy & Resin — 978×694, aspect-ratio 69/49 */
+.manufacturing-intelligence-photo-detail--printing-strategy-resin {
+  aspect-ratio: 69 / 49;
+  transform: translateY(var(--manufacturing-printing-strategy-resin-detail-nudge-y));
+  width: 978px;
+}
+
+/* Casting Compensation & Metal Flow — 682×753, aspect-ratio 48/53 */
+.manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+  aspect-ratio: 48 / 53;
+  height: auto;
+  transform: translate(
+    var(--manufacturing-casting-compensation-detail-nudge-x),
+    var(--manufacturing-casting-compensation-detail-nudge-y)
+  );
+  width: 682px;
+}
+
+@media (max-width: 767px) {
+  .manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+    transform: translate(
+      calc(
+        var(--manufacturing-casting-compensation-detail-nudge-x) +
+          var(--manufacturing-casting-compensation-detail-nudge-x-mobile-offset)
+      ),
+      calc(
+        var(--manufacturing-casting-compensation-detail-nudge-y) +
+          var(--manufacturing-casting-compensation-detail-nudge-y-mobile-offset)
+      )
+    );
+  }
+}
+
+/* Stone Seat Geometry & Setting Logic — ֆայլ 666×702, aspect-ratio 37/39, ցուցադրման լայնություն՝ token */
+.manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
+  aspect-ratio: 37 / 39;
+  height: auto;
+  transform: translate(
+    calc(
+      var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
+        var(--manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset)
+    ),
+    var(--manufacturing-stone-seat-geometry-detail-nudge-y)
+  );
+  width: var(--manufacturing-stone-seat-geometry-detail-display-width);
+}
+
+/* Wall Thickness Engineering — 560×590, aspect-ratio 151/159 */
+.manufacturing-intelligence-photo-detail--wall-thickness-engineering {
+  aspect-ratio: 151 / 159;
+  height: auto;
+  transform: translate(
+    var(--manufacturing-wall-thickness-detail-nudge-x),
+    var(--manufacturing-wall-thickness-detail-nudge-y)
+  );
+  width: 560px;
+}
+
+@media (max-width: 767px) {
+  .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
+    transform: translate(
+        calc(
+          var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
+            var(--manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset) +
+            var(--manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset)
+        ),
+        var(--manufacturing-stone-seat-geometry-detail-nudge-y)
+      )
+      scale(0.9);
+    transform-origin: center center;
+    width: 92% !important;
+  }
+
+  .manufacturing-intelligence-photo-detail--wall-thickness-engineering {
+    transform: translate(
+      calc(
+        var(--manufacturing-wall-thickness-detail-nudge-x) +
+          var(--manufacturing-wall-thickness-detail-nudge-x-mobile-offset)
+      ),
+      var(--manufacturing-wall-thickness-detail-nudge-y)
+    ) scale(0.92);
+    transform-origin: center center;
+    width: 90% !important;
+  }
+}
+
+.manufacturing-intelligence-image-frame {
+  max-width: min(100%, var(--manufacturing-intelligence-image-frame-max-w));
+}
+
+/* Image column — nudged up vs initial Figma padding so the composite aligns with the accordion */
+.manufacturing-intelligence-image-column {
+  padding-top: 0;
+}
+
+@media (min-width: 1024px) {
+  .manufacturing-intelligence-image-column {
+    padding-top: var(--manufacturing-intelligence-image-col-padding-top-lg);
+  }
+
+  .manufacturing-intelligence-image-frame {
+    max-height: var(--manufacturing-intelligence-image-frame-max-h-lg);
+    transform: translate(
+      var(--manufacturing-intelligence-image-nudge-x-lg),
+      var(--manufacturing-intelligence-image-nudge-y-lg)
+    );
+  }
+
+  .manufacturing-intelligence-photo {
+    object-position: left center;
+    transform: scale(var(--manufacturing-intelligence-photo-scale-lg));
+    transform-origin: left center;
+  }
+
+  /**
+   * Միայն «ստանդարտ» detail (առանց `manufacturing-intelligence-photo-detail--*` մոդիֆիկատոր class-ի) — `transform: none`։
+   * Նոր մոդիֆիկատոր ավելացնելիս այստեղ չի պետք շղթա թարմացնել — class-ի substring-ով ստուգում է։
+   */
+  .manufacturing-intelligence-photo-detail {
+    object-position: left center;
+  }
+
+  .manufacturing-intelligence-photo-detail:not([class*="manufacturing-intelligence-photo-detail--"]) {
+    transform: none;
+  }
+
+  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--mechanical-stress-load-distribution {
+    transform: translateX(var(--manufacturing-mechanical-stress-detail-nudge-x-lg))
+      scale(var(--manufacturing-mechanical-stress-detail-scale-lg));
+    transform-origin: left center;
+    width: var(--manufacturing-mechanical-stress-detail-display-width-lg);
+  }
+
+  .manufacturing-intelligence-photo-detail--printing-strategy-resin {
+    transform: translateY(var(--manufacturing-printing-strategy-resin-detail-nudge-y));
+  }
+
+  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+    margin-inline-start: var(--manufacturing-casting-compensation-detail-nudge-x-lg-offset);
+    transform: translate(
+      var(--manufacturing-casting-compensation-detail-nudge-x),
+      calc(
+        var(--manufacturing-casting-compensation-detail-nudge-y) +
+          var(--manufacturing-casting-compensation-detail-nudge-y-lg-offset)
+      )
+    );
+    width: var(--manufacturing-casting-compensation-detail-display-width-lg);
+  }
+
+  .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
+    transform: translate(
+        calc(
+          var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
+            var(--manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset)
+        ),
+        var(--manufacturing-stone-seat-geometry-detail-nudge-y)
+      )
+      scale(var(--manufacturing-stone-seat-geometry-detail-scale-lg));
+    transform-origin: left center;
+  }
+
+  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--wall-thickness-engineering {
+    transform: translate(
+      calc(
+        var(--manufacturing-wall-thickness-detail-nudge-x) +
+          var(--manufacturing-wall-thickness-detail-nudge-x-lg-offset)
+      ),
+      calc(
+        var(--manufacturing-wall-thickness-detail-nudge-y) +
+          var(--manufacturing-wall-thickness-detail-nudge-y-lg-offset)
+      )
+    ) scale(var(--manufacturing-wall-thickness-detail-scale-lg));
+    transform-origin: left center;
+    width: var(--manufacturing-wall-thickness-detail-display-width-lg);
+  }
+}

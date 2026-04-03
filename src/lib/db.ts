@@ -1,13 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
+import { normalizePostgresConnectionStringSslMode } from "@/lib/normalizePostgresConnectionStringSslMode";
+
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
 function createPrismaClient(): PrismaClient {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
+  const rawUrl = process.env.DATABASE_URL;
+  if (!rawUrl) {
     throw new Error("DATABASE_URL is not set");
   }
+  const connectionString = normalizePostgresConnectionStringSslMode(rawUrl);
   const adapter = new PrismaPg({ connectionString });
   return new PrismaClient({
     adapter,

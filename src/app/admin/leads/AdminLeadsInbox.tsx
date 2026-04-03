@@ -4,163 +4,26 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
+
 import { LeadReplyForm } from "./[id]/LeadReplyForm";
 import type { LeadListItem, LeadWithAttachments } from "./adminLeads.types";
-
-function IconSearch({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width={15}
-      height={15}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}
-
-/** Thin plus for “New Lead” (lighter stroke than other icons). */
-function IconPlusThin({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width={16}
-      height={16}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <line x1="12" x2="12" y1="5" y2="19" />
-      <line x1="5" x2="19" y1="12" y2="12" />
-    </svg>
-  );
-}
-
-/** Notifications — bell (stroke matches search / admin nav). */
-function IconBell({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width={20}
-      height={20}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-  );
-}
-
-/** Filter / sort — horizontal sliders (stroke matches inbox icons). */
-function IconSlidersHorizontal({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width={18}
-      height={18}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <line x1="21" x2="14" y1="4" y2="4" />
-      <line x1="10" x2="3" y1="4" y2="4" />
-      <line x1="21" x2="12" y1="12" y2="12" />
-      <line x1="8" x2="3" y1="12" y2="12" />
-      <line x1="21" x2="16" y1="20" y2="20" />
-      <line x1="12" x2="3" y1="20" y2="20" />
-      <line x1="14" x2="14" y1="2" y2="6" />
-      <line x1="8" x2="8" y1="10" y2="14" />
-      <line x1="16" x2="16" y1="18" y2="22" />
-    </svg>
-  );
-}
-
-/** Email address — envelope (stroke matches inbox icons). */
-function IconMail({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width={16}
-      height={16}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <rect width="20" height="16" x="2" y="4" rx="2" />
-      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-    </svg>
-  );
-}
-
-/** Default lead avatar (public/images/avatar-default.svg). */
-const LEAD_AVATAR_DEFAULT_SRC = "/images/avatar-default.svg";
-
-const ICON_DOWNLOAD =
-  "https://www.figma.com/api/mcp/asset/544d8796-9e2e-4766-8756-76ac81306b71";
-const ICON_TRASH =
-  "https://www.figma.com/api/mcp/asset/6b5d20c5-3c21-4c20-af9d-8fabe3b789a0";
-const ICON_PDF =
-  "https://www.figma.com/api/mcp/asset/b01bcc0e-3b49-47f5-abd1-f2f04513a605";
-const ICON_IMAGE =
-  "https://www.figma.com/api/mcp/asset/b9057f6d-ed9b-4160-ae47-5899ca81e6eb";
-
-function formatListTime(date: Date): string {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const d = new Date(date);
-  if (d >= today) {
-    return d.toLocaleTimeString("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  }
-  if (d >= yesterday) return "Yesterday";
-  return d.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-  });
-}
-
-function getSubject(message: string): string {
-  const firstLine = message.split(/\r?\n/)[0]?.trim() ?? "";
-  if (firstLine.length > 50) return firstLine.slice(0, 47) + "...";
-  return firstLine || "Contact form submission";
-}
-
-function getPreview(message: string, maxLength: number = 80): string {
-  const oneLine = message.replace(/\r?\n/g, " ").trim();
-  if (oneLine.length <= maxLength) return oneLine;
-  return oneLine.slice(0, maxLength) + "...";
-}
+import {
+  ICON_DOWNLOAD,
+  ICON_IMAGE,
+  ICON_PDF,
+  ICON_TRASH,
+  LEAD_AVATAR_DEFAULT_SRC,
+  formatListTime,
+  getPreview,
+  getSubject,
+} from "./adminLeadsInbox.helpers";
+import {
+  IconBell,
+  IconMail,
+  IconPlusThin,
+  IconSearch,
+  IconSlidersHorizontal,
+} from "./AdminLeadsInboxIcons";
 
 type AdminLeadsInboxProps = {
   leads: LeadListItem[];
