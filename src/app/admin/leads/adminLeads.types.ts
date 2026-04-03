@@ -18,6 +18,5 @@ export type LeadWithAttachments = LeadListItem & {
   attachmentUrls: Array<{
     key: string;
     url: string | null;
-    isImage: boolean;
   }>;
 };

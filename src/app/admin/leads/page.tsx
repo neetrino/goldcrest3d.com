@@ -41,9 +41,7 @@ export default async function AdminLeadsPage({
     if (lead) {
       const attachmentUrls = lead.attachmentKeys.map((key) => {
         const url = getR2PublicUrl(key);
-        const ext = key.split(".").pop()?.toLowerCase() ?? "";
-        const isImage = ["png", "jpg", "jpeg", "gif", "webp"].includes(ext);
-        return { key, url, isImage };
+        return { key, url };
       });
       selectedLead = {
         id: lead.id,

@@ -8,9 +8,14 @@ import { useMemo, useState, useTransition } from "react";
 import { LeadReplyForm } from "./[id]/LeadReplyForm";
 import type { LeadListItem, LeadWithAttachments } from "./adminLeads.types";
 import { DeleteLeadButton, LEAD_DELETE_CONFIRM_QUERY } from "./DeleteLeadButton";
+import { AdminAttachmentFileIcon } from "./AdminAttachmentFileIcon";
 import {
-  ICON_IMAGE,
-  ICON_PDF,
+  getAttachmentFileExtension,
+  getAttachmentFileKind,
+  getAttachmentFormatLabel,
+  getAttachmentKindWrapperClass,
+} from "./attachmentFileKind";
+import {
   LEAD_AVATAR_DEFAULT_SRC,
   formatListTime,
   getPreview,
@@ -280,8 +285,11 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                       Attachments ({selectedLead.attachmentUrls.length})
                     </h3>
                     <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                      {selectedLead.attachmentUrls.map(({ key, url, isImage }) => {
+                      {selectedLead.attachmentUrls.map(({ key, url }) => {
                         const name = key.split("/").pop() ?? key;
+                        const ext = getAttachmentFileExtension(key);
+                        const kind = getAttachmentFileKind(ext);
+                        const formatLabel = getAttachmentFormatLabel(ext);
                         return (
                           <a
                             key={key}
@@ -291,17 +299,18 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                             className="flex w-full max-w-[256px] items-center gap-3 rounded-lg border border-slate-200 bg-slate-50/50 p-3 hover:bg-slate-100 sm:w-[256px]"
                           >
                             <div
-                              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-                                isImage ? "bg-emerald-500/10" : "bg-blue-500/10"
-                              }`}
+                              className={`relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg ${getAttachmentKindWrapperClass(kind)}`}
+                              title={ext ? `.${ext}` : undefined}
                             >
-                              <Image
-                                src={isImage ? ICON_IMAGE : ICON_PDF}
-                                alt=""
-                                width={20}
-                                height={20}
-                                unoptimized
-                              />
+                              <span
+                                className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.14]"
+                                aria-hidden
+                              >
+                                <AdminAttachmentFileIcon kind={kind} />
+                              </span>
+                              <span className="relative z-10 max-w-[2.25rem] text-center text-[8px] font-extrabold leading-none tracking-tight">
+                                {formatLabel}
+                              </span>
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-[12px] font-bold text-slate-900">
