@@ -68,7 +68,7 @@ const MOBILE_SMALL_ROW_CLASS =
  * `md:` restores previous desktop (Manrope 48px, tracking).
  */
 const FINISHED_HEADING_CLASS =
-  "-mt-4 min-w-0 flex-[1_0_0] text-center text-[30px] not-italic font-[457] leading-[40px] text-black font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:mt-0 md:flex-none md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px]";
+  "-mt-7 min-w-0 flex-[1_0_0] text-center text-[30px] not-italic font-[457] leading-[40px] text-black font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:-mt-3 md:flex-none md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px]";
 
 /**
  * Edge-to-edge gallery on md+ (`ml` breakout from centered column).
