@@ -11,6 +11,9 @@
 .modeling-specialization-scale {
   width: 100%;
   --ms: 1;
+  /* md+ vertical rhythm: full top padding, tighter bottom before Manufacturing */
+  --modeling-scale-padding-y-md: 67px;
+  --modeling-scale-padding-b-md: 0px;
 }
 
 @media (min-width: 640px) {

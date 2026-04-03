@@ -10,7 +10,7 @@ import type { ComponentType } from "react";
 /** Pixel size for nav icons (must match Tailwind size on `<Icon />`). */
 const ADMIN_NAV_ITEM_ICON_SIZE_PX = 18;
 
-/** Inbox — incoming messages / leads, stroke style matches nav. */
+/** Inbox â€” incoming messages / leads, stroke style matches nav. */
 function IconNavInbox({ className }: { className?: string }) {
   return (
     <svg
@@ -31,7 +31,7 @@ function IconNavInbox({ className }: { className?: string }) {
   );
 }
 
-/** Orders — package / fulfillment. */
+/** Orders â€” package / fulfillment. */
 function IconNavOrders({ className }: { className?: string }) {
   return (
     <svg
@@ -53,7 +53,7 @@ function IconNavOrders({ className }: { className?: string }) {
   );
 }
 
-/** Reports — simple bar chart / analytics. */
+/** Reports â€” simple bar chart / analytics. */
 function IconNavReports({ className }: { className?: string }) {
   return (
     <svg
@@ -75,7 +75,7 @@ function IconNavReports({ className }: { className?: string }) {
   );
 }
 
-/** Media — image / gallery. */
+/** Media â€” image / gallery. */
 function IconNavMedia({ className }: { className?: string }) {
   return (
     <svg
@@ -97,7 +97,7 @@ function IconNavMedia({ className }: { className?: string }) {
   );
 }
 
-/** Settings — gear (footer link next to logout). */
+/** Settings â€” gear (footer link next to logout). */
 function IconNavSettings({ className }: { className?: string }) {
   return (
     <svg
@@ -118,7 +118,7 @@ function IconNavSettings({ className }: { className?: string }) {
   );
 }
 
-/** Log out icon — box with arrow right (15×15), matches sidebar icon style. */
+/** Log out icon â€” box with arrow right (15Ã—15), matches sidebar icon style. */
 function IconLogout({ className }: { className?: string }) {
   return (
     <svg
@@ -236,7 +236,7 @@ export function AdminSidebar({
                 {showBadge && leadsUnreadCount > 0 && (
                   <span
                     className="rounded-full bg-[var(--foreground)] px-1.5 py-0.5 text-center text-[10px] font-medium text-white min-w-[1.25rem]"
-                    title="Unread leads — open inbox to review"
+                    title="Unread leads â€” open inbox to review"
                     aria-label={`${leadsUnreadCount} unread leads`}
                   >
                     {formatUnreadBadgeLabel(leadsUnreadCount)}
@@ -257,7 +257,6 @@ export function AdminSidebar({
                 width={32}
                 height={32}
                 className="object-cover"
-                unoptimized
               />
             ) : (
               <span className="flex h-full w-full items-center justify-center text-xs font-semibold text-slate-600">

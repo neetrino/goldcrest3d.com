@@ -23,11 +23,10 @@ export function OrderedGallerySlidePreviewPane({
         {item.displayUrl ? (
           <Image
             src={item.displayUrl}
-            alt={`Gallery preview — ${positionLabel}`}
+            alt={`Gallery preview â€” ${positionLabel}`}
             fill
             className="object-contain"
             sizes="(max-width: 1024px) 100vw, 55vw"
-            unoptimized
           />
         ) : (
           <div className="flex h-full min-h-[200px] flex-col items-center justify-center gap-2 px-4 text-center">
@@ -48,7 +47,7 @@ export function OrderedGallerySlidePreviewPane({
         <details className="text-[11px] text-white/65">
           <summary className="cursor-pointer hover:text-white/90">Details</summary>
           <p className="mt-1 max-w-[200px] font-mono text-[10px] leading-relaxed">
-            id {item.id.slice(0, 8)}… · {item.slotKey}
+            id {item.id.slice(0, 8)}â€¦ Â· {item.slotKey}
           </p>
         </details>
       </div>

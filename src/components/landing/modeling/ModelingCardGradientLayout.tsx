@@ -63,7 +63,6 @@ export function ModelingCardGradientLayout({
                 className={imageFillClassName}
                 style={imageStyle}
                 sizes="(max-width: 768px) 100vw, 50vw"
-                unoptimized
               />
             ) : null}
           </div>
@@ -114,7 +113,6 @@ export function ModelingCardGradientLayout({
                 className={imageFillClassName}
                 style={imageStyle}
                 sizes="(max-width: 768px) 100vw, 50vw"
-                unoptimized
               />
             ) : null}
           </div>

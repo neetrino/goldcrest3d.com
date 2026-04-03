@@ -128,7 +128,6 @@ export function ModelingCardFullBleed({
                   className={`min-h-0 min-w-0 ${imageFillClassName}`}
                   style={imageStyle}
                   sizes="(max-width: 767px) 100vw, 0px"
-                  unoptimized
                 />
               </div>
               <div className={imgDesktopWrapperClass}>
@@ -139,7 +138,6 @@ export function ModelingCardFullBleed({
                   className={imageFillClassNameDesktop}
                   style={imageStyle}
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  unoptimized
                 />
               </div>
             </>
@@ -151,7 +149,6 @@ export function ModelingCardFullBleed({
               className={imageFillClassName}
               style={imageStyle}
               sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized
             />
           )
         ) : null}

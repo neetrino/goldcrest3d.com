@@ -31,7 +31,7 @@ const labelClass =
 const inputClass =
   "font-manrope w-full border-0 border-b border-[#EEEEEE] bg-transparent px-1 py-4 text-[16px] leading-[24px] text-[#757575] placeholder:text-[#757575] focus:ring-0 focus:border-[#c69f58] focus:outline-none transition-colors disabled:opacity-60";
 
-/** Mobile: Figma padding, radius 33px, full width. `md:` — previous submit button. */
+/** Mobile: Figma padding, radius 33px, full width. `md:` â€” previous submit button. */
 const QUOTE_SUBMIT_BUTTON_CLASS =
   "font-manrope flex w-full items-center justify-center self-stretch rounded-[33px] bg-[#181610] pt-[16.412px] pr-[102.148px] pb-[15.569px] pl-[102.345px] text-[14px] font-bold uppercase leading-[20px] tracking-[1.4px] text-white transition-colors hover:bg-[#181610]/90 disabled:opacity-60 md:h-[68px] md:min-w-[266px] md:w-auto md:rounded-full md:px-16 md:py-6 md:self-auto";
 
@@ -250,7 +250,6 @@ export function QuoteForm() {
                         alt=""
                         width={40}
                         height={40}
-                        unoptimized
                         className="h-10 w-10 shrink-0 rounded object-cover"
                       />
                     ) : (
@@ -271,7 +270,7 @@ export function QuoteForm() {
                       className="shrink-0 rounded p-1 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600 disabled:opacity-50"
                       aria-label={`Remove ${item.file.name}`}
                     >
-                      <span className="text-lg leading-none" aria-hidden>×</span>
+                      <span className="text-lg leading-none" aria-hidden>Ã—</span>
                     </button>
                   </li>
                 ))}
@@ -288,7 +287,6 @@ export function QuoteForm() {
                     width={32}
                     height={40}
                     className="object-contain"
-                    unoptimized
                   />
                 </span>
                 <p className="mt-1 font-manrope text-[14px] font-normal leading-[20px] text-[rgba(24,22,16,0.6)]">
@@ -339,7 +337,7 @@ export function QuoteForm() {
           disabled={isPending}
           className={QUOTE_SUBMIT_BUTTON_CLASS}
         >
-          {isPending ? "Sending…" : "Submit Request"}
+          {isPending ? "Sendingâ€¦" : "Submit Request"}
         </button>
       </div>
     </form>

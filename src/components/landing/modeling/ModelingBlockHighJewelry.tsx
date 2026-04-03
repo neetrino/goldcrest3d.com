@@ -7,13 +7,13 @@ import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
 const TITLE = "High Jewelry";
 const LINE_1 =
-  "Advanced pavé and fine-setting structures developed with micron-level";
+  "Advanced pavÃ© and fine-setting structures developed with micron-level";
 const LINE_2 =
   "Invisible settings and ultra-thin tolerances engineered with strict structural discipline.";
 
-/** Mobile only — explicit line break after “structures”. */
+/** Mobile only â€” explicit line break after â€œstructuresâ€. */
 const MOBILE_DESCRIPTION_LINE_1 =
-  "Advanced pavé and fine-setting structures";
+  "Advanced pavÃ© and fine-setting structures";
 const MOBILE_DESCRIPTION_LINE_2 =
   "developed with micron-level precision.";
 
@@ -22,7 +22,7 @@ type ModelingBlockHighJewelryProps = {
   imageUrlMobile: string;
 };
 
-/** High Jewelry — `object-cover` ամբողջ block-ում; mobile-ում աջ anchor, desktop-ում կենտրոնացված crop։ */
+/** High Jewelry â€” `object-cover` Õ¡Õ´Õ¢Õ¸Õ²Õ» block-Õ¸Ö‚Õ´; mobile-Õ¸Ö‚Õ´ Õ¡Õ» anchor, desktop-Õ¸Ö‚Õ´ Õ¯Õ¥Õ¶Õ¿Ö€Õ¸Õ¶Õ¡ÖÕ¾Õ¡Õ® cropÖ‰ */
 export function ModelingBlockHighJewelry({
   imageUrlDesktop,
   imageUrlMobile,
@@ -46,7 +46,6 @@ export function ModelingBlockHighJewelry({
             fill
             className={objectClassName}
             sizes="(max-width: 767px) 100vw, 50vw"
-            unoptimized
           />
         ) : (
           <>
@@ -57,7 +56,6 @@ export function ModelingBlockHighJewelry({
                 fill
                 className="min-h-0 min-w-0 h-full w-full object-cover object-right"
                 sizes="(max-width: 767px) 100vw, 0px"
-                unoptimized
               />
             </div>
             <div className="absolute inset-0 hidden md:block">
@@ -67,7 +65,6 @@ export function ModelingBlockHighJewelry({
                 fill
                 className="h-full w-full object-cover object-[center_48%_center]"
                 sizes="(max-width: 1280px) 50vw, 33vw"
-                unoptimized
               />
             </div>
           </>

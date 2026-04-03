@@ -15,15 +15,15 @@ export function ModelingSlotPreview({ row }: ModelingSlotPreviewProps) {
         <PreviewPane
           label="Desktop / tablet preview"
           url={row.displayUrl}
-          emptyMessage="No desktop image — default asset on site"
+          emptyMessage="No desktop image â€” default asset on site"
         />
         <PreviewPane
           label="Mobile preview"
           url={row.displayUrlMobile ?? row.displayUrl}
           emptyMessage={
             row.displayUrl
-              ? "No separate mobile — falls back to desktop"
-              : "No mobile image — default asset on site"
+              ? "No separate mobile â€” falls back to desktop"
+              : "No mobile image â€” default asset on site"
           }
           isFallback={!row.displayUrlMobile && Boolean(row.displayUrl)}
         />
@@ -65,7 +65,6 @@ function PreviewPane({ label, url, emptyMessage, isFallback }: PreviewPaneProps)
             fill
             className="object-contain"
             sizes="(max-width: 768px) 100vw, min(260px, 40vw)"
-            unoptimized
           />
         ) : (
           <div className="flex h-full min-h-[140px] flex-col items-center justify-center gap-2 px-3 text-center">

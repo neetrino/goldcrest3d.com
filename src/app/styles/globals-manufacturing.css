@@ -19,6 +19,17 @@
   }
 }
 
+/**
+ * Desktop: align card to the same left anchor as the outer shell (no `margin-inline: auto`),
+ * so resizing the viewport does not slide the block horizontally.
+ */
+@media (min-width: 1024px) {
+  .manufacturing-intelligence-card-shell {
+    margin-inline-end: auto;
+    margin-inline-start: 0;
+  }
+}
+
 /* Mobile: centered block (Figma); indent from lg — see SectionManufacturing h2 */
 .manufacturing-intelligence-heading {
   padding-inline-start: 0;
@@ -26,7 +37,8 @@
 
 @media (min-width: 1024px) {
   .manufacturing-intelligence-heading {
-    padding-inline-start: var(--manufacturing-intelligence-heading-indent-start);
+    margin-inline-start: var(--landing-section-title-shift-x-md);
+    padding-inline-start: var(--landing-section-title-indent-md);
   }
 }
 

@@ -5,7 +5,7 @@ import Image from "next/image";
 const FOUNDER_STAT_NUMBER_CLASS_DEFAULT =
   "font-black leading-[32px] text-[#0f172a] text-[24px] md:text-[28px]";
 
-/** Mobile founder bio — Figma widths (px) */
+/** Mobile founder bio â€” Figma widths (px) */
 const FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS = {
   p1: "max-w-[331px]",
   p2: "max-w-[342px]",
@@ -16,13 +16,13 @@ const FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS = {
 const FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS =
   "w-full font-sans text-base font-light italic leading-6 tracking-[-0.312px] text-black/80 break-words";
 
-const FOUNDER_BIO_MOBILE_P1 = `With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and stone setting, the studio is built on practical manufacturing knowledge — not theory.`;
+const FOUNDER_BIO_MOBILE_P1 = `With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and stone setting, the studio is built on practical manufacturing knowledge â€” not theory.`;
 
 const FOUNDER_BIO_MOBILE_P2 = `Direct experience at the bench provides a deep understanding of structural behavior, stone security, tolerances and real-world production limitations.`;
 
 const FOUNDER_BIO_MOBILE_P3 = `Every design decision is informed by how the piece will be cast, set, assembled and worn. Each project is personally reviewed, calibrated and validated before delivery.`;
 
-const FOUNDER_BIO_MOBILE_P4 = `No model leaves the studio without structural verification. Jewelry is approached as a system — where design, engineering and craftsmanship must align with precision`;
+const FOUNDER_BIO_MOBILE_P4 = `No model leaves the studio without structural verification. Jewelry is approached as a system â€” where design, engineering and craftsmanship must align with precision`;
 
 /** Desktop: soften left seam vs section gradient; avoid large negative translate (hard crop). */
 const FOUNDER_PHOTO_IMAGE_CLASS =
@@ -42,12 +42,12 @@ function FounderBioContentDesktop({ contentTopClassName }: FounderBioContentDesk
       className={`space-y-4 font-light italic leading-[22px] text-black text-[14px] ${contentTopClassName}`}
     >
       <p className="whitespace-pre-wrap break-words">{`With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and
-stone setting, the studio is built on practical manufacturing knowledge — not theory.
+stone setting, the studio is built on practical manufacturing knowledge â€” not theory.
 Direct experience at the bench provides a deep understanding of structural behavior, stone
 security, tolerances and real-world production limitations.`}</p>
       <p className="mt-8 whitespace-pre-wrap break-words sm:mt-10">{`Every design decision is informed by how the piece will be cast, set, assembled and worn. Each
 project is personally reviewed, calibrated and validated before delivery.
-No model leaves the studio without structural verification. Jewelry is approached as a system — 
+No model leaves the studio without structural verification. Jewelry is approached as a system â€” 
 where design, engineering and craftsmanship must align with precision`}</p>
     </div>
   );
@@ -180,7 +180,6 @@ export function SectionFounder() {
               fill
               className={FOUNDER_PHOTO_IMAGE_CLASS}
               sizes="(max-width: 768px) 100vw, 493px"
-              unoptimized
             />
           </div>
         </div>

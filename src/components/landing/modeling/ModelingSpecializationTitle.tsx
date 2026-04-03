@@ -1,4 +1,4 @@
-/** Section title copy — single line, centered in fixed block. */
+/** Section title copy — single line; centered (md+ horizontally centered in the title row). */
 const MODELING_SPECIALIZATION_TITLE = "Modeling Specialization";
 
 /**

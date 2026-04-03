@@ -18,8 +18,10 @@
   --landing-nav-logo-nudge-x: 0px;
   /** Manufacturing Intelligence — gradient card width (inside max-w 1612 shell) */
   --manufacturing-intelligence-card-max-w: 1421px;
-  /** Nudges the section title “Manufacturing Intelligence” slightly right (LTR). */
-  --manufacturing-intelligence-heading-indent-start: 91px;
+  /** Primary section titles (LTR), md+ — stable left inset vs viewport when shell is start-aligned. */
+  --landing-section-title-indent-md: 0px;
+  /** md+ extra nudge (negative = further left); pairs with indent (padding cannot be negative). */
+  --landing-section-title-shift-x-md: -1px;
   /** Manufacturing Intelligence — image column vertical tuning (lg+) */
   --manufacturing-intelligence-image-col-padding-top-lg: 24px;
   /** Positive = shift frame down (was -10px). */

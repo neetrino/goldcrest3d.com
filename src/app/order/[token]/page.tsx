@@ -75,7 +75,6 @@ export default async function OrderPaymentPage({ params }: Props) {
               src={productImageUrl}
               alt={order.productTitle}
               fill
-              unoptimized
               className="rounded object-contain"
               sizes="(max-width: 32rem) 100vw, 512px"
             />

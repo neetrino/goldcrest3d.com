@@ -23,7 +23,7 @@ export function AdminNav() {
           <Link
             href="/admin/leads"
             className="flex shrink-0 items-center no-underline hover:opacity-85"
-            aria-label="Goldcrest Admin — home"
+            aria-label="Goldcrest Admin â€” home"
           >
             <Image
               src={LOGO_SRC}
@@ -33,7 +33,6 @@ export function AdminNav() {
               sizes="100vw"
               className="relative h-12 w-[83px] max-h-full max-w-full overflow-hidden object-cover"
               priority
-              unoptimized
             />
           </Link>
           <nav

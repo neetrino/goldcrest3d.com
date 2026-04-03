@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 import { useFinishedCreationsCarouselMetrics } from "@/components/landing/useFinishedCreationsCarouselMetrics";
 
-/** Carousel: small row (row 2) — design aspect; slide width is fluid from container. */
+/** Carousel: small row (row 2) â€” design aspect; slide width is fluid from container. */
 const ROW2_ITEM_WIDTH = 420;
 const ROW2_ITEM_HEIGHT = 232;
 
@@ -21,11 +21,11 @@ const SLOT_HEIGHT = 370;
  */
 const DESKTOP_ROW1_VISIBLE_SLOTS_FALLBACK = 4;
 /**
- * Larger value → narrower slides, more of left/right slides visible (peek). Was 0.12.
+ * Larger value â†’ narrower slides, more of left/right slides visible (peek). Was 0.12.
  */
 const DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION = 0.2;
 /**
- * Row2 desktop: 5 slides in view — 3 full + ½+½ on left/right (`p` = edge fraction).
+ * Row2 desktop: 5 slides in view â€” 3 full + Â½+Â½ on left/right (`p` = edge fraction).
  */
 const DESKTOP_ROW2_PEEK_EDGE_VISIBLE_FRACTION = 0.5;
 const DESKTOP_ROW2_PEEK_FULL_CENTER_SLIDES = 3;
@@ -209,7 +209,6 @@ export function SectionFinishedCreations({
                     fill
                     className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
                     sizes="(max-width: 767px) 50vw, 50vw"
-                    unoptimized
                   />
                 </div>
               ))}
@@ -238,7 +237,6 @@ export function SectionFinishedCreations({
                       fill
                       className={`object-cover ${sideObjectPositionClass}`.trim()}
                       sizes="(max-width: 767px) 33vw, 33vw"
-                      unoptimized
                     />
                   </div>
                 );
@@ -270,7 +268,6 @@ export function SectionFinishedCreations({
                       fill
                       className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
                       sizes="(min-width: 768px) 28vw, 670px"
-                      unoptimized
                     />
                   </div>
                 ))}
@@ -300,7 +297,6 @@ export function SectionFinishedCreations({
                       fill
                       className="object-cover"
                       sizes="(min-width: 768px) 20vw, 420px"
-                      unoptimized
                     />
                   </div>
                 ))}
