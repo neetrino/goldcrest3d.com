@@ -1,0 +1,272 @@
+/* Mobile only: unify largest hero blocks size to 367x679 (20/37). */
+@media (max-width: 767px) {
+  .power-banners-section2-text-cluster > h1 {
+    flex: 1 0 0;
+    top: 24px;
+    text-align: left;
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 36px;
+    letter-spacing: 0.396px;
+  }
+
+  /* Jewelry Design (section3) — mobile Figma: right-aligned, same title scale as Rendering */
+  .power-banners-section3-text-cluster > h1.hero-primary-title-typography-design {
+    flex: 1 0 0;
+    color: #000;
+    text-align: right;
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 36px;
+    letter-spacing: 0.396px;
+  }
+
+  .power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
+    width: 197px;
+    max-width: 197px;
+    color: rgba(18, 18, 18, 0.9);
+    text-align: right;
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 350;
+    line-height: 28px;
+  }
+
+  #hero-rendering-subtitle {
+    width: auto;
+    max-width: 100%;
+    flex-shrink: 0;
+    text-align: left;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: Inter, -apple-system, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 24px;
+    letter-spacing: -0.312px;
+    transform: translate(0, 0);
+  }
+
+  /* Jewelry Rendering + Jewelry Design — same CTA size, padding, gradient (mobile) */
+  #hero-section2-get-quote,
+  #hero-section3-get-quote {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 32px;
+    border-radius: 110px;
+    background: linear-gradient(
+      90deg,
+      #4b463f 0%,
+      #5c5547 7.14%,
+      #6e644f 14.29%,
+      #807356 21.43%,
+      #93835e 28.57%,
+      #a69466 35.71%,
+      #b9a46d 42.86%,
+      #cdb575 50%,
+      #d4bd82 57.14%,
+      #dbc68f 64.29%,
+      #e2ce9d 71.43%,
+      #e9d7aa 78.57%,
+      #f1e0b7 85.71%,
+      #f8e8c4 92.86%,
+      #fff1d1 100%
+    );
+    transform: translate(0, 0);
+  }
+
+  /**
+   * Hero slides — fluid width on narrow viewports (avoid fixed 367/390px + scroll).
+   * Single aspect source: 20/37; height comes from width × ratio.
+   */
+  .power-banners-section1-block,
+  .power-banners-section2-block,
+  .power-banners-section3-block {
+    width: 100%;
+    max-width: 390px;
+    margin-inline: auto;
+    aspect-ratio: 20 / 37;
+    height: auto;
+    min-height: 0;
+  }
+
+  .power-banners-section1-block {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .power-banners-section3-block {
+    background-color: #fff;
+  }
+
+  .power-banners-section2-block {
+    background-color: #000;
+    /** Jewelry Rendering — ամբողջ տեքստային կլաստերը մի քիչ վերև (բացասական = վերև) */
+    --section2-text-cluster-translate-y-mobile: -18px;
+  }
+
+  .power-banners-section2-block .power-banners-section2-text-cluster {
+    transform: translate(
+      var(--section2-text-cluster-nudge-mobile, 0px),
+      var(--section2-text-cluster-translate-y-mobile)
+    );
+  }
+
+  .power-banners-section1-image-strip {
+    width: 100%;
+    margin-left: 0;
+    flex: 1 1 auto;
+    min-height: 0;
+    aspect-ratio: unset;
+    height: 100%;
+  }
+
+  .power-banners-section1-tail {
+    display: none;
+  }
+
+  /* Section1 mobile hero: `next/image` in PowerBanners (Figma 367×679, block aspect 20/37). */
+
+  .power-banners-section2-block::before {
+    width: 100%;
+    left: 0;
+    height: 100%;
+    background-color: #000;
+    background-image: var(--section2-hero-bg-mobile, var(--section2-hero-bg));
+    background-size: cover;
+    background-position: left center;
+    background-repeat: no-repeat;
+  }
+
+  .power-banners-section3-block::before {
+    width: 100%;
+    left: 0;
+    height: 100%;
+    background-color: #fff;
+    background-image: var(--section3-hero-bg-mobile, var(--section3-hero-bg));
+    background-size: cover;
+    background-position: left center;
+    background-repeat: no-repeat;
+  }
+
+  #hero-modeling-text-group {
+    transform: translateY(-68px) !important;
+  }
+
+  #hero-modeling-text-group > h1 {
+    align-self: stretch;
+    color: #fff;
+    text-align: center;
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 350;
+    line-height: 32px;
+  }
+
+  #hero-modeling-subtitle {
+    height: 72px;
+    align-self: stretch;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 17px;
+    font-style: italic;
+    font-weight: 350;
+    line-height: 25px;
+    transform: translateY(2px);
+  }
+
+  #hero-get-quote {
+    display: flex;
+    padding: 11px 32px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 110px;
+    transform: translateY(-0.1rem);
+    background: linear-gradient(
+      90deg,
+      #4b463f 0%,
+      #5c5547 7.14%,
+      #6e644f 14.29%,
+      #807356 21.43%,
+      #93835e 28.57%,
+      #a69466 35.71%,
+      #b9a46d 42.86%,
+      #cdb575 50%,
+      #d4bd82 57.14%,
+      #dbc68f 64.29%,
+      #e2ce9d 71.43%,
+      #e9d7aa 78.57%,
+      #f1e0b7 85.71%,
+      #f8e8c4 92.86%,
+      #fff1d1 100%
+    );
+  }
+}
+
+/**
+ * md↑ section3 height already from .power-banners-section3-block;
+ * text column uses Tailwind (same pattern as section2) — no extra transform.
+ */
+
+/* Nav CTA "Request a Quote" — gold gradient from Figma */
+.nav-cta-gradient {
+  background: linear-gradient(
+    73deg,
+    #ffcc6f 16.39%,
+    #997a42 46.51%,
+    #ecc06e 100.22%
+  );
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile nav CTA "Request a Quote" — match hero "Get a Quote" gold gradient */
+@media (max-width: 1023px) {
+  #landing-nav-request-quote {
+    background: linear-gradient(
+      90deg,
+      #4b463f 0%,
+      #5c5547 7.14%,
+      #6e644f 14.29%,
+      #807356 21.43%,
+      #93835e 28.57%,
+      #a69466 35.71%,
+      #b9a46d 42.86%,
+      #cdb575 50%,
+      #d4bd82 57.14%,
+      #dbc68f 64.29%,
+      #e2ce9d 71.43%,
+      #e9d7aa 78.57%,
+      #f1e0b7 85.71%,
+      #f8e8c4 92.86%,
+      #fff1d1 100%
+    );
+  }
+}
+
+/* Desktop nav CTA "Request a Quote" — updated gradient from design */
+@media (min-width: 1024px) {
+  #landing-nav-request-quote {
+    border-radius: 9999px;
+    background: linear-gradient(
+      84deg,
+      #4b463f -24.49%,
+      #786f5b -24.49%,
+      #cdb575 12.34%,
+      #eacd8b 82.07%,
+      #fff1d1 103.48%
+    );
+    box-shadow:
+      0 1px 2px 0 rgba(0, 0, 0, 0.05),
+      0 0 0 0 rgba(0, 0, 0, 0),
+      0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
