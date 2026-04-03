@@ -27,6 +27,9 @@ const SECTION1_HERO_BG_MOBILE_PATH = "/images/modeling/block1-mobile.png";
 /** Section1 — վերնագիր, ենթավերնագիր, CTA դեպի ներքև (translateY, px); ցածր արժեք = ավելի վերև */
 const SECTION1_HERO_TEXT_NUDGE_DOWN_PX = 22;
 
+/** Section1 — միայն mobile: լրացուցիչ translateY ներքև (title + subtitle + CTA բլոկը) */
+const SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX = 16;
+
 /** Միայն modeling վերնագիր — translateY(-N); ցածր N = ավելի ներքև */
 const SECTION1_MODELING_TITLE_NUDGE_UP_PX = 0;
 
@@ -36,6 +39,13 @@ const HERO_PRIMARY_TITLE_TYPOGRAPHY_CORE_CLASS =
 
 /** Modeling, Jewelry Rendering — սպիտակ ֆոնի վրա */
 const HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS = `${HERO_PRIMARY_TITLE_TYPOGRAPHY_CORE_CLASS} text-white`;
+
+/**
+ * Modeling hero title — mobile only: non-breaking hyphen (U+2011) so the line does not break
+ * after "Production-" leaving "Ready" alone on the next line.
+ */
+const MODELING_TITLE_MOBILE_DISPLAY = "3D Production\u2011Ready Modeling";
+const MODELING_TITLE_DESKTOP_DISPLAY = "3D Production-Ready Modeling";
 
 /** Explicit two-line copy for Jewelry Rendering subtitle; line break is intentional. */
 const RENDERING_SUBTITLE_LINE1 = "High-resolution assets for brand presentation";
@@ -85,7 +95,7 @@ const SLIDES: Array<{
 }> = [
   {
     id: "modeling",
-    title: "3D Production-Ready Modeling",
+    title: MODELING_TITLE_DESKTOP_DISPLAY,
     subtitle:
       "Engineered for casting, printing and precise stone setting. Every micron accounted for.",
     bg: LANDING_IMAGES.heroModeling,
@@ -96,7 +106,7 @@ const SLIDES: Array<{
     title: "Jewelry Rendering",
     subtitle: `${RENDERING_SUBTITLE_LINE1} ${RENDERING_SUBTITLE_LINE2}`,
     bg: LANDING_IMAGES.heroRendering,
-    contentAlign: "right",
+    contentAlign: "left",
   },
   {
     id: "design",
@@ -175,10 +185,13 @@ export function PowerBanners() {
                 />
                 <div
                   id={LANDING_ELEMENT_IDS.HERO_MODELING_TEXT_GROUP}
-                  className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center px-6 pb-10 pt-8 text-center md:pb-16 md:pt-12"
-                  style={{
-                    transform: `translateY(${SECTION1_HERO_TEXT_NUDGE_DOWN_PX}px)`,
-                  }}
+                  className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center px-6 pb-10 pt-8 text-center max-md:translate-y-[var(--section1-modeling-text-nudge-y-mobile)] md:translate-y-[var(--section1-modeling-text-nudge-y-desktop)] md:pb-16 md:pt-12"
+                  style={
+                    {
+                      ["--section1-modeling-text-nudge-y-mobile" as string]: `${SECTION1_HERO_TEXT_NUDGE_DOWN_PX + SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX}px`,
+                      ["--section1-modeling-text-nudge-y-desktop" as string]: `${SECTION1_HERO_TEXT_NUDGE_DOWN_PX}px`,
+                    } as React.CSSProperties
+                  }
                 >
                   <h1
                     className={`inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance md:max-w-none ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
@@ -186,7 +199,10 @@ export function PowerBanners() {
                       transform: `translateY(-${SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
                     }}
                   >
-                    {slide.title}
+                    <span className="md:hidden">{MODELING_TITLE_MOBILE_DISPLAY}</span>
+                    <span className="hidden md:inline">
+                      {MODELING_TITLE_DESKTOP_DISPLAY}
+                    </span>
                   </h1>
                   <p
                     id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
@@ -226,9 +242,9 @@ export function PowerBanners() {
               }
             >
               <div className="relative z-10 flex h-full w-full flex-col items-start justify-end px-6 pb-16 pt-16 md:absolute md:left-0 md:right-auto md:top-[38%] md:max-w-[min(520px,44vw)] md:-translate-y-1/2 md:items-start md:justify-center md:pl-12 md:pr-6 md:pb-0 md:pt-0 lg:pl-20">
-                <div className="power-banners-section2-text-cluster flex w-full flex-col items-end gap-8 text-right text-white">
+                <div className="power-banners-section2-text-cluster flex w-full flex-col items-start gap-8 text-left text-white">
                   <h1
-                    className={`relative inline-block max-w-full -translate-y-2.5 whitespace-normal text-balance text-right md:-translate-y-2.5 md:whitespace-nowrap ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
+                    className={`relative inline-block max-w-full -translate-y-2.5 whitespace-normal text-balance text-left md:-translate-y-2.5 md:whitespace-nowrap ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
                   >
                     <span
                       className="inline-block"
@@ -241,7 +257,7 @@ export function PowerBanners() {
                   </h1>
                   <p
                     id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
-                    className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] self-end text-right"
+                    className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] self-start text-left"
                   >
                     <span className="md:hidden">
                       <span className="block whitespace-nowrap">{RENDERING_SUBTITLE_MOBILE_LINE1}</span>
@@ -257,7 +273,7 @@ export function PowerBanners() {
                   <GetAQuoteButton
                     id={HERO_SECTION2_GET_QUOTE_BUTTON_ID}
                     variant="gold"
-                    className="shrink-0 self-end"
+                    className="shrink-0 self-start"
                   />
                 </div>
               </div>
