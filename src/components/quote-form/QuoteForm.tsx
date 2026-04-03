@@ -294,7 +294,7 @@ export function QuoteForm() {
               </>
             )}
             <p className="mt-1 font-manrope text-[12px] font-normal leading-[16px] text-[rgba(24,22,16,0.4)]">
-              PNG, JPEG, PDF up to 10MB
+              PNG, JPG, JPEG, PDF up to 10MB
             </p>
           </label>
         </div>

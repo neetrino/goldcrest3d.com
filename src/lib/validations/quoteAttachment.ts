@@ -58,7 +58,7 @@ export function resolveQuoteAttachmentContentType(file: File): string | null {
 }
 
 const QUOTE_ATTACHMENT_TYPE_ERROR =
-  "Only PNG, JPEG, and PDF files are allowed." as const;
+  "Only PNG, JPG, JPEG, and PDF files are allowed." as const;
 
 /**
  * Validates an optional file for the quote form.

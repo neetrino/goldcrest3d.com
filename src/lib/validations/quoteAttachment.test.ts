@@ -6,7 +6,7 @@ import {
   QUOTE_ATTACHMENT_MAX_BYTES,
 } from "./quoteAttachment";
 
-const TYPE_ERROR = "Only PNG, JPEG, and PDF files are allowed." as const;
+const TYPE_ERROR = "Only PNG, JPG, JPEG, and PDF files are allowed." as const;
 
 function file(overrides: { name?: string; size?: number; type?: string } = {}) {
   const { name = "doc.pdf", size = 1000, type = "application/pdf" } = overrides;
