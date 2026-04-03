@@ -47,6 +47,19 @@
   /** Casting Compensation detail — դեպի աջ (դրական = աջ) */
   --manufacturing-casting-compensation-detail-nudge-x: 65px;
   /**
+   * Casting Compensation — միայն lg+ (min-width 1024px): ցուցադրման լայնություն (բազային asset 682px; սա միայն desktop)։
+   */
+  --manufacturing-casting-compensation-detail-display-width-lg: 487px;
+  /**
+   * Casting Compensation — միայն lg+ (min-width 1024px): լրացուցիչ դեպի աջ `margin-inline-start`-ով (դրական = աջ)։
+   * Mobile/tablet-ում չի կիրառվում (տե՛ս lg բլոկը)։
+   */
+  --manufacturing-casting-compensation-detail-nudge-x-lg-offset: 45px;
+  /**
+   * Casting Compensation — միայն lg+ (min-width 1024px): լրացուցիչ translateY (դրական = ներքև)։
+   */
+  --manufacturing-casting-compensation-detail-nudge-y-lg-offset: 30px;
+  /**
    * Casting Compensation — միայն mobile (max-width 767px): ավելացնել բացասական = նկարը ձախ.
    * Լռելյայն 0 — lg-ում չի կիրառվում։
    */
@@ -109,7 +122,7 @@
     --landing-nav-logo-slot: 90px;
     --landing-nav-logo-offset-x: 180px;
     --landing-nav-logo-nudge-x: -116px;
-    --manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset: -48px;
+    --manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset: 95px;
   }
 }
 
@@ -946,11 +959,24 @@ section[id] {
   }
 
   .manufacturing-intelligence-photo {
+    object-position: left center;
     transform: scale(var(--manufacturing-intelligence-photo-scale-lg));
-    transform-origin: center center;
+    transform-origin: left center;
   }
 
+  /**
+   * Միայն «ստանդարտ» detail (առանց --*- մոդիֆիկատորի) — `transform: none`։
+   * Մոդիֆիկատոր ունեցող տարրերի վրա `transform: none` չդնել — cascade-ում կարող է չհաղթել կամ կարգը խառնվել։
+   */
   .manufacturing-intelligence-photo-detail {
+    object-position: left center;
+  }
+
+  .manufacturing-intelligence-photo-detail:not(
+      .manufacturing-intelligence-photo-detail--printing-strategy-resin
+    ):not(.manufacturing-intelligence-photo-detail--casting-compensation-metal-flow):not(
+      .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting
+    ):not(.manufacturing-intelligence-photo-detail--wall-thickness-engineering) {
     transform: none;
   }
 
@@ -958,11 +984,16 @@ section[id] {
     transform: translateY(var(--manufacturing-printing-strategy-resin-detail-nudge-y));
   }
 
-  .manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+    margin-inline-start: var(--manufacturing-casting-compensation-detail-nudge-x-lg-offset);
     transform: translate(
       var(--manufacturing-casting-compensation-detail-nudge-x),
-      var(--manufacturing-casting-compensation-detail-nudge-y)
+      calc(
+        var(--manufacturing-casting-compensation-detail-nudge-y) +
+          var(--manufacturing-casting-compensation-detail-nudge-y-lg-offset)
+      )
     );
+    width: var(--manufacturing-casting-compensation-detail-display-width-lg);
   }
 
   .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
@@ -974,7 +1005,7 @@ section[id] {
         var(--manufacturing-stone-seat-geometry-detail-nudge-y)
       )
       scale(var(--manufacturing-stone-seat-geometry-detail-scale-lg));
-    transform-origin: center center;
+    transform-origin: left center;
   }
 
   .manufacturing-intelligence-photo-detail--wall-thickness-engineering {
