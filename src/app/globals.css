@@ -42,10 +42,29 @@
   --manufacturing-intelligence-photo-scale-lg: 1.26;
   /** 3D Printing Strategy detail — նկարը մի քիչ ցածր frame-ի կենտրոնից */
   --manufacturing-printing-strategy-resin-detail-nudge-y: 16px;
+  /** Mechanical Stress & Load — միայն lg+ (min-width 1024px): translateX (դրական = աջ)։ */
+  --manufacturing-mechanical-stress-detail-nudge-x-lg: 88px;
+  /** Mechanical Stress & Load — միայն lg+։ ցուցադրման լայնություն (բազային 980px)։ */
+  --manufacturing-mechanical-stress-detail-display-width-lg: 840px;
+  /** Mechanical Stress & Load — միայն lg+։ scale, երբ `max-h-full`-ը սահմանափակում է բարձրությունը։ */
+  --manufacturing-mechanical-stress-detail-scale-lg: 0.88;
   /** Casting Compensation detail — միայն նկարը մի քիչ վերև (բացասական = վերև) */
   --manufacturing-casting-compensation-detail-nudge-y: -25px;
   /** Casting Compensation detail — դեպի աջ (դրական = աջ) */
   --manufacturing-casting-compensation-detail-nudge-x: 65px;
+  /**
+   * Casting Compensation — միայն lg+ (min-width 1024px): ցուցադրման լայնություն (բազային asset 682px; սա միայն desktop)։
+   */
+  --manufacturing-casting-compensation-detail-display-width-lg: 487px;
+  /**
+   * Casting Compensation — միայն lg+ (min-width 1024px): լրացուցիչ դեպի աջ `margin-inline-start`-ով (դրական = աջ)։
+   * Mobile/tablet-ում չի կիրառվում (տե՛ս lg բլոկը)։
+   */
+  --manufacturing-casting-compensation-detail-nudge-x-lg-offset: 45px;
+  /**
+   * Casting Compensation — միայն lg+ (min-width 1024px): լրացուցիչ translateY (դրական = ներքև)։
+   */
+  --manufacturing-casting-compensation-detail-nudge-y-lg-offset: 30px;
   /**
    * Casting Compensation — միայն mobile (max-width 767px): ավելացնել բացասական = նկարը ձախ.
    * Լռելյայն 0 — lg-ում չի կիրառվում։
@@ -60,8 +79,12 @@
   /** Stone Seat Geometry detail — մի քիչ աջ (դրական = աջ) */
   --manufacturing-stone-seat-geometry-detail-nudge-x: 35px;
   /**
+   * Stone Seat Geometry — only lg+ (min-width 1024px): negative shifts image left.
+   * 0 below lg so tablet/mobile stay on the base nudge + mobile override only.
+   */
+  --manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset: 0px;
+  /**
    * Stone Seat Geometry — only mobile (max-width 767px): negative shifts image left.
-   * Default 0 keeps desktop unchanged.
    */
   --manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset: -40px;
   /** Wall Thickness Engineering detail — շատ քիչ դեպի աջ (դրական = աջ) */
@@ -75,10 +98,33 @@
   /** Wall Thickness Engineering — mobile-only display width (slightly smaller). */
   --manufacturing-wall-thickness-detail-display-width-mobile: 520px;
   /**
-   * Stone Seat Geometry — ցուցադրման լայնություն (ֆայլը 666×702 է, aspect 37/39).
-   * Միայն այս նկարի վիզուալ սքեյլ — փոքրացնելու համար նվազեցրու արժեքը։
+   * Wall Thickness Engineering — միայն lg+ (min-width 1024px): ցուցադրման լայնություն (բազային 560px)։
    */
-  --manufacturing-stone-seat-geometry-detail-display-width: 610px;
+  --manufacturing-wall-thickness-detail-display-width-lg: 500px;
+  /**
+   * Wall Thickness Engineering — միայն lg+։ վիզուալ սքեյլ (1 = առանց փոփոխության)։
+   * Պարտադիր, երբ նկարը `max-h-full`-ով կպչում է կադրի բարձրությանը — միայն `width` token-ը կարող է չերևալ։
+   */
+  --manufacturing-wall-thickness-detail-scale-lg: 0.88;
+  /**
+   * Wall Thickness Engineering — միայն lg+ (min-width 1024px): լրացուցիչ translateX (դրական = աջ)։
+   */
+  --manufacturing-wall-thickness-detail-nudge-x-lg-offset: 125px;
+  /**
+   * Wall Thickness Engineering — միայն lg+։ լրացուցիչ translateY (բացասական = վերև)։
+   */
+  --manufacturing-wall-thickness-detail-nudge-y-lg-offset: -24px;
+  /**
+   * Stone Seat Geometry — ցուցադրման լայնություն (ֆայլը 666×702 է, aspect 37/39).
+   * Նկատի ունեցիր՝ lg+ շատ հաճախ սահմանափակվում է `max-h-full`-ով (կադրի բարձրություն),
+   * այդ դեպքում միայն width token-ը տեսողական փոփոխություն չի տա — տե՛ս `--manufacturing-stone-seat-geometry-detail-scale-lg`։
+   */
+  --manufacturing-stone-seat-geometry-detail-display-width: 560px;
+  /**
+   * Stone Seat Geometry — միայն lg+ (min-width 1024px): լրացուցիչ վիզուալ սքեյլ (1 = առանց փոփոխության).
+   * Օգտագործվում է, երբ նկարը բարձրությամբ կպչում է կադրին և `width` token-ը չի ազդում։
+   */
+  --manufacturing-stone-seat-geometry-detail-scale-lg: 0.9;
   /** Stone Seat Geometry — mobile-only display width (slightly smaller than desktop token). */
   --manufacturing-stone-seat-geometry-detail-display-width-mobile: 520px;
 }
@@ -99,6 +145,7 @@
     --landing-nav-logo-slot: 90px;
     --landing-nav-logo-offset-x: 180px;
     --landing-nav-logo-nudge-x: -116px;
+    --manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset: 95px;
   }
 }
 
@@ -156,11 +203,11 @@ section[id] {
   line-height: 28px;
 }
 
-/* translateX — միայն այս ենթավերնագիր; դրական = աջ (Tailwind-ի transform-ը հանված է TSX-ից) */
+/* translateY — միայն այս ենթավերնագիր (ձախ հավաքվածություն, առանց translateX) */
 #hero-rendering-subtitle {
   font-size: 18px;
   line-height: 26px;
-  transform: translate(-10px, -12px);
+  transform: translate(0, -12px);
 }
 
 /* Jewelry Design ենթավերնագիր — նույն տառաչափ/line-height ինչ #hero-rendering-subtitle */
@@ -185,7 +232,7 @@ section[id] {
 
 @media (min-width: 768px) {
   #hero-rendering-subtitle {
-    transform: translate(-4px, -12px);
+    transform: translate(0, -12px);
   }
 }
 
@@ -300,10 +347,10 @@ section[id] {
     line-height: 20px;
   }
 
-  /* Desktop-only: Hero Jewelry Rendering — колонка слева, текст по правому краю колонки */
+  /* Desktop-only: Hero Jewelry Rendering — колонка слева, текст по левому краю колонки */
   .power-banners-section2-text-cluster > h1 {
     color: #fff;
-    text-align: right;
+    text-align: left;
     font-family: "SF Compact", -apple-system, system-ui, sans-serif;
     font-size: 52px;
     font-style: normal;
@@ -314,7 +361,7 @@ section[id] {
 
   #hero-rendering-subtitle {
     color: rgba(255, 255, 255, 0.9);
-    text-align: right;
+    text-align: left;
     font-family: "SF Compact", -apple-system, system-ui, sans-serif;
     font-size: 20px;
     font-style: italic;
@@ -492,7 +539,7 @@ section[id] {
   .power-banners-section2-text-cluster > h1 {
     flex: 1 0 0;
     top: 24px;
-    text-align: right;
+    text-align: left;
     font-family: Inter, -apple-system, system-ui, sans-serif;
     font-size: 30px;
     font-style: normal;
@@ -530,7 +577,7 @@ section[id] {
     width: auto;
     max-width: 100%;
     flex-shrink: 0;
-    text-align: right;
+    text-align: left;
     color: rgba(255, 255, 255, 0.9);
     font-family: Inter, -apple-system, system-ui, sans-serif;
     font-size: 16px;
@@ -597,6 +644,15 @@ section[id] {
 
   .power-banners-section2-block {
     background-color: #000;
+    /** Jewelry Rendering — ամբողջ տեքստային կլաստերը մի քիչ վերև (բացասական = վերև) */
+    --section2-text-cluster-translate-y-mobile: -18px;
+  }
+
+  .power-banners-section2-block .power-banners-section2-text-cluster {
+    transform: translate(
+      var(--section2-text-cluster-nudge-mobile, 0px),
+      var(--section2-text-cluster-translate-y-mobile)
+    );
   }
 
   .power-banners-section1-image-strip {
@@ -855,7 +911,10 @@ section[id] {
   aspect-ratio: 37 / 39;
   height: auto;
   transform: translate(
-    var(--manufacturing-stone-seat-geometry-detail-nudge-x),
+    calc(
+      var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
+        var(--manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset)
+    ),
     var(--manufacturing-stone-seat-geometry-detail-nudge-y)
   );
   width: var(--manufacturing-stone-seat-geometry-detail-display-width);
@@ -877,7 +936,8 @@ section[id] {
     transform: translate(
         calc(
           var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
-            var(--manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset)
+            var(--manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset) +
+            var(--manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset)
         ),
         var(--manufacturing-stone-seat-geometry-detail-nudge-y)
       )
@@ -922,37 +982,71 @@ section[id] {
   }
 
   .manufacturing-intelligence-photo {
+    object-position: left center;
     transform: scale(var(--manufacturing-intelligence-photo-scale-lg));
-    transform-origin: center center;
+    transform-origin: left center;
   }
 
+  /**
+   * Միայն «ստանդարտ» detail (առանց `manufacturing-intelligence-photo-detail--*` մոդիֆիկատոր class-ի) — `transform: none`։
+   * Նոր մոդիֆիկատոր ավելացնելիս այստեղ չի պետք շղթա թարմացնել — class-ի substring-ով ստուգում է։
+   */
   .manufacturing-intelligence-photo-detail {
+    object-position: left center;
+  }
+
+  .manufacturing-intelligence-photo-detail:not([class*="manufacturing-intelligence-photo-detail--"]) {
     transform: none;
+  }
+
+  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--mechanical-stress-load-distribution {
+    transform: translateX(var(--manufacturing-mechanical-stress-detail-nudge-x-lg))
+      scale(var(--manufacturing-mechanical-stress-detail-scale-lg));
+    transform-origin: left center;
+    width: var(--manufacturing-mechanical-stress-detail-display-width-lg);
   }
 
   .manufacturing-intelligence-photo-detail--printing-strategy-resin {
     transform: translateY(var(--manufacturing-printing-strategy-resin-detail-nudge-y));
   }
 
-  .manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
+    margin-inline-start: var(--manufacturing-casting-compensation-detail-nudge-x-lg-offset);
     transform: translate(
       var(--manufacturing-casting-compensation-detail-nudge-x),
-      var(--manufacturing-casting-compensation-detail-nudge-y)
+      calc(
+        var(--manufacturing-casting-compensation-detail-nudge-y) +
+          var(--manufacturing-casting-compensation-detail-nudge-y-lg-offset)
+      )
     );
+    width: var(--manufacturing-casting-compensation-detail-display-width-lg);
   }
 
   .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
     transform: translate(
-      var(--manufacturing-stone-seat-geometry-detail-nudge-x),
-      var(--manufacturing-stone-seat-geometry-detail-nudge-y)
-    );
+        calc(
+          var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
+            var(--manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset)
+        ),
+        var(--manufacturing-stone-seat-geometry-detail-nudge-y)
+      )
+      scale(var(--manufacturing-stone-seat-geometry-detail-scale-lg));
+    transform-origin: left center;
   }
 
-  .manufacturing-intelligence-photo-detail--wall-thickness-engineering {
+  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--wall-thickness-engineering {
     transform: translate(
-      var(--manufacturing-wall-thickness-detail-nudge-x),
-      var(--manufacturing-wall-thickness-detail-nudge-y)
-    );
+      calc(
+        var(--manufacturing-wall-thickness-detail-nudge-x) +
+          var(--manufacturing-wall-thickness-detail-nudge-x-lg-offset)
+      ),
+      calc(
+        var(--manufacturing-wall-thickness-detail-nudge-y) +
+          var(--manufacturing-wall-thickness-detail-nudge-y-lg-offset)
+      )
+    ) scale(var(--manufacturing-wall-thickness-detail-scale-lg));
+    transform-origin: left center;
+    width: var(--manufacturing-wall-thickness-detail-display-width-lg);
   }
 }
 

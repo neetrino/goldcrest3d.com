@@ -168,7 +168,7 @@ export function SectionManufacturing() {
                 />
                 {slot0 ? (
                   <div
-                    className={`pointer-events-none absolute inset-0 flex items-center justify-center ${
+                    className={`pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-start ${
                       elevatedSlot === 0 ? "z-[2]" : "z-[1]"
                     }`}
                   >
@@ -191,7 +191,7 @@ export function SectionManufacturing() {
                 ) : null}
                 {slot1 ? (
                   <div
-                    className={`pointer-events-none absolute inset-0 flex items-center justify-center ${
+                    className={`pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-start ${
                       elevatedSlot === 1 ? "z-[2]" : "z-[1]"
                     }`}
                   >

@@ -11,6 +11,12 @@ const LINE_1 =
 const LINE_2 =
   "Invisible settings and ultra-thin tolerances engineered with strict structural discipline.";
 
+/** Mobile only — explicit line break after “structures”. */
+const MOBILE_DESCRIPTION_LINE_1 =
+  "Advanced pavé and fine-setting structures";
+const MOBILE_DESCRIPTION_LINE_2 =
+  "developed with micron-level precision.";
+
 type ModelingBlockHighJewelryProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
@@ -74,8 +80,13 @@ export function ModelingBlockHighJewelry({
         <h3 className="font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
           {TITLE}
         </h3>
-        <p className="mt-[calc(1rem*var(--ms,1))] block w-[calc(243px*var(--ms,1))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden">
-          {LINE_1}
+        <p className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden">
+          <span className="block whitespace-nowrap">
+            {MOBILE_DESCRIPTION_LINE_1}
+          </span>
+          <span className="mt-[calc(0.25rem*var(--ms,1))] block">
+            {MOBILE_DESCRIPTION_LINE_2}
+          </span>
         </p>
         <div className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 sm:block">
           <span className="block">{LINE_1}</span>
