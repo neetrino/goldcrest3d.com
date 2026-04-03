@@ -597,6 +597,15 @@ section[id] {
 
   .power-banners-section2-block {
     background-color: #000;
+    /** Jewelry Rendering — ամբողջ տեքստային կլաստերը մի քիչ վերև (բացասական = վերև) */
+    --section2-text-cluster-translate-y-mobile: -18px;
+  }
+
+  .power-banners-section2-block .power-banners-section2-text-cluster {
+    transform: translate(
+      var(--section2-text-cluster-nudge-mobile, 0px),
+      var(--section2-text-cluster-translate-y-mobile)
+    );
   }
 
   .power-banners-section1-image-strip {
