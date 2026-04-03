@@ -4,6 +4,7 @@ import { SITE_HEADER_LOGO_SRC } from "@/constants";
 import Image from "next/image";
 import { useEffect, useState, type ReactNode } from "react";
 import { AdminLeadsUnreadProvider, useAdminLeadsUnread } from "./AdminLeadsUnreadContext";
+import { AdminRscAutoRefresh } from "./AdminRscAutoRefresh";
 import { AdminSidebar } from "./AdminSidebar";
 
 function IconMenu({ className }: { className?: string }) {
@@ -143,6 +144,7 @@ export function AdminLayoutShell({
 
   return (
     <AdminLeadsUnreadProvider serverUnreadCount={leadsUnreadCount}>
+      <AdminRscAutoRefresh />
       <AdminLayoutInner
         userName={userName}
         userImage={userImage}

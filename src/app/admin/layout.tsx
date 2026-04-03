@@ -3,6 +3,9 @@ import { prisma } from "@/lib/db";
 import { AdminLayoutShell } from "./AdminLayoutShell";
 import { AdminSignInGate } from "./AdminSignInGate";
 
+/** Leads count and inbox must reflect new submissions without stale RSC cache. */
+export const dynamic = "force-dynamic";
+
 export default async function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
