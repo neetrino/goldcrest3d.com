@@ -27,7 +27,7 @@ function IconMenu({ className }: { className?: string }) {
 }
 
 type AdminLayoutShellProps = {
-  leadsCount: number;
+  leadsUnreadCount: number;
   userName: string | null;
   userImage: string | null;
   children: React.ReactNode;
@@ -37,7 +37,7 @@ type AdminLayoutShellProps = {
  * Responsive admin chrome: desktop keeps sidebar in flow; mobile uses overlay drawer + top bar.
  */
 export function AdminLayoutShell({
-  leadsCount,
+  leadsUnreadCount,
   userName,
   userImage,
   children,
@@ -110,7 +110,7 @@ export function AdminLayoutShell({
 
       <AdminSidebar
         id="admin-sidebar"
-        leadsCount={leadsCount}
+        leadsUnreadCount={leadsUnreadCount}
         userName={userName}
         userImage={userImage}
         onNavigate={closeNav}

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 
 import { LeadReplyForm } from "./[id]/LeadReplyForm";
 import type { LeadListItem, LeadWithAttachments } from "./adminLeads.types";
@@ -36,6 +36,7 @@ type AdminLeadsInboxProps = {
 export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
   const selectedId = searchParams.get("selected");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -52,7 +53,10 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
     const next = new URLSearchParams(searchParams.toString());
     next.set("selected", id);
     next.delete(LEAD_DELETE_CONFIRM_QUERY);
-    router.push(`/admin/leads?${next.toString()}`);
+    startTransition(() => {
+      router.push(`/admin/leads?${next.toString()}`);
+      router.refresh();
+    });
   };
 
   return (
@@ -118,14 +122,20 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
               <ul className="flex flex-col">
                 {filteredLeads.map((lead) => {
                   const isActive = selectedId === lead.id;
+                  const isUnread = lead.readAt === null;
                   return (
                     <li key={lead.id} className="border-b border-slate-100">
                       <button
                         type="button"
                         onClick={() => handleSelectLead(lead.id)}
+                        aria-label={
+                          isUnread
+                            ? `${lead.fullName}, unread lead`
+                            : `${lead.fullName}, read`
+                        }
                         className={`relative flex w-full flex-col gap-1 px-4 py-4 text-left transition-colors hover:bg-slate-50 lg:px-6 ${
                           isActive ? "bg-white" : ""
-                        }`}
+                        } ${isUnread && !isActive ? "bg-amber-500/5" : ""}`}
                       >
                         {isActive && (
                           <span
@@ -134,17 +144,47 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                           />
                         )}
                         <div className="flex items-start justify-between gap-2">
-                          <span className="font-bold text-slate-900 text-[14px] leading-5">
-                            {lead.fullName}
+                          <span className="flex min-w-0 items-start gap-2">
+                            {isUnread ? (
+                              <span
+                                className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[var(--foreground)]"
+                                title="Not opened yet"
+                                aria-hidden
+                              />
+                            ) : (
+                              <span
+                                className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-transparent"
+                                aria-hidden
+                              />
+                            )}
+                            <span
+                              className={`text-[14px] leading-5 ${
+                                isUnread
+                                  ? "font-bold text-slate-900"
+                                  : "font-semibold text-slate-700"
+                              }`}
+                            >
+                              {lead.fullName}
+                            </span>
                           </span>
                           <span className="shrink-0 text-[11px] text-slate-400 leading-[16.5px]">
                             {formatListTime(lead.createdAt)}
                           </span>
                         </div>
-                        <span className="font-medium text-slate-700 text-[12px] leading-4">
+                        <span
+                          className={`pl-4 text-[12px] leading-4 ${
+                            isUnread
+                              ? "font-semibold text-slate-800"
+                              : "font-medium text-slate-600"
+                          }`}
+                        >
                           {getSubject(lead.message)}
                         </span>
-                        <p className="line-clamp-2 text-[12px] leading-[19.5px] text-slate-500">
+                        <p
+                          className={`line-clamp-2 pl-4 text-[12px] leading-[19.5px] ${
+                            isUnread ? "text-slate-600" : "text-slate-500"
+                          }`}
+                        >
                           {getPreview(lead.message)}
                         </p>
                       </button>

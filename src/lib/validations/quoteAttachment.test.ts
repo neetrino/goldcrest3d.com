@@ -6,7 +6,8 @@ import {
   QUOTE_ATTACHMENT_MAX_BYTES,
 } from "./quoteAttachment";
 
-const TYPE_ERROR = "Only PNG, JPG, JPEG, and PDF files are allowed." as const;
+const TYPE_ERROR =
+  "Only PNG, JPG, JPEG, WebP, and PDF files are allowed." as const;
 
 function file(overrides: { name?: string; size?: number; type?: string } = {}) {
   const { name = "doc.pdf", size = 1000, type = "application/pdf" } = overrides;
@@ -57,6 +58,20 @@ describe("validateQuoteAttachment", () => {
     expect(validateQuoteAttachment(file({ type: "application/pdf" }))).toBeNull();
   });
 
+  it("returns null for valid WebP", () => {
+    expect(
+      validateQuoteAttachment(
+        file({ name: "ref.webp", type: "image/webp" })
+      )
+    ).toBeNull();
+  });
+
+  it("returns null for .webp with empty MIME (drag-and-drop)", () => {
+    expect(
+      validateQuoteAttachment(file({ name: "ref.webp", type: "" }))
+    ).toBeNull();
+  });
+
   it("returns error for file over 10MB", () => {
     expect(
       validateQuoteAttachment(file({ size: QUOTE_ATTACHMENT_MAX_BYTES + 1 }))
@@ -64,10 +79,10 @@ describe("validateQuoteAttachment", () => {
   });
 
   it("returns error for disallowed type", () => {
-    expect(validateQuoteAttachment(file({ type: "image/webp" }))).toBe(
+    expect(validateQuoteAttachment(file({ type: "image/gif" }))).toBe(
       TYPE_ERROR
     );
-    expect(validateQuoteAttachment(file({ type: "image/gif" }))).toBe(
+    expect(validateQuoteAttachment(file({ type: "image/svg+xml" }))).toBe(
       TYPE_ERROR
     );
   });
@@ -82,6 +97,7 @@ describe("validateQuoteAttachments", () => {
     expect(
       validateQuoteAttachments([
         file({ type: "image/png" }),
+        file({ name: "x.webp", type: "image/webp" }),
         file({ type: "application/pdf" }),
       ])
     ).toBeNull();
@@ -91,7 +107,7 @@ describe("validateQuoteAttachments", () => {
     expect(
       validateQuoteAttachments([
         file({ type: "image/png" }),
-        file({ type: "image/webp" }),
+        file({ type: "image/gif" }),
       ])
     ).toBe(TYPE_ERROR);
     expect(

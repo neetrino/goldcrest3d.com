@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { updateOrder, FORM_FIELD_PRODUCT_IMAGE } from "@/app/actions/order";
 import type { UpdateOrderResult } from "@/app/actions/order";
-import type { Order } from "@prisma/client";
+import type { Order } from "@/generated/prisma/client";
 
 const initialState: UpdateOrderResult = null;
 

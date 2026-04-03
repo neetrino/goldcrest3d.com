@@ -11,11 +11,13 @@ export default async function AdminLayout({
     return <AdminSignInGate />;
   }
 
-  const leadsCount = await prisma.lead.count();
+  const leadsUnreadCount = await prisma.lead.count({
+    where: { readAt: null },
+  });
 
   return (
     <AdminLayoutShell
-      leadsCount={leadsCount}
+      leadsUnreadCount={leadsUnreadCount}
       userName={session.user.name ?? null}
       userImage={session.user.image ?? null}
     >

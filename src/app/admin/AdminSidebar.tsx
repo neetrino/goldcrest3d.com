@@ -140,6 +140,13 @@ function IconLogout({ className }: { className?: string }) {
   );
 }
 
+/** Unread badge: show "99+" above this count. */
+const INBOX_UNREAD_BADGE_CAP = 99;
+
+function formatUnreadBadgeLabel(n: number): string {
+  return n > INBOX_UNREAD_BADGE_CAP ? "99+" : String(n);
+}
+
 const NAV_ITEMS: readonly {
   href: string;
   label: string;
@@ -153,7 +160,7 @@ const NAV_ITEMS: readonly {
 ];
 
 type AdminSidebarProps = {
-  leadsCount: number;
+  leadsUnreadCount: number;
   userName: string | null;
   userImage: string | null;
   /** For mobile drawer: closes the drawer after navigation. */
@@ -167,7 +174,7 @@ type AdminSidebarProps = {
  * Admin sidebar per Figma: logo, nav (Inbox/Leads, Orders, Reports), user block (settings icon + logout).
  */
 export function AdminSidebar({
-  leadsCount,
+  leadsUnreadCount,
   userName,
   userImage,
   onNavigate,
@@ -225,10 +232,14 @@ export function AdminSidebar({
                 }`}
               >
                 <Icon className="h-[18px] w-[18px] shrink-0" aria-hidden />
-                <span className="flex-1">{label}</span>
-                {showBadge && leadsCount > 0 && (
-                  <span className="rounded-full bg-[var(--foreground)] px-1.5 py-0.5 text-[10px] font-medium text-white min-w-[10px] text-center">
-                    {leadsCount > 99 ? "99+" : leadsCount}
+                <span className="min-w-0 flex-1">{label}</span>
+                {showBadge && leadsUnreadCount > 0 && (
+                  <span
+                    className="rounded-full bg-[var(--foreground)] px-1.5 py-0.5 text-center text-[10px] font-medium text-white min-w-[1.25rem]"
+                    title="Unread leads — open inbox to review"
+                    aria-label={`${leadsUnreadCount} unread leads`}
+                  >
+                    {formatUnreadBadgeLabel(leadsUnreadCount)}
                   </span>
                 )}
               </Link>
