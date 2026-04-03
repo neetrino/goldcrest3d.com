@@ -60,8 +60,12 @@
   /** Stone Seat Geometry detail — մի քիչ աջ (դրական = աջ) */
   --manufacturing-stone-seat-geometry-detail-nudge-x: 35px;
   /**
+   * Stone Seat Geometry — only lg+ (min-width 1024px): negative shifts image left.
+   * 0 below lg so tablet/mobile stay on the base nudge + mobile override only.
+   */
+  --manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset: 0px;
+  /**
    * Stone Seat Geometry — only mobile (max-width 767px): negative shifts image left.
-   * Default 0 keeps desktop unchanged.
    */
   --manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset: -40px;
   /** Wall Thickness Engineering detail — շատ քիչ դեպի աջ (դրական = աջ) */
@@ -76,9 +80,15 @@
   --manufacturing-wall-thickness-detail-display-width-mobile: 520px;
   /**
    * Stone Seat Geometry — ցուցադրման լայնություն (ֆայլը 666×702 է, aspect 37/39).
-   * Միայն այս նկարի վիզուալ սքեյլ — փոքրացնելու համար նվազեցրու արժեքը։
+   * Նկատի ունեցիր՝ lg+ շատ հաճախ սահմանափակվում է `max-h-full`-ով (կադրի բարձրություն),
+   * այդ դեպքում միայն width token-ը տեսողական փոփոխություն չի տա — տե՛ս `--manufacturing-stone-seat-geometry-detail-scale-lg`։
    */
-  --manufacturing-stone-seat-geometry-detail-display-width: 610px;
+  --manufacturing-stone-seat-geometry-detail-display-width: 560px;
+  /**
+   * Stone Seat Geometry — միայն lg+ (min-width 1024px): լրացուցիչ վիզուալ սքեյլ (1 = առանց փոփոխության).
+   * Օգտագործվում է, երբ նկարը բարձրությամբ կպչում է կադրին և `width` token-ը չի ազդում։
+   */
+  --manufacturing-stone-seat-geometry-detail-scale-lg: 0.9;
   /** Stone Seat Geometry — mobile-only display width (slightly smaller than desktop token). */
   --manufacturing-stone-seat-geometry-detail-display-width-mobile: 520px;
 }
@@ -99,6 +109,7 @@
     --landing-nav-logo-slot: 90px;
     --landing-nav-logo-offset-x: 180px;
     --landing-nav-logo-nudge-x: -116px;
+    --manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset: -48px;
   }
 }
 
@@ -864,7 +875,10 @@ section[id] {
   aspect-ratio: 37 / 39;
   height: auto;
   transform: translate(
-    var(--manufacturing-stone-seat-geometry-detail-nudge-x),
+    calc(
+      var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
+        var(--manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset)
+    ),
     var(--manufacturing-stone-seat-geometry-detail-nudge-y)
   );
   width: var(--manufacturing-stone-seat-geometry-detail-display-width);
@@ -886,7 +900,8 @@ section[id] {
     transform: translate(
         calc(
           var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
-            var(--manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset)
+            var(--manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset) +
+            var(--manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset)
         ),
         var(--manufacturing-stone-seat-geometry-detail-nudge-y)
       )
@@ -952,9 +967,14 @@ section[id] {
 
   .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
     transform: translate(
-      var(--manufacturing-stone-seat-geometry-detail-nudge-x),
-      var(--manufacturing-stone-seat-geometry-detail-nudge-y)
-    );
+        calc(
+          var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
+            var(--manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset)
+        ),
+        var(--manufacturing-stone-seat-geometry-detail-nudge-y)
+      )
+      scale(var(--manufacturing-stone-seat-geometry-detail-scale-lg));
+    transform-origin: center center;
   }
 
   .manufacturing-intelligence-photo-detail--wall-thickness-engineering {
