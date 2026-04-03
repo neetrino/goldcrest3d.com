@@ -35,11 +35,9 @@ function getR2Client(): S3Client | null {
 }
 
 import {
-  QUOTE_ATTACHMENT_ALLOWED_MIME_TYPES,
   QUOTE_ATTACHMENT_MAX_BYTES,
+  resolveQuoteAttachmentContentType,
 } from "@/lib/validations/quoteAttachment";
-
-const ALLOWED_TYPES = new Set(QUOTE_ATTACHMENT_ALLOWED_MIME_TYPES);
 
 /**
  * Uploads a file to R2 under prefix (e.g. "quotes" or "orders").
@@ -54,8 +52,8 @@ export async function uploadToR2(
   if (!client) return null;
 
   if (file.size > QUOTE_ATTACHMENT_MAX_BYTES) return null;
-  const contentType = (file.type ?? "").toLowerCase();
-  if (!ALLOWED_TYPES.has(contentType)) return null;
+  const contentType = resolveQuoteAttachmentContentType(file);
+  if (!contentType) return null;
 
   const ext = file.name.split(".").pop() ?? "bin";
   const key = `${prefix}/${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;

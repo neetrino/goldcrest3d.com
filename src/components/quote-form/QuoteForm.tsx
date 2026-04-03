@@ -13,11 +13,15 @@ import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import type { QuoteSubmitResult } from "@/app/actions/quote";
 import Image from "next/image";
-import { validateQuoteAttachment } from "@/lib/validations/quoteAttachment";
+import {
+  resolveQuoteAttachmentContentType,
+  validateQuoteAttachment,
+} from "@/lib/validations/quoteAttachment";
 
 const QUOTE_ATTACHMENT_FIELD_NAME = "attachment";
-/** Picker shows all images + PDF; server still validates PNG, JPG, PDF only */
-const ACCEPT_ATTRIBUTE = "image/png,image/jpeg,image/jpg,application/pdf,image/*";
+/** Picker shows images + PDF; server allows PNG, JPEG/JPG, PDF only */
+const ACCEPT_ATTRIBUTE =
+  "image/png,image/jpeg,image/jpg,.jpg,.jpeg,.jfif,application/pdf,image/*";
 
 const initialState: QuoteSubmitResult = null;
 
@@ -25,8 +29,6 @@ const labelClass =
   "font-manrope font-bold leading-[15px] tracking-[2px] text-[rgba(24,22,16,0.4)] text-[10px] uppercase";
 const inputClass =
   "font-manrope w-full border-0 border-b border-[#EEEEEE] bg-transparent px-1 py-4 text-[16px] leading-[24px] text-[#757575] placeholder:text-[#757575] focus:ring-0 focus:border-[#c69f58] focus:outline-none transition-colors disabled:opacity-60";
-
-const IMAGE_MIME_PREFIX = "image/";
 
 /** Mobile: Figma padding, radius 33px, full width. `md:` — previous submit button. */
 const QUOTE_SUBMIT_BUTTON_CLASS =
@@ -42,7 +44,8 @@ function setFileInputFiles(input: HTMLInputElement | null, files: File[]) {
 }
 
 function isImageFile(file: File): boolean {
-  return (file.type ?? "").toLowerCase().startsWith(IMAGE_MIME_PREFIX);
+  const t = resolveQuoteAttachmentContentType(file);
+  return t === "image/png" || t === "image/jpeg";
 }
 
 function buildFileWithPreview(file: File): FileWithPreview {
@@ -291,7 +294,7 @@ export function QuoteForm() {
               </>
             )}
             <p className="mt-1 font-manrope text-[12px] font-normal leading-[16px] text-[rgba(24,22,16,0.4)]">
-              PNG, JPG, PDF up to 10MB
+              PNG, JPEG, PDF up to 10MB
             </p>
           </label>
         </div>

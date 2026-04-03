@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  resolveQuoteAttachmentContentType,
   validateQuoteAttachment,
   validateQuoteAttachments,
   QUOTE_ATTACHMENT_MAX_BYTES,
 } from "./quoteAttachment";
+
+const TYPE_ERROR = "Only PNG, JPEG, and PDF files are allowed." as const;
 
 function file(overrides: { name?: string; size?: number; type?: string } = {}) {
   const { name = "doc.pdf", size = 1000, type = "application/pdf" } = overrides;
@@ -28,6 +31,28 @@ describe("validateQuoteAttachment", () => {
     expect(validateQuoteAttachment(file({ type: "image/jpeg" }))).toBeNull();
   });
 
+  it("returns null for .jpeg with empty MIME (drag-and-drop)", () => {
+    expect(
+      validateQuoteAttachment(file({ name: "photo.jpeg", type: "" }))
+    ).toBeNull();
+  });
+
+  it("returns null for .jpg with application/octet-stream", () => {
+    expect(
+      validateQuoteAttachment(
+        file({ name: "scan.jpg", type: "application/octet-stream" })
+      )
+    ).toBeNull();
+  });
+
+  it("normalizes image/jpg to JPEG", () => {
+    expect(
+      resolveQuoteAttachmentContentType(
+        file({ name: "x.jpg", type: "image/jpg" })
+      )
+    ).toBe("image/jpeg");
+  });
+
   it("returns null for valid PDF", () => {
     expect(validateQuoteAttachment(file({ type: "application/pdf" }))).toBeNull();
   });
@@ -40,10 +65,10 @@ describe("validateQuoteAttachment", () => {
 
   it("returns error for disallowed type", () => {
     expect(validateQuoteAttachment(file({ type: "image/webp" }))).toBe(
-      "Only PNG, JPG, and PDF files are allowed."
+      TYPE_ERROR
     );
     expect(validateQuoteAttachment(file({ type: "image/gif" }))).toBe(
-      "Only PNG, JPG, and PDF files are allowed."
+      TYPE_ERROR
     );
   });
 });
@@ -68,7 +93,7 @@ describe("validateQuoteAttachments", () => {
         file({ type: "image/png" }),
         file({ type: "image/webp" }),
       ])
-    ).toBe("Only PNG, JPG, and PDF files are allowed.");
+    ).toBe(TYPE_ERROR);
     expect(
       validateQuoteAttachments([
         file({ type: "image/png" }),
