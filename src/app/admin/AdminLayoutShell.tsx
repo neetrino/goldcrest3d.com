@@ -2,7 +2,8 @@
 
 import { SITE_HEADER_LOGO_SRC } from "@/constants";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { AdminLeadsUnreadProvider, useAdminLeadsUnread } from "./AdminLeadsUnreadContext";
 import { AdminSidebar } from "./AdminSidebar";
 
 function IconMenu({ className }: { className?: string }) {
@@ -33,35 +34,22 @@ type AdminLayoutShellProps = {
   children: React.ReactNode;
 };
 
-/**
- * Responsive admin chrome: desktop keeps sidebar in flow; mobile uses overlay drawer + top bar.
- */
-export function AdminLayoutShell({
-  leadsUnreadCount,
+type AdminLayoutInnerProps = {
+  userName: string | null;
+  userImage: string | null;
+  mobileNavOpen: boolean;
+  setMobileNavOpen: (open: boolean) => void;
+  children: ReactNode;
+};
+
+function AdminLayoutInner({
   userName,
   userImage,
+  mobileNavOpen,
+  setMobileNavOpen,
   children,
-}: AdminLayoutShellProps) {
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
-
-  useEffect(() => {
-    if (!mobileNavOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [mobileNavOpen]);
-
-  useEffect(() => {
-    if (!mobileNavOpen) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileNavOpen(false);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [mobileNavOpen]);
-
+}: AdminLayoutInnerProps) {
+  const { displayUnreadCount } = useAdminLeadsUnread();
   const closeNav = () => setMobileNavOpen(false);
 
   return (
@@ -110,7 +98,7 @@ export function AdminLayoutShell({
 
       <AdminSidebar
         id="admin-sidebar"
-        leadsUnreadCount={leadsUnreadCount}
+        leadsUnreadCount={displayUnreadCount}
         userName={userName}
         userImage={userImage}
         onNavigate={closeNav}
@@ -121,5 +109,48 @@ export function AdminLayoutShell({
         {children}
       </main>
     </div>
+  );
+}
+
+/**
+ * Responsive admin chrome: desktop keeps sidebar in flow; mobile uses overlay drawer + top bar.
+ */
+export function AdminLayoutShell({
+  leadsUnreadCount,
+  userName,
+  userImage,
+  children,
+}: AdminLayoutShellProps) {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileNavOpen]);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileNavOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileNavOpen]);
+
+  return (
+    <AdminLeadsUnreadProvider serverUnreadCount={leadsUnreadCount}>
+      <AdminLayoutInner
+        userName={userName}
+        userImage={userImage}
+        mobileNavOpen={mobileNavOpen}
+        setMobileNavOpen={setMobileNavOpen}
+      >
+        {children}
+      </AdminLayoutInner>
+    </AdminLeadsUnreadProvider>
   );
 }

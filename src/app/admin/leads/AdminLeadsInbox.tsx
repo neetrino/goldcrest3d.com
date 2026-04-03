@@ -24,6 +24,7 @@ import {
   IconSearch,
   IconSlidersHorizontal,
 } from "./AdminLeadsInboxIcons";
+import { useAdminLeadsUnread } from "../AdminLeadsUnreadContext";
 
 type AdminLeadsInboxProps = {
   leads: LeadListItem[];
@@ -37,6 +38,7 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
+  const { reportUnreadLeadOpened } = useAdminLeadsUnread();
   const selectedId = searchParams.get("selected");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -50,6 +52,10 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
   }, [leads, searchQuery]);
 
   const handleSelectLead = (id: string) => {
+    const opened = leads.find((l) => l.id === id);
+    if (opened?.readAt === null && id !== selectedId) {
+      reportUnreadLeadOpened();
+    }
     const next = new URLSearchParams(searchParams.toString());
     next.set("selected", id);
     next.delete(LEAD_DELETE_CONFIRM_QUERY);
