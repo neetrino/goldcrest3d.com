@@ -4,8 +4,21 @@
 
 import { Resend } from "resend";
 
+const FROM_DISPLAY_NAME = "Goldcrest 3D";
+
 const apiKey = process.env.RESEND_API_KEY;
-const fromEmail = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
+
+/** Resend `from`: verified domain address, optionally "Name <addr>" if already in env. */
+function getFromHeader(): string {
+  const raw = process.env.RESEND_FROM_EMAIL?.trim();
+  if (!raw) {
+    return `${FROM_DISPLAY_NAME} <onboarding@resend.dev>`;
+  }
+  if (raw.includes("<") && raw.includes(">")) {
+    return raw;
+  }
+  return `${FROM_DISPLAY_NAME} <${raw}>`;
+}
 
 const resend = apiKey ? new Resend(apiKey) : null;
 
@@ -39,7 +52,7 @@ export async function sendEmail({
 
   try {
     const { data, error } = await resend.emails.send({
-      from: fromEmail,
+      from: getFromHeader(),
       to: toList,
       subject,
       text: textContent,
