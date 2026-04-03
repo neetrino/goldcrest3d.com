@@ -41,6 +41,7 @@ describe("QuoteForm", () => {
     const fileInputs = screen.getAllByLabelText(/attach file \(optional\)/i);
     const fileInput = fileInputs[0];
     expect(fileInput).toHaveAttribute("accept", expect.stringContaining("image/png"));
+    expect(fileInput.getAttribute("accept")).toContain("image/webp");
     expect(fileInput.getAttribute("accept")).toContain("application/pdf");
   });
 });

@@ -7,6 +7,8 @@ export type LeadListItem = {
   email: string;
   message: string;
   createdAt: Date;
+  /** null = admin has not opened this lead in inbox yet */
+  readAt: Date | null;
 };
 
 /**
@@ -16,6 +18,5 @@ export type LeadWithAttachments = LeadListItem & {
   attachmentUrls: Array<{
     key: string;
     url: string | null;
-    isImage: boolean;
   }>;
 };

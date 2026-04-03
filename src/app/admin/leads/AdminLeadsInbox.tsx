@@ -3,27 +3,33 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 
 import { LeadReplyForm } from "./[id]/LeadReplyForm";
 import type { LeadListItem, LeadWithAttachments } from "./adminLeads.types";
+import { DeleteLeadButton, LEAD_DELETE_CONFIRM_QUERY } from "./DeleteLeadButton";
+import { AdminAttachmentFileIcon } from "./AdminAttachmentFileIcon";
 import {
-  ICON_DOWNLOAD,
-  ICON_IMAGE,
-  ICON_PDF,
-  ICON_TRASH,
+  getAttachmentFileExtension,
+  getAttachmentFileKind,
+  getAttachmentFormatLabel,
+  getAttachmentKindWrapperClass,
+} from "./attachmentFileKind";
+import {
   LEAD_AVATAR_DEFAULT_SRC,
   formatListTime,
   getPreview,
   getSubject,
 } from "./adminLeadsInbox.helpers";
 import {
+  IconArchiveBox,
   IconBell,
   IconMail,
   IconPlusThin,
   IconSearch,
   IconSlidersHorizontal,
 } from "./AdminLeadsInboxIcons";
+import { useAdminLeadsUnread } from "../AdminLeadsUnreadContext";
 
 type AdminLeadsInboxProps = {
   leads: LeadListItem[];
@@ -36,6 +42,8 @@ type AdminLeadsInboxProps = {
 export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
+  const { reportUnreadLeadOpened } = useAdminLeadsUnread();
   const selectedId = searchParams.get("selected");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -49,9 +57,17 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
   }, [leads, searchQuery]);
 
   const handleSelectLead = (id: string) => {
+    const opened = leads.find((l) => l.id === id);
+    if (opened?.readAt === null && id !== selectedId) {
+      reportUnreadLeadOpened();
+    }
     const next = new URLSearchParams(searchParams.toString());
     next.set("selected", id);
-    router.push(`/admin/leads?${next.toString()}`);
+    next.delete(LEAD_DELETE_CONFIRM_QUERY);
+    startTransition(() => {
+      router.push(`/admin/leads?${next.toString()}`);
+      router.refresh();
+    });
   };
 
   return (
@@ -117,14 +133,20 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
               <ul className="flex flex-col">
                 {filteredLeads.map((lead) => {
                   const isActive = selectedId === lead.id;
+                  const isUnread = lead.readAt === null;
                   return (
                     <li key={lead.id} className="border-b border-slate-100">
                       <button
                         type="button"
                         onClick={() => handleSelectLead(lead.id)}
+                        aria-label={
+                          isUnread
+                            ? `${lead.fullName}, unread lead`
+                            : `${lead.fullName}, read`
+                        }
                         className={`relative flex w-full flex-col gap-1 px-4 py-4 text-left transition-colors hover:bg-slate-50 lg:px-6 ${
                           isActive ? "bg-white" : ""
-                        }`}
+                        } ${isUnread && !isActive ? "bg-amber-500/5" : ""}`}
                       >
                         {isActive && (
                           <span
@@ -133,17 +155,47 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                           />
                         )}
                         <div className="flex items-start justify-between gap-2">
-                          <span className="font-bold text-slate-900 text-[14px] leading-5">
-                            {lead.fullName}
+                          <span className="flex min-w-0 items-start gap-2">
+                            {isUnread ? (
+                              <span
+                                className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[var(--foreground)]"
+                                title="Not opened yet"
+                                aria-hidden
+                              />
+                            ) : (
+                              <span
+                                className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-transparent"
+                                aria-hidden
+                              />
+                            )}
+                            <span
+                              className={`text-[14px] leading-5 ${
+                                isUnread
+                                  ? "font-bold text-slate-900"
+                                  : "font-semibold text-slate-700"
+                              }`}
+                            >
+                              {lead.fullName}
+                            </span>
                           </span>
                           <span className="shrink-0 text-[11px] text-slate-400 leading-[16.5px]">
                             {formatListTime(lead.createdAt)}
                           </span>
                         </div>
-                        <span className="font-medium text-slate-700 text-[12px] leading-4">
+                        <span
+                          className={`pl-4 text-[12px] leading-4 ${
+                            isUnread
+                              ? "font-semibold text-slate-800"
+                              : "font-medium text-slate-600"
+                          }`}
+                        >
                           {getSubject(lead.message)}
                         </span>
-                        <p className="line-clamp-2 text-[12px] leading-[19.5px] text-slate-500">
+                        <p
+                          className={`line-clamp-2 pl-4 text-[12px] leading-[19.5px] ${
+                            isUnread ? "text-slate-600" : "text-slate-500"
+                          }`}
+                        >
                           {getPreview(lead.message)}
                         </p>
                       </button>
@@ -187,30 +239,15 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                   <div className="flex shrink-0 gap-2 self-start sm:self-auto">
                     <a
                       href="#"
-                      className="flex h-9 w-9 items-center justify-center rounded border border-slate-200 hover:bg-slate-50"
-                      aria-label="Download"
+                      className="flex h-9 w-9 items-center justify-center rounded border border-slate-200 text-slate-700 hover:bg-slate-50"
+                      aria-label="Archive"
                     >
-                      <Image
-                        src={ICON_DOWNLOAD}
-                        alt=""
-                        width={18}
-                        height={18}
-                        unoptimized
-                      />
+                      <IconArchiveBox />
                     </a>
-                    <button
-                      type="button"
-                      className="flex h-9 w-9 items-center justify-center rounded border border-slate-200 hover:bg-slate-50"
-                      aria-label="Delete"
-                    >
-                      <Image
-                        src={ICON_TRASH}
-                        alt=""
-                        width={16}
-                        height={18}
-                        unoptimized
-                      />
-                    </button>
+                    <DeleteLeadButton
+                      leadId={selectedLead.id}
+                      leadName={selectedLead.fullName}
+                    />
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
@@ -248,8 +285,11 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                       Attachments ({selectedLead.attachmentUrls.length})
                     </h3>
                     <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                      {selectedLead.attachmentUrls.map(({ key, url, isImage }) => {
+                      {selectedLead.attachmentUrls.map(({ key, url }) => {
                         const name = key.split("/").pop() ?? key;
+                        const ext = getAttachmentFileExtension(key);
+                        const kind = getAttachmentFileKind(ext);
+                        const formatLabel = getAttachmentFormatLabel(ext);
                         return (
                           <a
                             key={key}
@@ -259,17 +299,18 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                             className="flex w-full max-w-[256px] items-center gap-3 rounded-lg border border-slate-200 bg-slate-50/50 p-3 hover:bg-slate-100 sm:w-[256px]"
                           >
                             <div
-                              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-                                isImage ? "bg-emerald-500/10" : "bg-blue-500/10"
-                              }`}
+                              className={`relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg ${getAttachmentKindWrapperClass(kind)}`}
+                              title={ext ? `.${ext}` : undefined}
                             >
-                              <Image
-                                src={isImage ? ICON_IMAGE : ICON_PDF}
-                                alt=""
-                                width={20}
-                                height={20}
-                                unoptimized
-                              />
+                              <span
+                                className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.14]"
+                                aria-hidden
+                              >
+                                <AdminAttachmentFileIcon kind={kind} />
+                              </span>
+                              <span className="relative z-10 max-w-[2.25rem] text-center text-[8px] font-extrabold leading-none tracking-tight">
+                                {formatLabel}
+                              </span>
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-[12px] font-bold text-slate-900">

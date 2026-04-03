@@ -11,6 +11,13 @@ export default async function AdminLeadsPage({
 }) {
   const { selected: selectedId } = await searchParams;
 
+  if (selectedId) {
+    await prisma.lead.updateMany({
+      where: { id: selectedId, readAt: null },
+      data: { readAt: new Date() },
+    });
+  }
+
   const leads = await prisma.lead.findMany({
     orderBy: { createdAt: "desc" },
   });
@@ -25,6 +32,7 @@ export default async function AdminLeadsPage({
     email: l.email,
     message: l.message,
     createdAt: l.createdAt,
+    readAt: l.readAt,
   }));
 
   let selectedLead: LeadWithAttachments | null = null;
@@ -33,9 +41,7 @@ export default async function AdminLeadsPage({
     if (lead) {
       const attachmentUrls = lead.attachmentKeys.map((key) => {
         const url = getR2PublicUrl(key);
-        const ext = key.split(".").pop()?.toLowerCase() ?? "";
-        const isImage = ["png", "jpg", "jpeg", "gif", "webp"].includes(ext);
-        return { key, url, isImage };
+        return { key, url };
       });
       selectedLead = {
         id: lead.id,
@@ -43,6 +49,7 @@ export default async function AdminLeadsPage({
         email: lead.email,
         message: lead.message,
         createdAt: lead.createdAt,
+        readAt: lead.readAt,
         attachmentUrls,
       };
     }

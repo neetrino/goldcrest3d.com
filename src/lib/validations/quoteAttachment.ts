@@ -1,5 +1,5 @@
 /**
- * Quote form attachment validation — PNG, JPEG/JPG, PDF, max 10MB.
+ * Quote form attachment validation — PNG, JPEG/JPG, WebP, PDF, max 10MB.
  * Used in submitQuote (server) and can be used for client-side UX.
  */
 
@@ -8,6 +8,7 @@ export const QUOTE_ATTACHMENT_MAX_BYTES = 10 * 1024 * 1024; // 10 MB
 export const QUOTE_ATTACHMENT_ALLOWED_MIME_TYPES: readonly string[] = [
   "image/png",
   "image/jpeg", // .jpg, .jpeg, .jfif
+  "image/webp",
   "application/pdf",
 ];
 
@@ -25,6 +26,7 @@ const EXTENSION_TO_CANONICAL_MIME: Readonly<Record<string, string>> = {
   jpeg: "image/jpeg",
   jpe: "image/jpeg",
   jfif: "image/jpeg",
+  webp: "image/webp",
   pdf: "application/pdf",
 };
 
@@ -40,7 +42,7 @@ function fileExtensionLower(name: string): string | null {
  */
 export function resolveQuoteAttachmentContentType(file: File): string | null {
   const raw = (file.type ?? "").trim().toLowerCase();
-  let normalized =
+  const normalized =
     raw === "image/jpg" || raw === "image/pjpeg" ? "image/jpeg" : raw;
 
   if (ALLOWED_SET.has(normalized)) {
@@ -58,7 +60,7 @@ export function resolveQuoteAttachmentContentType(file: File): string | null {
 }
 
 const QUOTE_ATTACHMENT_TYPE_ERROR =
-  "Only PNG, JPG, JPEG, and PDF files are allowed." as const;
+  "Only PNG, JPG, JPEG, WebP, and PDF files are allowed." as const;
 
 /**
  * Validates an optional file for the quote form.

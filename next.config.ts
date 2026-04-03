@@ -24,6 +24,13 @@ function r2RemotePattern():
 const r2Pattern = r2RemotePattern();
 
 const nextConfig: NextConfig = {
+  // Custom Prisma output under `src/generated/prisma` pulls `require("@prisma/client-runtime-utils")`;
+  // keep Prisma packages external so Turbopack resolves them from node_modules.
+  serverExternalPackages: [
+    "@prisma/client",
+    "@prisma/client-runtime-utils",
+    "@prisma/adapter-pg",
+  ],
   experimental: {
     serverActions: {
       bodySizeLimit: BODY_SIZE_LIMIT_BYTES,

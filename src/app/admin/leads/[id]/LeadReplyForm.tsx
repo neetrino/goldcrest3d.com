@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useRef, type KeyboardEvent } from "react";
 import { replyToLeadAction, type ReplyToLeadResult } from "@/app/actions/lead";
 
 type LeadReplyFormProps = {
@@ -15,6 +15,7 @@ export function LeadReplyForm({
   leadEmail,
   variant = "card",
 }: LeadReplyFormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
   const initialState: ReplyToLeadResult = {};
   const [state, formAction] = useActionState<
     ReplyToLeadResult,
@@ -24,10 +25,18 @@ export function LeadReplyForm({
     initialState,
   );
 
+  const handleReplyKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key !== "Enter" || event.shiftKey) {
+      return;
+    }
+    event.preventDefault();
+    formRef.current?.requestSubmit();
+  };
+
   if (variant === "inbox") {
     return (
       <div className="border border-slate-200 bg-white">
-        <form action={formAction}>
+        <form ref={formRef} action={formAction}>
           <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
             <span className="min-w-0 break-all text-[12px] font-bold text-slate-400">
               Reply to: {leadEmail}
@@ -39,6 +48,7 @@ export function LeadReplyForm({
               name="body"
               rows={5}
               required
+              onKeyDown={handleReplyKeyDown}
               className="w-full resize-none rounded border-0 bg-transparent px-0 py-2 text-[14px] text-[var(--foreground)] placeholder:text-gray-500 focus:outline-none"
               placeholder="Write your response here..."
             />
@@ -85,7 +95,11 @@ export function LeadReplyForm({
       <p className="mt-1 text-sm text-neutral-500">
         Email will be sent to <strong className="text-neutral-700">{leadEmail}</strong>.
       </p>
-      <form action={formAction} className="mt-5 space-y-4">
+      <form
+        ref={formRef}
+        action={formAction}
+        className="mt-5 space-y-4"
+      >
         <div>
           <label
             htmlFor="reply-body"
@@ -98,6 +112,7 @@ export function LeadReplyForm({
             name="body"
             rows={5}
             required
+            onKeyDown={handleReplyKeyDown}
             className="mt-1.5 w-full rounded-md border border-neutral-300 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400/30"
             placeholder="Write your reply..."
           />

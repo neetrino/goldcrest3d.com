@@ -9,6 +9,7 @@ import {
   startTransition,
 } from "react";
 import { submitQuote } from "@/app/actions/quote";
+import { notifyAdminLeadsUpdated } from "@/lib/adminLeadsBroadcast";
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import type { QuoteSubmitResult } from "@/app/actions/quote";
@@ -19,9 +20,9 @@ import {
 } from "@/lib/validations/quoteAttachment";
 
 const QUOTE_ATTACHMENT_FIELD_NAME = "attachment";
-/** Picker shows images + PDF; server allows PNG, JPEG/JPG, PDF only */
+/** Picker shows images + PDF; server allows PNG, JPEG/JPG, WebP, PDF */
 const ACCEPT_ATTRIBUTE =
-  "image/png,image/jpeg,image/jpg,.jpg,.jpeg,.jfif,application/pdf,image/*";
+  "image/png,image/jpeg,image/webp,image/jpg,.jpg,.jpeg,.jfif,.webp,application/pdf,image/*";
 
 const initialState: QuoteSubmitResult = null;
 
@@ -45,7 +46,11 @@ function setFileInputFiles(input: HTMLInputElement | null, files: File[]) {
 
 function isImageFile(file: File): boolean {
   const t = resolveQuoteAttachmentContentType(file);
-  return t === "image/png" || t === "image/jpeg";
+  return (
+    t === "image/png" ||
+    t === "image/jpeg" ||
+    t === "image/webp"
+  );
 }
 
 function buildFileWithPreview(file: File): FileWithPreview {
@@ -128,6 +133,7 @@ export function QuoteForm() {
   }, [items]);
   useEffect(() => {
     if (state?.success !== true) return;
+    notifyAdminLeadsUpdated();
     const toRevoke = itemsRef.current;
     startTransition(() => {
       toRevoke.forEach((i) => {
@@ -294,7 +300,7 @@ export function QuoteForm() {
               </>
             )}
             <p className="mt-1 font-manrope text-[12px] font-normal leading-[16px] text-[rgba(24,22,16,0.4)]">
-              PNG, JPG, JPEG, PDF up to 10MB
+              PNG, JPG, JPEG, WebP, PDF up to 10MB
             </p>
           </label>
         </div>

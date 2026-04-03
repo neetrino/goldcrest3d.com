@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { R2_PREFIXES } from "@/constants";
 import { prisma } from "@/lib/db";
 import { sendNewLeadNotificationToAdmin } from "@/lib/email";
@@ -73,6 +74,9 @@ export async function submitQuote(
     message: parsed.data.message,
     attachmentCount: attachmentKeys.length,
   });
+
+  revalidatePath("/admin", "layout");
+  revalidatePath("/admin/leads");
 
   return { success: true };
 }

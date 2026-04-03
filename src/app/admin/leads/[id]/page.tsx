@@ -12,5 +12,9 @@ export default async function AdminLeadDetailPage({
   const { id } = await params;
   const lead = await prisma.lead.findUnique({ where: { id } });
   if (!lead) notFound();
+  await prisma.lead.updateMany({
+    where: { id, readAt: null },
+    data: { readAt: new Date() },
+  });
   redirect(`/admin/leads?selected=${id}`);
 }
