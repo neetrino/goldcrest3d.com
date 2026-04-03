@@ -42,7 +42,7 @@ function fileExtensionLower(name: string): string | null {
  */
 export function resolveQuoteAttachmentContentType(file: File): string | null {
   const raw = (file.type ?? "").trim().toLowerCase();
-  let normalized =
+  const normalized =
     raw === "image/jpg" || raw === "image/pjpeg" ? "image/jpeg" : raw;
 
   if (ALLOWED_SET.has(normalized)) {
