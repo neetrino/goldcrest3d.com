@@ -42,6 +42,12 @@
   --manufacturing-intelligence-photo-scale-lg: 1.26;
   /** 3D Printing Strategy detail — նկարը մի քիչ ցածր frame-ի կենտրոնից */
   --manufacturing-printing-strategy-resin-detail-nudge-y: 16px;
+  /** Mechanical Stress & Load — միայն lg+ (min-width 1024px): translateX (դրական = աջ)։ */
+  --manufacturing-mechanical-stress-detail-nudge-x-lg: 88px;
+  /** Mechanical Stress & Load — միայն lg+։ ցուցադրման լայնություն (բազային 980px)։ */
+  --manufacturing-mechanical-stress-detail-display-width-lg: 840px;
+  /** Mechanical Stress & Load — միայն lg+։ scale, երբ `max-h-full`-ը սահմանափակում է բարձրությունը։ */
+  --manufacturing-mechanical-stress-detail-scale-lg: 0.88;
   /** Casting Compensation detail — միայն նկարը մի քիչ վերև (բացասական = վերև) */
   --manufacturing-casting-compensation-detail-nudge-y: -25px;
   /** Casting Compensation detail — դեպի աջ (դրական = աջ) */
@@ -104,6 +110,10 @@
    * Wall Thickness Engineering — միայն lg+ (min-width 1024px): լրացուցիչ translateX (դրական = աջ)։
    */
   --manufacturing-wall-thickness-detail-nudge-x-lg-offset: 125px;
+  /**
+   * Wall Thickness Engineering — միայն lg+։ լրացուցիչ translateY (բացասական = վերև)։
+   */
+  --manufacturing-wall-thickness-detail-nudge-y-lg-offset: -24px;
   /**
    * Stone Seat Geometry — ցուցադրման լայնություն (ֆայլը 666×702 է, aspect 37/39).
    * Նկատի ունեցիր՝ lg+ շատ հաճախ սահմանափակվում է `max-h-full`-ով (կադրի բարձրություն),
@@ -978,19 +988,22 @@ section[id] {
   }
 
   /**
-   * Միայն «ստանդարտ» detail (առանց --*- մոդիֆիկատորի) — `transform: none`։
-   * Մոդիֆիկատոր ունեցող տարրերի վրա `transform: none` չդնել — cascade-ում կարող է չհաղթել կամ կարգը խառնվել։
+   * Միայն «ստանդարտ» detail (առանց `manufacturing-intelligence-photo-detail--*` մոդիֆիկատոր class-ի) — `transform: none`։
+   * Նոր մոդիֆիկատոր ավելացնելիս այստեղ չի պետք շղթա թարմացնել — class-ի substring-ով ստուգում է։
    */
   .manufacturing-intelligence-photo-detail {
     object-position: left center;
   }
 
-  .manufacturing-intelligence-photo-detail:not(
-      .manufacturing-intelligence-photo-detail--printing-strategy-resin
-    ):not(.manufacturing-intelligence-photo-detail--casting-compensation-metal-flow):not(
-      .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting
-    ):not(.manufacturing-intelligence-photo-detail--wall-thickness-engineering) {
+  .manufacturing-intelligence-photo-detail:not([class*="manufacturing-intelligence-photo-detail--"]) {
     transform: none;
+  }
+
+  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--mechanical-stress-load-distribution {
+    transform: translateX(var(--manufacturing-mechanical-stress-detail-nudge-x-lg))
+      scale(var(--manufacturing-mechanical-stress-detail-scale-lg));
+    transform-origin: left center;
+    width: var(--manufacturing-mechanical-stress-detail-display-width-lg);
   }
 
   .manufacturing-intelligence-photo-detail--printing-strategy-resin {
@@ -1027,7 +1040,10 @@ section[id] {
         var(--manufacturing-wall-thickness-detail-nudge-x) +
           var(--manufacturing-wall-thickness-detail-nudge-x-lg-offset)
       ),
-      var(--manufacturing-wall-thickness-detail-nudge-y)
+      calc(
+        var(--manufacturing-wall-thickness-detail-nudge-y) +
+          var(--manufacturing-wall-thickness-detail-nudge-y-lg-offset)
+      )
     ) scale(var(--manufacturing-wall-thickness-detail-scale-lg));
     transform-origin: left center;
     width: var(--manufacturing-wall-thickness-detail-display-width-lg);

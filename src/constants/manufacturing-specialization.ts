@@ -22,6 +22,7 @@ export const MANUFACTURING_DETAIL_IMAGE_WALL_THICKNESS_HEIGHT_PX = 590;
 
 export const MANUFACTURING_DETAIL_PHOTO_LAYOUT = {
   STANDARD: "standard",
+  MECHANICAL_STRESS_LOAD_DISTRIBUTION: "mechanical-stress-load-distribution",
   PRINTING_STRATEGY_RESIN: "printing-strategy-resin",
   CASTING_COMPENSATION_METAL_FLOW: "casting-compensation-metal-flow",
   STONE_SEAT_GEOMETRY_SETTING: "stone-seat-geometry-setting",
@@ -37,6 +38,13 @@ export type ManufacturingDetailPhotoLayout =
 export function resolveManufacturingDetailImageDimensions(
   layout: ManufacturingDetailPhotoLayout | undefined,
 ): { widthPx: number; heightPx: number; photoLayout: ManufacturingDetailPhotoLayout } {
+  if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.MECHANICAL_STRESS_LOAD_DISTRIBUTION) {
+    return {
+      widthPx: MANUFACTURING_DETAIL_IMAGE_WIDTH_PX,
+      heightPx: MANUFACTURING_DETAIL_IMAGE_HEIGHT_PX,
+      photoLayout: MANUFACTURING_DETAIL_PHOTO_LAYOUT.MECHANICAL_STRESS_LOAD_DISTRIBUTION,
+    };
+  }
   if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.PRINTING_STRATEGY_RESIN) {
     return {
       widthPx: MANUFACTURING_DETAIL_IMAGE_PRINTING_STRATEGY_WIDTH_PX,
@@ -75,6 +83,9 @@ export function resolveManufacturingDetailImageDimensions(
 export function getManufacturingDetailPhotoLayoutClassName(
   layout: ManufacturingDetailPhotoLayout,
 ): string {
+  if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.MECHANICAL_STRESS_LOAD_DISTRIBUTION) {
+    return "manufacturing-intelligence-photo-detail--mechanical-stress-load-distribution";
+  }
   if (layout === MANUFACTURING_DETAIL_PHOTO_LAYOUT.PRINTING_STRATEGY_RESIN) {
     return "manufacturing-intelligence-photo-detail--printing-strategy-resin";
   }
@@ -135,6 +146,8 @@ export const MANUFACTURING_SPECIALIZATION_ITEMS: readonly ManufacturingSpecializ
       detailImageSrc: LANDING_IMAGES.manufacturingMechanicalStressLoadDistribution,
       detailImageAlt:
         "Ring finite element analysis showing mechanical stress and load distribution",
+      detailPhotoLayout:
+        MANUFACTURING_DETAIL_PHOTO_LAYOUT.MECHANICAL_STRESS_LOAD_DISTRIBUTION,
     },
     {
       id: MANUFACTURING_SPECIALIZATION_IDS.PRINTING_STRATEGY_RESIN,
