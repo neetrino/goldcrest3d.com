@@ -134,28 +134,6 @@
 
   /* Section1 mobile hero: `next/image` in PowerBanners (Figma 367×679, block aspect 20/37). */
 
-  .power-banners-section2-block::before {
-    width: 100%;
-    left: 0;
-    height: 100%;
-    background-color: #000;
-    background-image: var(--section2-hero-bg-mobile, var(--section2-hero-bg));
-    background-size: cover;
-    background-position: left center;
-    background-repeat: no-repeat;
-  }
-
-  .power-banners-section3-block::before {
-    width: 100%;
-    left: 0;
-    height: 100%;
-    background-color: #fff;
-    background-image: var(--section3-hero-bg-mobile, var(--section3-hero-bg));
-    background-size: cover;
-    background-position: left center;
-    background-repeat: no-repeat;
-  }
-
   #hero-modeling-text-group {
     transform: translateY(-68px) !important;
   }

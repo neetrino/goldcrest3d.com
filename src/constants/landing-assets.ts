@@ -1,7 +1,6 @@
 /**
  * Landing page image URLs — Figma design (Goldcrest 3D, node 92:83).
- * Use unoptimized so Next doesn't proxy (avoids 400).
- * Replace with /images/... when you export final assets to public.
+ * Տեղական ու remote URL-ները թույլատրված են `next.config.ts` `images.remotePatterns`-ում — `next/image` օպտիմիզացիա։
  */
 
 export const LANDING_IMAGES = {
@@ -13,13 +12,12 @@ export const LANDING_IMAGES = {
   heroDesign: "/images/design/hero-jewelry-design-brief.png",
   /** Modeling Specialization blocks (Figma export) */
   modelingHipHop: "/images/modeling/hip-hop.png",
-  /** Bridal & Engagement — Figma 378:723, локальный PNG (качество без срока MCP) */
-  modelingBridal: "/images/modeling/bridal-engagement.png",
+  /** Bridal & Engagement — webp (նույն ասեթը, ավելի փոքր ֆայլ) */
+  modelingBridal: "/images/modeling/bridal-engagement.webp",
   /** High Jewelry — Figma 378:751, локальный PNG (качество без срока MCP) */
   modelingHighJewelry: "/images/modeling/high-jewelry.png",
-  /** Mechanical & Lock Systems — full-bleed block. Use local: put your image at public/images/modeling/mechanical-lock-systems.png and set to "/images/modeling/mechanical-lock-systems.png" */
-  modelingMechanical:
-    "https://www.figma.com/api/mcp/asset/d547c3a3-48a4-4c4b-b752-f38344605292",
+  /** Mechanical & Lock Systems — full-bleed (լոկալ webp) */
+  modelingMechanical: "/images/modeling/mechanical-lock-systems.webp",
   modelingPortrait: "/images/modeling/portrait-jewelry.png",
   /** Ancient & Heritage Jewelry — full-bleed, jewelry left, cream background */
   modelingHeritage: "/images/modeling/ancient-heritage.png",

@@ -13,7 +13,7 @@ import { useMemo, useState } from "react";
 import { MANUFACTURING_IMAGE_OPACITY_CLASS } from "./manufacturing-image.constants";
 import { useManufacturingDetailLayers } from "./useManufacturingDetailLayers";
 
-/** Figma accordion chevron — 24×14, ներքևի սլաք */
+/** Figma accordion chevron â€” 24Ã—14, Õ¶Õ¥Ö€Ö„Ö‡Õ« Õ½Õ¬Õ¡Ö„ */
 const MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX = 24;
 const MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX = 14;
 
@@ -157,7 +157,6 @@ export function SectionManufacturing() {
                   src={LANDING_IMAGES.manufacturing}
                   alt={defaultManufacturingAlt}
                   fill
-                  unoptimized
                   sizes="(max-width: 1024px) 100vw, 45vw"
                   className={`manufacturing-intelligence-photo ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
                     detailObscuresDefault
@@ -178,7 +177,6 @@ export function SectionManufacturing() {
                       alt={slot0.alt}
                       width={slot0.widthPx}
                       height={slot0.heightPx}
-                      unoptimized
                       sizes="(max-width: 1024px) 100vw, 45vw"
                       className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
                         slot0.photoLayout,
@@ -201,7 +199,6 @@ export function SectionManufacturing() {
                       alt={slot1.alt}
                       width={slot1.widthPx}
                       height={slot1.heightPx}
-                      unoptimized
                       sizes="(max-width: 1024px) 100vw, 45vw"
                       className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
                         slot1.photoLayout,

@@ -49,7 +49,6 @@ export function ModelingBlockHeritage({
             fill
             className="h-full w-full object-cover object-center"
             sizes="(max-width: 767px) 100vw, 50vw"
-            unoptimized
           />
         ) : (
           <>
@@ -60,7 +59,6 @@ export function ModelingBlockHeritage({
                 fill
                 className="min-h-0 min-w-0 h-full w-full object-cover object-center"
                 sizes="(max-width: 767px) 100vw, 0px"
-                unoptimized
               />
             </div>
             <div className="absolute inset-0 hidden md:block">
@@ -70,7 +68,6 @@ export function ModelingBlockHeritage({
                 fill
                 className="h-full w-full object-cover object-center"
                 sizes="(max-width: 1280px) 50vw, 33vw"
-                unoptimized
               />
             </div>
           </>

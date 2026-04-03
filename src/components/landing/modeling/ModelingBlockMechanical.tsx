@@ -17,7 +17,7 @@ const DESCRIPTION_MOBILE_LINES = [
   "engineered for controlled movement.",
 ] as const;
 
-/** Desktop line breaks — match design baseline (left-aligned block, ragged right). */
+/** Desktop line breaks â€” match design baseline (left-aligned block, ragged right). */
 const DESCRIPTION_LINES = [
   "Tolerance-calibrated clasps, hinges and",
   "multi-part articulated",
@@ -55,7 +55,6 @@ export function ModelingBlockMechanical({
             fill
             className="h-full w-full object-cover object-center"
             sizes="(max-width: 767px) 100vw, 50vw"
-            unoptimized
           />
         ) : (
           <>
@@ -66,7 +65,6 @@ export function ModelingBlockMechanical({
                 fill
                 className="min-h-0 min-w-0 h-full w-full object-cover object-center"
                 sizes="(max-width: 767px) 100vw, 0px"
-                unoptimized
               />
             </div>
             <div className="absolute inset-0 hidden md:block">
@@ -76,7 +74,6 @@ export function ModelingBlockMechanical({
                 fill
                 className="h-full w-full object-cover object-center"
                 sizes="(max-width: 1280px) 50vw, 33vw"
-                unoptimized
               />
             </div>
           </>
