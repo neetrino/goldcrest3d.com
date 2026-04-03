@@ -59,9 +59,10 @@ const RENDERING_SUBTITLE_MOBILE_LINE4 = "every light ray.";
 const DESIGN_SUBTITLE_LINE1 = "Concept-to-CAD development for legacy";
 const DESIGN_SUBTITLE_LINE2 = "collection building. Your vision, engineered.";
 
-/** Section2 — text column left; cluster nudge disabled (padding handles inset). */
+/** Section2 — text cluster horizontal nudge via CSS var; mobile stays 0. */
 const SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX = 0;
-const SECTION2_TEXT_CLUSTER_NUDGE_MD_PX = 0;
+/** Desktop (md+): Jewelry Rendering block — slight shift right (px); mobile unchanged. */
+const SECTION2_TEXT_CLUSTER_NUDGE_MD_PX = 90;
 const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
 
 /** Section2 — Jewelry Rendering ֆոնի մասշտաբ (լայնություն+բարձրություն համամասնորեն); բլոկը նույնը */
