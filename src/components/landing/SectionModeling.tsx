@@ -27,9 +27,9 @@ export function SectionModeling({ modeling }: SectionModelingProps) {
       className="bg-white px-3 md:px-5"
       aria-labelledby="modeling-specialization"
     >
-      <div className="modeling-specialization-cq mx-auto w-full max-w-[1920px]">
+      <div className="modeling-specialization-cq ms-0 me-auto w-full max-w-[1920px]">
         <div className="modeling-specialization-scale py-6 md:py-[calc(67px*var(--ms,1))]">
-          <div className="flex min-h-[calc(140px*var(--ms,1))] w-full min-w-0 flex-col items-center justify-center overflow-visible py-6 md:min-h-[calc(200px*var(--ms,1))] md:overflow-hidden md:py-0">
+          <div className="flex min-h-[calc(140px*var(--ms,1))] w-full min-w-0 flex-col items-center justify-center overflow-visible py-6 md:min-h-[calc(200px*var(--ms,1))] md:items-stretch md:justify-center md:overflow-hidden md:py-0">
             <ModelingSpecializationTitle />
           </div>
 

@@ -122,10 +122,10 @@ export function SectionManufacturing() {
       className="overflow-hidden bg-[#f8f7f6] px-4 py-16 md:px-6 md:py-24"
       aria-labelledby="manufacturing-heading"
     >
-      <div className="mx-auto w-full max-w-[1612px]">
+      <div className="ms-0 me-auto w-full max-w-[1612px]">
         <h2
           id="manufacturing-heading"
-          className="manufacturing-intelligence-heading hidden text-left font-manrope text-[48px] font-normal leading-[40px] tracking-[-0.9px] text-black lg:block"
+          className="manufacturing-intelligence-heading hidden text-left font-manrope text-[48px] font-normal leading-[40px] tracking-[-0.9px] text-black lg:block lg:whitespace-nowrap"
         >
           Manufacturing Intelligence
         </h2>
