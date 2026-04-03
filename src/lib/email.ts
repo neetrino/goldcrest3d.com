@@ -2,7 +2,13 @@
  * Resend — reply to leads, payment link email.
  */
 
-import { Resend } from "resend";
+import { type Attachment, Resend } from "resend";
+
+import {
+  LEAD_REPLY_LOGO_CONTENT_ID,
+  LEAD_REPLY_LOGO_PATH,
+  loadLeadReplyLogoAttachment,
+} from "@/lib/emailLeadReplyLogo";
 
 const FROM_DISPLAY_NAME = "Goldcrest 3D";
 
@@ -42,11 +48,13 @@ export async function sendEmail({
   subject,
   text,
   html,
+  attachments,
 }: {
   to: string | string[];
   subject: string;
   text?: string;
   html?: string;
+  attachments?: Attachment[];
 }): Promise<SendEmailResult> {
   if (!resend) {
     return { success: false, error: "Email is not configured (RESEND_API_KEY)." };
@@ -65,6 +73,7 @@ export async function sendEmail({
       subject,
       text: textContent,
       html: htmlContent,
+      ...(attachments?.length ? { attachments } : {}),
     });
     if (error) {
       return { success: false, error: error.message };
@@ -120,8 +129,19 @@ export async function sendReplyToLead({
 }): Promise<SendEmailResult> {
   const subject = "Goldcrest 3D — reply to your request";
   const text = body.trim();
-  const html = buildLeadReplyBrandedHtml(text);
-  return sendEmail({ to, subject, text, html });
+  const baseUrl = resolvePublicBaseUrl();
+  const inlineLogo = await loadLeadReplyLogoAttachment();
+  const logoImgSrc = inlineLogo
+    ? `cid:${LEAD_REPLY_LOGO_CONTENT_ID}`
+    : `${baseUrl}${LEAD_REPLY_LOGO_PATH}`;
+  const html = buildLeadReplyBrandedHtml(text, logoImgSrc);
+  return sendEmail({
+    to,
+    subject,
+    text,
+    html,
+    attachments: inlineLogo ? [inlineLogo] : undefined,
+  });
 }
 
 /**
@@ -155,15 +175,12 @@ function leadReplyBodyToHtmlParagraphs(plain: string): string {
     .join("");
 }
 
-/** Public path — PNG for broad email client support (not SVG). */
-const LEAD_REPLY_LOGO_PATH = "/images/email-logo-mark.png";
-
-function buildLeadReplyHeaderRow(baseUrl: string): string {
-  const logoUrl = `${baseUrl}${LEAD_REPLY_LOGO_PATH}`;
+function buildLeadReplyHeaderRow(logoImgSrc: string): string {
+  const safeSrc = escapeHtml(logoImgSrc);
   return `
   <tr>
     <td style="background-color:${EMAIL_HEADER_BG};padding:28px 32px 22px 32px;text-align:center;border-bottom:1px solid #1e293b;">
-      <img src="${logoUrl}" alt="Goldcrest 3D" width="120" height="120" style="display:block;margin:0 auto 18px auto;width:120px;max-width:120px;height:auto;border:0;outline:none;text-decoration:none;" />
+      <img src="${safeSrc}" alt="Goldcrest 3D" width="120" height="120" style="display:block;margin:0 auto 18px auto;width:120px;max-width:120px;height:auto;border:0;outline:none;text-decoration:none;" />
       <p style="margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:${EMAIL_HEADER_MUTED};line-height:1.4;">Reply to your request</p>
       <div style="margin:18px auto 0 auto;width:40px;height:3px;background-color:${EMAIL_ACCENT};border-radius:2px;font-size:0;line-height:0;">&nbsp;</div>
     </td>
@@ -186,10 +203,10 @@ function buildLeadReplyFooterRow(baseUrl: string): string {
 /**
  * Branded HTML for lead replies: header, logo, readable body, footer link.
  */
-function buildLeadReplyBrandedHtml(plainBody: string): string {
+function buildLeadReplyBrandedHtml(plainBody: string, logoImgSrc: string): string {
   const baseUrl = resolvePublicBaseUrl();
   const bodyHtml = leadReplyBodyToHtmlParagraphs(plainBody);
-  const headerRow = buildLeadReplyHeaderRow(baseUrl);
+  const headerRow = buildLeadReplyHeaderRow(logoImgSrc);
   const footerRow = buildLeadReplyFooterRow(baseUrl);
   return `<!DOCTYPE html>
 <html lang="en">
