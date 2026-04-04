@@ -22,6 +22,7 @@ export function DesignHeroSlideBackgrounds({
           src={SECTION3_HERO_BG_MOBILE_PATH}
           alt=""
           fill
+          unoptimized
           sizes={HERO_MOBILE_IMAGE_SIZES}
           className="object-cover object-left"
         />
