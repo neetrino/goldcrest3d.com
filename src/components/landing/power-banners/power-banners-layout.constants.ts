@@ -56,5 +56,5 @@ export const SECTION3_HERO_BG_MOBILE_PATH =
 export const SECTION3_TEXT_COLUMN_TOP_MD_CLASS = "md:top-[47%]";
 
 /** Hero desktop `sizes` — մոտավորապես լայնության սահմանափակում */
-export const HERO_DESKTOP_IMAGE_SIZES = "(max-width: 767px) 0px, min(100vw, 1920px)";
-export const HERO_MOBILE_IMAGE_SIZES = "(max-width: 767px) min(100vw, 390px), 0px";
+export const HERO_DESKTOP_IMAGE_SIZES = "(max-width: 767px) 0px, 100vw";
+export const HERO_MOBILE_IMAGE_SIZES = "(max-width: 767px) 100vw, 0px";

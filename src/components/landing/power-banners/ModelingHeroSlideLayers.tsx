@@ -27,6 +27,7 @@ export function ModelingHeroSlideLayers({
           alt=""
           fill
           priority
+          unoptimized
           sizes={HERO_MOBILE_IMAGE_SIZES}
           className="h-full w-full object-cover object-center"
         />
