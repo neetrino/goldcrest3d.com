@@ -1,13 +1,19 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { R2_PREFIXES } from "@/constants";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
 import { sendEmail } from "@/lib/email";
 import { uploadToR2 } from "@/lib/storage";
-import { orderFormSchema } from "@/lib/validations/orderForm";
+import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
+import {
+  createOrderFormSchema,
+  orderFormSchema,
+} from "@/lib/validations/orderForm";
 import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
+import { logger } from "@/lib/logger";
 
 export type CreateOrderResult =
   | { success: true; orderId: string }
@@ -36,7 +42,6 @@ export async function createOrder(
   const clientEmail = formData.get("clientEmail");
   const productTitle = formData.get("productTitle");
   const priceAmdRaw = formData.get("priceCents");
-  const paymentType = formData.get("paymentType");
   const file = formData.get(FORM_FIELD_PRODUCT_IMAGE);
 
   const priceAmdParsed =
@@ -44,12 +49,11 @@ export async function createOrder(
       ? parseInt(priceAmdRaw.trim(), 10)
       : NaN;
 
-  const parsed = orderFormSchema.safeParse({
+  const parsed = createOrderFormSchema.safeParse({
     clientName: typeof clientName === "string" ? clientName : "",
     clientEmail: typeof clientEmail === "string" ? clientEmail : "",
     productTitle: typeof productTitle === "string" ? productTitle : "",
     priceAmd: Number.isNaN(priceAmdParsed) ? 0 : priceAmdParsed,
-    paymentType: paymentType === "SPLIT" ? "SPLIT" : "FULL",
   });
 
   if (!parsed.success) {
@@ -59,7 +63,6 @@ export async function createOrder(
       first.clientEmail?.[0] ??
       first.productTitle?.[0] ??
       first.priceAmd?.[0] ??
-      first.paymentType?.[0] ??
       "Invalid data";
     return { success: false, error: msg };
   }
@@ -80,7 +83,7 @@ export async function createOrder(
         productTitle: parsed.data.productTitle,
         productImageKey,
         priceCents: parsed.data.priceAmd,
-        paymentType: parsed.data.paymentType,
+        paymentType: ORDER_PAYMENT_TYPE.UNSET,
       },
     });
     return { success: true, orderId: order.id };
@@ -107,7 +110,7 @@ export async function updateOrder(
   const clientEmail = formData.get("clientEmail");
   const productTitle = formData.get("productTitle");
   const priceAmdRaw = formData.get("priceCents");
-  const paymentType = formData.get("paymentType");
+  const paymentTypeRaw = formData.get("paymentType");
   const file = formData.get(FORM_FIELD_PRODUCT_IMAGE);
 
   const priceAmdParsed =
@@ -115,12 +118,19 @@ export async function updateOrder(
       ? parseInt(priceAmdRaw.trim(), 10)
       : NaN;
 
+  const paymentTypeFromForm =
+    paymentTypeRaw === "SPLIT"
+      ? "SPLIT"
+      : paymentTypeRaw === "FULL"
+        ? "FULL"
+        : undefined;
+
   const parsed = orderFormSchema.safeParse({
     clientName: typeof clientName === "string" ? clientName : "",
     clientEmail: typeof clientEmail === "string" ? clientEmail : "",
     productTitle: typeof productTitle === "string" ? productTitle : "",
     priceAmd: Number.isNaN(priceAmdParsed) ? existing.priceCents : priceAmdParsed,
-    paymentType: paymentType === "SPLIT" ? "SPLIT" : "FULL",
+    paymentType: paymentTypeFromForm,
   });
 
   if (!parsed.success) {
@@ -207,6 +217,24 @@ export async function sendPaymentLink(
   });
 
   if (!result.success) return { success: false, error: result.error };
+
+  let persisted = false;
+  try {
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { paymentLinkSentAt: new Date() },
+    });
+    persisted = true;
+  } catch (err) {
+    // Email already sent — do not return failure (avoids duplicate sends if admin retries).
+    logger.error("sendPaymentLink: persist paymentLinkSentAt failed", err);
+  }
+
+  if (persisted) {
+    revalidatePath("/admin/orders");
+    revalidatePath(`/admin/orders/${orderId}`);
+  }
+
   return { success: true };
 }
 

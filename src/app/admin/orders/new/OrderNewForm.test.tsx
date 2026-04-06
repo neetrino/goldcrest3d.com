@@ -28,22 +28,12 @@ describe("OrderNewForm", () => {
     expect(screen.getByLabelText(/product image \(optional\)/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/price \(amd\)/i)).toBeInTheDocument();
 
-    expect(screen.getByRole("radio", { name: /full \(full\)/i })).toBeInTheDocument();
-    expect(screen.getByRole("radio", { name: /50–50 \(split\)/i })).toBeInTheDocument();
-
     const submit = screen.getByRole("button", { name: /save order/i });
     expect(submit).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /cancel/i })).toHaveAttribute(
       "href",
       "/admin/orders"
     );
-  });
-
-  it("FULL payment type is selected by default", () => {
-    render(<OrderNewForm />);
-    const fullRadios = screen.getAllByRole("radio", { name: /full \(full\)/i });
-    expect(fullRadios.length).toBeGreaterThan(0);
-    expect(fullRadios[0]).toBeChecked();
   });
 
   it("shows lead email suggestions on click when lead emails are provided", () => {

@@ -1,3 +1,4 @@
+import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
 import { ORDER_STATUS } from "@/constants/order-status";
 
 type OrderLike = {
@@ -34,6 +35,13 @@ export function resolveOrderPaymentAmount(
   const remaining = total - paid;
   if (remaining <= 0) {
     return { ok: false, error: "No amount due for payment." };
+  }
+
+  if (order.paymentType === ORDER_PAYMENT_TYPE.UNSET) {
+    return {
+      ok: false,
+      error: "Choose how you want to pay on the order page before continuing.",
+    };
   }
 
   if (order.paymentType === "SPLIT") {

@@ -6,8 +6,11 @@ import { getR2PublicUrl } from "@/lib/storage";
 import { formatPriceAmd } from "@/lib/formatPrice";
 import { ORDER_STATUS } from "@/constants/order-status";
 import { isSimulatedPaymentFlow } from "@/lib/payment/config";
+import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
+import { formatOrderPaymentTypeLabel } from "@/lib/payment/paymentTypeLabels";
 import { MockPaymentHoldActions } from "./MockPaymentHoldActions";
 import { OrderPayActions } from "./OrderPayActions";
+import { OrderPaymentTypeChoice } from "./OrderPaymentTypeChoice";
 
 type Props = {
   params: Promise<{ token: string }>;
@@ -38,6 +41,10 @@ export default async function OrderPaymentPage({ params, searchParams }: Props) 
   const isPaid = order.status === "PAID" || paid >= total;
   const half = Math.floor(total / 2);
   const firstHalfPaid = paid >= half;
+  const needsClientPaymentTypeChoice =
+    order.paymentType === ORDER_PAYMENT_TYPE.UNSET &&
+    !isPaid &&
+    order.status !== ORDER_STATUS.PAYMENT_PROCESSING;
 
   const productImageUrl = order.productImageKey
     ? getR2PublicUrl(order.productImageKey)
@@ -108,10 +115,10 @@ export default async function OrderPaymentPage({ params, searchParams }: Props) 
           )}
           <div className="flex justify-between text-sm">
             <dt className="text-neutral-500">Payment type</dt>
-            <dd>
-              {order.paymentType === "SPLIT"
-                ? "50% + 50%"
-                : "Full amount"}
+            <dd className="max-w-[14rem] text-right text-neutral-800">
+              {needsClientPaymentTypeChoice
+                ? "You will choose below"
+                : formatOrderPaymentTypeLabel(order.paymentType)}
             </dd>
           </div>
         </dl>
@@ -148,7 +155,9 @@ export default async function OrderPaymentPage({ params, searchParams }: Props) 
               )}
             </>
           )}
-          {isPaid ? (
+          {needsClientPaymentTypeChoice ? (
+            <OrderPaymentTypeChoice token={order.token} totalCents={total} />
+          ) : isPaid ? (
             <p className="rounded bg-green-50 py-3 text-center font-medium text-green-800">
               Order is fully paid
             </p>

@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 
@@ -21,13 +20,7 @@ import {
   getPreview,
   getSubject,
 } from "./adminLeadsInbox.helpers";
-import {
-  IconBell,
-  IconMail,
-  IconPlusThin,
-  IconSearch,
-  IconSlidersHorizontal,
-} from "./AdminLeadsInboxIcons";
+import { IconMail, IconSearch } from "./AdminLeadsInboxIcons";
 import { useAdminLeadsUnread } from "../AdminLeadsUnreadContext";
 
 type AdminLeadsInboxProps = {
@@ -36,7 +29,7 @@ type AdminLeadsInboxProps = {
 };
 
 /**
- * Inbox layout per Figma: header (search + New Lead), list column, detail column with reply.
+ * Inbox layout per Figma: header (search), list column, detail column with reply.
  */
 export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
   const router = useRouter();
@@ -71,8 +64,8 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col bg-white lg:min-h-0">
-      {/* Header: search + New Lead */}
-      <header className="flex min-h-[4rem] shrink-0 flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 lg:h-16 lg:flex-nowrap lg:px-6 lg:py-0">
+      {/* Header: search */}
+      <header className="flex min-h-[4rem] shrink-0 flex-wrap items-center gap-3 border-b border-slate-200 px-4 py-3 lg:h-16 lg:flex-nowrap lg:px-6 lg:py-0">
         <div className="relative min-w-0 flex-1 lg:max-w-[448px]">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
             <IconSearch />
@@ -86,23 +79,6 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
             aria-label="Search leads"
           />
         </div>
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <button
-            type="button"
-            className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-            aria-label="Notifications"
-          >
-            <IconBell />
-          </button>
-          <div className="h-6 w-px shrink-0 bg-slate-200" aria-hidden />
-          <Link
-            href="/#contact"
-            className="flex min-h-[44px] items-center gap-1.5 rounded-full bg-[var(--foreground)] px-4 py-2 text-[14px] font-medium text-white hover:opacity-90 lg:min-h-0 lg:py-1.5"
-          >
-            <IconPlusThin className="shrink-0 text-white" />
-            <span>New Lead</span>
-          </Link>
-        </div>
       </header>
 
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
@@ -111,15 +87,8 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
           className="flex w-full shrink-0 flex-col border-slate-200 border-b lg:h-auto lg:w-[380px] lg:border-b-0 lg:border-r"
           aria-label="All leads"
         >
-          <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4 lg:px-6">
+          <div className="border-b border-slate-200 px-4 py-4 lg:px-6">
             <h2 className="text-[16px] font-bold text-slate-800">All Leads</h2>
-            <button
-              type="button"
-              className="flex min-h-10 min-w-10 shrink-0 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-              aria-label="Filter or sort"
-            >
-              <IconSlidersHorizontal />
-            </button>
           </div>
           <div className="flex-1 overflow-y-auto">
             {filteredLeads.length === 0 ? (

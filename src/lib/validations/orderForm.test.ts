@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { orderFormSchema, PAYMENT_TYPES } from "./orderForm";
+import {
+  createOrderFormSchema,
+  orderFormSchema,
+  PAYMENT_TYPES,
+} from "./orderForm";
 
 describe("orderFormSchema", () => {
   it("accepts valid FULL order", () => {
@@ -86,6 +90,38 @@ describe("orderFormSchema", () => {
       productTitle: "Product",
       priceAmd: 100,
       paymentType: "HALF",
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects missing paymentType", () => {
+    const result = orderFormSchema.safeParse({
+      clientName: "Jane",
+      clientEmail: "jane@example.com",
+      productTitle: "Product",
+      priceAmd: 100,
+    });
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("createOrderFormSchema", () => {
+  it("accepts valid data without payment type field", () => {
+    const result = createOrderFormSchema.safeParse({
+      clientName: "Jane Doe",
+      clientEmail: "jane@example.com",
+      productTitle: "Custom bracket",
+      priceAmd: 15000,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects invalid email like orderFormSchema", () => {
+    const result = createOrderFormSchema.safeParse({
+      clientName: "Jane",
+      clientEmail: "invalid",
+      productTitle: "Product",
+      priceAmd: 100,
     });
     expect(result.success).toBe(false);
   });

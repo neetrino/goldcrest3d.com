@@ -9,8 +9,8 @@ import {
   ADMIN_ORDER_PAYMENT_BADGE_KIND,
   getAdminOrderPaymentBadgeKind,
 } from "@/lib/payment/adminPaymentDisplayStatus";
-import { OrderEditForm } from "./OrderEditForm";
 import { DeleteOrderButton } from "./DeleteOrderButton";
+import { formatOrderPaymentTypeLabel } from "@/lib/payment/paymentTypeLabels";
 import { PaymentLinkActions } from "./PaymentLinkActions";
 
 type Props = { params: Promise<{ id: string }> };
@@ -33,7 +33,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
     }) !== ADMIN_ORDER_PAYMENT_BADGE_KIND.PAID;
 
   return (
-    <div className="mx-auto max-w-2xl space-y-8 px-4 py-6 sm:px-6">
+    <div className="mx-auto w-full min-w-0 max-w-5xl space-y-8 px-4 py-6 sm:px-6">
       <Link
         href="/admin/orders"
         className="inline-flex items-center gap-1 text-sm font-medium text-neutral-600 transition-colors hover:text-[var(--foreground)]"
@@ -90,7 +90,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
               Payment type
             </dt>
-            <dd className="mt-0.5">{order.paymentType}</dd>
+            <dd className="mt-0.5">{formatOrderPaymentTypeLabel(order.paymentType)}</dd>
           </div>
           <div>
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
@@ -145,22 +145,11 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             <PaymentLinkActions
               orderId={order.id}
               paymentLinkUrl={getOrderPaymentUrl(order.token)}
+              paymentLinkSentFromDb={order.paymentLinkSentAt != null}
             />
           </div>
         </section>
       )}
-
-      <section className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
-        <h2 className="text-base font-semibold text-[var(--foreground)]">
-          Edit order
-        </h2>
-        <p className="mt-1 text-sm text-neutral-500">
-          Update client, product, or price.
-        </p>
-        <div className="mt-5">
-          <OrderEditForm order={order} />
-        </div>
-      </section>
 
       <section className="rounded-lg border border-red-200 bg-red-50/50 p-6">
         <h2 className="text-base font-semibold text-red-800">Danger zone</h2>
