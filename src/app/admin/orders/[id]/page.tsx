@@ -5,6 +5,10 @@ import { getOrderPaymentUrl } from "@/lib/appUrl";
 import { getR2PublicUrl } from "@/lib/storage";
 import { formatPriceAmd } from "@/lib/formatPrice";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
+import {
+  ADMIN_ORDER_PAYMENT_BADGE_KIND,
+  getAdminOrderPaymentBadgeKind,
+} from "@/lib/payment/adminPaymentDisplayStatus";
 import { OrderEditForm } from "./OrderEditForm";
 import { DeleteOrderButton } from "./DeleteOrderButton";
 import { PaymentLinkActions } from "./PaymentLinkActions";
@@ -19,6 +23,14 @@ export default async function AdminOrderDetailPage({ params }: Props) {
   const productImageUrl = order.productImageKey
     ? getR2PublicUrl(order.productImageKey)
     : null;
+
+  const showPaymentLinkSection =
+    getAdminOrderPaymentBadgeKind({
+      status: order.status,
+      paymentType: order.paymentType,
+      priceCents: order.priceCents,
+      paidCents: order.paidCents,
+    }) !== ADMIN_ORDER_PAYMENT_BADGE_KIND.PAID;
 
   return (
     <div className="mx-auto max-w-2xl space-y-8 px-4 py-6 sm:px-6">
@@ -121,20 +133,22 @@ export default async function AdminOrderDetailPage({ params }: Props) {
         </dl>
       </div>
 
-      <section className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
-        <h2 className="text-base font-semibold text-[var(--foreground)]">
-          Payment link
-        </h2>
-        <p className="mt-1 text-sm text-neutral-500">
-          Send the link to the client or copy it.
-        </p>
-        <div className="mt-4">
-          <PaymentLinkActions
-            orderId={order.id}
-            paymentLinkUrl={getOrderPaymentUrl(order.token)}
-          />
-        </div>
-      </section>
+      {showPaymentLinkSection && (
+        <section className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
+          <h2 className="text-base font-semibold text-[var(--foreground)]">
+            Payment link
+          </h2>
+          <p className="mt-1 text-sm text-neutral-500">
+            Send the link to the client or copy it.
+          </p>
+          <div className="mt-4">
+            <PaymentLinkActions
+              orderId={order.id}
+              paymentLinkUrl={getOrderPaymentUrl(order.token)}
+            />
+          </div>
+        </section>
+      )}
 
       <section className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
         <h2 className="text-base font-semibold text-[var(--foreground)]">
