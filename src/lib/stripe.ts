@@ -3,6 +3,7 @@
  */
 
 import Stripe from "stripe";
+import { AMD_MINOR_UNITS_PER_DRAM } from "@/constants/order-form";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
 
 const secretKey = process.env.STRIPE_SECRET_KEY;
@@ -24,20 +25,22 @@ export type CreateCheckoutSessionResult =
 /**
  * Creates a Stripe Checkout Session for an order (full or partial amount).
  * @param order - Order record (id, token, priceCents, productTitle, paymentType, paidCents)
- * @param amountCents - Amount to charge in this session (e.g. full price or 50%)
+ * @param amountWholeAmd - Amount to charge in whole AMD (Stripe gets minor units)
  * @param paymentIndex - For SPLIT: 0 = first 50%, 1 = second 50%. For FULL: undefined
  */
 export async function createCheckoutSession(
   order: OrderForCheckout,
-  amountCents: number,
+  amountWholeAmd: number,
   paymentIndex?: 0 | 1,
 ): Promise<CreateCheckoutSessionResult> {
   if (!stripe) {
     return { success: false, error: "Stripe is not configured (STRIPE_SECRET_KEY)." };
   }
-  if (amountCents <= 0) {
+  if (amountWholeAmd <= 0) {
     return { success: false, error: "Amount must be greater than 0." };
   }
+
+  const unitAmountMinor = Math.round(amountWholeAmd * AMD_MINOR_UNITS_PER_DRAM);
 
   const baseUrl = getOrderPaymentUrl(order.token);
   if (!baseUrl) {
@@ -60,7 +63,7 @@ export async function createCheckoutSession(
           quantity: 1,
           price_data: {
             currency: "amd",
-            unit_amount: amountCents,
+            unit_amount: unitAmountMinor,
             product_data: {
               name: label,
               description: order.productTitle,

@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { AMD_MINOR_UNITS_PER_DRAM } from "@/constants/order-form";
 
 const secretKey = process.env.STRIPE_SECRET_KEY;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -41,13 +42,14 @@ export async function POST(request: NextRequest) {
     return new Response("OK", { status: 200 });
   }
 
-  const amountTotal = session.amount_total ?? 0;
+  const amountTotalMinor = session.amount_total ?? 0;
 
   try {
     const order = await prisma.order.findUnique({ where: { id: orderId } });
     if (!order) return new Response("OK", { status: 200 });
 
-    const newPaidCents = order.paidCents + amountTotal;
+    const paidDeltaAmd = Math.round(amountTotalMinor / AMD_MINOR_UNITS_PER_DRAM);
+    const newPaidCents = order.paidCents + paidDeltaAmd;
     const isFullyPaid = newPaidCents >= order.priceCents;
 
     await prisma.order.update({

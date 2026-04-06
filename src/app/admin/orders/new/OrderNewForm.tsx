@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createOrder } from "@/app/actions/order";
@@ -19,8 +19,12 @@ export function OrderNewForm() {
     FormData
   >(createOrder, initialState);
 
-  if (state?.success === true) {
+  useEffect(() => {
+    if (state?.success !== true) return;
     router.push(`/admin/orders/${state.orderId}`);
+  }, [state, router]);
+
+  if (state?.success === true) {
     return null;
   }
 

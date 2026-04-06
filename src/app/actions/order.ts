@@ -35,20 +35,20 @@ export async function createOrder(
   const clientName = formData.get("clientName");
   const clientEmail = formData.get("clientEmail");
   const productTitle = formData.get("productTitle");
-  const priceCentsRaw = formData.get("priceCents");
+  const priceAmdRaw = formData.get("priceCents");
   const paymentType = formData.get("paymentType");
   const file = formData.get(FORM_FIELD_PRODUCT_IMAGE);
 
-  const priceCents =
-    typeof priceCentsRaw === "string" && priceCentsRaw.trim() !== ""
-      ? parseInt(priceCentsRaw.trim(), 10)
+  const priceAmdParsed =
+    typeof priceAmdRaw === "string" && priceAmdRaw.trim() !== ""
+      ? parseInt(priceAmdRaw.trim(), 10)
       : NaN;
 
   const parsed = orderFormSchema.safeParse({
     clientName: typeof clientName === "string" ? clientName : "",
     clientEmail: typeof clientEmail === "string" ? clientEmail : "",
     productTitle: typeof productTitle === "string" ? productTitle : "",
-    priceCents: Number.isNaN(priceCents) ? 0 : priceCents,
+    priceAmd: Number.isNaN(priceAmdParsed) ? 0 : priceAmdParsed,
     paymentType: paymentType === "SPLIT" ? "SPLIT" : "FULL",
   });
 
@@ -58,7 +58,7 @@ export async function createOrder(
       first.clientName?.[0] ??
       first.clientEmail?.[0] ??
       first.productTitle?.[0] ??
-      first.priceCents?.[0] ??
+      first.priceAmd?.[0] ??
       first.paymentType?.[0] ??
       "Invalid data";
     return { success: false, error: msg };
@@ -79,7 +79,7 @@ export async function createOrder(
         clientEmail: parsed.data.clientEmail,
         productTitle: parsed.data.productTitle,
         productImageKey,
-        priceCents: parsed.data.priceCents,
+        priceCents: parsed.data.priceAmd,
         paymentType: parsed.data.paymentType,
       },
     });
@@ -106,20 +106,20 @@ export async function updateOrder(
   const clientName = formData.get("clientName");
   const clientEmail = formData.get("clientEmail");
   const productTitle = formData.get("productTitle");
-  const priceCentsRaw = formData.get("priceCents");
+  const priceAmdRaw = formData.get("priceCents");
   const paymentType = formData.get("paymentType");
   const file = formData.get(FORM_FIELD_PRODUCT_IMAGE);
 
-  const priceCents =
-    typeof priceCentsRaw === "string" && priceCentsRaw.trim() !== ""
-      ? parseInt(priceCentsRaw.trim(), 10)
+  const priceAmdParsed =
+    typeof priceAmdRaw === "string" && priceAmdRaw.trim() !== ""
+      ? parseInt(priceAmdRaw.trim(), 10)
       : NaN;
 
   const parsed = orderFormSchema.safeParse({
     clientName: typeof clientName === "string" ? clientName : "",
     clientEmail: typeof clientEmail === "string" ? clientEmail : "",
     productTitle: typeof productTitle === "string" ? productTitle : "",
-    priceCents: Number.isNaN(priceCents) ? existing.priceCents : priceCents,
+    priceAmd: Number.isNaN(priceAmdParsed) ? existing.priceCents : priceAmdParsed,
     paymentType: paymentType === "SPLIT" ? "SPLIT" : "FULL",
   });
 
@@ -129,7 +129,7 @@ export async function updateOrder(
       first.clientName?.[0] ??
       first.clientEmail?.[0] ??
       first.productTitle?.[0] ??
-      first.priceCents?.[0] ??
+      first.priceAmd?.[0] ??
       first.paymentType?.[0] ??
       "Invalid data";
     return { error: msg };
@@ -148,7 +148,7 @@ export async function updateOrder(
         clientName: parsed.data.clientName,
         clientEmail: parsed.data.clientEmail,
         productTitle: parsed.data.productTitle,
-        priceCents: parsed.data.priceCents,
+        priceCents: parsed.data.priceAmd,
         paymentType: parsed.data.paymentType,
         ...(productImageKey != null && { productImageKey }),
       },
@@ -195,8 +195,9 @@ export async function sendPaymentLink(
   if (!paymentUrl) return { success: false, error: "Site URL is not configured (AUTH_URL)." };
 
   const subject = "Goldcrest 3D — payment link";
-  const text = `Hello ${order.clientName},\n\nYour order payment link.\n\n${paymentUrl}\n\nProduct: ${order.productTitle}\nPrice: ${(order.priceCents / 100).toFixed(0)} AMD`;
-  const html = `<p>Hello ${escapeHtml(order.clientName)},</p><p>Your order payment link.</p><p><a href="${escapeHtml(paymentUrl)}">${escapeHtml(paymentUrl)}</a></p><p>Product: ${escapeHtml(order.productTitle)}<br>Price: ${(order.priceCents / 100).toFixed(0)} AMD</p>`;
+  const priceAmd = String(order.priceCents);
+  const text = `Hello ${order.clientName},\n\nYour order payment link.\n\n${paymentUrl}\n\nProduct: ${order.productTitle}\nPrice: ${priceAmd} AMD`;
+  const html = `<p>Hello ${escapeHtml(order.clientName)},</p><p>Your order payment link.</p><p><a href="${escapeHtml(paymentUrl)}">${escapeHtml(paymentUrl)}</a></p><p>Product: ${escapeHtml(order.productTitle)}<br>Price: ${escapeHtml(priceAmd)} AMD</p>`;
 
   const result = await sendEmail({
     to: order.clientEmail,
