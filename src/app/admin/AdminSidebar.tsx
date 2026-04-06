@@ -164,13 +164,13 @@ export function AdminSidebar({
     <aside
       id={id}
       className={
-        "flex min-h-screen w-[256px] shrink-0 flex-col border-r border-slate-200 bg-white " +
-        "fixed inset-y-0 left-0 z-50 transition-transform duration-200 ease-out " +
+        "fixed inset-y-0 left-0 z-50 flex h-screen w-[256px] shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white " +
+        "transition-transform duration-200 ease-out " +
         (mobileNavOpen ? "translate-x-0 " : "-translate-x-full ") +
-        "lg:relative lg:inset-auto lg:z-auto lg:translate-x-0"
+        "lg:translate-x-0"
       }
     >
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-h-0 flex-1 flex-col">
         <div className="p-6">
           <div className="flex items-center gap-3">
             <div className="relative h-[26px] w-11 shrink-0">
@@ -193,7 +193,10 @@ export function AdminSidebar({
             </div>
           </div>
         </div>
-        <nav className="flex flex-1 flex-col gap-0.5 px-4" aria-label="Admin sections">
+        <nav
+          className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-4 pb-4"
+          aria-label="Admin sections"
+        >
           {NAV_ITEMS.map(({ href, label, Icon, showBadge }) => {
             const isActive =
               pathname === href || pathname.startsWith(href + "/");
@@ -224,7 +227,7 @@ export function AdminSidebar({
           })}
         </nav>
       </div>
-      <div className="mt-auto shrink-0 border-t border-slate-200 px-4 py-4">
+      <div className="shrink-0 border-t border-slate-200 px-4 py-4">
         <div className="flex items-center gap-3 rounded-lg p-2">
           <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-slate-200">
             {userImage ? (
