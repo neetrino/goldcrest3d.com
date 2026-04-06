@@ -106,7 +106,7 @@ function AdminLayoutInner({
         mobileNavOpen={mobileNavOpen}
       />
 
-      <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto lg:overflow-hidden">
+      <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto lg:pl-[256px] lg:overflow-hidden">
         {children}
       </main>
     </div>
@@ -114,7 +114,7 @@ function AdminLayoutInner({
 }
 
 /**
- * Responsive admin chrome: desktop keeps sidebar in flow; mobile uses overlay drawer + top bar.
+ * Responsive admin chrome: desktop keeps fixed sidebar; mobile uses overlay drawer + top bar.
  */
 export function AdminLayoutShell({
   leadsUnreadCount,
