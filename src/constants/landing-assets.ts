@@ -22,8 +22,7 @@ export const LANDING_IMAGES = {
   /** Ancient & Heritage Jewelry — full-bleed, jewelry left, cream background */
   modelingHeritage: "/images/modeling/ancient-heritage.png",
   /** Manufacturing Intelligence — Figma node -280 / 201:329 composite */
-  manufacturing:
-    "https://www.figma.com/api/mcp/asset/f0e2ff65-ab6e-4496-9550-dbb56fe62cca",
+  manufacturing: "/images/manufacturing/tolerance-control-assembly-precision.png",
   /** Manufacturing Intelligence — detail: Tolerance Control & Assembly Precision */
   manufacturingToleranceControl:
     "/images/manufacturing/tolerance-control-assembly-precision.png",
@@ -44,16 +43,16 @@ export const LANDING_IMAGES = {
     "/images/manufacturing/wall-thickness-engineering.png",
   /** Founder photo (Figma 222:305) — локальный PNG */
   founder: "/images/founder/founder-portrait.png",
-  finishedCnc: "https://www.figma.com/api/mcp/asset/5d0da0f6-ca7d-4159-bc93-a7ee35d1cc66",
-  finishedCopper: "https://www.figma.com/api/mcp/asset/49857533-5513-4d1c-8d13-ae2ee5816f66",
-  finishedOpacity: "https://www.figma.com/api/mcp/asset/2d279336-3d78-48c4-b923-778a5512f889",
+  finishedCnc: "/images/finished/block1-portrait-jewelry.webp",
+  finishedCopper: "/images/finished/block2-ancient-heritage.webp",
+  finishedOpacity: "/images/finished/block3-hiphop.webp",
   /** Footer — Goldcrest full logo (Figma 92:215 → 92:248), локальный PNG */
   footerLogo: "/images/footer/footer-goldcrest-full-logo.png",
   /** Footer Follow — map (Figma 110:389, 685.818×96, background cover), локальный PNG */
   footerFollowImage: "/images/footer/follow-map-banner.png",
   /** Quote form — file upload (document + arrow) */
   iconUpload: "/images/icon-upload-quote.png",
-  iconDots: "https://www.figma.com/api/mcp/asset/f3ba325e-a7bd-4009-b584-c238a58aa721",
+  iconDots: "/images/icon-dots.svg",
   /** Footer Follow — Instagram (Figma 92:227), ֆայլը SVG է */
   social1: "/images/footer/follow-social-instagram.svg",
   /** Footer Follow — LinkedIn (Figma 92:227), ֆայլը SVG է */

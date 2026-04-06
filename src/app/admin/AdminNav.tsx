@@ -3,10 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SITE_HEADER_LOGO_SRC } from "@/constants";
 import { AdminLogoutButton } from "./AdminLogoutButton";
-
-const LOGO_SRC =
-  "https://www.figma.com/api/mcp/asset/ce31ef4f-5914-417c-9ba4-4c47b79e2bff";
 
 const NAV_ITEMS = [
   { href: "/admin/leads", label: "Leads" },
@@ -26,7 +24,7 @@ export function AdminNav() {
             aria-label="Goldcrest Admin â€” home"
           >
             <Image
-              src={LOGO_SRC}
+              src={SITE_HEADER_LOGO_SRC}
               alt="Goldcrest Admin"
               width={83}
               height={48}
