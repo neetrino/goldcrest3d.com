@@ -337,7 +337,7 @@ export function QuoteForm() {
           disabled={isPending}
           className={QUOTE_SUBMIT_BUTTON_CLASS}
         >
-          {isPending ? "Sendingâ€¦" : "Submit Request"}
+          {isPending ? "Sending..." : "Submit Request"}
         </button>
       </div>
     </form>
