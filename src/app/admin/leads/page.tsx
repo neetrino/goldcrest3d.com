@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getR2PublicUrl } from "@/lib/storage";
 import { AdminLeadsInbox } from "./AdminLeadsInbox";
@@ -21,10 +20,6 @@ export default async function AdminLeadsPage({
   const leads = await prisma.lead.findMany({
     orderBy: { createdAt: "desc" },
   });
-
-  if (leads.length > 0 && !selectedId) {
-    redirect(`/admin/leads?selected=${leads[0].id}`);
-  }
 
   const listItems: LeadListItem[] = leads.map((l) => ({
     id: l.id,

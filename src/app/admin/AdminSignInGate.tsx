@@ -13,7 +13,7 @@ const ERROR_MESSAGE = "Invalid email or password. Please try again.";
 export function AdminSignInGate() {
   const pathname = usePathname();
   const router = useRouter();
-  const callbackUrl = pathname && pathname !== "/admin" ? pathname : "/admin/leads";
+  const callbackUrl = pathname && pathname !== "/admin" ? pathname : "/admin";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
