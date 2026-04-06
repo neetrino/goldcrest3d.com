@@ -109,6 +109,8 @@ const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS = "lg:-translate-y-2";
 const FOOTER_FOLLOW_MAP_INNER_FRAME_CLASS = `mt-4 w-full min-w-0 overflow-hidden ${FOOTER_FOLLOW_MAP_CORNER_CLASS} md:shrink-0 ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS} ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS}`;
 
 const FOOTER_FOLLOW_MAP_OUTER_WRAPPER_CLASS = `w-full ${FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS}`;
+const FOOTER_FOLLOW_MAP_LINK =
+  "https://www.google.com/maps/search/?api=1&query=Gai+Avenue+10%2F6%2C+Yerevan";
 
 /**
  * Figma 110:389 — `background: url(...) lightgray 50% / cover no-repeat`
@@ -270,12 +272,20 @@ export function LandingFooter() {
               </div>
             </div>
             <div className={FOOTER_FOLLOW_MAP_OUTER_WRAPPER_CLASS}>
-              <div
-                className={FOOTER_FOLLOW_MAP_INNER_FRAME_CLASS}
-                style={FOOTER_FOLLOW_MAP_BANNER_COMBINED_STYLE}
-                data-landing-image={LANDING_IMAGE_IDS.FOOTER_FOLLOW_IMAGE}
-                aria-hidden
-              />
+              <a
+                href={FOOTER_FOLLOW_MAP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open Gai avenue 10/6, Yerevan on Google Maps"
+                className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:ring-offset-2"
+              >
+                <div
+                  className={FOOTER_FOLLOW_MAP_INNER_FRAME_CLASS}
+                  style={FOOTER_FOLLOW_MAP_BANNER_COMBINED_STYLE}
+                  data-landing-image={LANDING_IMAGE_IDS.FOOTER_FOLLOW_IMAGE}
+                  aria-hidden
+                />
+              </a>
             </div>
           </div>
         </div>
