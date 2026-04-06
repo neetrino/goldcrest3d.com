@@ -16,7 +16,7 @@ export default async function AdminPage() {
         <div className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
           <h1 className="text-xl font-semibold text-slate-900">Engineering Admin</h1>
           <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            Choose a section from the sidebar to get started — inbox, orders, reports, or media.
+            Choose a section from the sidebar to get started — inbox, orders, or media.
           </p>
         </div>
       </div>
