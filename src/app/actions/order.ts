@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { R2_PREFIXES } from "@/constants";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
@@ -12,6 +13,7 @@ import {
   orderFormSchema,
 } from "@/lib/validations/orderForm";
 import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
+import { logger } from "@/lib/logger";
 
 export type CreateOrderResult =
   | { success: true; orderId: string }
@@ -215,6 +217,24 @@ export async function sendPaymentLink(
   });
 
   if (!result.success) return { success: false, error: result.error };
+
+  let persisted = false;
+  try {
+    await prisma.order.update({
+      where: { id: orderId },
+      data: { paymentLinkSentAt: new Date() },
+    });
+    persisted = true;
+  } catch (err) {
+    // Email already sent — do not return failure (avoids duplicate sends if admin retries).
+    logger.error("sendPaymentLink: persist paymentLinkSentAt failed", err);
+  }
+
+  if (persisted) {
+    revalidatePath("/admin/orders");
+    revalidatePath(`/admin/orders/${orderId}`);
+  }
+
   return { success: true };
 }
 

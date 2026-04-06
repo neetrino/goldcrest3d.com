@@ -145,6 +145,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             <PaymentLinkActions
               orderId={order.id}
               paymentLinkUrl={getOrderPaymentUrl(order.token)}
+              paymentLinkSentFromDb={order.paymentLinkSentAt != null}
             />
           </div>
         </section>

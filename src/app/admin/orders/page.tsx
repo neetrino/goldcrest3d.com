@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import { getOrderPaymentUrl } from "@/lib/appUrl";
 import { formatPriceAmd } from "@/lib/formatPrice";
 import { formatOrderPaymentTypeLabel } from "@/lib/payment/paymentTypeLabels";
 import { OrderEditPencilIcon } from "@/components/admin/OrderEditPencilIcon";
+import { OrderListItemSendPaymentLinkButton } from "@/components/admin/OrderListItemSendPaymentLinkButton";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 
 export default async function AdminOrdersPage() {
@@ -91,13 +93,22 @@ export default async function AdminOrdersPage() {
                     </div>
                   </div>
                 </Link>
-                <Link
-                  href={`/admin/orders/${order.id}/edit`}
-                  className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center self-stretch border-neutral-200 border-l px-3 text-neutral-500 transition-colors group-hover:bg-neutral-50 hover:text-[var(--foreground)] sm:min-h-0 sm:min-w-0 sm:px-4"
-                  aria-label={`Edit order: ${order.clientName}`}
-                >
-                  <OrderEditPencilIcon className="h-5 w-5" />
-                </Link>
+                <div className="flex shrink-0 flex-col border-neutral-200 border-t sm:flex-row sm:border-t-0 sm:border-l">
+                  <div className="flex min-h-[44px] items-center justify-center border-neutral-200 border-b px-2 py-2 sm:min-h-0 sm:border-b-0 sm:border-r sm:px-3 sm:py-3">
+                    <OrderListItemSendPaymentLinkButton
+                      orderId={order.id}
+                      paymentLinkUrl={getOrderPaymentUrl(order.token)}
+                      paymentLinkSentFromDb={order.paymentLinkSentAt != null}
+                    />
+                  </div>
+                  <Link
+                    href={`/admin/orders/${order.id}/edit`}
+                    className="flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center self-stretch px-3 text-neutral-500 transition-colors group-hover:bg-neutral-50 hover:text-[var(--foreground)] sm:min-h-0 sm:min-w-0 sm:px-4"
+                    aria-label={`Edit order: ${order.clientName}`}
+                  >
+                    <OrderEditPencilIcon className="h-5 w-5" />
+                  </Link>
+                </div>
               </div>
             </li>
           ))}

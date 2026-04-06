@@ -16,6 +16,7 @@ const mockOrder = {
   paymentType: "FULL" as const,
   paidCents: 0,
   status: "PENDING" as const,
+  paymentLinkSentAt: null as Date | null,
   token: "tok-abc",
   createdAt: new Date(),
   updatedAt: new Date(),

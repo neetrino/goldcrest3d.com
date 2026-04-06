@@ -2,13 +2,20 @@
 
 import { useTransition, useState } from "react";
 import { sendPaymentLink, type SendPaymentLinkResult } from "@/app/actions/order";
+import { getAdminSendPaymentLinkButtonClasses } from "@/components/admin/sendPaymentLinkButtonClassName";
 
 type Props = {
   orderId: string;
   paymentLinkUrl: string;
+  /** From DB: payment link email was successfully sent at least once. */
+  paymentLinkSentFromDb: boolean;
 };
 
-export function PaymentLinkActions({ orderId, paymentLinkUrl }: Props) {
+export function PaymentLinkActions({
+  orderId,
+  paymentLinkUrl,
+  paymentLinkSentFromDb,
+}: Props) {
   const [isPending, startTransition] = useTransition();
   const [state, setState] = useState<SendPaymentLinkResult>(null);
   const [copied, setCopied] = useState(false);
@@ -20,6 +27,9 @@ export function PaymentLinkActions({ orderId, paymentLinkUrl }: Props) {
       setState(result);
     });
   };
+
+  const showFadedSentStyle =
+    (paymentLinkSentFromDb || state?.success === true) && !isPending;
 
   const handleCopy = async () => {
     if (!paymentLinkUrl) return;
@@ -38,7 +48,19 @@ export function PaymentLinkActions({ orderId, paymentLinkUrl }: Props) {
         type="button"
         onClick={handleSend}
         disabled={isPending || !paymentLinkUrl}
-        className="rounded-md bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] transition-opacity hover:opacity-90 disabled:opacity-50"
+        aria-label={
+          showFadedSentStyle
+            ? "Payment link was sent (click to send again)"
+            : "Send payment link to client"
+        }
+        className={`rounded-md ${getAdminSendPaymentLinkButtonClasses({
+          showFadedSentStyle,
+          variant: "default",
+        })} ${
+          (isPending || !paymentLinkUrl) && !showFadedSentStyle
+            ? "cursor-not-allowed opacity-50"
+            : ""
+        }`}
       >
         {isPending ? "Sending…" : "Send payment link"}
       </button>
