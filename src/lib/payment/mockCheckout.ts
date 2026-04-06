@@ -2,7 +2,7 @@ import { getAppOrigin } from "@/lib/appUrl";
 import type { CreateCheckoutSessionResult } from "@/lib/stripe";
 
 /**
- * Builds the URL for the dev-only mock checkout page (no external provider).
+ * Builds the URL for the simulated checkout page (no external provider).
  */
 export function buildMockPaymentPageUrl(
   token: string,

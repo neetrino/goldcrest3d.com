@@ -5,7 +5,7 @@ import { prisma } from "@/lib/db";
 import { getR2PublicUrl } from "@/lib/storage";
 import { formatPriceAmd } from "@/lib/formatPrice";
 import { ORDER_STATUS } from "@/constants/order-status";
-import { isMockPaymentEnabled } from "@/lib/payment/config";
+import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 import { MockPaymentHoldActions } from "./MockPaymentHoldActions";
 import { OrderPayActions } from "./OrderPayActions";
 
@@ -27,7 +27,7 @@ export default async function OrderPaymentPage({ params, searchParams }: Props) 
   const sp = await searchParams;
   const mockFlag = firstQuery(sp.mock);
   const mockMsg = firstQuery(sp.msg);
-  const mockPaymentEnabled = isMockPaymentEnabled();
+  const mockPaymentEnabled = isSimulatedPaymentFlow();
 
   const order = await prisma.order.findUnique({ where: { token } });
   if (!order) notFound();

@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { isMockPaymentEnabled } from "@/lib/payment/config";
+import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 import { resolveOrderPaymentAmount } from "@/lib/payment/resolveOrderPaymentAmount";
 import { MockPaymentClient } from "./MockPaymentClient";
 
@@ -21,7 +21,7 @@ function parsePaymentIndex(
 }
 
 export default async function MockPaymentPage({ params, searchParams }: Props) {
-  if (!isMockPaymentEnabled()) {
+  if (!isSimulatedPaymentFlow()) {
     notFound();
   }
 
