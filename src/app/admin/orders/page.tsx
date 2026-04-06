@@ -45,14 +45,8 @@ export default async function AdminOrdersPage() {
         <div className="rounded-lg border border-neutral-200 bg-white py-16 text-center shadow-sm">
           <p className="text-neutral-500">No orders yet.</p>
           <p className="mt-1 text-sm text-neutral-400">
-            Create your first order to get started.
+            Create your first order using the button above to get started.
           </p>
-          <Link
-            href="/admin/orders/new"
-            className="mt-4 inline-block rounded-md bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] hover:opacity-90"
-          >
-            New order
-          </Link>
         </div>
       ) : (
         <ul className="overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm">
