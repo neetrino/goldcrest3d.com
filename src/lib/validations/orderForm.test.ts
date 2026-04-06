@@ -7,7 +7,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane Doe",
       clientEmail: "jane@example.com",
       productTitle: "Custom bracket",
-      priceCents: 15000,
+      priceAmd: 15000,
       paymentType: "FULL",
     });
     expect(result.success).toBe(true);
@@ -18,7 +18,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane Doe",
       clientEmail: "jane@example.com",
       productTitle: "Custom bracket",
-      priceCents: 20000,
+      priceAmd: 20000,
       paymentType: "SPLIT",
     });
     expect(result.success).toBe(true);
@@ -29,7 +29,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Sample",
-      priceCents: 0,
+      priceAmd: 0,
       paymentType: "FULL",
     });
     expect(result.success).toBe(true);
@@ -40,7 +40,7 @@ describe("orderFormSchema", () => {
       clientName: "",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceCents: 100,
+      priceAmd: 100,
       paymentType: "FULL",
     });
     expect(result.success).toBe(false);
@@ -51,29 +51,29 @@ describe("orderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "invalid",
       productTitle: "Product",
-      priceCents: 100,
+      priceAmd: 100,
       paymentType: "FULL",
     });
     expect(result.success).toBe(false);
   });
 
-  it("rejects negative priceCents", () => {
+  it("rejects negative priceAmd", () => {
     const result = orderFormSchema.safeParse({
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceCents: -100,
+      priceAmd: -100,
       paymentType: "FULL",
     });
     expect(result.success).toBe(false);
   });
 
-  it("rejects non-integer priceCents", () => {
+  it("rejects non-integer priceAmd", () => {
     const result = orderFormSchema.safeParse({
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceCents: 99.5,
+      priceAmd: 99.5,
       paymentType: "FULL",
     });
     expect(result.success).toBe(false);
@@ -84,7 +84,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceCents: 100,
+      priceAmd: 100,
       paymentType: "HALF",
     });
     expect(result.success).toBe(false);

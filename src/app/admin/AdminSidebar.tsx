@@ -53,28 +53,6 @@ function IconNavOrders({ className }: { className?: string }) {
   );
 }
 
-/** Reports â€” simple bar chart / analytics. */
-function IconNavReports({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width={ADMIN_NAV_ITEM_ICON_SIZE_PX}
-      height={ADMIN_NAV_ITEM_ICON_SIZE_PX}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <line x1="18" y1="20" x2="18" y2="10" />
-      <line x1="12" y1="20" x2="12" y2="4" />
-      <line x1="6" y1="20" x2="6" y2="14" />
-    </svg>
-  );
-}
-
 /** Media â€” image / gallery. */
 function IconNavMedia({ className }: { className?: string }) {
   return (
@@ -155,7 +133,6 @@ const NAV_ITEMS: readonly {
 }[] = [
   { href: "/admin/leads", label: "Inbox/Leads", Icon: IconNavInbox, showBadge: true },
   { href: "/admin/orders", label: "Orders", Icon: IconNavOrders, showBadge: false },
-  { href: "/admin/reports", label: "Reports", Icon: IconNavReports, showBadge: false },
   { href: "/admin/media", label: "Media Manager", Icon: IconNavMedia, showBadge: false },
 ];
 
@@ -171,7 +148,7 @@ type AdminSidebarProps = {
 };
 
 /**
- * Admin sidebar per Figma: logo, nav (Inbox/Leads, Orders, Reports), user block (settings icon + logout).
+ * Admin sidebar per Figma: logo, nav (Inbox/Leads, Orders, Media), user block (settings icon + logout).
  */
 export function AdminSidebar({
   leadsUnreadCount,

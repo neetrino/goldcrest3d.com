@@ -8,6 +8,8 @@ type Props = {
   paymentType: string;
   priceCents: number;
   paidCents: number;
+  /** When true, button labels indicate simulated checkout (PAYMENT_MOCK_MODE). */
+  mockPaymentEnabled?: boolean;
 };
 
 export function OrderPayActions({
@@ -15,6 +17,7 @@ export function OrderPayActions({
   paymentType,
   priceCents,
   paidCents,
+  mockPaymentEnabled = false,
 }: Props) {
   const [pending, setPending] = useState<"full" | "first" | "second" | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -50,7 +53,7 @@ export function OrderPayActions({
               disabled={!!pending}
               className="w-full rounded bg-[var(--foreground)] px-4 py-3 text-[var(--background)] font-medium hover:opacity-90 disabled:opacity-60"
             >
-              {pending === "first" ? "Loading…" : "Pay first 50%"}
+              {pending === "first" ? "Loading…" : mockPaymentEnabled ? "Pay first 50% (simulated)" : "Pay first 50%"}
             </button>
           )}
           {firstPaid && (
@@ -60,7 +63,7 @@ export function OrderPayActions({
               disabled={!!pending}
               className="w-full rounded bg-[var(--foreground)] px-4 py-3 text-[var(--background)] font-medium hover:opacity-90 disabled:opacity-60"
             >
-              {pending === "second" ? "Loading…" : "Pay second 50%"}
+              {pending === "second" ? "Loading…" : mockPaymentEnabled ? "Pay second 50% (simulated)" : "Pay second 50%"}
             </button>
           )}
         </>
@@ -71,7 +74,7 @@ export function OrderPayActions({
           disabled={!!pending}
           className="w-full rounded bg-[var(--foreground)] px-4 py-3 text-[var(--background)] font-medium hover:opacity-90 disabled:opacity-60"
         >
-          {pending ? "Loading…" : "Pay"}
+          {pending ? "Loading…" : mockPaymentEnabled ? "Pay (simulated)" : "Pay"}
         </button>
       )}
       {error && (

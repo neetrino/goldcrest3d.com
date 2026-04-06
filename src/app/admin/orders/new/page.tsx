@@ -1,7 +1,11 @@
 import Link from "next/link";
+import { getDistinctLeadEmails } from "@/lib/leads/getDistinctLeadEmails";
+
 import { OrderNewForm } from "./OrderNewForm";
 
-export default function AdminOrderNewPage() {
+export default async function AdminOrderNewPage() {
+  const leadEmails = await getDistinctLeadEmails();
+
   return (
     <div className="mx-auto max-w-2xl space-y-8 px-4 py-6 sm:px-6">
       <Link
@@ -19,7 +23,7 @@ export default function AdminOrderNewPage() {
         </p>
       </div>
       <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
-        <OrderNewForm />
+        <OrderNewForm leadEmails={leadEmails} />
       </div>
     </div>
   );

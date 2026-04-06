@@ -1,5 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { OrderNewForm } from "./OrderNewForm";
 
 vi.mock("next/navigation", () => ({
@@ -10,7 +16,6 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/app/actions/order", () => ({
   createOrder: vi.fn(() => Promise.resolve(null)),
-  FORM_FIELD_PRODUCT_IMAGE: "productImage",
 }));
 
 describe("OrderNewForm", () => {
@@ -39,5 +44,21 @@ describe("OrderNewForm", () => {
     const fullRadios = screen.getAllByRole("radio", { name: /full \(full\)/i });
     expect(fullRadios.length).toBeGreaterThan(0);
     expect(fullRadios[0]).toBeChecked();
+  });
+
+  it("shows lead email suggestions on click when lead emails are provided", () => {
+    const { container } = render(
+      <OrderNewForm leadEmails={["alpha@example.com", "beta@example.com"]} />,
+    );
+    const form = container.querySelector("form");
+    expect(form).toBeTruthy();
+    const emailInput = within(form as HTMLElement).getByRole("combobox");
+    act(() => {
+      fireEvent.click(emailInput);
+    });
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+    expect(
+      screen.getByRole("option", { name: "alpha@example.com" }),
+    ).toBeInTheDocument();
   });
 });

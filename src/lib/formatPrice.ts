@@ -1,10 +1,10 @@
 /**
- * Format price stored in cents for display in AMD.
+ * Format an AMD amount stored as whole drams (integer in DB / UI).
  */
-export function formatPriceAmd(cents: number): string {
+export function formatPriceAmd(amountAmd: number): string {
   return new Intl.NumberFormat("en-GB", {
     style: "decimal",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(Math.round(cents / 100));
+  }).format(Math.round(amountAmd));
 }

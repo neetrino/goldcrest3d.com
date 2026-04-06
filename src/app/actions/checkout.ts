@@ -2,6 +2,9 @@
 
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { isMockPaymentEnabled } from "@/lib/payment/config";
+import { createMockCheckoutSession } from "@/lib/payment/mockCheckout";
+import { resolveOrderPaymentAmount } from "@/lib/payment/resolveOrderPaymentAmount";
 import {
   createCheckoutSession,
   type CreateCheckoutSessionResult,
@@ -10,7 +13,7 @@ import {
 const ORDER_ID_MAX_LENGTH = 50;
 
 /**
- * Server Action: create Stripe Checkout Session for order (public — called from client payment page).
+ * Server Action: start checkout — Stripe session URL, or mock payment page when PAYMENT_MOCK_MODE=true.
  * Computes amount from order (FULL = remaining total, SPLIT = first or second 50%).
  */
 export async function createCheckoutSessionForOrder(
@@ -26,37 +29,14 @@ export async function createCheckoutSessionForOrder(
   try {
     const order = await prisma.order.findUnique({ where: { id } });
     if (!order) return { success: false, error: "Order not found." };
-    if (order.status === "PAID") {
-      return { success: false, error: "Order is already fully paid." };
+
+    const resolved = resolveOrderPaymentAmount(order, paymentIndex);
+    if (!resolved.ok) {
+      return { success: false, error: resolved.error };
     }
 
-    const total = order.priceCents;
-    const paid = order.paidCents;
-    const remaining = total - paid;
-    if (remaining <= 0) {
-      return { success: false, error: "No amount due for payment." };
-    }
-
-    let amountCents: number;
-    let index: 0 | 1 | undefined;
-
-    if (order.paymentType === "SPLIT") {
-      const half = Math.floor(total / 2);
-      if (paymentIndex === 1) {
-        if (paid < half) {
-          return { success: false, error: "Please pay the first 50% first." };
-        }
-        amountCents = total - half;
-        index = 1;
-      } else {
-        if (paid >= half) {
-          return { success: false, error: "First 50% is already paid." };
-        }
-        amountCents = half;
-        index = 0;
-      }
-    } else {
-      amountCents = remaining;
+    if (isMockPaymentEnabled()) {
+      return createMockCheckoutSession(order.token, resolved.paymentIndex);
     }
 
     const orderForCheckout = {
@@ -68,7 +48,7 @@ export async function createCheckoutSessionForOrder(
       paidCents: order.paidCents,
     };
 
-    return createCheckoutSession(orderForCheckout, amountCents, index);
+    return createCheckoutSession(orderForCheckout, resolved.amountCents, resolved.paymentIndex);
   } catch (err) {
     logger.error("createCheckoutSessionForOrder failed", err);
     return { success: false, error: "Payment could not be started. Please try again." };

@@ -1,25 +1,37 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createOrder, FORM_FIELD_PRODUCT_IMAGE } from "@/app/actions/order";
+import { createOrder } from "@/app/actions/order";
 import type { CreateOrderResult } from "@/app/actions/order";
+import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
+
+import { OrderNewClientEmailField } from "./OrderNewClientEmailField";
 
 const initialState: CreateOrderResult = null;
+
+export type OrderNewFormProps = {
+  /** Distinct emails from Inbox/Leads for quick selection */
+  leadEmails?: string[];
+};
 
 const inputClass =
   "mt-1.5 w-full rounded-md border border-neutral-300 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400/30 disabled:opacity-60";
 
-export function OrderNewForm() {
+export function OrderNewForm({ leadEmails = [] }: OrderNewFormProps) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState<
     CreateOrderResult,
     FormData
   >(createOrder, initialState);
 
-  if (state?.success === true) {
+  useEffect(() => {
+    if (state?.success !== true) return;
     router.push(`/admin/orders/${state.orderId}`);
+  }, [state, router]);
+
+  if (state?.success === true) {
     return null;
   }
 
@@ -57,15 +69,10 @@ export function OrderNewForm() {
         >
           Client email
         </label>
-        <input
-          id="order-clientEmail"
-          name="clientEmail"
-          type="email"
-          required
-          autoComplete="email"
+        <OrderNewClientEmailField
+          leadEmails={leadEmails}
           disabled={isPending}
-          className={inputClass}
-          placeholder="email@example.com"
+          inputClassName={inputClass}
         />
       </div>
       <div>

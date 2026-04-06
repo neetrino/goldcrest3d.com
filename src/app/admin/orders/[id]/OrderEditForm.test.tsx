@@ -4,7 +4,6 @@ import { OrderEditForm } from "./OrderEditForm";
 
 vi.mock("@/app/actions/order", () => ({
   updateOrder: vi.fn(() => Promise.resolve(null)),
-  FORM_FIELD_PRODUCT_IMAGE: "productImage",
 }));
 
 const mockOrder = {

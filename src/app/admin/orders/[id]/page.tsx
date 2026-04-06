@@ -4,23 +4,10 @@ import { prisma } from "@/lib/db";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
 import { getR2PublicUrl } from "@/lib/storage";
 import { formatPriceAmd } from "@/lib/formatPrice";
+import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 import { OrderEditForm } from "./OrderEditForm";
 import { DeleteOrderButton } from "./DeleteOrderButton";
 import { PaymentLinkActions } from "./PaymentLinkActions";
-
-function StatusBadge({ status }: { status: string }) {
-  const isPaid = status === "PAID";
-  return (
-    <span
-      className={
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium " +
-        (isPaid ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800")
-      }
-    >
-      {isPaid ? "Paid" : "Pending"}
-    </span>
-  );
-}
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -47,7 +34,12 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           <h1 className="text-xl font-semibold text-[var(--foreground)]">
             {order.productTitle}
           </h1>
-          <StatusBadge status={order.status} />
+          <OrderStatusBadge
+            status={order.status}
+            paymentType={order.paymentType}
+            priceCents={order.priceCents}
+            paidCents={order.paidCents}
+          />
         </div>
         <dl className="mt-5 space-y-4">
           <div>
