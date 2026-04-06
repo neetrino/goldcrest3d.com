@@ -22,7 +22,6 @@ import {
   getSubject,
 } from "./adminLeadsInbox.helpers";
 import {
-  IconArchiveBox,
   IconBell,
   IconMail,
   IconPlusThin,
@@ -237,13 +236,6 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                     </div>
                   </div>
                   <div className="flex shrink-0 gap-2 self-start sm:self-auto">
-                    <a
-                      href="#"
-                      className="flex h-9 w-9 items-center justify-center rounded border border-slate-200 text-slate-700 hover:bg-slate-50"
-                      aria-label="Archive"
-                    >
-                      <IconArchiveBox />
-                    </a>
                     <DeleteLeadButton
                       leadId={selectedLead.id}
                       leadName={selectedLead.fullName}

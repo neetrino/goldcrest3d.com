@@ -111,28 +111,6 @@ export function IconMail({ className }: { className?: string }) {
 
 const STROKE_BOLD = 2.5;
 
-/** Archive into box — thick stroke (lead detail toolbar). */
-export function IconArchiveBox({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width={18}
-      height={18}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={STROKE_BOLD}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <rect x="3.5" y="4" width="17" height="5" rx="1.25" />
-      <rect x="5" y="9" width="14" height="12" rx="1.25" />
-      <path d="M12 12v5M9 15l3 3 3-3" />
-    </svg>
-  );
-}
-
 /** Trash — thick stroke (lead detail toolbar). */
 export function IconTrashBin({ className }: { className?: string }) {
   return (
