@@ -199,12 +199,12 @@ export function LandingFooter() {
                 href="tel:+15559023481"
                 className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-none`}
               >
-                +1 (555) 902-3481
+                +374 (41) 141 - 110
               </a>
               <div className={FOOTER_CONTACT_LOCATION_BLOCK_CLASS}>
                 <div className={FOOTER_LOCATION_ROW_CLASS}>
                   <FooterLocationIcon />
-                  <p className={FOOTER_CONTACT_LINE_CLASS}>Yerevan, Armenia</p>
+                  <p className={FOOTER_CONTACT_LINE_CLASS}>10/6 Gai Ave, Yerevan</p>
                 </div>
                 <p className={FOOTER_CONTACT_LINE_CLASS}>
                   International collaborations available
