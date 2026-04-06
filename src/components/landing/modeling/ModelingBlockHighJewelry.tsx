@@ -7,13 +7,13 @@ import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
 const TITLE = "High Jewelry";
 const LINE_1 =
-  "Advanced pavÃ© and fine-setting structures developed with micron-level";
+  "Advanced pavé and fine-setting structures developed with micron-level";
 const LINE_2 =
   "Invisible settings and ultra-thin tolerances engineered with strict structural discipline.";
 
 /** Mobile only â€” explicit line break after â€œstructuresâ€. */
 const MOBILE_DESCRIPTION_LINE_1 =
-  "Advanced pavÃ© and fine-setting structures";
+  "Advanced pavé and fine-setting structures";
 const MOBILE_DESCRIPTION_LINE_2 =
   "developed with micron-level precision.";
 

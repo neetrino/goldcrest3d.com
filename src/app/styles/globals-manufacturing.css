@@ -135,6 +135,13 @@
 }
 
 @media (max-width: 767px) {
+  /* Tolerance Control (standard detail layout): nudge image slightly right on mobile only. */
+  .manufacturing-intelligence-photo-detail:not(
+      [class*="manufacturing-intelligence-photo-detail--"]
+    ) {
+    transform: translateX(3px);
+  }
+
   .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
     transform: translate(
         calc(
