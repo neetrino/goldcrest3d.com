@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { ORDER_STATUS } from "@/constants/order-status";
 import { applyPaidAmountToOrder } from "@/lib/payment/applyPaidAmount";
-import { isMockPaymentEnabled } from "@/lib/payment/config";
+import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 import { resolveOrderPaymentAmount } from "@/lib/payment/resolveOrderPaymentAmount";
 
 const ORDER_ID_MAX_LENGTH = 50;
@@ -24,8 +24,8 @@ export async function completeMockPayment(
   outcome: MockPaymentOutcome,
   paymentIndex?: 0 | 1,
 ): Promise<CompleteMockPaymentResult> {
-  if (!isMockPaymentEnabled()) {
-    return { success: false, error: "Mock payment is not enabled." };
+  if (!isSimulatedPaymentFlow()) {
+    return { success: false, error: "Simulated payment is not available." };
   }
 
   const id =
@@ -84,8 +84,8 @@ export async function clearMockPaymentHold(
   orderId: string,
   orderToken: string,
 ): Promise<{ success: true } | { success: false; error: string }> {
-  if (!isMockPaymentEnabled()) {
-    return { success: false, error: "Mock payment is not enabled." };
+  if (!isSimulatedPaymentFlow()) {
+    return { success: false, error: "Simulated payment is not available." };
   }
 
   const id =

@@ -5,7 +5,7 @@
 import Stripe from "stripe";
 import { AMD_MINOR_UNITS_PER_DRAM } from "@/constants/order-form";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
-import { isMockPaymentEnabled } from "@/lib/payment/config";
+import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 
 const secretKey = process.env.STRIPE_SECRET_KEY;
 const stripe = secretKey ? new Stripe(secretKey) : null;
@@ -34,11 +34,11 @@ export async function createCheckoutSession(
   amountWholeAmd: number,
   paymentIndex?: 0 | 1,
 ): Promise<CreateCheckoutSessionResult> {
-  if (isMockPaymentEnabled()) {
+  if (isSimulatedPaymentFlow()) {
     return {
       success: false,
       error:
-        "Stripe checkout is disabled while PAYMENT_MOCK_MODE is enabled. Use the simulated payment page.",
+        "Stripe checkout is unavailable; use the simulated payment page.",
     };
   }
   if (!stripe) {

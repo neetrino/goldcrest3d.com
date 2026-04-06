@@ -4,14 +4,14 @@ import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { AMD_MINOR_UNITS_PER_DRAM } from "@/constants/order-form";
 import { applyPaidAmountToOrder } from "@/lib/payment/applyPaidAmount";
-import { isMockPaymentEnabled } from "@/lib/payment/config";
+import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 
 const secretKey = process.env.STRIPE_SECRET_KEY;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const stripe = secretKey ? new Stripe(secretKey) : null;
 
 export async function POST(request: NextRequest) {
-  if (isMockPaymentEnabled()) {
+  if (isSimulatedPaymentFlow()) {
     return new Response("OK", { status: 200 });
   }
   if (!stripe || !webhookSecret) {

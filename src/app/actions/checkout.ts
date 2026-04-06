@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { isMockPaymentEnabled } from "@/lib/payment/config";
+import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 import { createMockCheckoutSession } from "@/lib/payment/mockCheckout";
 import { resolveOrderPaymentAmount } from "@/lib/payment/resolveOrderPaymentAmount";
 import {
@@ -13,7 +13,7 @@ import {
 const ORDER_ID_MAX_LENGTH = 50;
 
 /**
- * Server Action: start checkout — Stripe session URL, or mock payment page when PAYMENT_MOCK_MODE=true.
+ * Server Action: start checkout — Stripe session URL, or mock payment page when simulated flow (PAYMENT_MOCK_MODE or missing STRIPE_SECRET_KEY).
  * Computes amount from order (FULL = remaining total, SPLIT = first or second 50%).
  */
 export async function createCheckoutSessionForOrder(
@@ -35,7 +35,7 @@ export async function createCheckoutSessionForOrder(
       return { success: false, error: resolved.error };
     }
 
-    if (isMockPaymentEnabled()) {
+    if (isSimulatedPaymentFlow()) {
       return createMockCheckoutSession(order.token, resolved.paymentIndex);
     }
 
