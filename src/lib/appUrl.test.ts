@@ -17,9 +17,16 @@ describe("getAppOrigin", () => {
     expect(getAppOrigin()).toBe("https://goldcrest.example.com");
   });
 
-  it("returns empty string when AUTH_URL is missing", () => {
+  it("returns empty string when AUTH_URL and VERCEL_URL are missing", () => {
     vi.stubEnv("AUTH_URL", "");
+    vi.stubEnv("VERCEL_URL", "");
     expect(getAppOrigin()).toBe("");
+  });
+
+  it("returns origin from VERCEL_URL when AUTH_URL is missing", () => {
+    vi.stubEnv("AUTH_URL", "");
+    vi.stubEnv("VERCEL_URL", "goldcrest3d-com.vercel.app");
+    expect(getAppOrigin()).toBe("https://goldcrest3d-com.vercel.app");
   });
 
   it("returns origin when AUTH_URL has path", () => {
@@ -48,6 +55,7 @@ describe("getOrderPaymentUrl", () => {
 
   it("returns empty string when origin is missing", () => {
     vi.stubEnv("AUTH_URL", "");
+    vi.stubEnv("VERCEL_URL", "");
     expect(getOrderPaymentUrl("abc123")).toBe("");
   });
 });
