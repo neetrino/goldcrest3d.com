@@ -123,9 +123,15 @@ export default async function AdminOrderDetailPage({ params }: Props) {
                   href={productImageUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-[var(--foreground)] underline decoration-neutral-300 underline-offset-2 hover:decoration-[var(--foreground)]"
+                  className="block shrink-0 overflow-hidden rounded-md border border-neutral-200 bg-neutral-50 transition-opacity hover:opacity-90"
+                  aria-label="Open product image in new tab"
                 >
-                  Open image
+                  <img
+                    src={productImageUrl}
+                    alt={`${order.productTitle} image`}
+                    className="h-24 w-24 object-cover"
+                    loading="lazy"
+                  />
                 </a>
               </dd>
             </div>
