@@ -53,7 +53,7 @@ export function ModelingBlockMechanical({
             src={imageUrlDesktop}
             alt=""
             fill
-            className="h-full w-full object-cover object-center"
+            className="h-full w-full object-cover max-md:object-[56%_center] md:object-center"
             sizes="(max-width: 767px) 100vw, 50vw"
           />
         ) : (
@@ -63,7 +63,7 @@ export function ModelingBlockMechanical({
                 src={imageUrlMobile}
                 alt=""
                 fill
-                className="min-h-0 min-w-0 h-full w-full object-cover object-center"
+                className="min-h-0 min-w-0 h-full w-full object-cover object-[56%_center]"
                 sizes="(max-width: 767px) 100vw, 0px"
               />
             </div>
