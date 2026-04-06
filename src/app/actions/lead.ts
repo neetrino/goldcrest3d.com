@@ -38,13 +38,33 @@ export async function replyToLeadAction(
       where: { id: leadId },
     });
     if (!lead) return { error: "Lead not found." };
+    if (lead.repliedAt != null) {
+      return { error: "A response has already been sent for this lead." };
+    }
+
+    const replyLockedAt = new Date();
+    const lockResult = await prisma.lead.updateMany({
+      where: { id: leadId, repliedAt: null },
+      data: { repliedAt: replyLockedAt },
+    });
+    if (lockResult.count === 0) {
+      return { error: "A response has already been sent for this lead." };
+    }
 
     const result = await sendReplyToLead({
       to: lead.email,
       body: parsed.data.body.trim(),
     });
 
-    if (!result.success) return { error: result.error };
+    if (!result.success) {
+      await prisma.lead.updateMany({
+        where: { id: leadId, repliedAt: replyLockedAt },
+        data: { repliedAt: null },
+      });
+      return { error: result.error };
+    }
+
+    revalidatePath("/admin/leads");
     return { sent: true };
   } catch (err) {
     logger.error("replyToLeadAction failed", err);

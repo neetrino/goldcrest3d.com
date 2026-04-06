@@ -9,6 +9,8 @@ export type LeadListItem = {
   createdAt: Date;
   /** null = admin has not opened this lead in inbox yet */
   readAt: Date | null;
+  /** Set after the first successful admin reply email */
+  repliedAt: Date | null;
 };
 
 /**

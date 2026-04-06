@@ -1,20 +1,97 @@
 "use client";
 
-import { useActionState, useRef, type KeyboardEvent } from "react";
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useRef, type KeyboardEvent } from "react";
 import { replyToLeadAction, type ReplyToLeadResult } from "@/app/actions/lead";
 
 type LeadReplyFormProps = {
   leadId: string;
   leadEmail: string;
+  /** ISO timestamp after first successful reply; when set, the form is not shown */
+  repliedAtIso?: string | null;
   /** "card" = standalone card (e.g. detail page), "inbox" = Figma reply bar style */
   variant?: "card" | "inbox";
 };
 
+function formatRepliedAt(iso: string): string {
+  return new Date(iso).toLocaleString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
+function ReplyAlreadySentNotice({
+  leadEmail,
+  repliedAtIso,
+  variant,
+}: {
+  leadEmail: string;
+  repliedAtIso: string;
+  variant: "card" | "inbox";
+}) {
+  const when = formatRepliedAt(repliedAtIso);
+
+  if (variant === "inbox") {
+    return (
+      <div
+        className="border border-slate-200 bg-white"
+        role="region"
+        aria-label="Response already sent"
+      >
+        <div className="border-b border-slate-200 px-4 py-3">
+          <span className="text-[12px] font-bold uppercase tracking-tight text-slate-500">
+            Response
+          </span>
+        </div>
+        <div className="px-4 py-5">
+          <p className="text-[14px] font-semibold text-slate-800">
+            Response already sent
+          </p>
+          <p className="mt-2 text-[14px] leading-relaxed text-slate-600">
+            A reply was sent to{" "}
+            <span className="break-all font-medium text-slate-800">
+              {leadEmail}
+            </span>{" "}
+            on {when}. Further replies cannot be sent from this inbox.
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 border-t border-slate-200 bg-slate-50/80 px-4 py-3">
+          <span className="text-[10px] font-bold uppercase tracking-tight text-slate-400">
+            One reply per lead
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="rounded-lg border border-neutral-200 bg-neutral-50 p-6 shadow-sm"
+      role="region"
+      aria-label="Response already sent"
+    >
+      <h2 className="text-lg font-semibold text-[var(--foreground)]">
+        Response already sent
+      </h2>
+      <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+        A reply was sent to <strong className="text-neutral-800">{leadEmail}</strong>{" "}
+        on {when}. Further replies cannot be sent from this inbox.
+      </p>
+    </div>
+  );
+}
+
 export function LeadReplyForm({
   leadId,
   leadEmail,
+  repliedAtIso = null,
   variant = "card",
 }: LeadReplyFormProps) {
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const initialState: ReplyToLeadResult = {};
   const [state, formAction] = useActionState<
@@ -25,6 +102,14 @@ export function LeadReplyForm({
     initialState,
   );
 
+  useEffect(() => {
+    if (!state?.sent) {
+      return;
+    }
+    // Pull fresh lead state (repliedAt) so Inbox hides the response block immediately.
+    router.refresh();
+  }, [router, state?.sent]);
+
   const handleReplyKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key !== "Enter" || event.shiftKey) {
       return;
@@ -32,6 +117,16 @@ export function LeadReplyForm({
     event.preventDefault();
     formRef.current?.requestSubmit();
   };
+
+  if (repliedAtIso) {
+    return (
+      <ReplyAlreadySentNotice
+        leadEmail={leadEmail}
+        repliedAtIso={repliedAtIso}
+        variant={variant}
+      />
+    );
+  }
 
   if (variant === "inbox") {
     return (

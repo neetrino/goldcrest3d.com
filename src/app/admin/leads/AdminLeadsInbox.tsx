@@ -63,7 +63,7 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-1 flex-col bg-white lg:min-h-0">
+    <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-white lg:min-h-0">
       {/* Header: search */}
       <header className="flex min-h-[4rem] shrink-0 flex-wrap items-center gap-3 border-b border-slate-200 px-4 py-3 lg:h-16 lg:flex-nowrap lg:px-6 lg:py-0">
         <div className="relative min-w-0 flex-1 lg:max-w-[448px]">
@@ -81,16 +81,16 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
         </div>
       </header>
 
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
         {/* List column */}
         <section
-          className="flex w-full shrink-0 flex-col border-slate-200 border-b lg:h-auto lg:w-[380px] lg:border-b-0 lg:border-r"
+          className="flex min-h-0 w-full shrink-0 flex-col border-slate-200 border-b lg:h-auto lg:w-[380px] lg:border-b-0 lg:border-r"
           aria-label="All leads"
         >
           <div className="border-b border-slate-200 px-4 py-4 lg:px-6">
             <h2 className="text-[16px] font-bold text-slate-800">All Leads</h2>
           </div>
-          <div className="flex-1 overflow-y-auto">
+          <div className="min-h-0 flex-1 overflow-y-auto">
             {filteredLeads.length === 0 ? (
               <div className="p-6 text-center text-sm text-slate-500">
                 {leads.length === 0
@@ -289,14 +289,17 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                 )}
               </div>
 
-              {/* Reply section */}
-              <div className="shrink-0 border-t border-slate-200 bg-slate-50">
-                <LeadReplyForm
-                  leadId={selectedLead.id}
-                  leadEmail={selectedLead.email}
-                  variant="inbox"
-                />
-              </div>
+              {/* Reply section: shown only until the first successful response */}
+              {selectedLead.repliedAt == null && (
+                <div className="shrink-0 border-t border-slate-200 bg-slate-50">
+                  <LeadReplyForm
+                    leadId={selectedLead.id}
+                    leadEmail={selectedLead.email}
+                    repliedAtIso={null}
+                    variant="inbox"
+                  />
+                </div>
+              )}
             </>
           ) : (
             <div className="flex flex-1 flex-col items-center justify-center gap-2 text-slate-500">
