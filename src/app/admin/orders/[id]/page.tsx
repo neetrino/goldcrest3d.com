@@ -9,7 +9,6 @@ import {
   ADMIN_ORDER_PAYMENT_BADGE_KIND,
   getAdminOrderPaymentBadgeKind,
 } from "@/lib/payment/adminPaymentDisplayStatus";
-import { OrderEditForm } from "./OrderEditForm";
 import { DeleteOrderButton } from "./DeleteOrderButton";
 import { PaymentLinkActions } from "./PaymentLinkActions";
 
@@ -149,18 +148,6 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           </div>
         </section>
       )}
-
-      <section className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
-        <h2 className="text-base font-semibold text-[var(--foreground)]">
-          Edit order
-        </h2>
-        <p className="mt-1 text-sm text-neutral-500">
-          Update client, product, or price.
-        </p>
-        <div className="mt-5">
-          <OrderEditForm order={order} />
-        </div>
-      </section>
 
       <section className="rounded-lg border border-red-200 bg-red-50/50 p-6">
         <h2 className="text-base font-semibold text-red-800">Danger zone</h2>
