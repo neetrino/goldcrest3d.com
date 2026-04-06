@@ -102,6 +102,8 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                 {filteredLeads.map((lead) => {
                   const isActive = selectedId === lead.id;
                   const isUnread = lead.readAt === null;
+                  const isAnswered = lead.repliedAt !== null;
+                  const leadStatusLabel = isAnswered ? "answered" : "new";
                   return (
                     <li key={lead.id} className="border-b border-slate-100">
                       <button
@@ -109,8 +111,8 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                         onClick={() => handleSelectLead(lead.id)}
                         aria-label={
                           isUnread
-                            ? `${lead.fullName}, unread lead`
-                            : `${lead.fullName}, read`
+                            ? `${lead.fullName}, status ${leadStatusLabel}, not opened yet`
+                            : `${lead.fullName}, status ${leadStatusLabel}`
                         }
                         className={`relative flex w-full flex-col gap-1 px-4 py-4 text-left transition-colors hover:bg-slate-50 lg:px-6 ${
                           isActive ? "bg-white" : ""
@@ -146,8 +148,19 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                               {lead.fullName}
                             </span>
                           </span>
-                          <span className="shrink-0 text-[11px] text-slate-400 leading-[16.5px]">
-                            {formatListTime(lead.createdAt)}
+                          <span className="flex shrink-0 items-center gap-2">
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                                isAnswered
+                                  ? "bg-emerald-100 text-emerald-700"
+                                  : "bg-sky-100 text-sky-700"
+                              }`}
+                            >
+                              {leadStatusLabel}
+                            </span>
+                            <span className="text-[11px] text-slate-400 leading-[16.5px]">
+                              {formatListTime(lead.createdAt)}
+                            </span>
                           </span>
                         </div>
                         <span
