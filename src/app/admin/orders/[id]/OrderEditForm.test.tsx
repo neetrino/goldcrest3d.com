@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
 import { OrderEditForm } from "./OrderEditForm";
 
 vi.mock("@/app/actions/order", () => ({
@@ -22,6 +22,10 @@ const mockOrder = {
 };
 
 describe("OrderEditForm", () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it("renders form with order data prefilled", () => {
     render(<OrderEditForm order={mockOrder} />);
 
@@ -63,5 +67,18 @@ describe("OrderEditForm", () => {
       (el) => el.getAttribute("value") === "SPLIT"
     );
     expect(hasSplitChecked).toBe(true);
+  });
+
+  it("when paymentType is UNSET, no payment option is pre-selected", () => {
+    render(
+      <OrderEditForm order={{ ...mockOrder, paymentType: "UNSET" }} />
+    );
+    expect(screen.getByRole("radio", { name: /^full$/i })).not.toBeChecked();
+    expect(
+      screen.getByRole("radio", { name: /split \(50–50\)/i }),
+    ).not.toBeChecked();
+    expect(
+      screen.getByText(/client has not chosen yet/i),
+    ).toBeInTheDocument();
   });
 });

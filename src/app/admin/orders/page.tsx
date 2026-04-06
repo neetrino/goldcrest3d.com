@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { formatPriceAmd } from "@/lib/formatPrice";
+import { formatOrderPaymentTypeLabel } from "@/lib/payment/paymentTypeLabels";
 import { OrderEditPencilIcon } from "@/components/admin/OrderEditPencilIcon";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 
@@ -59,7 +60,7 @@ export default async function AdminOrdersPage() {
                         {order.productTitle}
                       </p>
                       <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500">
-                        <span>{order.paymentType}</span>
+                        <span>{formatOrderPaymentTypeLabel(order.paymentType)}</span>
                         <span aria-hidden>·</span>
                         <OrderStatusBadge
                           status={order.status}

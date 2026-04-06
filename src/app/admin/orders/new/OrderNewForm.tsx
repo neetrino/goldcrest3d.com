@@ -128,34 +128,6 @@ export function OrderNewForm({ leadEmails = [] }: OrderNewFormProps) {
           placeholder="50000"
         />
       </div>
-      <div>
-        <span className="block text-sm font-medium text-[var(--foreground)]">
-          Payment type
-        </span>
-        <div className="mt-1.5 flex flex-col gap-3 lg:flex-row lg:gap-6">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="paymentType"
-              value="FULL"
-              defaultChecked
-              disabled={isPending}
-              className="rounded border-[var(--foreground)]/30"
-            />
-            <span className="text-sm">Full (FULL)</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="paymentType"
-              value="SPLIT"
-              disabled={isPending}
-              className="rounded border-[var(--foreground)]/30"
-            />
-            <span className="text-sm">50–50 (SPLIT)</span>
-          </label>
-        </div>
-      </div>
       {state?.success === false && (
         <p
           id="order-error"

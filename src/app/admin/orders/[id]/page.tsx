@@ -10,6 +10,7 @@ import {
   getAdminOrderPaymentBadgeKind,
 } from "@/lib/payment/adminPaymentDisplayStatus";
 import { DeleteOrderButton } from "./DeleteOrderButton";
+import { formatOrderPaymentTypeLabel } from "@/lib/payment/paymentTypeLabels";
 import { PaymentLinkActions } from "./PaymentLinkActions";
 
 type Props = { params: Promise<{ id: string }> };
@@ -89,7 +90,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
               Payment type
             </dt>
-            <dd className="mt-0.5">{order.paymentType}</dd>
+            <dd className="mt-0.5">{formatOrderPaymentTypeLabel(order.paymentType)}</dd>
           </div>
           <div>
             <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">

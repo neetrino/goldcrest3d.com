@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { updateOrder } from "@/app/actions/order";
 import type { UpdateOrderResult } from "@/app/actions/order";
+import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
 import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
 import type { Order } from "@/generated/prisma/client";
 
@@ -122,6 +123,11 @@ export function OrderEditForm({ order }: Props) {
         <span className="block text-sm font-medium text-[var(--foreground)]">
           Payment type
         </span>
+        {order.paymentType === ORDER_PAYMENT_TYPE.UNSET && (
+          <p className="mt-1 text-xs text-neutral-500">
+            Client has not chosen yet — select FULL or SPLIT to set it from the admin side.
+          </p>
+        )}
         <div className="mt-1.5 flex flex-col gap-3 lg:flex-row lg:gap-6">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -129,6 +135,7 @@ export function OrderEditForm({ order }: Props) {
               name="paymentType"
               value="FULL"
               defaultChecked={order.paymentType === "FULL"}
+              required={order.paymentType === ORDER_PAYMENT_TYPE.UNSET}
               disabled={isPending}
               className="rounded border-[var(--foreground)]/30"
             />
