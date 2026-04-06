@@ -4,12 +4,31 @@ import Image from "next/image";
 import { prisma } from "@/lib/db";
 import { getR2PublicUrl } from "@/lib/storage";
 import { formatPriceAmd } from "@/lib/formatPrice";
+import { ORDER_STATUS } from "@/constants/order-status";
+import { isMockPaymentEnabled } from "@/lib/payment/config";
+import { MockPaymentHoldActions } from "./MockPaymentHoldActions";
 import { OrderPayActions } from "./OrderPayActions";
 
-type Props = { params: Promise<{ token: string }> };
+type Props = {
+  params: Promise<{ token: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
-export default async function OrderPaymentPage({ params }: Props) {
+function firstQuery(
+  raw: string | string[] | undefined,
+): string | undefined {
+  if (raw === undefined) return undefined;
+  const v = Array.isArray(raw) ? raw[0] : raw;
+  return typeof v === "string" && v.length > 0 ? v : undefined;
+}
+
+export default async function OrderPaymentPage({ params, searchParams }: Props) {
   const { token } = await params;
+  const sp = await searchParams;
+  const mockFlag = firstQuery(sp.mock);
+  const mockMsg = firstQuery(sp.msg);
+  const mockPaymentEnabled = isMockPaymentEnabled();
+
   const order = await prisma.order.findUnique({ where: { token } });
   if (!order) notFound();
 
@@ -24,9 +43,45 @@ export default async function OrderPaymentPage({ params }: Props) {
     ? getR2PublicUrl(order.productImageKey)
     : null;
 
+  const showMockBanner = mockPaymentEnabled && mockFlag !== undefined;
+
   return (
     <div className="mx-auto max-w-lg px-4 py-10">
       <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
+        {showMockBanner && mockFlag === "success" && (
+          <p
+            className="mb-4 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-900"
+            role="status"
+          >
+            Simulated payment: <strong>success</strong> — balance updated for testing only.
+          </p>
+        )}
+        {showMockBanner && mockFlag === "failed" && (
+          <p
+            className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900"
+            role="status"
+          >
+            Simulated payment: <strong>failed</strong> — no charge applied.
+          </p>
+        )}
+        {showMockBanner && mockFlag === "pending" && (
+          <p
+            className="mb-4 rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-900"
+            role="status"
+          >
+            Simulated payment: <strong>pending</strong> — order marked as processing (not paid yet).
+          </p>
+        )}
+        {showMockBanner && mockFlag === "error" && mockMsg && (
+          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900" role="alert">
+            {mockMsg}
+          </p>
+        )}
+        {mockPaymentEnabled && !showMockBanner && (
+          <p className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-950">
+            <strong className="font-semibold">Test mode:</strong> payments are simulated (no real charges).
+          </p>
+        )}
         <h1 className="text-xl font-semibold text-neutral-900">
           {order.productTitle}
         </h1>
@@ -81,17 +136,29 @@ export default async function OrderPaymentPage({ params }: Props) {
           </div>
         )}
 
-        <div className="mt-6">
+        <div className="mt-6 space-y-3">
+          {order.status === ORDER_STATUS.PAYMENT_PROCESSING && !isPaid && (
+            <>
+              {mockPaymentEnabled ? (
+                <MockPaymentHoldActions orderId={order.id} orderToken={order.token} />
+              ) : (
+                <p className="rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-sm text-blue-900">
+                  Payment is being processed. Please check back later.
+                </p>
+              )}
+            </>
+          )}
           {isPaid ? (
             <p className="rounded bg-green-50 py-3 text-center font-medium text-green-800">
               Order is fully paid
             </p>
-          ) : (
+          ) : order.status === ORDER_STATUS.PAYMENT_PROCESSING ? null : (
             <OrderPayActions
               orderId={order.id}
               paymentType={order.paymentType}
               priceCents={order.priceCents}
               paidCents={order.paidCents}
+              mockPaymentEnabled={mockPaymentEnabled}
             />
           )}
         </div>

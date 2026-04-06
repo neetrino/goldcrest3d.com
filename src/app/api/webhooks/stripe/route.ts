@@ -3,12 +3,17 @@ import Stripe from "stripe";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { AMD_MINOR_UNITS_PER_DRAM } from "@/constants/order-form";
+import { applyPaidAmountToOrder } from "@/lib/payment/applyPaidAmount";
+import { isMockPaymentEnabled } from "@/lib/payment/config";
 
 const secretKey = process.env.STRIPE_SECRET_KEY;
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const stripe = secretKey ? new Stripe(secretKey) : null;
 
 export async function POST(request: NextRequest) {
+  if (isMockPaymentEnabled()) {
+    return new Response("OK", { status: 200 });
+  }
   if (!stripe || !webhookSecret) {
     return new Response("Webhook not configured", { status: 500 });
   }
@@ -49,16 +54,7 @@ export async function POST(request: NextRequest) {
     if (!order) return new Response("OK", { status: 200 });
 
     const paidDeltaAmd = Math.round(amountTotalMinor / AMD_MINOR_UNITS_PER_DRAM);
-    const newPaidCents = order.paidCents + paidDeltaAmd;
-    const isFullyPaid = newPaidCents >= order.priceCents;
-
-    await prisma.order.update({
-      where: { id: orderId },
-      data: {
-        paidCents: newPaidCents,
-        ...(isFullyPaid && { status: "PAID" }),
-      },
-    });
+    await applyPaidAmountToOrder(orderId, paidDeltaAmd);
   } catch (err) {
     logger.error("Stripe webhook: order update failed", err);
     return new Response("Database error", { status: 500 });

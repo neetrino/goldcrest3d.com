@@ -1,20 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { formatPriceAmd } from "@/lib/formatPrice";
-
-function StatusBadge({ status }: { status: string }) {
-  const isPaid = status === "PAID";
-  return (
-    <span
-      className={
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium " +
-        (isPaid ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800")
-      }
-    >
-      {isPaid ? "Paid" : "Pending"}
-    </span>
-  );
-}
+import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 
 export default async function AdminOrdersPage() {
   const orders = await prisma.order.findMany({
@@ -72,7 +59,12 @@ export default async function AdminOrdersPage() {
                     <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500">
                       <span>{order.paymentType}</span>
                       <span aria-hidden>·</span>
-                      <StatusBadge status={order.status} />
+                      <OrderStatusBadge
+                        status={order.status}
+                        paymentType={order.paymentType}
+                        priceCents={order.priceCents}
+                        paidCents={order.paidCents}
+                      />
                       <span aria-hidden>·</span>
                       <time dateTime={order.createdAt.toISOString()}>
                         {order.createdAt.toLocaleDateString("en-GB", {
