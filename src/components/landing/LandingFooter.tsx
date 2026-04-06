@@ -181,7 +181,7 @@ export function LandingFooter() {
               </div>
             </div>
             <p className={FOOTER_TAGLINE_CLASS}>
-              Specialized in precision jewelry CAD and structural engineering for high-end manufacturing.
+              Professional Jewelry 3D Modeling Studio
             </p>
           </div>
           <div
@@ -193,7 +193,7 @@ export function LandingFooter() {
                 href="mailto:hello@ds-jewelry.studio"
                 className={`${FOOTER_CONTACT_LINE_CLASS} break-all md:max-w-none`}
               >
-                hello@ds-jewelry.studio
+                info@goldcrest3d.com
               </a>
               <a
                 href="tel:+15559023481"
@@ -219,7 +219,7 @@ export function LandingFooter() {
               <h3 className={FOOTER_FOLLOW_HEADING_CLASS}>Follow</h3>
               <div className={FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS}>
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/goldcrest3d?igsh=NXQ3MXk4N2xsYWRm"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
