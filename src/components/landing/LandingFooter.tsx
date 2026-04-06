@@ -113,8 +113,7 @@ const FOOTER_FOLLOW_MAP_LINK =
   "https://www.google.com/maps/search/?api=1&query=Gai+Avenue+10%2F6%2C+Yerevan";
 
 /**
- * Figma 110:389 — `background: url(...) lightgray 50% / cover no-repeat`
- * https://www.figma.com/design/dQx6mBANOqB24VBcCxsLcP/Goldcrest-3D?node-id=110-389
+ * Design reference 110:389 — `background: url(...) lightgray 50% / cover no-repeat`
  */
 const FOOTER_FOLLOW_MAP_BANNER_STYLE: CSSProperties = {
   background: `lightgray url("${LANDING_IMAGES.footerFollowImage}") 50% / cover no-repeat`,
