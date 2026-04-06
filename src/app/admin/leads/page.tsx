@@ -28,6 +28,7 @@ export default async function AdminLeadsPage({
     message: l.message,
     createdAt: l.createdAt,
     readAt: l.readAt,
+    repliedAt: l.repliedAt,
   }));
 
   let selectedLead: LeadWithAttachments | null = null;
@@ -45,6 +46,7 @@ export default async function AdminLeadsPage({
         message: lead.message,
         createdAt: lead.createdAt,
         readAt: lead.readAt,
+        repliedAt: lead.repliedAt,
         attachmentUrls,
       };
     }

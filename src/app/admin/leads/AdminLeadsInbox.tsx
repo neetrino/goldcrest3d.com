@@ -289,14 +289,17 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
                 )}
               </div>
 
-              {/* Reply section */}
-              <div className="shrink-0 border-t border-slate-200 bg-slate-50">
-                <LeadReplyForm
-                  leadId={selectedLead.id}
-                  leadEmail={selectedLead.email}
-                  variant="inbox"
-                />
-              </div>
+              {/* Reply section: shown only until the first successful response */}
+              {selectedLead.repliedAt == null && (
+                <div className="shrink-0 border-t border-slate-200 bg-slate-50">
+                  <LeadReplyForm
+                    leadId={selectedLead.id}
+                    leadEmail={selectedLead.email}
+                    repliedAtIso={null}
+                    variant="inbox"
+                  />
+                </div>
+              )}
             </>
           ) : (
             <div className="flex flex-1 flex-col items-center justify-center gap-2 text-slate-500">

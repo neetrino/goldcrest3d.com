@@ -72,6 +72,8 @@ model Lead {
   attachmentKeys String[] // R2 keys for quote form uploads
   /// Set when an admin has opened the lead detail; null = unread in inbox.
   readAt     DateTime?
+  /// Set after the first successful admin reply email; blocks further replies from the UI.
+  repliedAt  DateTime?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
