@@ -20,7 +20,7 @@ import {
   getPreview,
   getSubject,
 } from "./adminLeadsInbox.helpers";
-import { IconMail, IconSearch, IconSlidersHorizontal } from "./AdminLeadsInboxIcons";
+import { IconMail, IconSearch } from "./AdminLeadsInboxIcons";
 import { useAdminLeadsUnread } from "../AdminLeadsUnreadContext";
 
 type AdminLeadsInboxProps = {
@@ -87,15 +87,8 @@ export function AdminLeadsInbox({ leads, selectedLead }: AdminLeadsInboxProps) {
           className="flex w-full shrink-0 flex-col border-slate-200 border-b lg:h-auto lg:w-[380px] lg:border-b-0 lg:border-r"
           aria-label="All leads"
         >
-          <div className="flex items-center justify-between border-b border-slate-200 px-4 py-4 lg:px-6">
+          <div className="border-b border-slate-200 px-4 py-4 lg:px-6">
             <h2 className="text-[16px] font-bold text-slate-800">All Leads</h2>
-            <button
-              type="button"
-              className="flex min-h-10 min-w-10 shrink-0 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-              aria-label="Filter or sort"
-            >
-              <IconSlidersHorizontal />
-            </button>
           </div>
           <div className="flex-1 overflow-y-auto">
             {filteredLeads.length === 0 ? (
