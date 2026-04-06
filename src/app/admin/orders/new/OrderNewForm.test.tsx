@@ -10,7 +10,6 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/app/actions/order", () => ({
   createOrder: vi.fn(() => Promise.resolve(null)),
-  FORM_FIELD_PRODUCT_IMAGE: "productImage",
 }));
 
 describe("OrderNewForm", () => {

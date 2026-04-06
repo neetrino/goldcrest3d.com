@@ -3,8 +3,9 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createOrder, FORM_FIELD_PRODUCT_IMAGE } from "@/app/actions/order";
+import { createOrder } from "@/app/actions/order";
 import type { CreateOrderResult } from "@/app/actions/order";
+import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
 
 const initialState: CreateOrderResult = null;
 

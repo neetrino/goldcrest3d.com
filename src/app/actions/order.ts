@@ -7,8 +7,7 @@ import { getOrderPaymentUrl } from "@/lib/appUrl";
 import { sendEmail } from "@/lib/email";
 import { uploadToR2 } from "@/lib/storage";
 import { orderFormSchema } from "@/lib/validations/orderForm";
-
-const FORM_FIELD_PRODUCT_IMAGE = "productImage";
+import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
 
 export type CreateOrderResult =
   | { success: true; orderId: string }
@@ -218,5 +217,3 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
-
-export { FORM_FIELD_PRODUCT_IMAGE };
