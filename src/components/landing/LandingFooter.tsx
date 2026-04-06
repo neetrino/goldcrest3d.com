@@ -109,6 +109,8 @@ const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS = "lg:-translate-y-2";
 const FOOTER_FOLLOW_MAP_INNER_FRAME_CLASS = `mt-4 w-full min-w-0 overflow-hidden ${FOOTER_FOLLOW_MAP_CORNER_CLASS} md:shrink-0 ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS} ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS}`;
 
 const FOOTER_FOLLOW_MAP_OUTER_WRAPPER_CLASS = `w-full ${FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS}`;
+const FOOTER_FOLLOW_MAP_LINK =
+  "https://www.google.com/maps/search/?api=1&query=Gai+Avenue+10%2F6%2C+Yerevan";
 
 /**
  * Figma 110:389 — `background: url(...) lightgray 50% / cover no-repeat`
@@ -179,7 +181,7 @@ export function LandingFooter() {
               </div>
             </div>
             <p className={FOOTER_TAGLINE_CLASS}>
-              Specialized in precision jewelry CAD and structural engineering for high-end manufacturing.
+              Professional Jewelry 3D Modeling Studio
             </p>
           </div>
           <div
@@ -191,18 +193,18 @@ export function LandingFooter() {
                 href="mailto:hello@ds-jewelry.studio"
                 className={`${FOOTER_CONTACT_LINE_CLASS} break-all md:max-w-none`}
               >
-                hello@ds-jewelry.studio
+                info@goldcrest3d.com
               </a>
               <a
                 href="tel:+15559023481"
                 className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-none`}
               >
-                +1 (555) 902-3481
+                +374 (41) 141 - 110
               </a>
               <div className={FOOTER_CONTACT_LOCATION_BLOCK_CLASS}>
                 <div className={FOOTER_LOCATION_ROW_CLASS}>
                   <FooterLocationIcon />
-                  <p className={FOOTER_CONTACT_LINE_CLASS}>Yerevan, Armenia</p>
+                  <p className={FOOTER_CONTACT_LINE_CLASS}>10/6 Gai Ave, Yerevan</p>
                 </div>
                 <p className={FOOTER_CONTACT_LINE_CLASS}>
                   International collaborations available
@@ -217,7 +219,7 @@ export function LandingFooter() {
               <h3 className={FOOTER_FOLLOW_HEADING_CLASS}>Follow</h3>
               <div className={FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS}>
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/goldcrest3d?igsh=NXQ3MXk4N2xsYWRm"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
@@ -270,12 +272,20 @@ export function LandingFooter() {
               </div>
             </div>
             <div className={FOOTER_FOLLOW_MAP_OUTER_WRAPPER_CLASS}>
-              <div
-                className={FOOTER_FOLLOW_MAP_INNER_FRAME_CLASS}
-                style={FOOTER_FOLLOW_MAP_BANNER_COMBINED_STYLE}
-                data-landing-image={LANDING_IMAGE_IDS.FOOTER_FOLLOW_IMAGE}
-                aria-hidden
-              />
+              <a
+                href={FOOTER_FOLLOW_MAP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open Gai avenue 10/6, Yerevan on Google Maps"
+                className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C9A86A] focus-visible:ring-offset-2"
+              >
+                <div
+                  className={FOOTER_FOLLOW_MAP_INNER_FRAME_CLASS}
+                  style={FOOTER_FOLLOW_MAP_BANNER_COMBINED_STYLE}
+                  data-landing-image={LANDING_IMAGE_IDS.FOOTER_FOLLOW_IMAGE}
+                  aria-hidden
+                />
+              </a>
             </div>
           </div>
         </div>
