@@ -19,7 +19,10 @@ export const SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX = 16;
 
 export const SECTION1_MODELING_TITLE_NUDGE_UP_PX = 0;
 
-export const MODELING_TITLE_MOBILE_DISPLAY = "3D Production\u2011Ready Modeling";
+/** Mobile hero: two lines (md+ uses desktop single-line title). U+2011 keeps "Ready" on line 1 with "Production". */
+export const MODELING_TITLE_MOBILE_LINE1 = "3D Production\u2011Ready";
+export const MODELING_TITLE_MOBILE_LINE2 = "Modeling";
+
 export const MODELING_TITLE_DESKTOP_DISPLAY = "3D Production-Ready Modeling";
 
 export const RENDERING_SUBTITLE_LINE1 =
@@ -37,6 +40,16 @@ export const DESIGN_SUBTITLE_LINE2 =
   "collection building. Your vision, engineered.";
 
 export const SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX = 0;
+
+/** Mobile only: lifts title + subtitle + CTA together (negative = up). Sync with globals-powerbanners-mobile-nav.css --section2-text-cluster-translate-y-mobile */
+export const SECTION2_TEXT_CLUSTER_TRANSLATE_Y_MOBILE_PX = -176;
+
+/** Mobile only: extra space above subtitle — moves subtitle + Get a Quote down; title unchanged. Sync with #hero-rendering-subtitle margin-top in globals-powerbanners-mobile-nav.css */
+export const SECTION2_RENDERING_SUBTITLE_AND_CTA_NUDGE_DOWN_MOBILE_PX = 20;
+
+/** Mobile only: section2 Get a Quote only — negative = up. Sync with #hero-section2-get-quote transform in globals-powerbanners-mobile-nav.css */
+export const SECTION2_GET_QUOTE_NUDGE_UP_MOBILE_PX = 28;
+
 export const SECTION2_TEXT_CLUSTER_NUDGE_MD_PX = 90;
 export const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
 

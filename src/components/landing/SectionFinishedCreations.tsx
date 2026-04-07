@@ -3,7 +3,7 @@
 import { LANDING_SECTION_IDS } from "@/constants";
 import type { FinishedGalleryItem } from "@/lib/site-media/landing-defaults";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useFinishedCreationsCarouselMetrics } from "@/components/landing/useFinishedCreationsCarouselMetrics";
 
 /** Carousel: small row (row 2) â€” design aspect; slide width is fluid from container. */
@@ -34,6 +34,8 @@ const DESKTOP_ROW2_VISIBLE_SLOTS_FALLBACK = 3;
 
 /** Desktop carousel: one timing curve for both rows (GPU-friendly transform). */
 const DESKTOP_CAROUSEL_TRANSITION_MS = 420;
+/** Mobile gallery strips use `gap-1` (4px) — same as previous grid spacing. */
+const MOBILE_FINISHED_GALLERY_GAP_PX = 4;
 const FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS = 5000;
 
 /** Mobile gallery: slightly taller than desktop slot ratio so blocks feel larger. */
@@ -167,6 +169,43 @@ export function SectionFinishedCreations({
   const row1StripImages = [...ROW1_IMAGES, ...ROW1_IMAGES];
   const row2StripImages = [...ROW2_IMAGES, ...ROW2_IMAGES];
 
+  const mobileRow1OverflowRef = useRef<HTMLDivElement>(null);
+  const mobileRow2OverflowRef = useRef<HTMLDivElement>(null);
+  const [mobileRow1SlideWidthPx, setMobileRow1SlideWidthPx] = useState(0);
+  const [mobileRow2FrameWidthPx, setMobileRow2FrameWidthPx] = useState(0);
+
+  useLayoutEffect(() => {
+    const el1 = mobileRow1OverflowRef.current;
+    const el2 = mobileRow2OverflowRef.current;
+    const measure = () => {
+      if (el1) {
+        const w = el1.getBoundingClientRect().width;
+        if (w > 0) {
+          setMobileRow1SlideWidthPx(
+            Math.max(0, (w - MOBILE_FINISHED_GALLERY_GAP_PX) / 2),
+          );
+        }
+      }
+      if (el2) {
+        const w = el2.getBoundingClientRect().width;
+        if (w > 0) {
+          setMobileRow2FrameWidthPx(w);
+        }
+      }
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (el1) {
+      ro.observe(el1);
+    }
+    if (el2) {
+      ro.observe(el2);
+    }
+    return () => {
+      ro.disconnect();
+    };
+  }, []);
+
   const desktopCarouselContainerRef = useRef<HTMLDivElement>(null);
   const desktopMetrics = useFinishedCreationsCarouselMetrics(
     desktopCarouselContainerRef,
@@ -177,14 +216,14 @@ export function SectionFinishedCreations({
     DESKTOP_ROW2_PEEK_FULL_CENTER_SLIDES,
   );
 
-  const mobileRow1Left = ROW1_IMAGES[activePage % TOTAL_PAGES];
-  const mobileRow1Right = ROW1_IMAGES[(activePage + 1) % TOTAL_PAGES];
-  const mobileRow2First = activePage % ROW2_IMAGE_COUNT;
-  const mobileRow2Items = [
-    ROW2_IMAGES[mobileRow2First],
-    ROW2_IMAGES[(mobileRow2First + 1) % ROW2_IMAGE_COUNT],
-    ROW2_IMAGES[(mobileRow2First + 2) % ROW2_IMAGE_COUNT],
-  ] as const;
+  const mobileRow1TransformPx = Math.round(
+    (activePage % TOTAL_PAGES) *
+      (mobileRow1SlideWidthPx + MOBILE_FINISHED_GALLERY_GAP_PX),
+  );
+  const mobileRow2TransformPx = Math.round(
+    (activePage % ROW2_IMAGE_COUNT) *
+      (mobileRow2FrameWidthPx + MOBILE_FINISHED_GALLERY_GAP_PX),
+  );
 
   const desktopRow1TransformPx = Math.round(
     desktopMetrics.row1PeekOffsetPx +
@@ -216,57 +255,116 @@ export function SectionFinishedCreations({
             onPointerCancel={onMobileSwipePointerCancel}
             role="presentation"
           >
-            <div className={`grid grid-cols-2 gap-1 ${MOBILE_TOP_ROW_BLEED_CLASS}`}>
-              {[mobileRow1Left, mobileRow1Right].map((item, index) => (
-                <div
-                  key={`mobile-row1-${item.id}-${activePage}-${index}`}
-                  data-landing-image={item.imageId}
-                  className="relative w-full min-w-0 overflow-hidden rounded-none"
-                  style={{ aspectRatio: `${SLOT_WIDTH} / ${MOBILE_ROW1_ASPECT_HEIGHT}` }}
-                >
-                  <Image
-                    src={item.src}
-                    alt=""
-                    fill
-                    className={`object-cover ${item.objectPositionClass ?? ""} ${
-                      index === 1 &&
-                      item.objectPositionClass !== GALLERY_OBJECT_POSITION_PORTRAIT_CLASS
-                        ? MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS
-                        : ""
-                    }`.trim()}
-                    sizes="(max-width: 767px) 50vw, 50vw"
-                  />
-                </div>
-              ))}
+            <div
+              ref={mobileRow1OverflowRef}
+              className={`overflow-hidden ${MOBILE_TOP_ROW_BLEED_CLASS}`}
+            >
+              <div
+                className="flex gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
+                style={{
+                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                  transform: `translate3d(-${mobileRow1TransformPx}px, 0, 0)`,
+                }}
+              >
+                {row1StripImages.map((item, index) => {
+                  const isMobileRow1RightColumn =
+                    TOTAL_PAGES <= 1
+                      ? index % 2 === 1
+                      : index % TOTAL_PAGES === (activePage + 1) % TOTAL_PAGES;
+                  return (
+                    <div
+                      key={`mobile-row1-${item.id}-${index}`}
+                      data-landing-image={item.imageId}
+                      className="relative shrink-0 min-w-0 overflow-hidden rounded-none"
+                      style={{
+                        width:
+                          mobileRow1SlideWidthPx > 0
+                            ? `${mobileRow1SlideWidthPx}px`
+                            : undefined,
+                        aspectRatio: `${SLOT_WIDTH} / ${MOBILE_ROW1_ASPECT_HEIGHT}`,
+                      }}
+                    >
+                      <Image
+                        src={item.src}
+                        alt=""
+                        fill
+                        className={`object-cover ${item.objectPositionClass ?? ""} ${
+                          isMobileRow1RightColumn &&
+                          item.objectPositionClass !== GALLERY_OBJECT_POSITION_PORTRAIT_CLASS
+                            ? MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS
+                            : ""
+                        }`.trim()}
+                        sizes="(max-width: 767px) 50vw, 50vw"
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
             <div
-              className={`grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] gap-1 ${MOBILE_SMALL_ROW_CLASS}`}
+              ref={mobileRow2OverflowRef}
+              className={`overflow-hidden ${MOBILE_SMALL_ROW_CLASS}`}
             >
-              {mobileRow2Items.map((item, index) => {
-                const sideObjectPositionClass =
-                  index === 0 ? "object-right" : index === 2 ? "object-left" : "object-center";
-                const isCenter = index === 1;
-                return (
-                  <div
-                    key={`mobile-row2-${item.id}-${activePage}-${index}`}
-                    data-landing-image={item.imageId}
-                    className="relative min-h-0 min-w-0 overflow-hidden rounded-none"
-                    style={
-                      isCenter
-                        ? { aspectRatio: `${ROW2_ITEM_WIDTH} / ${MOBILE_ROW2_ASPECT_HEIGHT}` }
-                        : undefined
-                    }
-                  >
-                    <Image
-                      src={item.src}
-                      alt=""
-                      fill
-                      className={`object-cover ${sideObjectPositionClass}`.trim()}
-                      sizes="(max-width: 767px) 33vw, 33vw"
-                    />
-                  </div>
-                );
-              })}
+              <div
+                className="flex gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
+                style={{
+                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                  transform: `translate3d(-${mobileRow2TransformPx}px, 0, 0)`,
+                }}
+              >
+                {Array.from({ length: ROW2_IMAGE_COUNT * 2 }, (_, frameIndex) => {
+                  const base = frameIndex % ROW2_IMAGE_COUNT;
+                  const frameItems = [
+                    ROW2_IMAGES[base],
+                    ROW2_IMAGES[(base + 1) % ROW2_IMAGE_COUNT],
+                    ROW2_IMAGES[(base + 2) % ROW2_IMAGE_COUNT],
+                  ] as const;
+                  return (
+                    <div
+                      key={`mobile-row2-frame-${frameIndex}`}
+                      className="grid shrink-0 grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] gap-1"
+                      style={{
+                        width:
+                          mobileRow2FrameWidthPx > 0
+                            ? `${mobileRow2FrameWidthPx}px`
+                            : undefined,
+                      }}
+                    >
+                      {frameItems.map((item, index) => {
+                        const sideObjectPositionClass =
+                          index === 0
+                            ? "object-right"
+                            : index === 2
+                              ? "object-left"
+                              : "object-center";
+                        const isCenter = index === 1;
+                        return (
+                          <div
+                            key={`mobile-row2-${item.id}-${frameIndex}-${index}`}
+                            data-landing-image={item.imageId}
+                            className="relative min-h-0 min-w-0 overflow-hidden rounded-none"
+                            style={
+                              isCenter
+                                ? {
+                                    aspectRatio: `${ROW2_ITEM_WIDTH} / ${MOBILE_ROW2_ASPECT_HEIGHT}`,
+                                  }
+                                : undefined
+                            }
+                          >
+                            <Image
+                              src={item.src}
+                              alt=""
+                              fill
+                              className={`object-cover ${sideObjectPositionClass}`.trim()}
+                              sizes="(max-width: 767px) 33vw, 33vw"
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
             </div>
             <div

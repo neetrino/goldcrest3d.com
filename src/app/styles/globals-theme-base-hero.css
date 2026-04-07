@@ -40,16 +40,33 @@ section[id] {
   line-height: 28px;
 }
 
-/* Jewelry Rendering — ենթավերնագիր (նույն տիպոգրաֆիան ինչ 1024px+) */
+/* Jewelry Rendering — ենթավերնագիր (mobile: Inter; md+: SF Compact) */
 #hero-rendering-subtitle {
   color: rgba(255, 255, 255, 0.9);
   text-align: left;
-  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-  font-size: 20px;
-  font-style: italic;
-  font-weight: 350;
-  line-height: 28px;
   transform: translate(0, -12px);
+}
+
+@media (max-width: 767px) {
+  #hero-rendering-subtitle {
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 24px;
+    letter-spacing: -0.312px;
+  }
+}
+
+@media (min-width: 768px) {
+  #hero-rendering-subtitle {
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 350;
+    line-height: 28px;
+    transform: translate(0, -12px);
+  }
 }
 
 /* Jewelry Design վերնագիր — նույն scale ինչ md+ (line-height 1.12) */
@@ -72,12 +89,31 @@ section[id] {
   line-height: 28px;
 }
 
-@media (min-width: 768px) {
-  #hero-rendering-subtitle {
-    transform: translate(0, -12px);
+/* Jewelry Design (section3) — mobile Figma; md+ uses base + globals-powerbanners-layout */
+@media (max-width: 767px) {
+  .power-banners-section3-text-cluster .hero-primary-title-typography-design {
+    color: #000;
+    text-align: right;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 36px;
+    letter-spacing: 0.396px;
+  }
+
+  .power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
+    color: rgba(18, 18, 18, 0.9);
+    text-align: right;
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 350;
+    line-height: 28px;
   }
 }
 
+/* Modeling hero subtitle — Figma 16/24 +1px nudge */
 #hero-modeling-subtitle {
   align-self: stretch;
   margin-inline: auto;
@@ -86,33 +122,58 @@ section[id] {
   transform: translateY(-8px);
   color: rgba(255, 255, 255, 0.9);
   font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-  font-size: 20px;
+  font-size: 17px;
   font-style: italic;
   font-weight: 350;
-  line-height: 28px;
+  line-height: 25px;
 }
 
-/* Hero slides 1–3: title + body copy — same typography as viewports ≥1024px */
+/* Hero slide 1 — modeling title: mobile Figma 30/30 +1px nudge; md+ unchanged */
 #hero-modeling-text-group > h1 {
   align-self: stretch;
   color: #fff;
   text-align: center;
   font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-  font-size: 52px;
+  font-size: 31px;
   font-style: normal;
   font-weight: 350;
-  line-height: 72px;
+  line-height: 31px;
 }
 
+@media (min-width: 768px) {
+  #hero-modeling-text-group > h1 {
+    font-size: 52px;
+    line-height: 72px;
+  }
+}
+
+/* Jewelry Rendering title — mobile: Inter; md+: SF Compact */
 .power-banners-section2-text-cluster > h1 {
   color: #fff;
   text-align: left;
-  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-  font-size: 52px;
-  font-style: normal;
-  font-weight: 350;
-  line-height: 72px;
-  translate: 0 -0.625rem;
+}
+
+@media (max-width: 767px) {
+  .power-banners-section2-text-cluster > h1 {
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 36px;
+    letter-spacing: 0.396px;
+    translate: 0 -0.625rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .power-banners-section2-text-cluster > h1 {
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 52px;
+    font-style: normal;
+    font-weight: 350;
+    line-height: 72px;
+    translate: 0 -0.625rem;
+  }
 }
 
 /* Հերո gold CTA — section1 և section2 նույն չափ/տիպոգրաֆիա; transform-ը առանձին */

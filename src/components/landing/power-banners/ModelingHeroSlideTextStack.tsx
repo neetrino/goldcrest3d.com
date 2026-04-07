@@ -6,7 +6,8 @@ import {
 } from "@/components/landing/GetAQuoteButton";
 import {
   MODELING_TITLE_DESKTOP_DISPLAY,
-  MODELING_TITLE_MOBILE_DISPLAY,
+  MODELING_TITLE_MOBILE_LINE1,
+  MODELING_TITLE_MOBILE_LINE2,
   SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX,
   SECTION1_HERO_TEXT_NUDGE_DOWN_PX,
   SECTION1_MODELING_TITLE_NUDGE_UP_PX,
@@ -30,7 +31,12 @@ export function ModelingHeroSlideTextStack() {
           transform: `translateY(-${SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
         }}
       >
-        <span className="md:hidden">{MODELING_TITLE_MOBILE_DISPLAY}</span>
+        <span className="md:hidden">
+          <span className="block whitespace-nowrap">
+            {MODELING_TITLE_MOBILE_LINE1}
+          </span>
+          <span className="block">{MODELING_TITLE_MOBILE_LINE2}</span>
+        </span>
         <span className="hidden md:inline">
           {MODELING_TITLE_DESKTOP_DISPLAY}
         </span>

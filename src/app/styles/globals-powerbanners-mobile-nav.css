@@ -19,10 +19,12 @@
     text-align: right;
   }
 
+  /* Subtitle + CTA մի քիչ ներքև; վերնագիրը չի շարժվում (SECTION2_RENDERING_SUBTITLE_AND_CTA_NUDGE_DOWN_MOBILE_PX) */
   #hero-rendering-subtitle {
     width: auto;
     max-width: 100%;
     flex-shrink: 0;
+    margin-top: 20px;
   }
 
   /* Jewelry Rendering + Jewelry Design — same CTA size, padding, gradient (mobile) */
@@ -54,6 +56,11 @@
     transform: translate(0, 0);
   }
 
+  /* Jewelry Rendering — միայն Get a Quote վերև (SECTION2_GET_QUOTE_NUDGE_UP_MOBILE_PX); section3 CTA չի դիպում */
+  #hero-section2-get-quote {
+    transform: translate(0, -28px);
+  }
+
   /**
    * Hero slides — fluid width on narrow viewports (avoid fixed 367/390px + scroll).
    * Single aspect source: 20/37; height comes from width × ratio.
@@ -81,8 +88,8 @@
 
   .power-banners-section2-block {
     background-color: #000;
-    /** Jewelry Rendering — ամբողջ տեքստային կլաստերը մի քիչ վերև (բացասական = վերև) */
-    --section2-text-cluster-translate-y-mobile: -18px;
+    /** Jewelry Rendering — title + subtitle + CTA միասին վերև (միայն mobile; sync SECTION2_TEXT_CLUSTER_TRANSLATE_Y_MOBILE_PX) */
+    --section2-text-cluster-translate-y-mobile: -176px;
   }
 
   .power-banners-section2-block .power-banners-section2-text-cluster {
