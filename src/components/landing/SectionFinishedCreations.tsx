@@ -3,7 +3,7 @@
 import { LANDING_SECTION_IDS } from "@/constants";
 import type { FinishedGalleryItem } from "@/lib/site-media/landing-defaults";
 import Image from "next/image";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFinishedCreationsCarouselMetrics } from "@/components/landing/useFinishedCreationsCarouselMetrics";
 
 /** Carousel: small row (row 2) â€” design aspect; slide width is fluid from container. */
@@ -34,6 +34,7 @@ const DESKTOP_ROW2_VISIBLE_SLOTS_FALLBACK = 3;
 
 /** Desktop carousel: one timing curve for both rows (GPU-friendly transform). */
 const DESKTOP_CAROUSEL_TRANSITION_MS = 420;
+const FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS = 5000;
 
 /** Mobile gallery: slightly taller than desktop slot ratio so blocks feel larger. */
 const MOBILE_BLOCK_HEIGHT_SCALE = 1.38;
@@ -94,6 +95,18 @@ export function SectionFinishedCreations({
 
   const goNext = useCallback(() => {
     setActivePage((p) => (p >= TOTAL_PAGES - 1 ? 0 : p + 1));
+  }, [TOTAL_PAGES]);
+
+  useEffect(() => {
+    if (TOTAL_PAGES <= 1) {
+      return;
+    }
+    const intervalId = window.setInterval(() => {
+      setActivePage((page) => (page >= TOTAL_PAGES - 1 ? 0 : page + 1));
+    }, FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS);
+    return () => {
+      window.clearInterval(intervalId);
+    };
   }, [TOTAL_PAGES]);
 
   const onMobileSwipePointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
