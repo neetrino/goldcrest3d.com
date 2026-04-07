@@ -27,6 +27,21 @@ const FOUNDER_BIO_MOBILE_P4 = `No model leaves the studio without structural ver
 /** Դեսքտոփում միայն founder նկարը մի քիչ դեպի ձախ (`-translate-x` = ձախ) */
 const FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS = "md:-translate-x-24";
 
+/** Founder գրադարան — lg (1024px) կոմպակտ, xl-ից վեր՝ լայն դեսքտոփ */
+const FOUNDER_GRADIENT_PANEL_CLASS =
+  "relative mx-auto flex h-[431.867px] min-h-0 w-full max-w-full shrink-0 flex-col self-stretch overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:h-[560px] md:w-full md:max-w-[1440px] md:shrink md:flex-row md:self-auto lg:mt-10 lg:h-[560px] xl:mt-[88px] xl:h-[680px]";
+
+const FOUNDER_DESKTOP_TEXT_COLUMN_CLASS =
+  "hidden min-h-0 flex-1 flex-col px-4 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8 md:flex md:pl-16 md:pr-10 md:pt-20 md:pb-10 md:min-h-[280px] lg:pl-14 lg:pr-8 lg:pt-14 lg:pb-6 lg:min-h-0 xl:pl-28 xl:pr-12 xl:pt-40 xl:pb-16 xl:min-h-[320px]";
+
+const FOUNDER_DESKTOP_HEADING_CLASS =
+  "text-left font-black text-[#0f172a] text-[32px] leading-[38px] tracking-[-1.2px] md:text-[34px] md:leading-[40px] xl:text-[36px] xl:leading-[40px]";
+
+const FOUNDER_DESKTOP_BIO_TOP_MARGIN_CLASS = "mt-5 sm:mt-6 md:mt-6 lg:mt-4 xl:mt-10";
+
+const FOUNDER_DESKTOP_STATS_SECTION_CLASS =
+  "mt-6 flex flex-wrap gap-6 sm:gap-8 sm:mt-8 md:mt-10 md:gap-10 lg:mt-6 lg:gap-8 xl:mt-16 xl:gap-12";
+
 type FounderBioContentDesktopProps = {
   contentTopClassName: string;
 };
@@ -34,13 +49,13 @@ type FounderBioContentDesktopProps = {
 function FounderBioContentDesktop({ contentTopClassName }: FounderBioContentDesktopProps) {
   return (
     <div
-      className={`space-y-4 font-light italic leading-[22px] text-black text-[14px] ${contentTopClassName}`}
+      className={`space-y-3 font-light italic leading-[22px] text-black text-[14px] lg:space-y-2.5 xl:space-y-4 ${contentTopClassName}`}
     >
       <p className="whitespace-pre-wrap break-words">{`With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and
 stone setting, the studio is built on practical manufacturing knowledge — not theory.
 Direct experience at the bench provides a deep understanding of structural behavior, stone
 security, tolerances and real-world production limitations.`}</p>
-      <p className="mt-8 whitespace-pre-wrap break-words sm:mt-10">{`Every design decision is informed by how the piece will be cast, set, assembled and worn. Each
+      <p className="mt-8 whitespace-pre-wrap break-words sm:mt-10 lg:mt-5 xl:mt-10">{`Every design decision is informed by how the piece will be cast, set, assembled and worn. Each
 project is personally reviewed, calibrated and validated before delivery.
 No model leaves the studio without structural verification. Jewelry is approached as a system — 
 where design, engineering and craftsmanship must align with precision․`}</p>
@@ -154,15 +169,15 @@ export function SectionFounder() {
         <h3 className="-mt-2 mb-3 text-center font-sans text-[30px] font-black leading-[36px] tracking-[0.396px] text-black md:hidden">
           Davit Sargsyan
         </h3>
-        <div className="relative mx-auto flex h-[431.867px] min-h-0 w-full max-w-full shrink-0 flex-col self-stretch overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:h-[680px] md:w-full md:max-w-[1440px] md:shrink md:flex-row md:self-auto">
-          <div className="hidden min-h-0 flex-1 flex-col px-4 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8 md:flex md:pl-28 md:pr-12 md:pt-40 md:pb-16 md:min-h-[320px]">
-            <h3 className="text-left font-black leading-[40px] tracking-[-1.2px] text-[#0f172a] text-[36px]">
+        <div className={FOUNDER_GRADIENT_PANEL_CLASS}>
+          <div className={FOUNDER_DESKTOP_TEXT_COLUMN_CLASS}>
+            <h3 className={FOUNDER_DESKTOP_HEADING_CLASS}>
               Davit Sargsyan
             </h3>
             <FounderBioAndStats
               statCaptionClassName="font-bold uppercase tracking-[1.4px] text-white text-[12px] md:text-[13px]"
-              contentTopClassName="mt-6 sm:mt-8 md:mt-10"
-              statsSectionClassName="mt-8 flex flex-wrap gap-8 sm:gap-10 md:mt-16 md:gap-12"
+              contentTopClassName={FOUNDER_DESKTOP_BIO_TOP_MARGIN_CLASS}
+              statsSectionClassName={FOUNDER_DESKTOP_STATS_SECTION_CLASS}
             />
           </div>
           <div
