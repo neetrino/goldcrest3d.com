@@ -21,8 +21,8 @@ export const LANDING_IMAGES = {
   modelingPortrait: "/images/modeling/portrait-jewelry.png",
   /** Ancient & Heritage Jewelry — full-bleed, jewelry left, cream background */
   modelingHeritage: "/images/modeling/ancient-heritage.png",
-  /** Manufacturing Intelligence — Figma node -280 / 201:329 composite */
-  manufacturing: "/images/manufacturing/tolerance-control-assembly-precision.png",
+  /** Manufacturing Intelligence — default composite (updated local image) */
+  manufacturing: "/images/manufacturing/manufacturing-intelligence-default.png",
   /** Manufacturing Intelligence — detail: Tolerance Control & Assembly Precision */
   manufacturingToleranceControl:
     "/images/manufacturing/tolerance-control-assembly-precision.png",

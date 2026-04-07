@@ -5,28 +5,19 @@
   width: 100%;
 }
 
-/**
- * Mobile / tablet below `lg`: gradient card breaks out of section horizontal padding
- * so the block is edge-to-edge (no white side gutters).
- */
+/* Mobile / tablet: keep the card centered inside section gutters. */
 @media (max-width: 1023px) {
   .manufacturing-intelligence-card-shell {
-    margin-inline: unset;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    max-width: none;
-    width: 100vw;
+    margin-inline: auto;
+    max-width: min(100%, var(--manufacturing-intelligence-card-max-w));
+    width: 100%;
   }
 }
 
-/**
- * Desktop: align card to the same left anchor as the outer shell (no `margin-inline: auto`),
- * so resizing the viewport does not slide the block horizontally.
- */
+/* Desktop: keep centered so left/right spacing stays balanced on resize. */
 @media (min-width: 1024px) {
   .manufacturing-intelligence-card-shell {
-    margin-inline-end: auto;
-    margin-inline-start: 0;
+    margin-inline: auto;
   }
 }
 
@@ -39,6 +30,14 @@
   .manufacturing-intelligence-heading {
     margin-inline-start: var(--landing-section-title-shift-x-md);
     padding-inline-start: var(--landing-section-title-indent-md);
+  }
+
+  .manufacturing-intelligence-heading-desktop {
+    margin-inline: auto;
+    margin-inline-start: auto;
+    max-width: min(100%, var(--manufacturing-intelligence-card-max-w));
+    padding-inline-start: 0;
+    width: 100%;
   }
 }
 
@@ -184,7 +183,11 @@
   }
 
   .manufacturing-intelligence-image-frame {
+    aspect-ratio: 6 / 5;
+    height: 610px;
     max-height: var(--manufacturing-intelligence-image-frame-max-h-lg);
+    max-width: 100%;
+    width: 732px;
     transform: translate(
       var(--manufacturing-intelligence-image-nudge-x-lg),
       var(--manufacturing-intelligence-image-nudge-y-lg)
@@ -193,7 +196,7 @@
 
   .manufacturing-intelligence-photo {
     object-position: left center;
-    transform: scale(var(--manufacturing-intelligence-photo-scale-lg));
+    transform: translate(50px, -14px) scale(0.86);
     transform-origin: left center;
   }
 
