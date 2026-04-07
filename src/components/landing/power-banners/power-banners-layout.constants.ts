@@ -19,11 +19,6 @@ export const SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX = 16;
 
 export const SECTION1_MODELING_TITLE_NUDGE_UP_PX = 0;
 
-export const HERO_PRIMARY_TITLE_TYPOGRAPHY_CORE_CLASS =
-  "font-black leading-tight text-[24px] tracking-[-0.006em] md:text-[42px] md:leading-[1.1] md:[letter-spacing:-1.28px]";
-
-export const HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS = `${HERO_PRIMARY_TITLE_TYPOGRAPHY_CORE_CLASS} text-white`;
-
 export const MODELING_TITLE_MOBILE_DISPLAY = "3D Production\u2011Ready Modeling";
 export const MODELING_TITLE_DESKTOP_DISPLAY = "3D Production-Ready Modeling";
 

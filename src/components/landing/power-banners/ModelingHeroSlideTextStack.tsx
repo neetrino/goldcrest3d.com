@@ -5,7 +5,6 @@ import {
   HERO_GET_QUOTE_BUTTON_ID,
 } from "@/components/landing/GetAQuoteButton";
 import {
-  HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS,
   MODELING_TITLE_DESKTOP_DISPLAY,
   MODELING_TITLE_MOBILE_DISPLAY,
   SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX,
@@ -26,7 +25,7 @@ export function ModelingHeroSlideTextStack() {
       }
     >
       <h1
-        className={`inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance md:max-w-none ${HERO_PRIMARY_TITLE_TYPOGRAPHY_CLASS}`}
+        className="inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance md:max-w-none"
         style={{
           transform: `translateY(-${SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
         }}

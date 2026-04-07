@@ -30,7 +30,7 @@ section[id] {
   scroll-margin-top: 4.5rem;
 }
 
-/* Հերո ենթավերնագիր — հիմք (modeling 20/28; rendering-ը ներքևում մի քիչ փոքր) */
+/* Հերո ենթավերնագիր — հիմք (modeling 20/28) */
 .hero-primary-subtitle-typography {
   color: #ffffffe5;
   font-family: "SF Compact", -apple-system, system-ui, sans-serif;
@@ -40,14 +40,19 @@ section[id] {
   line-height: 28px;
 }
 
-/* translateY — միայն այս ենթավերնագիր (ձախ հավաքվածություն, առանց translateX) */
+/* Jewelry Rendering — ենթավերնագիր (նույն տիպոգրաֆիան ինչ 1024px+) */
 #hero-rendering-subtitle {
-  font-size: 18px;
-  line-height: 26px;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: left;
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 350;
+  line-height: 28px;
   transform: translate(0, -12px);
 }
 
-/* Jewelry Design ենթավերնագիր — նույն տառաչափ/line-height ինչ #hero-rendering-subtitle */
+/* Jewelry Design վերնագիր — նույն scale ինչ md+ (line-height 1.12) */
 .hero-primary-title-typography-design {
   color: #000;
   text-align: center;
@@ -55,7 +60,7 @@ section[id] {
   font-size: 52px;
   font-style: normal;
   font-weight: 350;
-  line-height: 72px;
+  line-height: 1.12;
 }
 
 .hero-primary-subtitle-typography-design {
@@ -79,6 +84,35 @@ section[id] {
   text-align: center;
   white-space: normal;
   transform: translateY(-8px);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 350;
+  line-height: 28px;
+}
+
+/* Hero slides 1–3: title + body copy — same typography as viewports ≥1024px */
+#hero-modeling-text-group > h1 {
+  align-self: stretch;
+  color: #fff;
+  text-align: center;
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 52px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: 72px;
+}
+
+.power-banners-section2-text-cluster > h1 {
+  color: #fff;
+  text-align: left;
+  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+  font-size: 52px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: 72px;
+  translate: 0 -0.625rem;
 }
 
 /* Հերո gold CTA — section1 և section2 նույն չափ/տիպոգրաֆիա; transform-ը առանձին */
@@ -152,57 +186,12 @@ section[id] {
   }
 }
 
-/* Desktop-only: Hero Modeling typography from design spec */
 @media (min-width: 1024px) {
-  #hero-modeling-text-group > h1 {
-    align-self: stretch;
-    color: #fff;
-    text-align: center;
-    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-    font-size: 52px;
-    font-style: normal;
-    font-weight: 350;
-    line-height: 72px;
-  }
-
-  #hero-modeling-subtitle {
-    align-self: stretch;
-    color: rgba(255, 255, 255, 0.9);
-    text-align: center;
-    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-    font-size: 20px;
-    font-style: italic;
-    font-weight: 350;
-    line-height: 28px;
-  }
-
   #hero-get-quote {
     color: #fff;
     font-family: "SF Compact", -apple-system, system-ui, sans-serif;
     font-style: normal;
     font-weight: 790;
     line-height: 20px;
-  }
-
-  /* Desktop-only: Hero Jewelry Rendering — колонка слева, текст по левому краю колонки */
-  .power-banners-section2-text-cluster > h1 {
-    color: #fff;
-    text-align: left;
-    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-    font-size: 52px;
-    font-style: normal;
-    font-weight: 350;
-    line-height: 72px;
-    translate: 0 -0.625rem;
-  }
-
-  #hero-rendering-subtitle {
-    color: rgba(255, 255, 255, 0.9);
-    text-align: left;
-    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-    font-size: 20px;
-    font-style: italic;
-    font-weight: 350;
-    line-height: 28px;
   }
 }
