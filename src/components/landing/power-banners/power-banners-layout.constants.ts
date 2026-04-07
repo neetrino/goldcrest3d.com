@@ -47,6 +47,9 @@ export const SECTION2_TEXT_CLUSTER_TRANSLATE_Y_MOBILE_PX = -176;
 /** Mobile only: extra space above subtitle — moves subtitle + Get a Quote down; title unchanged. Sync with #hero-rendering-subtitle margin-top in globals-powerbanners-mobile-nav.css */
 export const SECTION2_RENDERING_SUBTITLE_AND_CTA_NUDGE_DOWN_MOBILE_PX = 20;
 
+/** Mobile only: section2 Get a Quote only — negative = up. Sync with #hero-section2-get-quote transform in globals-powerbanners-mobile-nav.css */
+export const SECTION2_GET_QUOTE_NUDGE_UP_MOBILE_PX = 28;
+
 export const SECTION2_TEXT_CLUSTER_NUDGE_MD_PX = 90;
 export const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
 

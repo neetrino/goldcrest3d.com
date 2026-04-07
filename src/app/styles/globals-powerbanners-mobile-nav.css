@@ -56,6 +56,11 @@
     transform: translate(0, 0);
   }
 
+  /* Jewelry Rendering — միայն Get a Quote վերև (SECTION2_GET_QUOTE_NUDGE_UP_MOBILE_PX); section3 CTA չի դիպում */
+  #hero-section2-get-quote {
+    transform: translate(0, -28px);
+  }
+
   /**
    * Hero slides — fluid width on narrow viewports (avoid fixed 367/390px + scroll).
    * Single aspect source: 20/37; height comes from width × ratio.
