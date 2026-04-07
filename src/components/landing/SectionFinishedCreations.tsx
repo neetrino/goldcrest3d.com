@@ -36,14 +36,17 @@ const DESKTOP_ROW2_VISIBLE_SLOTS_FALLBACK = 3;
 const DESKTOP_CAROUSEL_TRANSITION_MS = 420;
 const FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS = 5000;
 
-/** Mobile gallery: slightly taller than desktop slot ratio so blocks feel larger. */
-const MOBILE_BLOCK_HEIGHT_SCALE = 1.38;
-/** Mobile small row only: extra scale on top of `MOBILE_BLOCK_HEIGHT_SCALE`. */
-const MOBILE_SMALL_BLOCK_SIZE_SCALE = 0.95;
-const MOBILE_ROW1_ASPECT_HEIGHT = Math.round(SLOT_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE);
-const MOBILE_ROW2_ASPECT_HEIGHT = Math.round(
-  ROW2_ITEM_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE * MOBILE_SMALL_BLOCK_SIZE_SCALE,
-);
+/** Mobile gallery (`md:hidden` block): fixed block sizes from design. */
+const MOBILE_ROW1_ITEM_WIDTH_PX = 310;
+const MOBILE_ROW1_ITEM_HEIGHT_PX = 206;
+const MOBILE_ROW2_ITEM_WIDTH_PX = 150;
+const MOBILE_ROW2_ITEM_HEIGHT_PX = 124;
+
+/**
+ * Mobile row1 full-bleed breakout: pairs `width` and `marginLeft` (`50% - 50vw - N`).
+ * Higher N shifts the strip left (more past the left viewport edge); lower N shifts right.
+ */
+const MOBILE_TOP_ROW_BLEED_PX = 210;
 
 /**
  * Mobile row1 right column: `object-position` x below 50% so the crop reads slightly left
@@ -57,20 +60,6 @@ const GALLERY_OBJECT_POSITION_PORTRAIT_CLASS = "gallery-object-position-portrait
 const MOBILE_SWIPE_THRESHOLD_PX = 40;
 /** If vertical movement dominates, treat as scroll, not carousel. */
 const MOBILE_SWIPE_VERTICAL_TOLERANCE_PX = 45;
-
-/**
- * Mobile top row: bleed past the left edge only (shift left; right stays at viewport).
- * 180px past the left edge (was 144px) so the right column’s large `object-cover` crop reads fuller on narrow screens.
- * `50%` = parent content width. Literal arbitrary values for Tailwind JIT.
- */
-const MOBILE_TOP_ROW_BLEED_CLASS =
-  "shrink-0 max-w-none w-[calc(100vw+180px)] ml-[calc(50%-50vw-180px)]";
-
-/**
- * Mobile small row: full viewport width (symmetric bleed) so 1:2:1 columns align to screen edges.
- */
-const MOBILE_SMALL_ROW_CLASS =
-  "shrink-0 max-w-none w-[100vw] ml-[calc(50%-50vw)]";
 
 /**
  * Mobile: SF Compact, 30/40, weight 457, flex item `1 0 0` (parent is flex row).
@@ -216,13 +205,22 @@ export function SectionFinishedCreations({
             onPointerCancel={onMobileSwipePointerCancel}
             role="presentation"
           >
-            <div className={`grid grid-cols-2 gap-1 ${MOBILE_TOP_ROW_BLEED_CLASS}`}>
+            <div
+              className="flex w-full min-w-0 shrink-0 max-w-none flex-row gap-1"
+              style={{
+                width: `calc(100vw + ${MOBILE_TOP_ROW_BLEED_PX}px)`,
+                marginLeft: `calc(50% - 50vw - ${MOBILE_TOP_ROW_BLEED_PX}px)`,
+              }}
+            >
               {[mobileRow1Left, mobileRow1Right].map((item, index) => (
                 <div
                   key={`mobile-row1-${item.id}-${activePage}-${index}`}
                   data-landing-image={item.imageId}
-                  className="relative w-full min-w-0 overflow-hidden rounded-none"
-                  style={{ aspectRatio: `${SLOT_WIDTH} / ${MOBILE_ROW1_ASPECT_HEIGHT}` }}
+                  className="relative shrink-0 overflow-hidden rounded-none"
+                  style={{
+                    width: MOBILE_ROW1_ITEM_WIDTH_PX,
+                    height: MOBILE_ROW1_ITEM_HEIGHT_PX,
+                  }}
                 >
                   <Image
                     src={item.src}
@@ -234,35 +232,33 @@ export function SectionFinishedCreations({
                         ? MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS
                         : ""
                     }`.trim()}
-                    sizes="(max-width: 767px) 50vw, 50vw"
+                    sizes="(max-width: 767px) 310px, 50vw"
                   />
                 </div>
               ))}
             </div>
             <div
-              className={`grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] gap-1 ${MOBILE_SMALL_ROW_CLASS}`}
+              className="mx-auto grid w-max max-w-full shrink-0 gap-1"
+              style={{
+                gridTemplateColumns: `repeat(3, ${MOBILE_ROW2_ITEM_WIDTH_PX}px)`,
+                gridAutoRows: `${MOBILE_ROW2_ITEM_HEIGHT_PX}px`,
+              }}
             >
               {mobileRow2Items.map((item, index) => {
                 const sideObjectPositionClass =
                   index === 0 ? "object-right" : index === 2 ? "object-left" : "object-center";
-                const isCenter = index === 1;
                 return (
                   <div
                     key={`mobile-row2-${item.id}-${activePage}-${index}`}
                     data-landing-image={item.imageId}
                     className="relative min-h-0 min-w-0 overflow-hidden rounded-none"
-                    style={
-                      isCenter
-                        ? { aspectRatio: `${ROW2_ITEM_WIDTH} / ${MOBILE_ROW2_ASPECT_HEIGHT}` }
-                        : undefined
-                    }
                   >
                     <Image
                       src={item.src}
                       alt=""
                       fill
                       className={`object-cover ${sideObjectPositionClass}`.trim()}
-                      sizes="(max-width: 767px) 33vw, 33vw"
+                      sizes="(max-width: 767px) 150px, 33vw"
                     />
                   </div>
                 );
