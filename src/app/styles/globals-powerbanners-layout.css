@@ -8,6 +8,15 @@
   max-width: 1918px;
   margin-inline: auto;
   --section1-image-strip-height-desktop: 707px;
+  /* Desktop hero (section1): fallback + tail; img tone + mild “shine” via contrast/saturate */
+  --section1-hero-bg-top: #ededed;
+  --section1-hero-bg-mid: #e0e0e0;
+  --section1-hero-bg-bottom: #d2d2d2;
+  --section1-hero-img-brightness: 0.89;
+  --section1-hero-img-contrast: 1.12;
+  --section1-hero-img-saturate: 1.1;
+  --section1-hero-overlay-top: rgba(0, 0, 0, 0.11);
+  --section1-hero-overlay-mid: rgba(0, 0, 0, 0.06);
 }
 
 /* Base (mobile-first): proportional strip until md override */
@@ -25,6 +34,8 @@
     width: 106%;
     margin-inline: auto;
     transform: translateX(-3%);
+    /* Overrides Tailwind bg-white at edges / during load */
+    background-color: var(--section1-hero-bg-top);
   }
 }
 
@@ -35,14 +46,48 @@
   background-color: #d8d8d8;
 }
 
+@media (min-width: 768px) {
+  .power-banners-section1-tail {
+    background-color: var(--section1-hero-bg-bottom);
+  }
+}
+
 /**
  * Section1 Modeling — uniform scale only (no non-uniform % width/height = no stretch).
  * cover + center: сужение экрана обрезает по краям, центр композиции остаётся в кадре.
  */
-/** Desktop modeling hero — նկարը `next/image` է (ModelingHeroSlideLayers); մնում է ֆոնի գույնը */
+/**
+ * Desktop modeling hero — `next/image` opaque-ով ծածկում է background-ը, այնպես որ տեսանելի
+ * գունակարգավորումը՝ img filter + ::after overlay (տեղը/չափը՝ TSX-ում).
+ */
 .power-banners-section1-bg {
-  background-color: #d3d3d3;
+  isolation: isolate;
+  background: linear-gradient(
+    180deg,
+    var(--section1-hero-bg-top) 0%,
+    var(--section1-hero-bg-mid) 48%,
+    var(--section1-hero-bg-bottom) 100%
+  );
   overflow: hidden;
+}
+
+.power-banners-section1-bg :where(img) {
+  filter: brightness(var(--section1-hero-img-brightness))
+    contrast(var(--section1-hero-img-contrast)) saturate(var(--section1-hero-img-saturate));
+}
+
+.power-banners-section1-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    var(--section1-hero-overlay-top) 0%,
+    var(--section1-hero-overlay-mid) 42%,
+    transparent 72%
+  );
 }
 
 /* PowerBanners section2 (Jewelry Rendering) — ֆրեյմ 1920×712; ֆոնը միայն cover (առանց դեֆորմացիայի) */
