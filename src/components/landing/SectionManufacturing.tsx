@@ -71,13 +71,15 @@ function ManufacturingAccordionRow({
           id={`manufacturing-detail-${item.id}`}
           className={
             descriptionHasManualLineBreaks
-              ? "overflow-x-auto border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left"
+              ? "overflow-x-visible border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left md:overflow-x-auto"
               : "border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left"
           }
         >
           <p
             className={`manufacturing-intelligence-accordion-detail text-[15px] font-normal leading-[22px] tracking-normal text-black/80 ${
-              descriptionHasManualLineBreaks ? "whitespace-pre" : ""
+              descriptionHasManualLineBreaks
+                ? "whitespace-pre-line break-words md:whitespace-pre"
+                : ""
             }`}
           >
             {item.description}
