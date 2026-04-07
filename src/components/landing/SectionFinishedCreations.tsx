@@ -38,14 +38,28 @@ const DESKTOP_CAROUSEL_TRANSITION_MS = 420;
 const MOBILE_FINISHED_GALLERY_GAP_PX = 4;
 const FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS = 5000;
 
-/** Mobile gallery: slightly taller than desktop slot ratio so blocks feel larger. */
-const MOBILE_BLOCK_HEIGHT_SCALE = 1.38;
-/** Mobile small row only: extra scale on top of `MOBILE_BLOCK_HEIGHT_SCALE`. */
-const MOBILE_SMALL_BLOCK_SIZE_SCALE = 0.95;
-const MOBILE_ROW1_ASPECT_HEIGHT = Math.round(SLOT_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE);
-const MOBILE_ROW2_ASPECT_HEIGHT = Math.round(
-  ROW2_ITEM_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE * MOBILE_SMALL_BLOCK_SIZE_SCALE,
-);
+/** Mobile gallery (`md:hidden` block): fixed block sizes from design. */
+const MOBILE_ROW1_ITEM_WIDTH_PX = 310;
+const MOBILE_ROW1_ITEM_HEIGHT_PX = 206;
+/**
+ * Mobile row2 (`md:hidden`): fixed height + equal `flex-1 basis-0` columns (full `100vw` after parent `max-w` fix).
+ */
+const MOBILE_ROW2_CELL_HEIGHT_PX = 130;
+
+/**
+ * Mobile row1 full-bleed breakout: pairs `width` and `marginLeft` (`50% - 50vw - N`).
+ * Higher N shifts the strip left (more past the left viewport edge); lower N shifts right.
+ */
+const MOBILE_TOP_ROW_BLEED_PX = 210;
+
+/** Mobile row2: pixels past each viewport edge; strip width = `100vw + 2 * N` (symmetric bleed). */
+const MOBILE_ROW2_SIDE_BLEED_PX = 68;
+
+/** Mobile row2: shifts the whole strip right (positive = right); does not change cell sizes. */
+const MOBILE_ROW2_NUDGE_RIGHT_PX = 16;
+
+/** Layout helpers only; width/margin set inline with `MOBILE_ROW2_SIDE_BLEED_PX`. */
+const MOBILE_ROW2_FULL_BLEED_CLASS = "min-w-0 max-w-none shrink-0";
 
 /**
  * Mobile row1 right column: `object-position` x below 50% so the crop reads slightly left
@@ -55,24 +69,18 @@ const MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS =
   "max-md:[object-position:36%_center]";
 const GALLERY_OBJECT_POSITION_PORTRAIT_CLASS = "gallery-object-position-portrait";
 
+/** Matches `gap-1` (0.25rem) between mobile gallery cells. */
+const MOBILE_GAP_PX = 4;
+/** One horizontal step for mobile row1 strip = card width + gap. */
+const MOBILE_ROW1_SLIDE_STEP_PX = MOBILE_ROW1_ITEM_WIDTH_PX + MOBILE_GAP_PX;
+/** Viewport width showing two row1 cards (matches current two-up layout). */
+const MOBILE_ROW1_VIEWPORT_WIDTH_PX =
+  MOBILE_ROW1_ITEM_WIDTH_PX * 2 + MOBILE_GAP_PX;
+
 /** Minimum horizontal distance to count as swipe; ignores small jitter. */
 const MOBILE_SWIPE_THRESHOLD_PX = 40;
 /** If vertical movement dominates, treat as scroll, not carousel. */
 const MOBILE_SWIPE_VERTICAL_TOLERANCE_PX = 45;
-
-/**
- * Mobile top row: bleed past the left edge only (shift left; right stays at viewport).
- * 180px past the left edge (was 144px) so the right column’s large `object-cover` crop reads fuller on narrow screens.
- * `50%` = parent content width. Literal arbitrary values for Tailwind JIT.
- */
-const MOBILE_TOP_ROW_BLEED_CLASS =
-  "shrink-0 max-w-none w-[calc(100vw+180px)] ml-[calc(50%-50vw-180px)]";
-
-/**
- * Mobile small row: full viewport width (symmetric bleed) so 1:2:1 columns align to screen edges.
- */
-const MOBILE_SMALL_ROW_CLASS =
-  "shrink-0 max-w-none w-[100vw] ml-[calc(50%-50vw)]";
 
 /**
  * Mobile: SF Compact, 30/40, weight 457, flex item `1 0 0` (parent is flex row).
@@ -98,6 +106,8 @@ export function SectionFinishedCreations({
 
   const [activePage, setActivePage] = useState(0);
   const mobileSwipeStartRef = useRef<{ x: number; y: number } | null>(null);
+  const mobileRow2ViewportRef = useRef<HTMLDivElement>(null);
+  const [mobileRow2CellWidthPx, setMobileRow2CellWidthPx] = useState(0);
 
   const goPrev = useCallback(() => {
     setActivePage((p) => (p <= 0 ? TOTAL_PAGES - 1 : p - 1));
@@ -118,6 +128,27 @@ export function SectionFinishedCreations({
       window.clearInterval(intervalId);
     };
   }, [TOTAL_PAGES]);
+
+  useLayoutEffect(() => {
+    const el = mobileRow2ViewportRef.current;
+    if (!el) {
+      return;
+    }
+    const measure = () => {
+      const w = el.getBoundingClientRect().width;
+      if (w <= 0) {
+        return;
+      }
+      const cell = (w - 2 * MOBILE_GAP_PX) / 3;
+      setMobileRow2CellWidthPx(Math.max(0, cell));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+    };
+  }, []);
 
   const onMobileSwipePointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) {
@@ -216,14 +247,12 @@ export function SectionFinishedCreations({
     DESKTOP_ROW2_PEEK_FULL_CENTER_SLIDES,
   );
 
-  const mobileRow1TransformPx = Math.round(
-    (activePage % TOTAL_PAGES) *
-      (mobileRow1SlideWidthPx + MOBILE_FINISHED_GALLERY_GAP_PX),
-  );
-  const mobileRow2TransformPx = Math.round(
-    (activePage % ROW2_IMAGE_COUNT) *
-      (mobileRow2FrameWidthPx + MOBILE_FINISHED_GALLERY_GAP_PX),
-  );
+  const mobileRow2StepPx =
+    mobileRow2CellWidthPx > 0 ? mobileRow2CellWidthPx + MOBILE_GAP_PX : 0;
+  const mobileRow2TransformPx =
+    mobileRow2StepPx > 0
+      ? (activePage % ROW2_IMAGE_COUNT) * mobileRow2StepPx
+      : 0;
 
   const desktopRow1TransformPx = Math.round(
     desktopMetrics.row1PeekOffsetPx +
@@ -247,41 +276,40 @@ export function SectionFinishedCreations({
           </h2>
         </div>
         <div className="mt-9 flex flex-col gap-2 max-md:items-stretch md:items-stretch">
-          <div className={FINISHED_GALLERY_BLEED_OUTER_CLASS}>
+          <div className={`${FINISHED_GALLERY_BLEED_OUTER_CLASS} max-md:max-w-none`}>
             <div
-            className="flex w-full max-w-full min-w-0 touch-pan-y flex-col gap-2 max-md:overflow-x-visible md:hidden"
+            className="flex w-full min-w-0 touch-pan-y flex-col gap-2 max-md:max-w-none max-md:overflow-x-visible md:hidden"
             onPointerDown={onMobileSwipePointerDown}
             onPointerUp={onMobileSwipePointerUp}
             onPointerCancel={onMobileSwipePointerCancel}
             role="presentation"
           >
             <div
-              ref={mobileRow1OverflowRef}
-              className={`overflow-hidden ${MOBILE_TOP_ROW_BLEED_CLASS}`}
+              className="flex w-full min-w-0 shrink-0 max-w-none flex-row gap-1"
+              style={{
+                width: `calc(100vw + ${MOBILE_TOP_ROW_BLEED_PX}px)`,
+                marginLeft: `calc(50% - 50vw - ${MOBILE_TOP_ROW_BLEED_PX}px)`,
+              }}
             >
               <div
-                className="flex gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
-                style={{
-                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
-                  transform: `translate3d(-${mobileRow1TransformPx}px, 0, 0)`,
-                }}
+                className="shrink-0 overflow-hidden"
+                style={{ width: MOBILE_ROW1_VIEWPORT_WIDTH_PX }}
               >
-                {row1StripImages.map((item, index) => {
-                  const isMobileRow1RightColumn =
-                    TOTAL_PAGES <= 1
-                      ? index % 2 === 1
-                      : index % TOTAL_PAGES === (activePage + 1) % TOTAL_PAGES;
-                  return (
+                <div
+                  className="flex shrink-0 flex-row gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
+                  style={{
+                    transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                    transform: `translate3d(-${activePage * MOBILE_ROW1_SLIDE_STEP_PX}px, 0, 0)`,
+                  }}
+                >
+                  {row1StripImages.map((item, index) => (
                     <div
                       key={`mobile-row1-${item.id}-${index}`}
                       data-landing-image={item.imageId}
-                      className="relative shrink-0 min-w-0 overflow-hidden rounded-none"
+                      className="relative shrink-0 overflow-hidden rounded-none"
                       style={{
-                        width:
-                          mobileRow1SlideWidthPx > 0
-                            ? `${mobileRow1SlideWidthPx}px`
-                            : undefined,
-                        aspectRatio: `${SLOT_WIDTH} / ${MOBILE_ROW1_ASPECT_HEIGHT}`,
+                        width: MOBILE_ROW1_ITEM_WIDTH_PX,
+                        height: MOBILE_ROW1_ITEM_HEIGHT_PX,
                       }}
                     >
                       <Image
@@ -289,81 +317,62 @@ export function SectionFinishedCreations({
                         alt=""
                         fill
                         className={`object-cover ${item.objectPositionClass ?? ""} ${
-                          isMobileRow1RightColumn &&
+                          index === activePage + 1 &&
                           item.objectPositionClass !== GALLERY_OBJECT_POSITION_PORTRAIT_CLASS
                             ? MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS
                             : ""
                         }`.trim()}
-                        sizes="(max-width: 767px) 50vw, 50vw"
+                        sizes="(max-width: 767px) 310px, 50vw"
                       />
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
               </div>
             </div>
             <div
-              ref={mobileRow2OverflowRef}
-              className={`overflow-hidden ${MOBILE_SMALL_ROW_CLASS}`}
+              ref={mobileRow2ViewportRef}
+              className={`flex min-w-0 flex-row items-stretch gap-1 overflow-hidden ${MOBILE_ROW2_FULL_BLEED_CLASS}`}
+              style={{
+                width: `calc(100vw + ${MOBILE_ROW2_SIDE_BLEED_PX * 2}px)`,
+                marginLeft: `calc(50% - 50vw - ${MOBILE_ROW2_SIDE_BLEED_PX}px + ${MOBILE_ROW2_NUDGE_RIGHT_PX}px)`,
+              }}
             >
               <div
-                className="flex gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
+                className="flex shrink-0 flex-row gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
                 style={{
                   transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
-                  transform: `translate3d(-${mobileRow2TransformPx}px, 0, 0)`,
+                  transform:
+                    mobileRow2StepPx > 0
+                      ? `translate3d(-${mobileRow2TransformPx}px, 0, 0)`
+                      : "translate3d(0, 0, 0)",
                 }}
               >
-                {Array.from({ length: ROW2_IMAGE_COUNT * 2 }, (_, frameIndex) => {
-                  const base = frameIndex % ROW2_IMAGE_COUNT;
-                  const frameItems = [
-                    ROW2_IMAGES[base],
-                    ROW2_IMAGES[(base + 1) % ROW2_IMAGE_COUNT],
-                    ROW2_IMAGES[(base + 2) % ROW2_IMAGE_COUNT],
-                  ] as const;
-                  return (
-                    <div
-                      key={`mobile-row2-frame-${frameIndex}`}
-                      className="grid shrink-0 grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] gap-1"
-                      style={{
-                        width:
-                          mobileRow2FrameWidthPx > 0
-                            ? `${mobileRow2FrameWidthPx}px`
-                            : undefined,
-                      }}
-                    >
-                      {frameItems.map((item, index) => {
-                        const sideObjectPositionClass =
-                          index === 0
-                            ? "object-right"
-                            : index === 2
-                              ? "object-left"
-                              : "object-center";
-                        const isCenter = index === 1;
-                        return (
-                          <div
-                            key={`mobile-row2-${item.id}-${frameIndex}-${index}`}
-                            data-landing-image={item.imageId}
-                            className="relative min-h-0 min-w-0 overflow-hidden rounded-none"
-                            style={
-                              isCenter
-                                ? {
-                                    aspectRatio: `${ROW2_ITEM_WIDTH} / ${MOBILE_ROW2_ASPECT_HEIGHT}`,
-                                  }
-                                : undefined
-                            }
-                          >
-                            <Image
-                              src={item.src}
-                              alt=""
-                              fill
-                              className={`object-cover ${sideObjectPositionClass}`.trim()}
-                              sizes="(max-width: 767px) 33vw, 33vw"
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
+                {row2StripImages.map((item, index) => (
+                  <div
+                    key={`mobile-row2-${item.id}-${index}`}
+                    data-landing-image={item.imageId}
+                    className={`relative overflow-hidden rounded-none ${
+                      mobileRow2CellWidthPx > 0
+                        ? "shrink-0"
+                        : "min-h-0 min-w-0 flex-1 basis-0"
+                    }`}
+                    style={{
+                      width:
+                        mobileRow2CellWidthPx > 0
+                          ? mobileRow2CellWidthPx
+                          : undefined,
+                      height: MOBILE_ROW2_CELL_HEIGHT_PX,
+                    }}
+                  >
+                    <Image
+                      src={item.src}
+                      alt=""
+                      fill
+                      className="object-cover object-center"
+                      sizes="(max-width: 767px) 34vw, 33vw"
+                    />
+                  </div>
+                ))}
               </div>
             </div>
             </div>
