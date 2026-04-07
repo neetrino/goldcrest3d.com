@@ -87,9 +87,9 @@ const FOOTER_CONTACT_LINES_BLOCK_CLASS = `mt-[40px] flex flex-col gap-[13px] ${F
 
 const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS = "lg:-translate-y-1";
 
-/** Follow վերնագիր + 3 պատկերակ — մի քիչ աջ (քարտեզը՝ առանց շարժման) */
+/** Follow վերնագիր + 3 պատկերակ — մի քիչ աջ (քարտեզը՝ առանց շարժման). Mobile-only left nudge for heading+icons; desktop unchanged. */
 const FOOTER_FOLLOW_HEADING_AND_SOCIAL_NUDGE_RIGHT_CLASS =
-  "pl-8 sm:pl-9 lg:pl-14 xl:pl-16 2xl:pl-20 lg:translate-x-3";
+  "pl-8 sm:pl-9 max-md:-translate-x-7 md:translate-x-0 lg:pl-14 xl:pl-16 2xl:pl-20 lg:translate-x-3";
 
 const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS = `mt-[35px] flex gap-4 ${FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS}`;
 
