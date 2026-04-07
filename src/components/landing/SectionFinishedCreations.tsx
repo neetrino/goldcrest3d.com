@@ -52,11 +52,11 @@ const MOBILE_SWIPE_VERTICAL_TOLERANCE_PX = 45;
 
 /**
  * Mobile top row: bleed past the left edge only (shift left; right stays at viewport).
- * ~144px past the left viewport edge only; extra width matches shift (right at 100vw).
- * `50%` = parent content width. Literal classes for Tailwind JIT.
+ * 180px past the left edge (was 144px) so the right column’s large `object-cover` crop reads fuller on narrow screens.
+ * `50%` = parent content width. Literal arbitrary values for Tailwind JIT.
  */
 const MOBILE_TOP_ROW_BLEED_CLASS =
-  "shrink-0 max-w-none w-[calc(100vw+144px)] ml-[calc(50%-50vw-144px)]";
+  "shrink-0 max-w-none w-[calc(100vw+180px)] ml-[calc(50%-50vw-180px)]";
 
 /**
  * Mobile small row: full viewport width (symmetric bleed) so 1:2:1 columns align to screen edges.
