@@ -10,6 +10,9 @@ const MOBILE_OVERLAY_TRANSLATE_Y_PX = 100;
 const TITLE_LINE1 = "Mechanical &";
 const TITLE_LINE2 = "Lock Systems";
 
+/** Desktop (md+): nudge first title line up without shifting the rest of the overlay. */
+const TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS = "md:-translate-y-1.5";
+
 /** Mobile only: Inter 12/300, width 283px; explicit line breaks. */
 const DESCRIPTION_MOBILE_LINES = [
   "Tolerance-calibrated clasps, hinges and",
@@ -88,7 +91,9 @@ export function ModelingBlockMechanical({
         }
       >
         <h3 className="z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left">
-          <span className="block">{TITLE_LINE1}</span>
+          <span className={`block ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
+            {TITLE_LINE1}
+          </span>
           <span className="block">{TITLE_LINE2}</span>
         </h3>
         <p className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] sm:hidden">

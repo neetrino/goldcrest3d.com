@@ -3,7 +3,7 @@
 import { LANDING_SECTION_IDS } from "@/constants";
 import type { FinishedGalleryItem } from "@/lib/site-media/landing-defaults";
 import Image from "next/image";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFinishedCreationsCarouselMetrics } from "@/components/landing/useFinishedCreationsCarouselMetrics";
 
 /** Carousel: small row (row 2) â€” design aspect; slide width is fluid from container. */
@@ -34,6 +34,7 @@ const DESKTOP_ROW2_VISIBLE_SLOTS_FALLBACK = 3;
 
 /** Desktop carousel: one timing curve for both rows (GPU-friendly transform). */
 const DESKTOP_CAROUSEL_TRANSITION_MS = 420;
+const FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS = 5000;
 
 /** Mobile gallery: slightly taller than desktop slot ratio so blocks feel larger. */
 const MOBILE_BLOCK_HEIGHT_SCALE = 1.38;
@@ -44,6 +45,14 @@ const MOBILE_ROW2_ASPECT_HEIGHT = Math.round(
   ROW2_ITEM_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE * MOBILE_SMALL_BLOCK_SIZE_SCALE,
 );
 
+/**
+ * Mobile row1 right column: `object-position` x below 50% so the crop reads slightly left
+ * (block size unchanged; only focal alignment). Skip when item uses portrait object-position.
+ */
+const MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS =
+  "max-md:[object-position:36%_center]";
+const GALLERY_OBJECT_POSITION_PORTRAIT_CLASS = "gallery-object-position-portrait";
+
 /** Minimum horizontal distance to count as swipe; ignores small jitter. */
 const MOBILE_SWIPE_THRESHOLD_PX = 40;
 /** If vertical movement dominates, treat as scroll, not carousel. */
@@ -51,11 +60,11 @@ const MOBILE_SWIPE_VERTICAL_TOLERANCE_PX = 45;
 
 /**
  * Mobile top row: bleed past the left edge only (shift left; right stays at viewport).
- * ~144px past the left viewport edge only; extra width matches shift (right at 100vw).
- * `50%` = parent content width. Literal classes for Tailwind JIT.
+ * 180px past the left edge (was 144px) so the right column’s large `object-cover` crop reads fuller on narrow screens.
+ * `50%` = parent content width. Literal arbitrary values for Tailwind JIT.
  */
 const MOBILE_TOP_ROW_BLEED_CLASS =
-  "shrink-0 max-w-none w-[calc(100vw+144px)] ml-[calc(50%-50vw-144px)]";
+  "shrink-0 max-w-none w-[calc(100vw+180px)] ml-[calc(50%-50vw-180px)]";
 
 /**
  * Mobile small row: full viewport width (symmetric bleed) so 1:2:1 columns align to screen edges.
@@ -94,6 +103,18 @@ export function SectionFinishedCreations({
 
   const goNext = useCallback(() => {
     setActivePage((p) => (p >= TOTAL_PAGES - 1 ? 0 : p + 1));
+  }, [TOTAL_PAGES]);
+
+  useEffect(() => {
+    if (TOTAL_PAGES <= 1) {
+      return;
+    }
+    const intervalId = window.setInterval(() => {
+      setActivePage((page) => (page >= TOTAL_PAGES - 1 ? 0 : page + 1));
+    }, FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS);
+    return () => {
+      window.clearInterval(intervalId);
+    };
   }, [TOTAL_PAGES]);
 
   const onMobileSwipePointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
@@ -207,7 +228,12 @@ export function SectionFinishedCreations({
                     src={item.src}
                     alt=""
                     fill
-                    className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
+                    className={`object-cover ${item.objectPositionClass ?? ""} ${
+                      index === 1 &&
+                      item.objectPositionClass !== GALLERY_OBJECT_POSITION_PORTRAIT_CLASS
+                        ? MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS
+                        : ""
+                    }`.trim()}
                     sizes="(max-width: 767px) 50vw, 50vw"
                   />
                 </div>

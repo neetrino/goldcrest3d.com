@@ -1,9 +1,9 @@
 "use client";
 
 import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
-import { LANDING_IMAGES } from "@/constants/landing-assets";
 import {
   getManufacturingDetailPhotoLayoutClassName,
+  MANUFACTURING_SPECIALIZATION_IDS,
   MANUFACTURING_SPECIALIZATION_ITEMS,
   type ManufacturingSpecializationId,
   type ManufacturingSpecializationItem,
@@ -71,13 +71,15 @@ function ManufacturingAccordionRow({
           id={`manufacturing-detail-${item.id}`}
           className={
             descriptionHasManualLineBreaks
-              ? "overflow-x-auto border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left"
+              ? "overflow-x-visible border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left md:overflow-x-auto"
               : "border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left"
           }
         >
           <p
             className={`manufacturing-intelligence-accordion-detail text-[15px] font-normal leading-[22px] tracking-normal text-black/80 ${
-              descriptionHasManualLineBreaks ? "whitespace-pre" : ""
+              descriptionHasManualLineBreaks
+                ? "whitespace-pre-line break-words md:whitespace-pre"
+                : ""
             }`}
           >
             {item.description}
@@ -89,15 +91,12 @@ function ManufacturingAccordionRow({
 }
 
 export function SectionManufacturing() {
-  const [activeId, setActiveId] = useState<ManufacturingSpecializationId | null>(
-    null,
+  const [activeId, setActiveId] = useState<ManufacturingSpecializationId>(
+    MANUFACTURING_SPECIALIZATION_IDS.TOLERANCE_CONTROL_ASSEMBLY_PRECISION,
   );
 
   const activeItem = useMemo(
-    () =>
-      activeId
-        ? MANUFACTURING_SPECIALIZATION_ITEMS.find((i) => i.id === activeId)
-        : undefined,
+    () => MANUFACTURING_SPECIALIZATION_ITEMS.find((i) => i.id === activeId),
     [activeId],
   );
 
@@ -107,13 +106,14 @@ export function SectionManufacturing() {
     slot0Visible,
     slot1Visible,
     elevatedSlot,
-    detailObscuresDefault,
   } = useManufacturingDetailLayers({ activeItem });
 
-  const defaultManufacturingAlt = "CAD workspace and jewelry model";
-
   const handleToggle = (id: ManufacturingSpecializationId) => {
-    setActiveId((prev) => (prev === id ? null : id));
+    setActiveId((prev) =>
+      prev === id
+        ? MANUFACTURING_SPECIALIZATION_IDS.TOLERANCE_CONTROL_ASSEMBLY_PRECISION
+        : id,
+    );
   };
 
   return (
@@ -153,18 +153,6 @@ export function SectionManufacturing() {
                 className="manufacturing-intelligence-image-frame relative mx-auto aspect-[750/625] w-full overflow-hidden lg:ml-auto lg:mr-0"
                 data-landing-image={LANDING_IMAGE_IDS.MANUFACTURING_MAIN}
               >
-                <Image
-                  src={LANDING_IMAGES.manufacturing}
-                  alt={defaultManufacturingAlt}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 45vw"
-                  className={`manufacturing-intelligence-photo ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
-                    detailObscuresDefault
-                      ? "pointer-events-none opacity-0"
-                      : "opacity-100"
-                  }`}
-                  aria-hidden={detailObscuresDefault}
-                />
                 {slot0 ? (
                   <div
                     className={`pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-start ${

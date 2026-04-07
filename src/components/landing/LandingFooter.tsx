@@ -24,7 +24,7 @@ const FOOTER_LOGO_FULL_BLEED_STYLE: CSSProperties = {
  * No horizontal translate on md (was clipping at viewport edge).
  */
 const FOOTER_LOGO_FRAME_CLASS =
-  "relative mt-4 aspect-[299/171] w-full max-w-[299px] shrink-0 overflow-hidden self-start md:mt-0";
+  "relative mt-4 aspect-[299/171] w-full max-w-[299px] shrink-0 overflow-hidden self-start -translate-x-3.5 md:mt-0 md:translate-x-0 lg:-translate-x-3";
 
 /** Figma-ի ներքին overflow-շերտ — նկարը կտրվում է ֆրեյմի մեջ */
 const FOOTER_LOGO_INNER_CLIP_CLASS =
@@ -87,26 +87,26 @@ const FOOTER_CONTACT_LINES_BLOCK_CLASS = `mt-[40px] flex flex-col gap-[13px] ${F
 
 const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS = "lg:-translate-y-1";
 
-/** Follow վերնագիր + 3 պատկերակ — մի քիչ աջ (քարտեզը՝ առանց շարժման) */
+/** Follow վերնագիր + 3 պատկերակ — մի քիչ աջ (քարտեզը՝ առանց շարժման). Mobile-only left nudge for heading+icons; desktop unchanged. */
 const FOOTER_FOLLOW_HEADING_AND_SOCIAL_NUDGE_RIGHT_CLASS =
-  "pl-8 sm:pl-9 lg:pl-14 xl:pl-16 2xl:pl-20 lg:translate-x-3";
+  "pl-8 sm:pl-9 max-md:-translate-x-7 md:translate-x-0 lg:pl-14 xl:pl-16 2xl:pl-20 lg:translate-x-3";
 
 const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS = `mt-[35px] flex gap-4 ${FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS}`;
 
 /** Follow քարտեզ — Figma 685.818px-ից մի քիչ նեղ */
-const FOOTER_FOLLOW_MAP_WIDTH_PX = 590;
-const FOOTER_FOLLOW_MAP_HEIGHT_PX = 96;
+const FOOTER_FOLLOW_MAP_WIDTH_PX = 560;
+const FOOTER_FOLLOW_MAP_HEIGHT_PX = 100;
 
 const FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS = "";
 
 const FOOTER_FOLLOW_MAP_CORNER_CLASS = "rounded-3xl";
 
-const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS = "lg:translate-x-1";
+const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS = "lg:translate-x-23";
 
 const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS = "lg:-translate-y-2";
 
 /** Ներքին ֆրեյմ — overflow + radius; չափերը՝ FOOTER_FOLLOW_MAP_BANNER_LAYOUT_STYLE */
-const FOOTER_FOLLOW_MAP_INNER_FRAME_CLASS = `mt-4 w-full min-w-0 overflow-hidden ${FOOTER_FOLLOW_MAP_CORNER_CLASS} md:shrink-0 ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS} ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS}`;
+const FOOTER_FOLLOW_MAP_INNER_FRAME_CLASS = `mt-4 w-full md:w-[79%] min-w-0 overflow-hidden ${FOOTER_FOLLOW_MAP_CORNER_CLASS} md:shrink-0 ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS} ${FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS}`;
 
 const FOOTER_FOLLOW_MAP_OUTER_WRAPPER_CLASS = `w-full ${FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS}`;
 const FOOTER_FOLLOW_MAP_LINK =
@@ -122,8 +122,7 @@ const FOOTER_FOLLOW_MAP_BANNER_STYLE: CSSProperties = {
 /** Նույն Figma չափեր՝ inline (Tailwind-ը չի սկանավորում փոփոխական arbitrary class-ները) */
 const FOOTER_FOLLOW_MAP_BANNER_LAYOUT_STYLE: CSSProperties = {
   height: FOOTER_FOLLOW_MAP_HEIGHT_PX,
-  width: "100%",
-  maxWidth: `min(100%, ${FOOTER_FOLLOW_MAP_WIDTH_PX}px)`,
+  maxWidth: `${FOOTER_FOLLOW_MAP_WIDTH_PX}px`,
 };
 
 const FOOTER_FOLLOW_MAP_BANNER_COMBINED_STYLE: CSSProperties = {

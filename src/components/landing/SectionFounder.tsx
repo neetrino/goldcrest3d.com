@@ -5,7 +5,7 @@ import Image from "next/image";
 const FOUNDER_STAT_NUMBER_CLASS_DEFAULT =
   "font-black leading-[32px] text-[#0f172a] text-[24px] md:text-[28px]";
 
-/** Mobile founder bio â€” Figma widths (px) */
+/** Mobile founder bio — Figma widths (px) */
 const FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS = {
   p1: "max-w-[331px]",
   p2: "max-w-[342px]",
@@ -16,21 +16,35 @@ const FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS = {
 const FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS =
   "w-full font-sans text-base font-light italic leading-6 tracking-[-0.312px] text-black/80 break-words";
 
-const FOUNDER_BIO_MOBILE_P1 = `With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and stone setting, the studio is built on practical manufacturing knowledge â€” not theory.`;
+const FOUNDER_BIO_MOBILE_P1 = `With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and stone setting, the studio is built on practical manufacturing knowledge — not theory.`;
 
 const FOUNDER_BIO_MOBILE_P2 = `Direct experience at the bench provides a deep understanding of structural behavior, stone security, tolerances and real-world production limitations.`;
 
 const FOUNDER_BIO_MOBILE_P3 = `Every design decision is informed by how the piece will be cast, set, assembled and worn. Each project is personally reviewed, calibrated and validated before delivery.`;
 
-const FOUNDER_BIO_MOBILE_P4 = `No model leaves the studio without structural verification. Jewelry is approached as a system â€” where design, engineering and craftsmanship must align with precision`;
+const FOUNDER_BIO_MOBILE_P4 = `No model leaves the studio without structural verification. Jewelry is approached as a system — where design, engineering and craftsmanship must align with precision․`;
 
-/** Desktop: soften left seam vs section gradient; avoid large negative translate (hard crop). */
-const FOUNDER_PHOTO_IMAGE_CLASS =
-  "object-cover object-[52%_center] md:object-[60%_center] md:scale-[1.02]";
+/** Դեսքտոփում միայն founder նկարը մի քիչ դեպի ձախ (`-translate-x` = ձախ) */
+const FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS = "md:-translate-x-24";
 
-/** Left-edge blend into the block gradient (mask = fade, no hard line). */
-const FOUNDER_PHOTO_LEFT_BLEND_MASK_CLASS =
-  "md:[mask-image:linear-gradient(90deg,transparent_0%,black_3.5rem)] md:[-webkit-mask-image:linear-gradient(90deg,transparent_0%,black_3.5rem)] md:[mask-size:100%_100%] md:[mask-repeat:no-repeat]";
+/** Outer section shell — baseline unchanged below `xl`; larger insets + footprint on wide desktops */
+const FOUNDER_SECTION_WRAPPER_CLASS =
+  "-mt-8 bg-[#f8f7f6] px-4 pt-0 pb-12 md:-mt-12 md:px-6 md:pt-0 md:pb-16 xl:px-10 xl:pb-20 2xl:px-14 2xl:pb-28";
+
+/** Founder գրադարան — lg (1024px) կոմպակտ, xl-ից վեր՝ լայն դեսքտոփ */
+const FOUNDER_GRADIENT_PANEL_CLASS =
+  "relative mx-auto flex h-[431.867px] min-h-0 w-full max-w-full shrink-0 flex-col self-stretch overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:h-[560px] md:w-full md:max-w-[1440px] md:shrink md:flex-row md:self-auto lg:mt-10 lg:h-[560px] xl:mt-[88px] xl:h-[680px]";
+
+const FOUNDER_DESKTOP_TEXT_COLUMN_CLASS =
+  "hidden min-h-0 flex-1 flex-col px-4 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8 md:flex md:pl-16 md:pr-10 md:pt-20 md:pb-10 md:min-h-[280px] lg:pl-14 lg:pr-8 lg:pt-14 lg:pb-6 lg:min-h-0 xl:pl-28 xl:pr-12 xl:pt-40 xl:pb-16 xl:min-h-[320px]";
+
+const FOUNDER_DESKTOP_HEADING_CLASS =
+  "text-left font-black text-[#0f172a] text-[32px] leading-[38px] tracking-[-1.2px] md:text-[34px] md:leading-[40px] xl:text-[36px] xl:leading-[40px]";
+
+const FOUNDER_DESKTOP_BIO_TOP_MARGIN_CLASS = "mt-5 sm:mt-6 md:mt-6 lg:mt-4 xl:mt-10";
+
+const FOUNDER_DESKTOP_STATS_SECTION_CLASS =
+  "mt-6 flex flex-wrap gap-6 sm:gap-8 sm:mt-8 md:mt-10 md:gap-10 lg:mt-6 lg:gap-8 xl:mt-16 xl:gap-12";
 
 type FounderBioContentDesktopProps = {
   contentTopClassName: string;
@@ -39,16 +53,16 @@ type FounderBioContentDesktopProps = {
 function FounderBioContentDesktop({ contentTopClassName }: FounderBioContentDesktopProps) {
   return (
     <div
-      className={`space-y-4 font-light italic leading-[22px] text-black text-[14px] ${contentTopClassName}`}
+      className={`space-y-3 font-light italic leading-[22px] text-black text-[14px] lg:space-y-2.5 xl:space-y-4 ${contentTopClassName}`}
     >
       <p className="whitespace-pre-wrap break-words">{`With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and
-stone setting, the studio is built on practical manufacturing knowledge â€” not theory.
+stone setting, the studio is built on practical manufacturing knowledge — not theory.
 Direct experience at the bench provides a deep understanding of structural behavior, stone
 security, tolerances and real-world production limitations.`}</p>
-      <p className="mt-8 whitespace-pre-wrap break-words sm:mt-10">{`Every design decision is informed by how the piece will be cast, set, assembled and worn. Each
+      <p className="mt-8 whitespace-pre-wrap break-words sm:mt-10 lg:mt-5 xl:mt-10">{`Every design decision is informed by how the piece will be cast, set, assembled and worn. Each
 project is personally reviewed, calibrated and validated before delivery.
-No model leaves the studio without structural verification. Jewelry is approached as a system â€” 
-where design, engineering and craftsmanship must align with precision`}</p>
+No model leaves the studio without structural verification. Jewelry is approached as a system — 
+where design, engineering and craftsmanship must align with precision․`}</p>
     </div>
   );
 }
@@ -146,7 +160,7 @@ export function SectionFounder() {
   return (
     <section
       id={LANDING_SECTION_IDS.FOUNDER}
-      className="-mt-8 bg-[#f8f7f6] px-4 pt-0 pb-12 md:-mt-12 md:px-6 md:pt-0 md:pb-16"
+      className={FOUNDER_SECTION_WRAPPER_CLASS}
       aria-labelledby="founder-heading"
     >
       <div className="mx-auto max-w-[1440px]">
@@ -159,27 +173,28 @@ export function SectionFounder() {
         <h3 className="-mt-2 mb-3 text-center font-sans text-[30px] font-black leading-[36px] tracking-[0.396px] text-black md:hidden">
           Davit Sargsyan
         </h3>
-        <div className="relative mx-auto flex w-full max-w-full flex-col overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:w-full md:max-w-[1440px] md:min-h-0 md:flex-row md:items-stretch">
-          <div className="hidden min-h-0 min-w-0 flex-1 flex-col px-4 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8 md:flex md:pl-20 md:pr-10 lg:pl-28 lg:pr-12 md:pt-12 md:pb-10 lg:pt-20 xl:pt-32 lg:pb-12 xl:pb-16">
-            <h3 className="text-left font-black leading-[40px] tracking-[-1.2px] text-[#0f172a] text-[36px]">
+        <div className={FOUNDER_GRADIENT_PANEL_CLASS}>
+          <div className={FOUNDER_DESKTOP_TEXT_COLUMN_CLASS}>
+            <h3 className={FOUNDER_DESKTOP_HEADING_CLASS}>
               Davit Sargsyan
             </h3>
             <FounderBioAndStats
               statCaptionClassName="font-bold uppercase tracking-[1.4px] text-white text-[12px] md:text-[13px]"
-              contentTopClassName="mt-6 sm:mt-8 md:mt-10"
-              statsSectionClassName="mt-8 flex flex-wrap gap-8 sm:gap-10 md:mt-16 md:gap-12"
+              contentTopClassName={FOUNDER_DESKTOP_BIO_TOP_MARGIN_CLASS}
+              statsSectionClassName={FOUNDER_DESKTOP_STATS_SECTION_CLASS}
             />
           </div>
           <div
-            className={`relative isolate w-full shrink-0 overflow-hidden max-md:aspect-[4/5] max-md:min-h-[240px] md:min-h-[680px] md:w-full md:max-w-[493px] md:flex-none md:self-stretch md:-ml-4 lg:-ml-6 ${FOUNDER_PHOTO_LEFT_BLEND_MASK_CLASS}`}
+            className="relative min-h-0 w-full flex-1 md:aspect-auto md:h-auto md:max-w-[493px] md:min-h-0 md:flex-none md:shrink-0"
             data-landing-image={LANDING_IMAGE_IDS.FOUNDER_PHOTO}
           >
             <Image
               src={LANDING_IMAGES.founder}
               alt="Davit Sargsyan"
               fill
-              className={FOUNDER_PHOTO_IMAGE_CLASS}
+              className={`object-cover object-center ${FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS}`}
               sizes="(max-width: 768px) 100vw, 493px"
+              unoptimized
             />
           </div>
         </div>
