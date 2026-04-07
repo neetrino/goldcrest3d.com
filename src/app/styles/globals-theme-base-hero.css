@@ -89,6 +89,30 @@ section[id] {
   line-height: 28px;
 }
 
+/* Jewelry Design (section3) — mobile Figma; md+ uses base + globals-powerbanners-layout */
+@media (max-width: 767px) {
+  .power-banners-section3-text-cluster .hero-primary-title-typography-design {
+    color: #000;
+    text-align: right;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 36px;
+    letter-spacing: 0.396px;
+  }
+
+  .power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
+    color: rgba(18, 18, 18, 0.9);
+    text-align: right;
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 350;
+    line-height: 28px;
+  }
+}
+
 /* Modeling hero subtitle — Figma 16/24 +1px nudge */
 #hero-modeling-subtitle {
   align-self: stretch;
