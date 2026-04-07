@@ -39,14 +39,25 @@ const FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS = 5000;
 /** Mobile gallery (`md:hidden` block): fixed block sizes from design. */
 const MOBILE_ROW1_ITEM_WIDTH_PX = 310;
 const MOBILE_ROW1_ITEM_HEIGHT_PX = 206;
-const MOBILE_ROW2_ITEM_WIDTH_PX = 150;
-const MOBILE_ROW2_ITEM_HEIGHT_PX = 124;
+/**
+ * Mobile row2 (`md:hidden`): fixed height + equal `flex-1 basis-0` columns (full `100vw` after parent `max-w` fix).
+ */
+const MOBILE_ROW2_CELL_HEIGHT_PX = 130;
 
 /**
  * Mobile row1 full-bleed breakout: pairs `width` and `marginLeft` (`50% - 50vw - N`).
  * Higher N shifts the strip left (more past the left viewport edge); lower N shifts right.
  */
 const MOBILE_TOP_ROW_BLEED_PX = 210;
+
+/** Mobile row2: pixels past each viewport edge; strip width = `100vw + 2 * N` (symmetric bleed). */
+const MOBILE_ROW2_SIDE_BLEED_PX = 68;
+
+/** Mobile row2: shifts the whole strip right (positive = right); does not change cell sizes. */
+const MOBILE_ROW2_NUDGE_RIGHT_PX = 16;
+
+/** Layout helpers only; width/margin set inline with `MOBILE_ROW2_SIDE_BLEED_PX`. */
+const MOBILE_ROW2_FULL_BLEED_CLASS = "min-w-0 max-w-none shrink-0";
 
 /**
  * Mobile row1 right column: `object-position` x below 50% so the crop reads slightly left
@@ -197,9 +208,9 @@ export function SectionFinishedCreations({
           </h2>
         </div>
         <div className="mt-9 flex flex-col gap-2 max-md:items-stretch md:items-stretch">
-          <div className={FINISHED_GALLERY_BLEED_OUTER_CLASS}>
+          <div className={`${FINISHED_GALLERY_BLEED_OUTER_CLASS} max-md:max-w-none`}>
             <div
-            className="flex w-full max-w-full min-w-0 touch-pan-y flex-col gap-2 max-md:overflow-x-visible md:hidden"
+            className="flex w-full min-w-0 touch-pan-y flex-col gap-2 max-md:max-w-none max-md:overflow-x-visible md:hidden"
             onPointerDown={onMobileSwipePointerDown}
             onPointerUp={onMobileSwipePointerUp}
             onPointerCancel={onMobileSwipePointerCancel}
@@ -238,31 +249,28 @@ export function SectionFinishedCreations({
               ))}
             </div>
             <div
-              className="mx-auto grid w-max max-w-full shrink-0 gap-1"
+              className={`flex min-w-0 flex-row items-stretch gap-1 ${MOBILE_ROW2_FULL_BLEED_CLASS}`}
               style={{
-                gridTemplateColumns: `repeat(3, ${MOBILE_ROW2_ITEM_WIDTH_PX}px)`,
-                gridAutoRows: `${MOBILE_ROW2_ITEM_HEIGHT_PX}px`,
+                width: `calc(100vw + ${MOBILE_ROW2_SIDE_BLEED_PX * 2}px)`,
+                marginLeft: `calc(50% - 50vw - ${MOBILE_ROW2_SIDE_BLEED_PX}px + ${MOBILE_ROW2_NUDGE_RIGHT_PX}px)`,
               }}
             >
-              {mobileRow2Items.map((item, index) => {
-                const sideObjectPositionClass =
-                  index === 0 ? "object-right" : index === 2 ? "object-left" : "object-center";
-                return (
+              {mobileRow2Items.map((item, index) => (
                   <div
                     key={`mobile-row2-${item.id}-${activePage}-${index}`}
                     data-landing-image={item.imageId}
-                    className="relative min-h-0 min-w-0 overflow-hidden rounded-none"
+                    className="relative min-h-0 min-w-0 flex-1 basis-0 overflow-hidden rounded-none"
+                    style={{ height: MOBILE_ROW2_CELL_HEIGHT_PX }}
                   >
                     <Image
                       src={item.src}
                       alt=""
                       fill
-                      className={`object-cover ${sideObjectPositionClass}`.trim()}
-                      sizes="(max-width: 767px) 150px, 33vw"
+                      className="object-cover object-center"
+                      sizes="(max-width: 767px) 34vw, 33vw"
                     />
                   </div>
-                );
-              })}
+                ))}
             </div>
             </div>
             <div
