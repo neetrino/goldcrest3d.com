@@ -3,7 +3,7 @@
 import { LANDING_SECTION_IDS } from "@/constants";
 import type { FinishedGalleryItem } from "@/lib/site-media/landing-defaults";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useFinishedCreationsCarouselMetrics } from "@/components/landing/useFinishedCreationsCarouselMetrics";
 
 /** Carousel: small row (row 2) â€” design aspect; slide width is fluid from container. */
@@ -67,6 +67,14 @@ const MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS =
   "max-md:[object-position:36%_center]";
 const GALLERY_OBJECT_POSITION_PORTRAIT_CLASS = "gallery-object-position-portrait";
 
+/** Matches `gap-1` (0.25rem) between mobile gallery cells. */
+const MOBILE_GAP_PX = 4;
+/** One horizontal step for mobile row1 strip = card width + gap. */
+const MOBILE_ROW1_SLIDE_STEP_PX = MOBILE_ROW1_ITEM_WIDTH_PX + MOBILE_GAP_PX;
+/** Viewport width showing two row1 cards (matches current two-up layout). */
+const MOBILE_ROW1_VIEWPORT_WIDTH_PX =
+  MOBILE_ROW1_ITEM_WIDTH_PX * 2 + MOBILE_GAP_PX;
+
 /** Minimum horizontal distance to count as swipe; ignores small jitter. */
 const MOBILE_SWIPE_THRESHOLD_PX = 40;
 /** If vertical movement dominates, treat as scroll, not carousel. */
@@ -96,6 +104,8 @@ export function SectionFinishedCreations({
 
   const [activePage, setActivePage] = useState(0);
   const mobileSwipeStartRef = useRef<{ x: number; y: number } | null>(null);
+  const mobileRow2ViewportRef = useRef<HTMLDivElement>(null);
+  const [mobileRow2CellWidthPx, setMobileRow2CellWidthPx] = useState(0);
 
   const goPrev = useCallback(() => {
     setActivePage((p) => (p <= 0 ? TOTAL_PAGES - 1 : p - 1));
@@ -116,6 +126,27 @@ export function SectionFinishedCreations({
       window.clearInterval(intervalId);
     };
   }, [TOTAL_PAGES]);
+
+  useLayoutEffect(() => {
+    const el = mobileRow2ViewportRef.current;
+    if (!el) {
+      return;
+    }
+    const measure = () => {
+      const w = el.getBoundingClientRect().width;
+      if (w <= 0) {
+        return;
+      }
+      const cell = (w - 2 * MOBILE_GAP_PX) / 3;
+      setMobileRow2CellWidthPx(Math.max(0, cell));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+    };
+  }, []);
 
   const onMobileSwipePointerDown = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) {
@@ -177,14 +208,12 @@ export function SectionFinishedCreations({
     DESKTOP_ROW2_PEEK_FULL_CENTER_SLIDES,
   );
 
-  const mobileRow1Left = ROW1_IMAGES[activePage % TOTAL_PAGES];
-  const mobileRow1Right = ROW1_IMAGES[(activePage + 1) % TOTAL_PAGES];
-  const mobileRow2First = activePage % ROW2_IMAGE_COUNT;
-  const mobileRow2Items = [
-    ROW2_IMAGES[mobileRow2First],
-    ROW2_IMAGES[(mobileRow2First + 1) % ROW2_IMAGE_COUNT],
-    ROW2_IMAGES[(mobileRow2First + 2) % ROW2_IMAGE_COUNT],
-  ] as const;
+  const mobileRow2StepPx =
+    mobileRow2CellWidthPx > 0 ? mobileRow2CellWidthPx + MOBILE_GAP_PX : 0;
+  const mobileRow2TransformPx =
+    mobileRow2StepPx > 0
+      ? (activePage % ROW2_IMAGE_COUNT) * mobileRow2StepPx
+      : 0;
 
   const desktopRow1TransformPx = Math.round(
     desktopMetrics.row1PeekOffsetPx +
@@ -223,44 +252,78 @@ export function SectionFinishedCreations({
                 marginLeft: `calc(50% - 50vw - ${MOBILE_TOP_ROW_BLEED_PX}px)`,
               }}
             >
-              {[mobileRow1Left, mobileRow1Right].map((item, index) => (
+              <div
+                className="shrink-0 overflow-hidden"
+                style={{ width: MOBILE_ROW1_VIEWPORT_WIDTH_PX }}
+              >
                 <div
-                  key={`mobile-row1-${item.id}-${activePage}-${index}`}
-                  data-landing-image={item.imageId}
-                  className="relative shrink-0 overflow-hidden rounded-none"
+                  className="flex shrink-0 flex-row gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
                   style={{
-                    width: MOBILE_ROW1_ITEM_WIDTH_PX,
-                    height: MOBILE_ROW1_ITEM_HEIGHT_PX,
+                    transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                    transform: `translate3d(-${activePage * MOBILE_ROW1_SLIDE_STEP_PX}px, 0, 0)`,
                   }}
                 >
-                  <Image
-                    src={item.src}
-                    alt=""
-                    fill
-                    className={`object-cover ${item.objectPositionClass ?? ""} ${
-                      index === 1 &&
-                      item.objectPositionClass !== GALLERY_OBJECT_POSITION_PORTRAIT_CLASS
-                        ? MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS
-                        : ""
-                    }`.trim()}
-                    sizes="(max-width: 767px) 310px, 50vw"
-                  />
+                  {row1StripImages.map((item, index) => (
+                    <div
+                      key={`mobile-row1-${item.id}-${index}`}
+                      data-landing-image={item.imageId}
+                      className="relative shrink-0 overflow-hidden rounded-none"
+                      style={{
+                        width: MOBILE_ROW1_ITEM_WIDTH_PX,
+                        height: MOBILE_ROW1_ITEM_HEIGHT_PX,
+                      }}
+                    >
+                      <Image
+                        src={item.src}
+                        alt=""
+                        fill
+                        className={`object-cover ${item.objectPositionClass ?? ""} ${
+                          index === activePage + 1 &&
+                          item.objectPositionClass !== GALLERY_OBJECT_POSITION_PORTRAIT_CLASS
+                            ? MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS
+                            : ""
+                        }`.trim()}
+                        sizes="(max-width: 767px) 310px, 50vw"
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
             <div
-              className={`flex min-w-0 flex-row items-stretch gap-1 ${MOBILE_ROW2_FULL_BLEED_CLASS}`}
+              ref={mobileRow2ViewportRef}
+              className={`flex min-w-0 flex-row items-stretch gap-1 overflow-hidden ${MOBILE_ROW2_FULL_BLEED_CLASS}`}
               style={{
                 width: `calc(100vw + ${MOBILE_ROW2_SIDE_BLEED_PX * 2}px)`,
                 marginLeft: `calc(50% - 50vw - ${MOBILE_ROW2_SIDE_BLEED_PX}px + ${MOBILE_ROW2_NUDGE_RIGHT_PX}px)`,
               }}
             >
-              {mobileRow2Items.map((item, index) => (
+              <div
+                className="flex shrink-0 flex-row gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
+                style={{
+                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                  transform:
+                    mobileRow2StepPx > 0
+                      ? `translate3d(-${mobileRow2TransformPx}px, 0, 0)`
+                      : "translate3d(0, 0, 0)",
+                }}
+              >
+                {row2StripImages.map((item, index) => (
                   <div
-                    key={`mobile-row2-${item.id}-${activePage}-${index}`}
+                    key={`mobile-row2-${item.id}-${index}`}
                     data-landing-image={item.imageId}
-                    className="relative min-h-0 min-w-0 flex-1 basis-0 overflow-hidden rounded-none"
-                    style={{ height: MOBILE_ROW2_CELL_HEIGHT_PX }}
+                    className={`relative overflow-hidden rounded-none ${
+                      mobileRow2CellWidthPx > 0
+                        ? "shrink-0"
+                        : "min-h-0 min-w-0 flex-1 basis-0"
+                    }`}
+                    style={{
+                      width:
+                        mobileRow2CellWidthPx > 0
+                          ? mobileRow2CellWidthPx
+                          : undefined,
+                      height: MOBILE_ROW2_CELL_HEIGHT_PX,
+                    }}
                   >
                     <Image
                       src={item.src}
@@ -271,6 +334,7 @@ export function SectionFinishedCreations({
                     />
                   </div>
                 ))}
+              </div>
             </div>
             </div>
             <div
