@@ -45,7 +45,7 @@ const MOBILE_ROW1_ITEM_HEIGHT_PX = 206;
  * Mobile row2 (`md:hidden`): fixed height + equal `flex-1 basis-0` columns (full `100vw` after parent `max-w` fix).
  */
 const MOBILE_ROW2_CELL_HEIGHT_PX = 130;
-
+console.log("s");
 /**
  * Mobile row1 full-bleed breakout: pairs `width` and `marginLeft` (`50% - 50vw - N`).
  * Higher N shifts the strip left (more past the left viewport edge); lower N shifts right.
