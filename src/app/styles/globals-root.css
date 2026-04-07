@@ -109,7 +109,7 @@
   /**
    * Wall Thickness Engineering — միայն lg+ (min-width 1024px): լրացուցիչ translateX (դրական = աջ)։
    */
-  --manufacturing-wall-thickness-detail-nudge-x-lg-offset: 125px;
+  --manufacturing-wall-thickness-detail-nudge-x-lg-offset: 100px;
   /**
    * Wall Thickness Engineering — միայն lg+։ լրացուցիչ translateY (բացասական = վերև)։
    */
@@ -145,7 +145,7 @@
     --landing-nav-logo-slot: 90px;
     --landing-nav-logo-offset-x: 180px;
     --landing-nav-logo-nudge-x: -116px;
-    --manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset: 95px;
+    --manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset: 35px;
   }
 }
 

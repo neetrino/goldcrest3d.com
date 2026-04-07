@@ -125,7 +125,7 @@ export function SectionManufacturing() {
       <div className="mx-auto w-full max-w-[1612px]">
         <h2
           id="manufacturing-heading"
-          className="manufacturing-intelligence-heading hidden text-left font-manrope text-[48px] font-normal leading-[40px] tracking-[-0.9px] text-black lg:block lg:whitespace-nowrap"
+          className="manufacturing-intelligence-heading manufacturing-intelligence-heading-desktop hidden text-left font-manrope text-[48px] font-normal leading-[40px] tracking-[-0.9px] text-black lg:block lg:whitespace-nowrap"
         >
           Manufacturing Intelligence
         </h2>

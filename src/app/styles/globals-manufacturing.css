@@ -31,6 +31,14 @@
     margin-inline-start: var(--landing-section-title-shift-x-md);
     padding-inline-start: var(--landing-section-title-indent-md);
   }
+
+  .manufacturing-intelligence-heading-desktop {
+    margin-inline: auto;
+    margin-inline-start: auto;
+    max-width: min(100%, var(--manufacturing-intelligence-card-max-w));
+    padding-inline-start: 0;
+    width: 100%;
+  }
 }
 
 .manufacturing-intelligence-accordion-label {
