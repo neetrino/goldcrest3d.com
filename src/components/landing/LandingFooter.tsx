@@ -24,7 +24,7 @@ const FOOTER_LOGO_FULL_BLEED_STYLE: CSSProperties = {
  * No horizontal translate on md (was clipping at viewport edge).
  */
 const FOOTER_LOGO_FRAME_CLASS =
-  "relative mt-4 aspect-[299/171] w-full max-w-[299px] shrink-0 overflow-hidden self-start md:mt-0";
+  "relative mt-4 aspect-[299/171] w-full max-w-[299px] shrink-0 overflow-hidden self-start -translate-x-3.5 md:mt-0 md:translate-x-0";
 
 /** Figma-ի ներքին overflow-շերտ — նկարը կտրվում է ֆրեյմի մեջ */
 const FOOTER_LOGO_INNER_CLIP_CLASS =
