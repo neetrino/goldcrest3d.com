@@ -27,6 +27,10 @@ const FOUNDER_BIO_MOBILE_P4 = `No model leaves the studio without structural ver
 /** Դեսքտոփում միայն founder նկարը մի քիչ դեպի ձախ (`-translate-x` = ձախ) */
 const FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS = "md:-translate-x-24";
 
+/** Outer section shell — baseline unchanged below `xl`; larger insets + footprint on wide desktops */
+const FOUNDER_SECTION_WRAPPER_CLASS =
+  "-mt-8 bg-[#f8f7f6] px-4 pt-0 pb-12 md:-mt-12 md:px-6 md:pt-0 md:pb-16 xl:px-10 xl:pb-20 2xl:px-14 2xl:pb-28";
+
 /** Founder գրադարան — lg (1024px) կոմպակտ, xl-ից վեր՝ լայն դեսքտոփ */
 const FOUNDER_GRADIENT_PANEL_CLASS =
   "relative mx-auto flex h-[431.867px] min-h-0 w-full max-w-full shrink-0 flex-col self-stretch overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:h-[560px] md:w-full md:max-w-[1440px] md:shrink md:flex-row md:self-auto lg:mt-10 lg:h-[560px] xl:mt-[88px] xl:h-[680px]";
@@ -156,7 +160,7 @@ export function SectionFounder() {
   return (
     <section
       id={LANDING_SECTION_IDS.FOUNDER}
-      className="-mt-8 bg-[#f8f7f6] px-4 pt-0 pb-12 md:-mt-12 md:px-6 md:pt-0 md:pb-16"
+      className={FOUNDER_SECTION_WRAPPER_CLASS}
       aria-labelledby="founder-heading"
     >
       <div className="mx-auto max-w-[1440px]">
