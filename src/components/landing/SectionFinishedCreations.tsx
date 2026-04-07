@@ -34,6 +34,8 @@ const DESKTOP_ROW2_VISIBLE_SLOTS_FALLBACK = 3;
 
 /** Desktop carousel: one timing curve for both rows (GPU-friendly transform). */
 const DESKTOP_CAROUSEL_TRANSITION_MS = 420;
+/** Mobile gallery strips use `gap-1` (4px) — same as previous grid spacing. */
+const MOBILE_FINISHED_GALLERY_GAP_PX = 4;
 const FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS = 5000;
 
 /** Mobile gallery (`md:hidden` block): fixed block sizes from design. */
@@ -197,6 +199,43 @@ export function SectionFinishedCreations({
   /** Images rendered once; sliding via transform. Duplicated for seamless loop. */
   const row1StripImages = [...ROW1_IMAGES, ...ROW1_IMAGES];
   const row2StripImages = [...ROW2_IMAGES, ...ROW2_IMAGES];
+
+  const mobileRow1OverflowRef = useRef<HTMLDivElement>(null);
+  const mobileRow2OverflowRef = useRef<HTMLDivElement>(null);
+  const [mobileRow1SlideWidthPx, setMobileRow1SlideWidthPx] = useState(0);
+  const [mobileRow2FrameWidthPx, setMobileRow2FrameWidthPx] = useState(0);
+
+  useLayoutEffect(() => {
+    const el1 = mobileRow1OverflowRef.current;
+    const el2 = mobileRow2OverflowRef.current;
+    const measure = () => {
+      if (el1) {
+        const w = el1.getBoundingClientRect().width;
+        if (w > 0) {
+          setMobileRow1SlideWidthPx(
+            Math.max(0, (w - MOBILE_FINISHED_GALLERY_GAP_PX) / 2),
+          );
+        }
+      }
+      if (el2) {
+        const w = el2.getBoundingClientRect().width;
+        if (w > 0) {
+          setMobileRow2FrameWidthPx(w);
+        }
+      }
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (el1) {
+      ro.observe(el1);
+    }
+    if (el2) {
+      ro.observe(el2);
+    }
+    return () => {
+      ro.disconnect();
+    };
+  }, []);
 
   const desktopCarouselContainerRef = useRef<HTMLDivElement>(null);
   const desktopMetrics = useFinishedCreationsCarouselMetrics(
