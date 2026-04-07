@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
@@ -126,11 +127,13 @@ export default async function AdminOrderDetailPage({ params }: Props) {
                   className="block shrink-0 overflow-hidden rounded-md border border-neutral-200 bg-neutral-50 transition-opacity hover:opacity-90"
                   aria-label="Open product image in new tab"
                 >
-                  <img
+                  <Image
                     src={productImageUrl}
                     alt={`${order.productTitle} image`}
+                    width={96}
+                    height={96}
                     className="h-24 w-24 object-cover"
-                    loading="lazy"
+                    sizes="96px"
                   />
                 </a>
               </dd>
