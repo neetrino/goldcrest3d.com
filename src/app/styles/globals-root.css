@@ -109,7 +109,7 @@
   /**
    * Wall Thickness Engineering — միայն lg+ (min-width 1024px): լրացուցիչ translateX (դրական = աջ)։
    */
-  --manufacturing-wall-thickness-detail-nudge-x-lg-offset: 100px;
+  --manufacturing-wall-thickness-detail-nudge-x-lg-offset: 75px;
   /**
    * Wall Thickness Engineering — միայն lg+։ լրացուցիչ translateY (բացասական = վերև)։
    */
