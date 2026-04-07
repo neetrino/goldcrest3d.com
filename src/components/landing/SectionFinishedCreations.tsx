@@ -45,6 +45,14 @@ const MOBILE_ROW2_ASPECT_HEIGHT = Math.round(
   ROW2_ITEM_HEIGHT * MOBILE_BLOCK_HEIGHT_SCALE * MOBILE_SMALL_BLOCK_SIZE_SCALE,
 );
 
+/**
+ * Mobile row1 right column: `object-position` x below 50% so the crop reads slightly left
+ * (block size unchanged; only focal alignment). Skip when item uses portrait object-position.
+ */
+const MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS =
+  "max-md:[object-position:36%_center]";
+const GALLERY_OBJECT_POSITION_PORTRAIT_CLASS = "gallery-object-position-portrait";
+
 /** Minimum horizontal distance to count as swipe; ignores small jitter. */
 const MOBILE_SWIPE_THRESHOLD_PX = 40;
 /** If vertical movement dominates, treat as scroll, not carousel. */
@@ -220,7 +228,12 @@ export function SectionFinishedCreations({
                     src={item.src}
                     alt=""
                     fill
-                    className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
+                    className={`object-cover ${item.objectPositionClass ?? ""} ${
+                      index === 1 &&
+                      item.objectPositionClass !== GALLERY_OBJECT_POSITION_PORTRAIT_CLASS
+                        ? MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS
+                        : ""
+                    }`.trim()}
                     sizes="(max-width: 767px) 50vw, 50vw"
                   />
                 </div>
