@@ -184,7 +184,11 @@
   }
 
   .manufacturing-intelligence-image-frame {
+    aspect-ratio: 6 / 5;
+    height: 610px;
     max-height: var(--manufacturing-intelligence-image-frame-max-h-lg);
+    max-width: 100%;
+    width: 732px;
     transform: translate(
       var(--manufacturing-intelligence-image-nudge-x-lg),
       var(--manufacturing-intelligence-image-nudge-y-lg)
@@ -193,7 +197,7 @@
 
   .manufacturing-intelligence-photo {
     object-position: left center;
-    transform: scale(var(--manufacturing-intelligence-photo-scale-lg));
+    transform: scale(1);
     transform-origin: left center;
   }
 
