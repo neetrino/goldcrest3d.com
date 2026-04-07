@@ -22,6 +22,9 @@
   .power-banners-section1-image-strip {
     aspect-ratio: unset;
     height: var(--section1-image-strip-height-desktop);
+    width: 106%;
+    margin-inline: auto;
+    transform: translateX(-3%);
   }
 }
 
@@ -59,7 +62,9 @@
 
 @media (min-width: 768px) {
   .power-banners-section2-block {
+    --power-banners-block-width-compensation-x: 3vw;
     width: var(--section2-block-design-width);
+    width: 106%;
     max-width: 100%;
     height: var(--section2-block-visible-height);
   }
@@ -72,7 +77,12 @@
 
 @media (min-width: 768px) {
   .power-banners-section2-text-cluster {
-    transform: translateX(var(--section2-text-cluster-nudge-md, 0px));
+    transform: translateX(
+      calc(
+        var(--section2-text-cluster-nudge-md, 0px) +
+          var(--power-banners-block-width-compensation-x, 0px)
+      )
+    );
   }
 }
 
@@ -93,7 +103,9 @@
 
 @media (min-width: 768px) {
   .power-banners-section3-block {
+    --power-banners-block-width-compensation-x: 3vw;
     width: var(--section3-block-design-width);
+    width: 106%;
     max-width: 100%;
     height: var(--section3-block-visible-height);
     min-height: var(--section3-block-visible-height);
@@ -102,6 +114,10 @@
 
 /* Desktop (md+): section3 title/subtitle — left-aligned */
 @media (min-width: 768px) {
+  .power-banners-section3-text-cluster {
+    transform: translateX(var(--power-banners-block-width-compensation-x, 0px));
+  }
+
   .power-banners-section3-text-cluster .hero-primary-title-typography-design,
   .power-banners-section3-text-cluster .hero-primary-subtitle-typography-design {
     text-align: left;
