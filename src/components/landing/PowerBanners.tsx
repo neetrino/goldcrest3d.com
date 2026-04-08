@@ -23,12 +23,10 @@ export function PowerBanners() {
       {HERO_SLIDES.map((slide) => (
         <Fragment key={slide.id}>
           <div
-            className={`relative flex w-full shrink-0 flex-col overflow-hidden ${
+            className={`relative flex w-full shrink-0 flex-col ${
               slide.id === "modeling"
-                ? "items-center bg-white"
-                : slide.id === "rendering"
-                  ? "min-h-0 bg-white md:h-auto"
-                  : "min-h-0 bg-white md:h-auto"
+                ? "overflow-x-visible overflow-y-clip bg-white"
+                : "overflow-hidden min-h-0 bg-white md:h-auto"
             } ${slide.id === "rendering" ? "-mt-[60px] md:-mt-[140px]" : ""}`}
           >
             {slide.id === "rendering" && (
