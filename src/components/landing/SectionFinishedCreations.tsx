@@ -50,6 +50,8 @@ const MOBILE_ROW2_CELL_HEIGHT_PX = 130;
  * Higher N shifts the strip left (more past the left viewport edge); lower N shifts right.
  */
 const MOBILE_TOP_ROW_BLEED_PX = 210;
+const LARGE_MOBILE_TOP_ROW_BLEED_PX = 0;
+const LARGE_MOBILE_MIN_WIDTH_PX = 430;
 
 /** Mobile row2: pixels past each viewport edge; strip width = `100vw + 2 * N` (symmetric bleed). */
 const MOBILE_ROW2_SIDE_BLEED_PX = 68;
@@ -104,6 +106,7 @@ export function SectionFinishedCreations({
   const ROW2_IMAGE_COUNT = Math.max(1, ROW2_IMAGES.length);
 
   const [activePage, setActivePage] = useState(0);
+  const [isLargeMobileViewport, setIsLargeMobileViewport] = useState(false);
   const mobileSwipeStartRef = useRef<{ x: number; y: number } | null>(null);
   const mobileRow2ViewportRef = useRef<HTMLDivElement>(null);
   const [mobileRow2CellWidthPx, setMobileRow2CellWidthPx] = useState(0);
@@ -146,6 +149,20 @@ export function SectionFinishedCreations({
     ro.observe(el);
     return () => {
       ro.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateIsLargeMobileViewport = () => {
+      const viewportWidth = window.innerWidth;
+      setIsLargeMobileViewport(
+        viewportWidth >= LARGE_MOBILE_MIN_WIDTH_PX && viewportWidth < 768,
+      );
+    };
+    updateIsLargeMobileViewport();
+    window.addEventListener("resize", updateIsLargeMobileViewport);
+    return () => {
+      window.removeEventListener("resize", updateIsLargeMobileViewport);
     };
   }, []);
 
@@ -261,6 +278,17 @@ export function SectionFinishedCreations({
     desktopMetrics.row2PeekOffsetPx +
       (activePage % ROW2_IMAGE_COUNT) * desktopMetrics.row2TranslatePx,
   );
+  const mobileTopRowBleedPx = isLargeMobileViewport
+    ? LARGE_MOBILE_TOP_ROW_BLEED_PX
+    : MOBILE_TOP_ROW_BLEED_PX;
+  const mobileRow1CardWidthPx =
+    isLargeMobileViewport && mobileRow1SlideWidthPx > 0
+      ? mobileRow1SlideWidthPx
+      : MOBILE_ROW1_ITEM_WIDTH_PX;
+  const mobileRow1SlideStepPx = mobileRow1CardWidthPx + MOBILE_GAP_PX;
+  const mobileRow1ViewportWidth = isLargeMobileViewport
+    ? "100vw"
+    : MOBILE_ROW1_VIEWPORT_WIDTH_PX;
 
   return (
     <section
@@ -286,19 +314,20 @@ export function SectionFinishedCreations({
             <div
               className="flex w-full min-w-0 shrink-0 max-w-none flex-row gap-1"
               style={{
-                width: `calc(100vw + ${MOBILE_TOP_ROW_BLEED_PX}px)`,
-                marginLeft: `calc(50% - 50vw - ${MOBILE_TOP_ROW_BLEED_PX}px)`,
+                width: `calc(100vw + ${mobileTopRowBleedPx}px)`,
+                marginLeft: `calc(50% - 50vw - ${mobileTopRowBleedPx}px)`,
               }}
             >
               <div
+                ref={mobileRow1OverflowRef}
                 className="shrink-0 overflow-hidden"
-                style={{ width: MOBILE_ROW1_VIEWPORT_WIDTH_PX }}
+                style={{ width: mobileRow1ViewportWidth }}
               >
                 <div
                   className="flex shrink-0 flex-row gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
                   style={{
                     transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
-                    transform: `translate3d(-${activePage * MOBILE_ROW1_SLIDE_STEP_PX}px, 0, 0)`,
+                    transform: `translate3d(-${activePage * mobileRow1SlideStepPx}px, 0, 0)`,
                   }}
                 >
                   {row1StripImages.map((item, index) => (
@@ -307,7 +336,7 @@ export function SectionFinishedCreations({
                       data-landing-image={item.imageId}
                       className="relative shrink-0 overflow-hidden rounded-none"
                       style={{
-                        width: MOBILE_ROW1_ITEM_WIDTH_PX,
+                        width: mobileRow1CardWidthPx,
                         height: MOBILE_ROW1_ITEM_HEIGHT_PX,
                       }}
                     >
