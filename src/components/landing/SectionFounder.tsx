@@ -7,10 +7,10 @@ const FOUNDER_STAT_NUMBER_CLASS_DEFAULT =
 
 /** Mobile founder bio — Figma widths (px) */
 const FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS = {
-  p1: "max-w-[331px]",
-  p2: "max-w-[342px]",
-  p3: "max-w-[332px]",
-  p4: "max-w-[338px]",
+  p1: "max-w-[331px] min-[430px]:max-md:max-w-full",
+  p2: "max-w-[342px] min-[430px]:max-md:max-w-full",
+  p3: "max-w-[332px] min-[430px]:max-md:max-w-full",
+  p4: "max-w-[338px] min-[430px]:max-md:max-w-full",
 } as const;
 
 const FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS =
@@ -34,7 +34,7 @@ const FOUNDER_SECTION_WRAPPER_CLASS =
 
 /** Founder գրադարան — lg (1024px) կոմպակտ, xl-ից վեր՝ լայն դեսքտոփ */
 const FOUNDER_GRADIENT_PANEL_CLASS =
-  "relative mx-auto flex h-[431.867px] min-h-0 w-full max-w-full shrink-0 flex-col self-stretch overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:h-[560px] md:max-lg:h-auto md:w-full md:max-w-[1440px] md:shrink md:flex-row md:self-auto lg:mt-10 lg:h-[560px] xl:mt-[88px] xl:h-[680px]";
+  "relative mx-auto flex h-[431.867px] min-h-0 w-full max-w-full shrink-0 flex-col self-stretch overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] min-[430px]:max-md:h-[500px] md:mt-[88px] md:h-[560px] md:max-lg:h-auto md:w-full md:max-w-[1440px] md:shrink md:flex-row md:self-auto lg:mt-10 lg:h-[560px] xl:mt-[88px] xl:h-[680px]";
 
 const FOUNDER_DESKTOP_TEXT_COLUMN_CLASS =
   "hidden min-h-0 flex-1 flex-col px-4 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8 md:flex md:pl-16 md:pr-10 md:pt-20 md:pb-10 md:min-h-[280px] md:max-lg:-translate-y-7 md:max-lg:pl-10 md:max-lg:pr-6 md:max-lg:pt-12 md:max-lg:pb-6 lg:pl-14 lg:pr-8 lg:pt-14 lg:pb-6 lg:min-h-0 xl:pl-28 xl:pr-12 xl:pt-40 xl:pb-16 xl:min-h-[320px]";
@@ -193,7 +193,7 @@ export function SectionFounder() {
               src={LANDING_IMAGES.founder}
               alt="Davit Sargsyan"
               fill
-              className={`object-cover object-center ${FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS}`}
+              className={`object-cover object-center min-[430px]:max-md:object-contain min-[430px]:max-md:object-bottom ${FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS}`}
               sizes="(max-width: 768px) 100vw, 493px"
               unoptimized
             />
