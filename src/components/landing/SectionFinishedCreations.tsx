@@ -56,9 +56,15 @@ const LARGE_MOBILE_MIN_WIDTH_PX = 430;
 /** Mobile row2: pixels past each viewport edge; strip width = `100vw + 2 * N` (symmetric bleed). */
 const MOBILE_ROW2_SIDE_BLEED_PX = 68;
 
-/** Mobile row2: shifts the whole strip right (positive = right); does not change cell sizes. */
-const MOBILE_ROW2_NUDGE_RIGHT_PX = 16;
+/**
+ * Mobile-only: shifts both strips right (positive = right).
+ * Keep at 0 so the bleed fills the width; large values leave empty space on the left.
+ */
+const MOBILE_GALLERY_NUDGE_RIGHT_PX = 0;
 
+/** Mobile: sliver of the previous slide on the left edge when `activePage > 0`. */
+const MOBILE_CAROUSEL_EDGE_PEEK_PX = 220;
+  
 /** Layout helpers only; width/margin set inline with `MOBILE_ROW2_SIDE_BLEED_PX`. */
 const MOBILE_ROW2_FULL_BLEED_CLASS = "min-w-0 max-w-none shrink-0";
 
@@ -94,7 +100,7 @@ const FINISHED_HEADING_CLASS =
  * Edge-to-edge gallery on md+ (`ml` breakout from centered column).
  */
 const FINISHED_GALLERY_BLEED_OUTER_CLASS =
-  "flex w-full min-w-0 max-w-full flex-col gap-2 max-md:items-stretch md:ml-[calc(50%-50vw)] md:w-[100vw] md:max-w-[100vw] md:shrink-0 md:self-stretch";
+  "flex w-full min-w-0 max-w-full flex-col gap-2 max-md:-mx-4 max-md:w-[calc(100%+2rem)] max-md:items-stretch md:ml-[calc(50%-50vw)] md:w-[100vw] md:max-w-[100vw] md:shrink-0 md:self-stretch";
 
 export function SectionFinishedCreations({
   row1,
@@ -265,10 +271,13 @@ export function SectionFinishedCreations({
 
   const mobileRow2StepPx =
     mobileRow2CellWidthPx > 0 ? mobileRow2CellWidthPx + MOBILE_GAP_PX : 0;
-  const mobileRow2TransformPx =
+  const mobileRow2BaseTransformPx =
     mobileRow2StepPx > 0
       ? (activePage % ROW2_IMAGE_COUNT) * mobileRow2StepPx
       : 0;
+  const mobileRow2PeekAdjustPx =
+    activePage > 0 && mobileRow2StepPx > 0 ? MOBILE_CAROUSEL_EDGE_PEEK_PX : 0;
+  const mobileRow2TransformPx = mobileRow2BaseTransformPx - mobileRow2PeekAdjustPx;
 
   const desktopRow1TransformPx = Math.round(
     desktopMetrics.row1PeekOffsetPx +
@@ -290,10 +299,15 @@ export function SectionFinishedCreations({
     ? "100vw"
     : MOBILE_ROW1_VIEWPORT_WIDTH_PX;
 
+  const mobileRow1PeekAdjustPx =
+    activePage > 0 ? MOBILE_CAROUSEL_EDGE_PEEK_PX : 0;
+  const mobileRow1TranslatePx =
+    mobileRow1PeekAdjustPx - activePage * mobileRow1SlideStepPx;
+
   return (
     <section
       id={LANDING_SECTION_IDS.FINISHED_CREATIONS}
-      className="overflow-x-clip bg-white px-4 pt-[56px] pb-10 md:px-6"
+      className="max-md:overflow-x-visible md:overflow-x-clip bg-white px-4 pt-[56px] pb-10 md:px-6"
       aria-labelledby="finished-heading"
     >
       <div className="mx-auto max-w-[1980px]">
@@ -303,7 +317,9 @@ export function SectionFinishedCreations({
           </h2>
         </div>
         <div className="mt-9 flex flex-col gap-2 max-md:items-stretch md:items-stretch">
-          <div className={`${FINISHED_GALLERY_BLEED_OUTER_CLASS} max-md:max-w-none`}>
+          <div
+            className={`${FINISHED_GALLERY_BLEED_OUTER_CLASS} max-md:max-w-none`}
+          >
             <div
             className="flex w-full min-w-0 touch-pan-y flex-col gap-2 max-md:max-w-none max-md:overflow-x-visible md:hidden"
             onPointerDown={onMobileSwipePointerDown}
@@ -315,7 +331,7 @@ export function SectionFinishedCreations({
               className="flex w-full min-w-0 shrink-0 max-w-none flex-row gap-1"
               style={{
                 width: `calc(100vw + ${mobileTopRowBleedPx}px)`,
-                marginLeft: `calc(50% - 50vw - ${mobileTopRowBleedPx}px)`,
+                marginLeft: `calc(50% - 50vw - ${mobileTopRowBleedPx}px + ${MOBILE_GALLERY_NUDGE_RIGHT_PX}px)`,
               }}
             >
               <div
@@ -327,7 +343,7 @@ export function SectionFinishedCreations({
                   className="flex shrink-0 flex-row gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
                   style={{
                     transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
-                    transform: `translate3d(-${activePage * mobileRow1SlideStepPx}px, 0, 0)`,
+                    transform: `translate3d(${mobileRow1TranslatePx}px, 0, 0)`,
                   }}
                 >
                   {row1StripImages.map((item, index) => (
@@ -362,7 +378,7 @@ export function SectionFinishedCreations({
               className={`flex min-w-0 flex-row items-stretch gap-1 overflow-hidden ${MOBILE_ROW2_FULL_BLEED_CLASS}`}
               style={{
                 width: `calc(100vw + ${MOBILE_ROW2_SIDE_BLEED_PX * 2}px)`,
-                marginLeft: `calc(50% - 50vw - ${MOBILE_ROW2_SIDE_BLEED_PX}px + ${MOBILE_ROW2_NUDGE_RIGHT_PX}px)`,
+                marginLeft: `calc(50% - 50vw - ${MOBILE_ROW2_SIDE_BLEED_PX}px + ${MOBILE_GALLERY_NUDGE_RIGHT_PX}px)`,
               }}
             >
               <div
