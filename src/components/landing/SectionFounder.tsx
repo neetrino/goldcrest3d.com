@@ -24,8 +24,9 @@ const FOUNDER_BIO_MOBILE_P3 = `Every design decision is informed by how the piec
 
 const FOUNDER_BIO_MOBILE_P4 = `No model leaves the studio without structural verification. Jewelry is approached as a system — where design, engineering and craftsmanship must align with precision․`;
 
-/** Դեսքտոփում միայն founder նկարը մի քիչ դեպի ձախ (`-translate-x` = ձախ) */
-const FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS = "md:-translate-x-24";
+/** Tablet-ում մի քիչ աջ, desktop-ում պահում ենք նախորդ ձախ տեղաշարժը */
+const FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS =
+  "md:max-lg:-translate-x-0 lg:-translate-x-24";
 
 /** Outer section shell — baseline unchanged below `xl`; larger insets + footprint on wide desktops */
 const FOUNDER_SECTION_WRAPPER_CLASS =
@@ -33,13 +34,13 @@ const FOUNDER_SECTION_WRAPPER_CLASS =
 
 /** Founder գրադարան — lg (1024px) կոմպակտ, xl-ից վեր՝ լայն դեսքտոփ */
 const FOUNDER_GRADIENT_PANEL_CLASS =
-  "relative mx-auto flex h-[431.867px] min-h-0 w-full max-w-full shrink-0 flex-col self-stretch overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:h-[560px] md:w-full md:max-w-[1440px] md:shrink md:flex-row md:self-auto lg:mt-10 lg:h-[560px] xl:mt-[88px] xl:h-[680px]";
+  "relative mx-auto flex h-[431.867px] min-h-0 w-full max-w-full shrink-0 flex-col self-stretch overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] md:mt-[88px] md:h-[560px] md:max-lg:h-auto md:w-full md:max-w-[1440px] md:shrink md:flex-row md:self-auto lg:mt-10 lg:h-[560px] xl:mt-[88px] xl:h-[680px]";
 
 const FOUNDER_DESKTOP_TEXT_COLUMN_CLASS =
-  "hidden min-h-0 flex-1 flex-col px-4 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8 md:flex md:pl-16 md:pr-10 md:pt-20 md:pb-10 md:min-h-[280px] md:max-lg:-translate-y-19 lg:pl-14 lg:pr-8 lg:pt-14 lg:pb-6 lg:min-h-0 xl:pl-28 xl:pr-12 xl:pt-40 xl:pb-16 xl:min-h-[320px]";
+  "hidden min-h-0 flex-1 flex-col px-4 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8 md:flex md:pl-16 md:pr-10 md:pt-20 md:pb-10 md:min-h-[280px] md:max-lg:-translate-y-7 md:max-lg:pl-10 md:max-lg:pr-6 md:max-lg:pt-12 md:max-lg:pb-6 lg:pl-14 lg:pr-8 lg:pt-14 lg:pb-6 lg:min-h-0 xl:pl-28 xl:pr-12 xl:pt-40 xl:pb-16 xl:min-h-[320px]";
 
 const FOUNDER_DESKTOP_HEADING_CLASS =
-  "text-left font-black text-[#0f172a] text-[32px] leading-[38px] tracking-[-1.2px] md:text-[34px] md:leading-[40px] xl:text-[36px] xl:leading-[40px]";
+  "text-left font-black text-[#0f172a] text-[32px] leading-[38px] tracking-[-1.2px] md:text-[34px] md:leading-[40px] md:max-lg:text-[clamp(30px,4vw,34px)] md:max-lg:leading-[clamp(34px,4.6vw,40px)] xl:text-[36px] xl:leading-[40px]";
 
 const FOUNDER_DESKTOP_BIO_TOP_MARGIN_CLASS = "mt-5 sm:mt-6 md:mt-6 lg:mt-4 xl:mt-10";
 
@@ -53,7 +54,7 @@ type FounderBioContentDesktopProps = {
 function FounderBioContentDesktop({ contentTopClassName }: FounderBioContentDesktopProps) {
   return (
     <div
-      className={`space-y-3 font-light italic leading-[22px] text-black text-[14px] lg:space-y-2.5 xl:space-y-4 ${contentTopClassName}`}
+      className={`space-y-3 font-light italic leading-[22px] text-black text-[14px] md:max-lg:text-[clamp(13px,1.6vw,14px)] md:max-lg:leading-[clamp(20px,2.3vw,22px)] lg:space-y-2.5 xl:space-y-4 ${contentTopClassName}`}
     >
       <p className="whitespace-pre-wrap break-words">{`With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and
 stone setting, the studio is built on practical manufacturing knowledge — not theory.
@@ -185,7 +186,7 @@ export function SectionFounder() {
             />
           </div>
           <div
-            className="relative min-h-0 w-full flex-1 md:aspect-auto md:h-auto md:max-w-[493px] md:min-h-0 md:flex-none md:shrink-0"
+            className="relative min-h-0 w-full flex-1 md:aspect-auto md:h-auto md:max-w-[440px] lg:max-w-[493px] md:min-h-0 md:flex-none md:shrink-0"
             data-landing-image={LANDING_IMAGE_IDS.FOUNDER_PHOTO}
           >
             <Image
