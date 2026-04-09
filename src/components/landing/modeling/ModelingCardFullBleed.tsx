@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import Image from "next/image";
 
@@ -96,6 +99,47 @@ export function ModelingCardFullBleed({
   descriptionContent,
   DescriptionTag,
 }: ModelingCardFullBleedProps) {
+  const [hipHopZoomCompensation, setHipHopZoomCompensation] = useState(1);
+
+  useEffect(() => {
+    if (!hipHopMobileLayout || typeof window === "undefined") {
+      return;
+    }
+
+    const baselineDevicePixelRatio = window.devicePixelRatio || 1;
+
+    const updateCompensation = () => {
+      const currentDevicePixelRatio = window.devicePixelRatio || baselineDevicePixelRatio;
+      const compensation = baselineDevicePixelRatio / currentDevicePixelRatio;
+      setHipHopZoomCompensation(Math.max(1, compensation));
+    };
+
+    updateCompensation();
+    window.addEventListener("resize", updateCompensation);
+    window.visualViewport?.addEventListener("resize", updateCompensation);
+
+    return () => {
+      window.removeEventListener("resize", updateCompensation);
+      window.visualViewport?.removeEventListener("resize", updateCompensation);
+    };
+  }, [hipHopMobileLayout]);
+
+  const overlayTextStyleResolved = useMemo<CSSProperties | undefined>(() => {
+    if (!hipHopMobileLayout) {
+      return overlayTextContainerStyle;
+    }
+
+    const existingTransform = overlayTextContainerStyle?.transform;
+
+    return {
+      ...overlayTextContainerStyle,
+      transform: existingTransform
+        ? `${existingTransform} scale(${hipHopZoomCompensation})`
+        : `scale(${hipHopZoomCompensation})`,
+      transformOrigin: "center bottom",
+    };
+  }, [hipHopMobileLayout, hipHopZoomCompensation, overlayTextContainerStyle]);
+
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -154,8 +198,8 @@ export function ModelingCardFullBleed({
         ) : null}
       </div>
       <div
-        className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "max-sm:items-center max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:translate-x-[calc(0.125rem*var(--ms,1))] max-sm:translate-y-[calc(72px*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:pb-[calc(1.5rem*var(--ms,1))] max-sm:text-center sm:items-start sm:gap-[calc(1.5rem*var(--ms,1))] sm:pr-[40%] sm:translate-x-[calc(3.75rem*var(--ms,1))] sm:translate-y-[calc(8.5rem*var(--ms,1))] md:translate-y-[calc(10.75rem*var(--ms,1))] sm:text-left" : bridalMobileLayout ? "max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-[calc(5rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(13.5rem*var(--ms,1)),32vw)] sm:-translate-y-[min(calc(12rem*var(--ms,1)),28vh)] sm:items-end sm:text-right" : `${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
-        style={overlayTextContainerStyle}
+        className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] translate-y-[calc(1.35rem*var(--ms,1))] text-center sm:gap-[calc(1.5rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:pb-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(1.6rem*var(--ms,1))]" : bridalMobileLayout ? "justify-center max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-[calc(5rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(13.5rem*var(--ms,1)),32vw)] sm:-translate-y-[min(calc(12rem*var(--ms,1)),28vh)] sm:items-end sm:text-right" : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
+        style={overlayTextStyleResolved}
       >
         {independentTitleDescription ? (
           portraitMobileLayout ? (
@@ -247,7 +291,7 @@ export function ModelingCardFullBleed({
         ) : (
           <>
             <h3
-              className={`${titleClassNameResolved} ${hipHopMobileLayout ? "max-sm:mt-[calc(0.5rem*var(--ms,1))] max-sm:self-center max-sm:text-center sm:self-auto sm:text-left sm:translate-x-[min(calc(15.25rem*var(--ms,1)),32vw)] sm:translate-y-[calc(0.25rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+              className={`${titleClassNameResolved} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center translate-y-[calc(0.5rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
               style={{
                 ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                 ...(titleMarginTop != null && { marginTop: titleMarginTop }),
