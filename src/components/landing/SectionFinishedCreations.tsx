@@ -14,8 +14,6 @@ type SectionFinishedCreationsProps = {
   row1: FinishedGalleryItem[];
   row2: FinishedGalleryItem[];
 };
-const SLOT_WIDTH = 670;
-const SLOT_HEIGHT = 370;
 /**
  * Row1 fallback when peek is off (unused if `DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION` is set).
  */
@@ -78,8 +76,6 @@ const GALLERY_OBJECT_POSITION_PORTRAIT_CLASS = "gallery-object-position-portrait
 
 /** Matches `gap-1` (0.25rem) between mobile gallery cells. */
 const MOBILE_GAP_PX = 4;
-/** One horizontal step for mobile row1 strip = card width + gap. */
-const MOBILE_ROW1_SLIDE_STEP_PX = MOBILE_ROW1_ITEM_WIDTH_PX + MOBILE_GAP_PX;
 /** Viewport width showing two row1 cards (matches current two-up layout). */
 const MOBILE_ROW1_VIEWPORT_WIDTH_PX =
   MOBILE_ROW1_ITEM_WIDTH_PX * 2 + MOBILE_GAP_PX;
@@ -223,13 +219,10 @@ export function SectionFinishedCreations({
   const row2StripImages = [...ROW2_IMAGES, ...ROW2_IMAGES];
 
   const mobileRow1OverflowRef = useRef<HTMLDivElement>(null);
-  const mobileRow2OverflowRef = useRef<HTMLDivElement>(null);
   const [mobileRow1SlideWidthPx, setMobileRow1SlideWidthPx] = useState(0);
-  const [mobileRow2FrameWidthPx, setMobileRow2FrameWidthPx] = useState(0);
 
   useLayoutEffect(() => {
     const el1 = mobileRow1OverflowRef.current;
-    const el2 = mobileRow2OverflowRef.current;
     const measure = () => {
       if (el1) {
         const w = el1.getBoundingClientRect().width;
@@ -239,20 +232,11 @@ export function SectionFinishedCreations({
           );
         }
       }
-      if (el2) {
-        const w = el2.getBoundingClientRect().width;
-        if (w > 0) {
-          setMobileRow2FrameWidthPx(w);
-        }
-      }
     };
     measure();
     const ro = new ResizeObserver(measure);
     if (el1) {
       ro.observe(el1);
-    }
-    if (el2) {
-      ro.observe(el2);
     }
     return () => {
       ro.disconnect();

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { SITE_MEDIA_ACCEPT } from "./media-manager.constants";
@@ -113,11 +114,14 @@ export function ImageUploadControl({
         />
         {previewUrl ? (
           <div className="p-3">
-            <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
-              <img
+            <div className="relative h-40 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+              <Image
                 src={previewUrl}
                 alt={displayName ? `Preview of ${displayName}` : "Selected image preview"}
-                className="h-40 w-full object-contain"
+                fill
+                unoptimized
+                sizes="100vw"
+                className="object-contain"
               />
             </div>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
