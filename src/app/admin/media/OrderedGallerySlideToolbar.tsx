@@ -8,6 +8,8 @@ import { ReplaceOrderedGalleryImageForm } from "./ReplaceOrderedGalleryImageForm
 type OrderedGallerySlideToolbarProps = {
   item: AdminOrderedItemRow;
   positionLabel: string;
+  rowContextLabel: string;
+  recommendedSize: string;
   index: number;
   total: number;
   pending: boolean;
@@ -18,6 +20,8 @@ type OrderedGallerySlideToolbarProps = {
 export function OrderedGallerySlideToolbar({
   item,
   positionLabel,
+  rowContextLabel,
+  recommendedSize,
   index,
   total,
   pending,
@@ -47,7 +51,12 @@ export function OrderedGallerySlideToolbar({
           Updating gallery…
         </p>
       ) : null}
-      <ReplaceOrderedGalleryImageForm item={item} positionLabel={positionLabel} />
+      <ReplaceOrderedGalleryImageForm
+        item={item}
+        positionLabel={positionLabel}
+        rowLabel={rowContextLabel}
+        recommendedSize={recommendedSize}
+      />
     </div>
   );
 }

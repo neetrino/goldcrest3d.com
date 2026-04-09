@@ -20,11 +20,15 @@ import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 type ReplaceOrderedGalleryImageFormProps = {
   item: AdminOrderedItemRow;
   positionLabel: string;
+  rowLabel: string;
+  recommendedSize: string;
 };
 
 export function ReplaceOrderedGalleryImageForm({
   item,
   positionLabel,
+  rowLabel,
+  recommendedSize,
 }: ReplaceOrderedGalleryImageFormProps) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(
@@ -67,6 +71,10 @@ export function ReplaceOrderedGalleryImageForm({
       )}
       <p className="text-xs text-slate-500">
         {SITE_MEDIA_FORMATS_LABEL} · max {SITE_MEDIA_MAX_SIZE_MB} MB
+      </p>
+      <p className="text-xs text-slate-600">
+        <span className="font-medium text-slate-700">Recommended size:</span> {rowLabel} —{" "}
+        {recommendedSize}
       </p>
       <ImageUploadControl
         disabled={isPending}

@@ -18,12 +18,14 @@ type OrderedGalleryAddFormProps = {
   groupKey: SiteMediaGroupKey;
   canAdd: boolean;
   rowLabel: string;
+  recommendedSize: string;
 };
 
 export function OrderedGalleryAddForm({
   groupKey,
   canAdd,
   rowLabel,
+  recommendedSize,
 }: OrderedGalleryAddFormProps) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(
@@ -64,6 +66,10 @@ export function OrderedGalleryAddForm({
           <p className="text-base font-semibold text-slate-900">Add image</p>
           <p className="text-xs text-slate-600">
             {rowLabel} · {SITE_MEDIA_FORMATS_LABEL}, max {SITE_MEDIA_MAX_SIZE_MB} MB
+          </p>
+          <p className="mt-1 text-xs text-slate-600">
+            <span className="font-medium text-slate-700">Recommended size:</span>{" "}
+            {rowLabel} — {recommendedSize}
           </p>
         </div>
       </div>
