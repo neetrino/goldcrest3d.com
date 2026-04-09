@@ -104,12 +104,12 @@ export async function sendNewLeadNotificationToAdmin({
   if (!to?.trim()) {
     return { success: true };
   }
-  const subject = "Goldcrest 3D — նոր հայտ";
+  const subject = "Goldcrest 3D — new lead";
   const text = [
-    `Անուն: ${fullName}`,
+    `Name: ${fullName}`,
     `Email: ${email}`,
-    `Հաղորդագրություն: ${message}`,
-    attachmentCount > 0 ? `Կցված ֆայլեր: ${attachmentCount}` : "",
+    `Message: ${message}`,
+    attachmentCount > 0 ? `Attached files: ${attachmentCount}` : "",
   ]
     .filter(Boolean)
     .join("\n");

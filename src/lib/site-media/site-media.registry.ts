@@ -46,7 +46,7 @@ export const SITE_MEDIA_GROUPS: readonly SiteMediaGroupDefinition[] = [
     key: SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1,
     label: "Finished Creations — top row",
     description:
-      "Կարուսելի մեծ պատկերներ։ Դասավորությունը համապատասխանում է սլայդերի «էջերին»։",
+      "Large carousel images. Ordering matches the slider pages.",
     kind: "ordered_list",
     minItems: 1,
     maxItems: 12,
@@ -54,7 +54,7 @@ export const SITE_MEDIA_GROUPS: readonly SiteMediaGroupDefinition[] = [
   {
     key: SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW2,
     label: "Finished Creations — bottom row",
-    description: "Երկրորդ շարքի փոքր պատկերներ՝ դասավորված ցուցակ։",
+    description: "Small images for the second row, managed as an ordered list.",
     kind: "ordered_list",
     minItems: 1,
     maxItems: 12,
