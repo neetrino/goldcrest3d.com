@@ -9,7 +9,7 @@ const PROCESS_HEADING_CLASS =
 
 /** Mobile: Inter; `md:`/`lg:` — previous step typography (Manrope). */
 const PROCESS_STEP_NUM_CLASS =
-  "block font-sans text-[48px] font-normal leading-[48px] tracking-[0.352px] text-[#C69F58] md:font-manrope md:text-[42px] md:leading-none md:tracking-normal lg:text-[44px]";
+  "block font-sans text-[48px] font-normal leading-[48px] tracking-[0.352px] text-[#e2c481] md:font-manrope md:text-[42px] md:leading-none md:tracking-normal lg:text-[44px]";
 
 const PROCESS_STEP_TITLE_CLASS =
   "font-sans text-[20px] font-bold leading-7 tracking-[-0.449px] text-black md:font-manrope md:leading-tight md:tracking-normal md:text-[#181610] lg:text-[19px]";
