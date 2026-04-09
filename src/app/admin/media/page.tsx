@@ -8,7 +8,7 @@ export default async function AdminMediaPage() {
   return (
     <div className="mx-auto max-w-5xl overflow-auto px-4 py-8 sm:px-6">
       <header className="mb-10 border-b border-slate-200 pb-8">
-        <p className="text-xs font-semibold uppercase tracking-wider text-amber-700/90">
+        <p className="text-xs font-semibold uppercase tracking-wider text-[#e2c481]">
           Site content
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--foreground)]">
