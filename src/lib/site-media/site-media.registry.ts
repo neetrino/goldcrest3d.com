@@ -39,8 +39,7 @@ export const SITE_MEDIA_GROUPS: readonly SiteMediaGroupDefinition[] = [
   {
     key: SITE_MEDIA_GROUP_KEYS.MODELING_SPECIALIZATION,
     label: "Modeling Specialization",
-    description:
-      "Վեց քարտ՝ մեկ պատկեր յուրաքանչյուր բլոկի համար (փոխարինում առանց լայաուտի խախտման)։",
+    description: "",
     kind: "fixed_slots",
   },
   {
