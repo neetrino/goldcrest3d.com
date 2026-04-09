@@ -30,8 +30,10 @@ export type ModelingCardFullBleedProps = Pick<
   | "textAlign"
   | "titleBlockTop"
   | "titleBlockLeft"
+  | "titleShiftClassName"
   | "descriptionBlockTop"
   | "descriptionBlockLeft"
+  | "desktopOverlayShiftClassName"
   | "descriptionAlign"
   | "titleAlignSelf"
   | "titleMarginRight"
@@ -72,8 +74,10 @@ export function ModelingCardFullBleed({
   textAlign,
   titleBlockTop,
   titleBlockLeft,
+  titleShiftClassName,
   descriptionBlockTop,
   descriptionBlockLeft,
+  desktopOverlayShiftClassName,
   descriptionAlign,
   titleAlignSelf,
   titleMarginRight,
@@ -223,7 +227,9 @@ export function ModelingCardFullBleed({
                   ))}
                 </div>
               </div>
-              <div className="absolute inset-0 hidden sm:block">
+              <div
+                className={`absolute inset-0 hidden sm:block ${desktopOverlayShiftClassName ?? ""}`}
+              >
                 <div
                   className={`${textAlignClass}`}
                   style={{
@@ -233,7 +239,7 @@ export function ModelingCardFullBleed({
                     right: textAlign === "left" ? undefined : "8%",
                   }}
                 >
-                  <h3 className={titleClassName}>{title}</h3>
+                  <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>{title}</h3>
                 </div>
                 <div
                   className={`max-w-[calc(407px*var(--ms,1))] ${descriptionBlockAlignClass}`}
@@ -266,7 +272,7 @@ export function ModelingCardFullBleed({
                   right: textAlign === "left" ? undefined : "8%",
                 }}
               >
-                <h3 className={titleClassName}>{title}</h3>
+                <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>{title}</h3>
               </div>
               <div
                 className={`max-w-[calc(407px*var(--ms,1))] ${descriptionBlockAlignClass}`}

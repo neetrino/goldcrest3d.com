@@ -47,8 +47,10 @@ export function ModelingCard({
   independentTitleDescription = false,
   titleBlockTop,
   titleBlockLeft,
+  titleShiftClassName,
   descriptionBlockTop,
   descriptionBlockLeft,
+  desktopOverlayShiftClassName,
   descriptionAlign,
   mobileHipHopTypography = false,
   mobileBridalTypography = false,
@@ -196,8 +198,10 @@ export function ModelingCard({
         textAlign={textAlign}
         titleBlockTop={titleBlockTop}
         titleBlockLeft={titleBlockLeft}
+        titleShiftClassName={titleShiftClassName}
         descriptionBlockTop={descriptionBlockTop}
         descriptionBlockLeft={descriptionBlockLeft}
+        desktopOverlayShiftClassName={desktopOverlayShiftClassName}
         descriptionAlign={descriptionAlign}
         titleAlignSelf={titleAlignSelf}
         titleMarginRight={titleMarginRight}

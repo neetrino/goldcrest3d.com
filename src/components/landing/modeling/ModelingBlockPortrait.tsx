@@ -6,18 +6,16 @@ function portraitLayerBackground(imageUrl: string): string {
 }
 
 const PORTRAIT_DESCRIPTION_LINES = [
-  "High-relief sculptural portraits",
-  "engineered with controlledvolume",
-  "distribution and balanced weight",
-  "architecture. Developed to integrate",
-  "pavé surfaces, deep dimensional detail",
-  "and reinforced structural support for",
-  "long-term durability.",
+  "Advanced pavé and fine-setting structures",
+  "developed with micron-level precision.",
+  "Invisible settings and ultra-thin tolerances",
+  "engineered with strict structural discipline.",
 ] as const;
 
 /** Below `sm` only; desktop unchanged. */
 const PORTRAIT_DESCRIPTION_LINES_MOBILE = [
-  "High-relief sculptural portraits engineered with controlled volume distribution and balanced weight architecture.",
+  "Advanced pavé and fine-setting structures developed with micron-level precision.",
+  "Invisible settings and ultra-thin tolerances engineered with strict structural discipline.",
 ] as const;
 
 type ModelingBlockPortraitProps = {
@@ -32,7 +30,7 @@ export function ModelingBlockPortrait({
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
     <ModelingCard
-      title="3D Portrait Jewelry"
+      title="High Jewelry"
       description=""
       descriptionLines={[...PORTRAIT_DESCRIPTION_LINES]}
       descriptionLinesMobile={[...PORTRAIT_DESCRIPTION_LINES_MOBILE]}
@@ -51,9 +49,11 @@ export function ModelingBlockPortrait({
       textDark
       independentTitleDescription
       titleBlockTop="34%"
-      titleBlockLeft="5%"
+      titleBlockLeft="7%"
+      titleShiftClassName="md:translate-x-[calc(2.25rem*var(--ms,1))] lg:translate-x-0"
       descriptionBlockTop="45%"
-      descriptionBlockLeft="-7%"
+      descriptionBlockLeft="-13%"
+      desktopOverlayShiftClassName="lg:translate-x-[calc(2rem*var(--ms,1))] lg:translate-y-[calc(2.25rem*var(--ms,1))]"
       mobilePortraitTypography
     />
   );

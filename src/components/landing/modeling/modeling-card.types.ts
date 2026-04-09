@@ -89,10 +89,14 @@ export type ModelingCardProps = {
   titleBlockTop?: string;
   /** With independentTitleDescription: title position left (e.g. "8%"). */
   titleBlockLeft?: string;
+  /** Optional class to shift only title at specific breakpoints (e.g. tablet). */
+  titleShiftClassName?: string;
   /** With independentTitleDescription: description position top (e.g. "32%"). */
   descriptionBlockTop?: string;
   /** With independentTitleDescription: description position left (e.g. "8%"). */
   descriptionBlockLeft?: string;
+  /** Optional class to shift desktop independent title+description overlay. */
+  desktopOverlayShiftClassName?: string;
   /** When set, overrides textAlign for the description block only (e.g. right-aligned lines for flush-right typography). */
   descriptionAlign?: "left" | "right";
   /**
