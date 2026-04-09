@@ -51,9 +51,10 @@
   .power-banners-section1-block,
   .power-banners-section2-block,
   .power-banners-section3-block {
-    width: 100%;
-    max-width: 430px;
-    margin-inline: auto;
+    width: 100vw;
+    max-width: none;
+    margin-inline: 0;
+    margin-left: calc(50% - 50vw);
     aspect-ratio: 20 / 37;
     height: auto;
     min-height: 0;
