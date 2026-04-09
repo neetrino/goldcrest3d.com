@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { updateOrder } from "@/app/actions/order";
 import type { UpdateOrderResult } from "@/app/actions/order";
-import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
 import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
+import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
 import type { Order } from "@/generated/prisma/client";
 
 const initialState: UpdateOrderResult = null;
@@ -12,13 +13,27 @@ const initialState: UpdateOrderResult = null;
 const inputClass =
   "mt-1.5 w-full rounded-md border border-neutral-300 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400/30 disabled:opacity-60";
 
-type Props = { order: Order };
+type OrderEditFormProps = {
+  order: Order;
+  paymentLinkMode: "FULL_ONLY" | "SPLIT_ENABLED";
+  onPaymentLinkModeChange: (mode: "FULL_ONLY" | "SPLIT_ENABLED") => void;
+};
 
-export function OrderEditForm({ order }: Props) {
+export function OrderEditForm({
+  order,
+  paymentLinkMode,
+  onPaymentLinkModeChange,
+}: OrderEditFormProps) {
+  const router = useRouter();
   const [state, formAction, isPending] = useActionState<
     UpdateOrderResult,
     FormData
   >((prev, formData) => updateOrder(order.id, prev, formData), initialState);
+
+  useEffect(() => {
+    if (!state?.updated) return;
+    router.refresh();
+  }, [state, router]);
 
   return (
     <form
@@ -119,41 +134,53 @@ export function OrderEditForm({ order }: Props) {
           className={inputClass}
         />
       </div>
-      <div>
-        <span className="block text-sm font-medium text-[var(--foreground)]">
-          Payment type
-        </span>
-        {order.paymentType === ORDER_PAYMENT_TYPE.UNSET && (
-          <p className="mt-1 text-xs text-neutral-500">
-            Client has not chosen yet — select FULL or SPLIT to set it from the admin side.
-          </p>
-        )}
-        <div className="mt-1.5 flex flex-col gap-3 lg:flex-row lg:gap-6">
-          <label className="flex items-center gap-2 cursor-pointer">
+      <fieldset>
+        <legend className="block text-sm font-medium text-[var(--foreground)]">
+          Payment link mode
+        </legend>
+        <p className="mt-1 text-xs text-neutral-500">
+          Choose what payment option(s) the client will see when opening the
+          payment link.
+        </p>
+        <div className="mt-2 flex flex-col gap-3">
+          <label className="flex cursor-pointer items-start gap-2">
             <input
               type="radio"
-              name="paymentType"
-              value="FULL"
-              defaultChecked={order.paymentType === "FULL"}
-              required={order.paymentType === ORDER_PAYMENT_TYPE.UNSET}
+              name="paymentLinkMode"
+              value={ORDER_PAYMENT_LINK_MODE.FULL_ONLY}
+              checked={paymentLinkMode === ORDER_PAYMENT_LINK_MODE.FULL_ONLY}
+              onChange={() => onPaymentLinkModeChange(ORDER_PAYMENT_LINK_MODE.FULL_ONLY)}
               disabled={isPending}
-              className="rounded border-[var(--foreground)]/30"
+              className="mt-0.5 rounded border-[var(--foreground)]/30"
             />
-            <span className="text-sm">FULL</span>
+            <span className="text-sm">
+              <span className="font-medium text-neutral-900">Full-only</span>
+              <span className="block text-neutral-600">
+                Client sees only Pay in Full.
+              </span>
+            </span>
           </label>
-          <label className="flex items-center gap-2 cursor-pointer">
+          <label className="flex cursor-pointer items-start gap-2">
             <input
               type="radio"
-              name="paymentType"
-              value="SPLIT"
-              defaultChecked={order.paymentType === "SPLIT"}
+              name="paymentLinkMode"
+              value={ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED}
+              checked={paymentLinkMode === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED}
+              onChange={() =>
+                onPaymentLinkModeChange(ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED)
+              }
               disabled={isPending}
-              className="rounded border-[var(--foreground)]/30"
+              className="mt-0.5 rounded border-[var(--foreground)]/30"
             />
-            <span className="text-sm">SPLIT (50–50)</span>
+            <span className="text-sm">
+              <span className="font-medium text-neutral-900">Enable 50/50</span>
+              <span className="block text-neutral-600">
+                Client can choose Pay in Full or Pay 50/50.
+              </span>
+            </span>
           </label>
         </div>
-      </div>
+      </fieldset>
       {state?.error && (
         <p
           id="order-edit-error"

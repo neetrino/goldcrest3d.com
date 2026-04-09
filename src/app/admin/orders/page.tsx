@@ -98,6 +98,7 @@ export default async function AdminOrdersPage() {
                     <OrderListItemSendPaymentLinkButton
                       orderId={order.id}
                       paymentLinkUrl={getOrderPaymentUrl(order.token)}
+                      paymentLinkMode={order.paymentLinkMode}
                       paymentLinkSentFromDb={order.paymentLinkSentAt != null}
                     />
                   </div>

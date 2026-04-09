@@ -10,10 +10,11 @@ import { uploadToR2 } from "@/lib/storage";
 import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
 import {
   createOrderFormSchema,
-  orderFormSchema,
 } from "@/lib/validations/orderForm";
 import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
 import { logger } from "@/lib/logger";
+import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
+import { ORDER_STATUS } from "@/constants/order-status";
 
 export type CreateOrderResult =
   | { success: true; orderId: string }
@@ -42,6 +43,7 @@ export async function createOrder(
   const clientEmail = formData.get("clientEmail");
   const productTitle = formData.get("productTitle");
   const priceAmdRaw = formData.get("priceCents");
+  const paymentLinkModeRaw = formData.get("paymentLinkMode");
   const file = formData.get(FORM_FIELD_PRODUCT_IMAGE);
 
   const priceAmdParsed =
@@ -54,6 +56,10 @@ export async function createOrder(
     clientEmail: typeof clientEmail === "string" ? clientEmail : "",
     productTitle: typeof productTitle === "string" ? productTitle : "",
     priceAmd: Number.isNaN(priceAmdParsed) ? 0 : priceAmdParsed,
+    paymentLinkMode:
+      paymentLinkModeRaw === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+        ? ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+        : ORDER_PAYMENT_LINK_MODE.FULL_ONLY,
   });
 
   if (!parsed.success) {
@@ -63,6 +69,7 @@ export async function createOrder(
       first.clientEmail?.[0] ??
       first.productTitle?.[0] ??
       first.priceAmd?.[0] ??
+      first.paymentLinkMode?.[0] ??
       "Invalid data";
     return { success: false, error: msg };
   }
@@ -84,6 +91,7 @@ export async function createOrder(
         productImageKey,
         priceCents: parsed.data.priceAmd,
         paymentType: ORDER_PAYMENT_TYPE.UNSET,
+        paymentLinkMode: parsed.data.paymentLinkMode,
       },
     });
     return { success: true, orderId: order.id };
@@ -110,7 +118,7 @@ export async function updateOrder(
   const clientEmail = formData.get("clientEmail");
   const productTitle = formData.get("productTitle");
   const priceAmdRaw = formData.get("priceCents");
-  const paymentTypeRaw = formData.get("paymentType");
+  const paymentLinkModeRaw = formData.get("paymentLinkMode");
   const file = formData.get(FORM_FIELD_PRODUCT_IMAGE);
 
   const priceAmdParsed =
@@ -118,19 +126,21 @@ export async function updateOrder(
       ? parseInt(priceAmdRaw.trim(), 10)
       : NaN;
 
-  const paymentTypeFromForm =
-    paymentTypeRaw === "SPLIT"
-      ? "SPLIT"
-      : paymentTypeRaw === "FULL"
-        ? "FULL"
-        : undefined;
+  const paymentLinkModeFromForm =
+    paymentLinkModeRaw === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+      ? ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+      : paymentLinkModeRaw === ORDER_PAYMENT_LINK_MODE.FULL_ONLY
+        ? ORDER_PAYMENT_LINK_MODE.FULL_ONLY
+        : existing.paymentLinkMode === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+          ? ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+          : ORDER_PAYMENT_LINK_MODE.FULL_ONLY;
 
-  const parsed = orderFormSchema.safeParse({
+  const parsed = createOrderFormSchema.safeParse({
     clientName: typeof clientName === "string" ? clientName : "",
     clientEmail: typeof clientEmail === "string" ? clientEmail : "",
     productTitle: typeof productTitle === "string" ? productTitle : "",
     priceAmd: Number.isNaN(priceAmdParsed) ? existing.priceCents : priceAmdParsed,
-    paymentType: paymentTypeFromForm,
+    paymentLinkMode: paymentLinkModeFromForm,
   });
 
   if (!parsed.success) {
@@ -140,7 +150,6 @@ export async function updateOrder(
       first.clientEmail?.[0] ??
       first.productTitle?.[0] ??
       first.priceAmd?.[0] ??
-      first.paymentType?.[0] ??
       "Invalid data";
     return { error: msg };
   }
@@ -151,6 +160,24 @@ export async function updateOrder(
     if (key) productImageKey = key;
   }
 
+  const isPaymentFlowLocked =
+    existing.paidCents > 0 ||
+    existing.status === ORDER_STATUS.PAID ||
+    existing.status === ORDER_STATUS.PAYMENT_PROCESSING;
+  const isModeChanged = parsed.data.paymentLinkMode !== existing.paymentLinkMode;
+  if (isPaymentFlowLocked && isModeChanged) {
+    return {
+      error:
+        "Payment link mode cannot be changed after payment has started or while it is processing.",
+    };
+  }
+
+  const nextPaymentType = isPaymentFlowLocked
+    ? existing.paymentType
+    : parsed.data.paymentLinkMode === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+      ? ORDER_PAYMENT_TYPE.UNSET
+      : ORDER_PAYMENT_TYPE.FULL;
+
   try {
     await prisma.order.update({
       where: { id: orderId },
@@ -159,7 +186,8 @@ export async function updateOrder(
         clientEmail: parsed.data.clientEmail,
         productTitle: parsed.data.productTitle,
         priceCents: parsed.data.priceAmd,
-        paymentType: parsed.data.paymentType,
+        paymentLinkMode: parsed.data.paymentLinkMode,
+        paymentType: nextPaymentType,
         ...(productImageKey != null && { productImageKey }),
       },
     });
@@ -189,17 +217,50 @@ export type SendPaymentLinkResult =
   | { success: false; error: string }
   | null;
 
+export type SetPaymentLinkModeResult =
+  | { success: true }
+  | { success: false; error: string };
+
 /**
  * Server Action: send payment link email to order client.
  */
 export async function sendPaymentLink(
   orderId: string,
+  paymentLinkMode?: "FULL_ONLY" | "SPLIT_ENABLED",
 ): Promise<SendPaymentLinkResult> {
   const session = await requireAdminSession();
   if (!session) return { success: false, error: "Unauthorized." };
 
   const order = await prisma.order.findUnique({ where: { id: orderId } });
   if (!order) return { success: false, error: "Order not found." };
+
+  const nextPaymentLinkMode =
+    paymentLinkMode === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+      ? ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+      : paymentLinkMode === ORDER_PAYMENT_LINK_MODE.FULL_ONLY
+        ? ORDER_PAYMENT_LINK_MODE.FULL_ONLY
+        : order.paymentLinkMode === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+          ? ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+          : ORDER_PAYMENT_LINK_MODE.FULL_ONLY;
+
+  // Allow mode changes only before payment starts; keeps state coherent for Stripe/webhook flow.
+  const canChangePaymentPlan =
+    order.paidCents === 0 &&
+    order.status !== ORDER_STATUS.PAID &&
+    order.status !== ORDER_STATUS.PAYMENT_PROCESSING;
+  if (!canChangePaymentPlan && paymentLinkMode !== undefined) {
+    return {
+      success: false,
+      error:
+        "Payment mode cannot be changed after payment has started or while it is processing.",
+    };
+  }
+
+  const nextPaymentType = canChangePaymentPlan
+    ? nextPaymentLinkMode === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+      ? ORDER_PAYMENT_TYPE.UNSET
+      : ORDER_PAYMENT_TYPE.FULL
+    : order.paymentType;
 
   const paymentUrl = getOrderPaymentUrl(order.token);
   if (!paymentUrl) return { success: false, error: "Site URL is not configured (AUTH_URL)." };
@@ -222,7 +283,11 @@ export async function sendPaymentLink(
   try {
     await prisma.order.update({
       where: { id: orderId },
-      data: { paymentLinkSentAt: new Date() },
+      data: {
+        paymentLinkSentAt: new Date(),
+        paymentLinkMode: nextPaymentLinkMode,
+        paymentType: nextPaymentType,
+      },
     });
     persisted = true;
   } catch (err) {
@@ -236,6 +301,63 @@ export async function sendPaymentLink(
   }
 
   return { success: true };
+}
+
+/**
+ * Server Action: persist payment-link mode without sending email.
+ * Used by admin "Copy link" to ensure copied URL behavior matches the latest selection.
+ */
+export async function setOrderPaymentLinkMode(
+  orderId: string,
+  paymentLinkMode: "FULL_ONLY" | "SPLIT_ENABLED",
+): Promise<SetPaymentLinkModeResult> {
+  const session = await requireAdminSession();
+  if (!session) return { success: false, error: "Unauthorized." };
+
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+  if (!order) return { success: false, error: "Order not found." };
+
+  const nextPaymentLinkMode =
+    paymentLinkMode === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+      ? ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+      : ORDER_PAYMENT_LINK_MODE.FULL_ONLY;
+
+  const canChangePaymentPlan =
+    order.paidCents === 0 &&
+    order.status !== ORDER_STATUS.PAID &&
+    order.status !== ORDER_STATUS.PAYMENT_PROCESSING;
+  if (!canChangePaymentPlan && nextPaymentLinkMode !== order.paymentLinkMode) {
+    return {
+      success: false,
+      error:
+        "Payment mode cannot be changed after payment has started or while it is processing.",
+    };
+  }
+
+  const nextPaymentType = canChangePaymentPlan
+    ? nextPaymentLinkMode === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+      ? ORDER_PAYMENT_TYPE.UNSET
+      : ORDER_PAYMENT_TYPE.FULL
+    : order.paymentType;
+
+  try {
+    await prisma.order.update({
+      where: { id: orderId },
+      data: {
+        paymentLinkMode: nextPaymentLinkMode,
+        paymentType: nextPaymentType,
+      },
+    });
+
+    revalidatePath(`/order/${order.token}`);
+    revalidatePath(`/admin/orders/${orderId}/edit`);
+    revalidatePath(`/admin/orders/${orderId}`);
+    revalidatePath("/admin/orders");
+
+    return { success: true };
+  } catch {
+    return { success: false, error: "Could not update payment link mode." };
+  }
 }
 
 function escapeHtml(s: string): string {

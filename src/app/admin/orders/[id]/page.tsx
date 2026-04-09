@@ -12,6 +12,7 @@ import {
 } from "@/lib/payment/adminPaymentDisplayStatus";
 import { DeleteOrderButton } from "./DeleteOrderButton";
 import { formatOrderPaymentTypeLabel } from "@/lib/payment/paymentTypeLabels";
+import { formatOrderPaymentLinkModeLabel } from "@/constants/order-payment-link-mode";
 import { PaymentLinkActions } from "./PaymentLinkActions";
 
 type Props = { params: Promise<{ id: string }> };
@@ -24,7 +25,6 @@ export default async function AdminOrderDetailPage({ params }: Props) {
   const productImageUrl = order.productImageKey
     ? getR2PublicUrl(order.productImageKey)
     : null;
-
   const showPaymentLinkSection =
     getAdminOrderPaymentBadgeKind({
       status: order.status,
@@ -148,12 +148,16 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             Payment link
           </h2>
           <p className="mt-1 text-sm text-neutral-500">
-            Send the link to the client or copy it.
+            Send the link to the client or copy it. Current selected mode:{" "}
+            <span className="font-medium text-neutral-700">
+              {formatOrderPaymentLinkModeLabel(order.paymentLinkMode)}
+            </span>
           </p>
           <div className="mt-4">
             <PaymentLinkActions
               orderId={order.id}
               paymentLinkUrl={getOrderPaymentUrl(order.token)}
+              paymentLinkMode={order.paymentLinkMode}
               paymentLinkSentFromDb={order.paymentLinkSentAt != null}
             />
           </div>

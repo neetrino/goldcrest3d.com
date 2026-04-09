@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createOrder } from "@/app/actions/order";
 import type { CreateOrderResult } from "@/app/actions/order";
 import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
+import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
 
 import { OrderNewClientEmailField } from "./OrderNewClientEmailField";
 
@@ -128,6 +129,50 @@ export function OrderNewForm({ leadEmails = [] }: OrderNewFormProps) {
           placeholder="50000"
         />
       </div>
+      <fieldset>
+        <legend className="block text-sm font-medium text-[var(--foreground)]">
+          Payment link mode
+        </legend>
+        <p className="mt-1 text-xs text-neutral-500">
+          This controls what payment option(s) the client can see when you send the
+          link.
+        </p>
+        <div className="mt-2 flex flex-col gap-3">
+          <label className="flex cursor-pointer items-start gap-2">
+            <input
+              type="radio"
+              name="paymentLinkMode"
+              value={ORDER_PAYMENT_LINK_MODE.FULL_ONLY}
+              defaultChecked
+              disabled={isPending}
+              className="mt-0.5 rounded border-[var(--foreground)]/30"
+            />
+            <span className="text-sm">
+              <span className="font-medium text-neutral-900">Full-only link</span>
+              <span className="block text-neutral-600">
+                Client sees only <em>Pay in Full</em>.
+              </span>
+            </span>
+          </label>
+          <label className="flex cursor-pointer items-start gap-2">
+            <input
+              type="radio"
+              name="paymentLinkMode"
+              value={ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED}
+              disabled={isPending}
+              className="mt-0.5 rounded border-[var(--foreground)]/30"
+            />
+            <span className="text-sm">
+              <span className="font-medium text-neutral-900">
+                50/50-enabled link
+              </span>
+              <span className="block text-neutral-600">
+                Client can choose <em>Pay in Full</em> or <em>Pay 50/50</em>.
+              </span>
+            </span>
+          </label>
+        </div>
+      </fieldset>
       {state?.success === false && (
         <p
           id="order-error"

@@ -3,6 +3,8 @@ import { z } from "zod";
 /** Admin update / edit — client-facing choice uses FULL | SPLIT only. */
 export const PAYMENT_TYPES = ["FULL", "SPLIT"] as const;
 export type PaymentType = (typeof PAYMENT_TYPES)[number];
+export const PAYMENT_LINK_MODES = ["FULL_ONLY", "SPLIT_ENABLED"] as const;
+export type PaymentLinkMode = (typeof PAYMENT_LINK_MODES)[number];
 
 const adminOrderBase = {
   clientName: z.string().min(1, "Client name is required").max(120),
@@ -25,6 +27,9 @@ export const orderFormSchema = z.object({
 /** Admin creates order — payment type is set by the client on the payment page. */
 export const createOrderFormSchema = z.object({
   ...adminOrderBase,
+  paymentLinkMode: z.enum(PAYMENT_LINK_MODES, {
+    message: "Choose a payment link mode",
+  }),
 });
 
 export type OrderFormData = z.infer<typeof orderFormSchema>;
