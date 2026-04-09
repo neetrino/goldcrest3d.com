@@ -190,12 +190,7 @@ section[id] {
   font-weight: 500;
   line-height: 20px;
   border-radius: 9999px;
-  background: linear-gradient(
-    73deg,
-    #ffcc6f 16.39%,
-    #997a42 46.51%,
-    #ecc06e 100.22%
-  );
+  background: #e2c481;
   box-shadow:
     0 1px 2px 0 rgba(0, 0, 0, 0.05),
     0 0 0 0 rgba(0, 0, 0, 0),
@@ -228,14 +223,7 @@ section[id] {
   #hero-section2-get-quote,
   #hero-section3-get-quote {
     border-radius: 9999px;
-    background: linear-gradient(
-      84deg,
-      #4b463f -24.49%,
-      #786f5b -24.49%,
-      #cdb575 12.34%,
-      #eacd8b 82.07%,
-      #fff1d1 103.48%
-    );
+    background: #e2c481;
     box-shadow:
       0 1px 2px 0 rgba(0, 0, 0, 0.05),
       0 0 0 0 rgba(0, 0, 0, 0),
