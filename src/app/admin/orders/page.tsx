@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
 import { formatPriceAmd } from "@/lib/formatPrice";
 import { formatOrderPaymentTypeLabel } from "@/lib/payment/paymentTypeLabels";
+import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
 import { OrderEditPencilIcon } from "@/components/admin/OrderEditPencilIcon";
 import { OrderListItemSendPaymentLinkButton } from "@/components/admin/OrderListItemSendPaymentLinkButton";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
@@ -98,7 +99,11 @@ export default async function AdminOrdersPage() {
                     <OrderListItemSendPaymentLinkButton
                       orderId={order.id}
                       paymentLinkUrl={getOrderPaymentUrl(order.token)}
-                      paymentLinkMode={order.paymentLinkMode}
+                      paymentLinkMode={
+                        order.paymentLinkMode === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+                          ? ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+                          : ORDER_PAYMENT_LINK_MODE.FULL_ONLY
+                      }
                       paymentLinkSentFromDb={order.paymentLinkSentAt != null}
                     />
                   </div>
