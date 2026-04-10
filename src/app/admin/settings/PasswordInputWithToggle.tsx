@@ -14,6 +14,11 @@ export type PasswordInputWithToggleProps = {
   required?: boolean;
   disabled: boolean;
   ariaDescribedBy?: string;
+  /**
+   * Starts read-only so browsers skip autofill on load; becomes editable on focus.
+   * Use for sensitive “current password” fields where saved credentials must not appear prefilled.
+   */
+  readOnlyUntilFocused?: boolean;
 };
 
 function EyeVisibleIcon() {
@@ -73,8 +78,11 @@ export function PasswordInputWithToggle({
   required = true,
   disabled,
   ariaDescribedBy,
+  readOnlyUntilFocused = false,
 }: PasswordInputWithToggleProps) {
   const [visible, setVisible] = useState(false);
+  const [editUnlocked, setEditUnlocked] = useState(!readOnlyUntilFocused);
+  const readOnly = readOnlyUntilFocused && !editUnlocked;
 
   return (
     <div>
@@ -93,6 +101,10 @@ export function PasswordInputWithToggle({
           required={required}
           minLength={minLength}
           disabled={disabled}
+          readOnly={readOnly}
+          onFocus={() => {
+            if (readOnlyUntilFocused) setEditUnlocked(true);
+          }}
           className={inputClass}
           aria-describedby={ariaDescribedBy}
         />
