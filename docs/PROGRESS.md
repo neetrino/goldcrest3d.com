@@ -100,7 +100,7 @@
 - Sign-in only at **/signin** (no public signup). `/auth/signin` redirects to `/signin`.
 - Login by **email or username** (User.username added, bcrypt password).
 - **Proxy** (`src/proxy.ts`) protects `/admin/*`: unauthenticated → redirect to `/signin`.
-- **Initial Admin** (after `pnpm db:seed`): email `admin@goldcrest.local`, username `admin`, password `ChangeMeAfterFirstLogin!` (or set SEED_ADMIN_* in .env). Change password after first login.
+- **Initial Admin** — ստեղծվում է DB-ում (Prisma Studio / SQL / մեկանգամյա import), ոչ թե repo seed-ով։
 
 ### 2026-03-09
 - Փաստաթղթերի փաթեթ պատրաստված — BRIEF, TECH_CARD, 01-ARCHITECTURE, PROGRESS (project.md + repo հիման վրա)
@@ -123,7 +123,7 @@
 - Auth.js — next-auth@beta, Credentials (email/password, argon2), PrismaAdapter, JWT session
 - Middleware — /admin պաշտպանություն, /auth/signin, /auth/error
 - Admin layout — նավ (Հայտեր, Պատվերներ), Դուրս գալ
-- Seed — prisma db seed, admin user (SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD)
+- Seed — `prisma/seed.ts` (առանց admin fixture-ների)
 - Leads Inbox — ցանկ (fullName, email, message, createdAt), detail /admin/leads/[id]
 - Կցված ֆայլեր — R2 public URL-ներ lead detail-ում
 - Resend — sendEmail, sendReplyToLead; LeadReplyForm → replyToLeadAction

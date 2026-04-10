@@ -1,9 +1,13 @@
+import { getPowerBannerCopyBundle } from "@/lib/power-banner-copy/get-power-banner-copy";
 import { getSiteMediaAdminBundle } from "@/lib/site-media/get-site-media-admin";
 
 import { MediaManagerClient } from "./MediaManagerClient";
 
 export default async function AdminMediaPage() {
-  const bundle = await getSiteMediaAdminBundle();
+  const [bundle, powerBannerCopy] = await Promise.all([
+    getSiteMediaAdminBundle(),
+    getPowerBannerCopyBundle(),
+  ]);
 
   return (
     <div className="mx-auto max-w-5xl overflow-auto px-4 py-8 sm:px-6">
@@ -19,7 +23,7 @@ export default async function AdminMediaPage() {
           preview, and you&apos;re done — updates apply as soon as each upload succeeds.
         </p>
       </header>
-      <MediaManagerClient bundle={bundle} />
+      <MediaManagerClient bundle={bundle} powerBannerCopy={powerBannerCopy} />
     </div>
   );
 }

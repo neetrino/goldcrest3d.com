@@ -71,7 +71,7 @@
 | 4.5 | statement_timeout | 15s | ⬜ | ադապտիվ |
 | 4.6 | idle_in_transaction_session_timeout | 10s | ⬜ | ադապտիվ |
 | 4.7 | lock_timeout | 5s | ⬜ | ադապտիվ |
-| 4.8 | Seed data | prisma db seed | ⬜ | dev — admin user |
+| 4.8 | Seed data | prisma db seed | ⬜ | optional fixtures — admin-ը DB-ում |
 | 4.9 | Cache (Redis) | պետք չէ | ➖ | |
 | 4.10 | Հերթեր | պետք չէ | ➖ | |
 

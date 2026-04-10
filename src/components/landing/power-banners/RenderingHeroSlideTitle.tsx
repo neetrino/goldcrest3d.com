@@ -1,7 +1,12 @@
 import type { CSSProperties } from "react";
+
 import { SECTION2_RENDERING_TITLE_NUDGE_DOWN_PX } from "./power-banners-layout.constants";
 
-export function RenderingHeroSlideTitle() {
+type RenderingHeroSlideTitleProps = {
+  title: string;
+};
+
+export function RenderingHeroSlideTitle({ title }: RenderingHeroSlideTitleProps) {
   return (
     <h1
       className="relative inline-block max-w-full -translate-y-2.5 whitespace-normal text-balance text-left text-white md:-translate-y-2.5 md:whitespace-nowrap"
@@ -14,7 +19,7 @@ export function RenderingHeroSlideTitle() {
           } as CSSProperties
         }
       >
-        Jewelry Rendering
+        {title}
       </span>
     </h1>
   );

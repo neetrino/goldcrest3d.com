@@ -1,27 +1,27 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
-import { signOut } from "next-auth/react";
+import { useActionState, useState } from "react";
 import {
-  updateAdminEmail,
   updateAdminPassword,
-  type UpdateEmailResult,
   type UpdatePasswordResult,
 } from "@/app/actions/admin-credentials";
+import { AdminEmailChangeFields } from "./AdminEmailChangeFields";
+import { PasswordInputWithToggle } from "./PasswordInputWithToggle";
 
-const inputClass =
-  "mt-1.5 w-full rounded-md border border-neutral-300 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400/30 disabled:opacity-60";
+function normalizeLogin(value: string): string {
+  return value.trim();
+}
 
 type AdminSettingsFormProps = {
-  currentEmail: string;
+  currentLogin: string;
 };
 
-export function AdminSettingsForm({ currentEmail }: AdminSettingsFormProps) {
-  const emailInitial: UpdateEmailResult = null;
-  const [emailState, emailAction, isEmailPending] = useActionState<
-    UpdateEmailResult,
-    FormData
-  >(updateAdminEmail, emailInitial);
+export function AdminSettingsForm({ currentLogin }: AdminSettingsFormProps) {
+  const storedLogin = normalizeLogin(currentLogin);
+  const [loginFieldsKey, setLoginFieldsKey] = useState(0);
+  const [currentLoginVerified, setCurrentLoginVerified] = useState(false);
+  const [typedCurrentLogin, setTypedCurrentLogin] = useState("");
+  const [localVerifyError, setLocalVerifyError] = useState<string | null>(null);
 
   const passwordInitial: UpdatePasswordResult = null;
   const [passwordState, passwordAction, isPasswordPending] = useActionState<
@@ -29,73 +29,59 @@ export function AdminSettingsForm({ currentEmail }: AdminSettingsFormProps) {
     FormData
   >(updateAdminPassword, passwordInitial);
 
-  useEffect(() => {
-    if (emailState?.success === true) {
-      signOut({ callbackUrl: "/auth/signin?updated=email" });
+  function handleVerifyCurrentLogin(): void {
+    setLocalVerifyError(null);
+    if (!storedLogin) {
+      setLocalVerifyError(
+        "No login is set on this account. Contact support before changing login.",
+      );
+      setCurrentLoginVerified(false);
+      return;
     }
-  }, [emailState?.success]);
+    const typed = normalizeLogin(typedCurrentLogin);
+    if (!typed) {
+      setLocalVerifyError("Enter your current login.");
+      setCurrentLoginVerified(false);
+      return;
+    }
+    if (typed !== storedLogin) {
+      setLocalVerifyError(
+        "The current login does not match your account. Enter the exact value you use to sign in.",
+      );
+      setCurrentLoginVerified(false);
+      return;
+    }
+    setCurrentLoginVerified(true);
+    setLoginFieldsKey((k) => k + 1);
+  }
+
+  function handleCurrentLoginChange(value: string): void {
+    setTypedCurrentLogin(value);
+    setLocalVerifyError(null);
+    if (currentLoginVerified) {
+      setCurrentLoginVerified(false);
+    }
+  }
 
   return (
     <div className="space-y-8">
-      <section>
-        <h2 className="text-sm font-semibold text-slate-700">
-          Current login
-        </h2>
-        <p
-          className="mt-1 text-[var(--foreground)]"
-          data-testid="settings-current-email"
-        >
-          {currentEmail || "—"}
-        </p>
-      </section>
-
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-base font-semibold text-[var(--foreground)]">
-          Change login (email)
+          Change login
         </h2>
         <p className="mt-1 text-sm text-neutral-500">
-          After changing your email, you will need to sign in again with the new
-          address.
+          First confirm your current login, then enter your new one. After a
+          successful change, you will need to sign in again.
         </p>
-        <form action={emailAction} className="mt-4 space-y-4">
-          <div>
-            <label
-              htmlFor="settings-newEmail"
-              className="block text-sm font-medium text-[var(--foreground)]"
-            >
-              New email
-            </label>
-            <input
-              id="settings-newEmail"
-              name="newEmail"
-              type="email"
-              autoComplete="email"
-              required
-              disabled={isEmailPending}
-              className={inputClass}
-              placeholder={currentEmail || "admin@example.com"}
-              aria-describedby={
-                emailState?.success === false ? "email-error" : undefined
-              }
-            />
-            {emailState?.success === false && (
-              <p
-                id="email-error"
-                className="mt-1.5 text-sm text-red-600"
-                role="alert"
-              >
-                {emailState.error}
-              </p>
-            )}
-          </div>
-          <button
-            type="submit"
-            disabled={isEmailPending}
-            className="rounded-md bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] transition-opacity hover:opacity-90 disabled:opacity-50"
-          >
-            {isEmailPending ? "Saving…" : "Save email"}
-          </button>
-        </form>
+        <AdminEmailChangeFields
+          key={loginFieldsKey}
+          storedLogin={storedLogin}
+          typedCurrentLogin={typedCurrentLogin}
+          onTypedCurrentLoginChange={handleCurrentLoginChange}
+          currentLoginVerified={currentLoginVerified}
+          onVerifyCurrentLogin={handleVerifyCurrentLogin}
+          localVerifyError={localVerifyError}
+        />
       </section>
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
@@ -107,62 +93,43 @@ export function AdminSettingsForm({ currentEmail }: AdminSettingsFormProps) {
           characters).
         </p>
         <form action={passwordAction} className="mt-4 space-y-4">
-          <div>
-            <label
-              htmlFor="settings-currentPassword"
-              className="block text-sm font-medium text-[var(--foreground)]"
-            >
-              Current password
-            </label>
-            <input
-              id="settings-currentPassword"
-              name="currentPassword"
-              type="password"
-              autoComplete="current-password"
-              required
-              disabled={isPasswordPending}
-              className={inputClass}
-              aria-describedby={
-                passwordState?.success === false ? "password-error" : undefined
-              }
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="settings-newPassword"
-              className="block text-sm font-medium text-[var(--foreground)]"
-            >
-              New password
-            </label>
-            <input
-              id="settings-newPassword"
-              name="newPassword"
-              type="password"
-              autoComplete="new-password"
-              required
-              minLength={8}
-              disabled={isPasswordPending}
-              className={inputClass}
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="settings-confirmNewPassword"
-              className="block text-sm font-medium text-[var(--foreground)]"
-            >
-              Confirm new password
-            </label>
-            <input
-              id="settings-confirmNewPassword"
-              name="confirmNewPassword"
-              type="password"
-              autoComplete="new-password"
-              required
-              minLength={8}
-              disabled={isPasswordPending}
-              className={inputClass}
-            />
-          </div>
+          {/* Associates the form with the account for password managers / a11y (Chrome DOM hint). */}
+          <input
+            type="text"
+            name="username"
+            autoComplete="username"
+            defaultValue={currentLogin}
+            readOnly
+            tabIndex={-1}
+            aria-hidden="true"
+            className="sr-only"
+          />
+          <PasswordInputWithToggle
+            id="settings-currentPassword"
+            name="currentPassword"
+            label="Current password"
+            autoComplete="current-password"
+            disabled={isPasswordPending}
+            ariaDescribedBy={
+              passwordState?.success === false ? "password-error" : undefined
+            }
+          />
+          <PasswordInputWithToggle
+            id="settings-newPassword"
+            name="newPassword"
+            label="New password"
+            autoComplete="new-password"
+            minLength={8}
+            disabled={isPasswordPending}
+          />
+          <PasswordInputWithToggle
+            id="settings-confirmNewPassword"
+            name="confirmNewPassword"
+            label="Confirm new password"
+            autoComplete="new-password"
+            minLength={8}
+            disabled={isPasswordPending}
+          />
           {passwordState?.success === false && (
             <p
               id="password-error"

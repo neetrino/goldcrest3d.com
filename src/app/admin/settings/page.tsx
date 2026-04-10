@@ -8,7 +8,7 @@ export default async function AdminSettingsPage() {
     redirect("/auth/signin?callbackUrl=/admin/settings");
   }
 
-  const currentEmail =
+  const currentLogin =
     typeof session.user.email === "string" ? session.user.email : "";
 
   return (
@@ -19,10 +19,10 @@ export default async function AdminSettingsPage() {
             Settings
           </h1>
           <p className="mt-1 text-sm text-neutral-500">
-            Update your login (email) and password.
+            Update your login and password.
           </p>
         </div>
-        <AdminSettingsForm currentEmail={currentEmail} />
+        <AdminSettingsForm currentLogin={currentLogin} />
       </div>
     </div>
   );

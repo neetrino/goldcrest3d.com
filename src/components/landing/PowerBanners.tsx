@@ -3,6 +3,7 @@
 import { Fragment } from "react";
 import { LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
+import type { PowerBannerCopyBundle } from "@/lib/power-banner-copy/power-banner-copy.types";
 import { DesignHeroSlide } from "@/components/landing/power-banners/DesignHeroSlide";
 import { ModelingHeroSlide } from "@/components/landing/power-banners/ModelingHeroSlide";
 import { RenderingHeroSlide } from "@/components/landing/power-banners/RenderingHeroSlide";
@@ -13,7 +14,11 @@ const HERO_SLIDES = [
   { id: "design" as const, desktopBg: LANDING_IMAGES.heroDesign },
 ];
 
-export function PowerBanners() {
+type PowerBannersProps = {
+  powerBannerCopy: PowerBannerCopyBundle;
+};
+
+export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
   return (
     <section
       id={LANDING_SECTION_IDS.HERO}
@@ -36,11 +41,20 @@ export function PowerBanners() {
               />
             )}
             {slide.id === "modeling" ? (
-              <ModelingHeroSlide desktopBgSrc={slide.desktopBg} />
+              <ModelingHeroSlide
+                desktopBgSrc={slide.desktopBg}
+                copy={powerBannerCopy.MODELING}
+              />
             ) : slide.id === "rendering" ? (
-              <RenderingHeroSlide desktopBgSrc={slide.desktopBg} />
+              <RenderingHeroSlide
+                desktopBgSrc={slide.desktopBg}
+                copy={powerBannerCopy.RENDERING}
+              />
             ) : (
-              <DesignHeroSlide desktopBgSrc={slide.desktopBg} />
+              <DesignHeroSlide
+                desktopBgSrc={slide.desktopBg}
+                copy={powerBannerCopy.DESIGN}
+              />
             )}
           </div>
           {slide.id === "rendering" && (

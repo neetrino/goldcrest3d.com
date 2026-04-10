@@ -145,7 +145,6 @@ src/app/admin/
 | **Auth (admin մուտք)** | |
 | AUTH_SECRET | Auth.js secret (openssl rand -base64 32) |
 | AUTH_URL | Site origin (http://localhost:3000 / https://yourdomain.com) — payment link-ի base |
-| SEED_ADMIN_EMAIL, SEED_ADMIN_USERNAME, SEED_ADMIN_PASSWORD | Seed-ում admin user (դատարկ = defaults) |
 | **ԲԴ** | |
 | DATABASE_URL, DIRECT_URL | Neon PostgreSQL |
 | **Ֆայլեր (R2)** | Lead attachments, order product image |
@@ -196,7 +195,7 @@ src/app/admin/
 
 - **Next.js** (dev/build/start) — ինքնաբերաբար բեռնում է արմատի `.env`.
 - **Prisma** (migrate, push, generate) — `prisma.config.ts`-ում `import "dotenv/config"`, այսինքն `.env`-ը բեռնվում է.
-- **Seed** (`pnpm db:seed`) — `prisma/seed.ts`-ի սկզբում `import "dotenv/config"`, որպեսզի `DATABASE_URL` (Neon) և `SEED_ADMIN_*` հասանելի լինեն.
+- **Seed** (`pnpm db:seed`) — `prisma/seed.ts` (ներկայումս admin seed չի պարունակում; տվյալները DB-ում են)։ Migrate-ի ժամանակ `dotenv`-ը բեռնվում է `prisma.config.ts`-ով։
 
 ---
 
