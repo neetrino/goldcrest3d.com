@@ -1,4 +1,5 @@
 import { LANDING_SECTION_IDS } from "@/constants";
+import type { PowerBannerCopyBundle } from "@/lib/power-banner-copy/power-banner-copy.types";
 import type { LandingSiteMedia } from "@/lib/site-media/get-landing-site-media";
 import { LandingFooter } from "./LandingFooter";
 import { PowerBanners } from "./PowerBanners";
@@ -12,12 +13,13 @@ import { SectionQuote } from "./SectionQuote";
 
 type LandingSectionsProps = {
   siteMedia: LandingSiteMedia;
+  powerBannerCopy: PowerBannerCopyBundle;
 };
 
-export function LandingSections({ siteMedia }: LandingSectionsProps) {
+export function LandingSections({ siteMedia, powerBannerCopy }: LandingSectionsProps) {
   return (
     <>
-      <PowerBanners />
+      <PowerBanners powerBannerCopy={powerBannerCopy} />
 
       <SectionPhilosophy />
 

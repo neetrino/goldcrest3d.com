@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { LANDING_IMAGE_IDS } from "@/constants";
+import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-copy.types";
 import {
   SECTION2_TEXT_CLUSTER_NUDGE_MD_PX,
   SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX,
@@ -9,9 +10,10 @@ import { RenderingHeroSlideCopy } from "./RenderingHeroSlideCopy";
 
 type RenderingHeroSlideProps = {
   desktopBgSrc: string;
+  copy: PowerBannerCopyEntry;
 };
 
-export function RenderingHeroSlide({ desktopBgSrc }: RenderingHeroSlideProps) {
+export function RenderingHeroSlide({ desktopBgSrc, copy }: RenderingHeroSlideProps) {
   return (
     <div
       className="power-banners-section2-block relative overflow-hidden"
@@ -24,7 +26,7 @@ export function RenderingHeroSlide({ desktopBgSrc }: RenderingHeroSlideProps) {
       }
     >
       <RenderingHeroSlideBackgrounds desktopBgSrc={desktopBgSrc} />
-      <RenderingHeroSlideCopy />
+      <RenderingHeroSlideCopy copy={copy} />
     </div>
   );
 }
