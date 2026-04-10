@@ -35,10 +35,14 @@ const DESKTOP_CAROUSEL_TRANSITION_MS = 420;
 /** Mobile gallery strips use `gap-1` (4px) — same as previous grid spacing. */
 const MOBILE_FINISHED_GALLERY_GAP_PX = 4;
 const FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS = 5000;
+const MOBILE_CAROUSEL_TRANSITION_MS = 560;
+const MOBILE_CAROUSEL_TRANSITION_EASING = "cubic-bezier(0.22,1,0.36,1)";
 
 /** Mobile gallery (`md:hidden` block): fixed block sizes from design. */
 const MOBILE_ROW1_ITEM_WIDTH_PX = 310;
 const MOBILE_ROW1_ITEM_HEIGHT_PX = 206;
+const MOBILE_ROW1_NEXT_CARD_PEEK_PX = 56;
+const MOBILE_ROW1_MIN_CARD_WIDTH_PX = 260;
 /**
  * Mobile row2 (`md:hidden`): fixed height + equal `flex-1 basis-0` columns (full `100vw` after parent `max-w` fix).
  */
@@ -47,9 +51,7 @@ const MOBILE_ROW2_CELL_HEIGHT_PX = 130;
  * Mobile row1 full-bleed breakout: pairs `width` and `marginLeft` (`50% - 50vw - N`).
  * Higher N shifts the strip left (more past the left viewport edge); lower N shifts right.
  */
-const MOBILE_TOP_ROW_BLEED_PX = 210;
-const LARGE_MOBILE_TOP_ROW_BLEED_PX = 0;
-const LARGE_MOBILE_MIN_WIDTH_PX = 430;
+const MOBILE_TOP_ROW_BLEED_PX = 0;
 
 /** Mobile row2: pixels past each viewport edge; strip width = `100vw + 2 * N` (symmetric bleed). */
 const MOBILE_ROW2_SIDE_BLEED_PX = 68;
@@ -60,7 +62,7 @@ const MOBILE_ROW2_SIDE_BLEED_PX = 68;
  */
 const MOBILE_GALLERY_NUDGE_RIGHT_PX = 0;
 
-/** Mobile: sliver of the previous slide on the left edge when `activePage > 0`. */
+/** Mobile row2 only: sliver of the previous slide on the left edge when `activePage > 0`. */
 const MOBILE_CAROUSEL_EDGE_PEEK_PX = 220;
   
 /** Layout helpers only; width/margin set inline with `MOBILE_ROW2_SIDE_BLEED_PX`. */
@@ -76,10 +78,6 @@ const GALLERY_OBJECT_POSITION_PORTRAIT_CLASS = "gallery-object-position-portrait
 
 /** Matches `gap-1` (0.25rem) between mobile gallery cells. */
 const MOBILE_GAP_PX = 4;
-/** Viewport width showing two row1 cards (matches current two-up layout). */
-const MOBILE_ROW1_VIEWPORT_WIDTH_PX =
-  MOBILE_ROW1_ITEM_WIDTH_PX * 2 + MOBILE_GAP_PX;
-
 /** Minimum horizontal distance to count as swipe; ignores small jitter. */
 const MOBILE_SWIPE_THRESHOLD_PX = 40;
 /** If vertical movement dominates, treat as scroll, not carousel. */
@@ -108,7 +106,6 @@ export function SectionFinishedCreations({
   const ROW2_IMAGE_COUNT = Math.max(1, ROW2_IMAGES.length);
 
   const [activePage, setActivePage] = useState(0);
-  const [isLargeMobileViewport, setIsLargeMobileViewport] = useState(false);
   const mobileSwipeStartRef = useRef<{ x: number; y: number } | null>(null);
   const mobileRow2ViewportRef = useRef<HTMLDivElement>(null);
   const [mobileRow2CellWidthPx, setMobileRow2CellWidthPx] = useState(0);
@@ -151,20 +148,6 @@ export function SectionFinishedCreations({
     ro.observe(el);
     return () => {
       ro.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    const updateIsLargeMobileViewport = () => {
-      const viewportWidth = window.innerWidth;
-      setIsLargeMobileViewport(
-        viewportWidth >= LARGE_MOBILE_MIN_WIDTH_PX && viewportWidth < 768,
-      );
-    };
-    updateIsLargeMobileViewport();
-    window.addEventListener("resize", updateIsLargeMobileViewport);
-    return () => {
-      window.removeEventListener("resize", updateIsLargeMobileViewport);
     };
   }, []);
 
@@ -228,7 +211,10 @@ export function SectionFinishedCreations({
         const w = el1.getBoundingClientRect().width;
         if (w > 0) {
           setMobileRow1SlideWidthPx(
-            Math.max(0, (w - MOBILE_FINISHED_GALLERY_GAP_PX) / 2),
+            Math.max(
+              MOBILE_ROW1_MIN_CARD_WIDTH_PX,
+              w - MOBILE_ROW1_NEXT_CARD_PEEK_PX,
+            ),
           );
         }
       }
@@ -271,22 +257,11 @@ export function SectionFinishedCreations({
     desktopMetrics.row2PeekOffsetPx +
       (activePage % ROW2_IMAGE_COUNT) * desktopMetrics.row2TranslatePx,
   );
-  const mobileTopRowBleedPx = isLargeMobileViewport
-    ? LARGE_MOBILE_TOP_ROW_BLEED_PX
-    : MOBILE_TOP_ROW_BLEED_PX;
+  const mobileTopRowBleedPx = MOBILE_TOP_ROW_BLEED_PX;
   const mobileRow1CardWidthPx =
-    isLargeMobileViewport && mobileRow1SlideWidthPx > 0
-      ? mobileRow1SlideWidthPx
-      : MOBILE_ROW1_ITEM_WIDTH_PX;
+    mobileRow1SlideWidthPx > 0 ? mobileRow1SlideWidthPx : MOBILE_ROW1_ITEM_WIDTH_PX;
   const mobileRow1SlideStepPx = mobileRow1CardWidthPx + MOBILE_GAP_PX;
-  const mobileRow1ViewportWidth = isLargeMobileViewport
-    ? "100vw"
-    : MOBILE_ROW1_VIEWPORT_WIDTH_PX;
-
-  const mobileRow1PeekAdjustPx =
-    activePage > 0 ? MOBILE_CAROUSEL_EDGE_PEEK_PX : 0;
-  const mobileRow1TranslatePx =
-    mobileRow1PeekAdjustPx - activePage * mobileRow1SlideStepPx;
+  const mobileRow1TranslatePx = -activePage * mobileRow1SlideStepPx;
 
   return (
     <section
@@ -321,12 +296,13 @@ export function SectionFinishedCreations({
               <div
                 ref={mobileRow1OverflowRef}
                 className="shrink-0 overflow-hidden"
-                style={{ width: mobileRow1ViewportWidth }}
+                style={{ width: "100vw" }}
               >
                 <div
-                  className="flex shrink-0 flex-row gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
+                  className="flex shrink-0 flex-row gap-1 transition-transform motion-reduce:duration-0"
                   style={{
-                    transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                    transitionDuration: `${MOBILE_CAROUSEL_TRANSITION_MS}ms`,
+                    transitionTimingFunction: MOBILE_CAROUSEL_TRANSITION_EASING,
                     transform: `translate3d(${mobileRow1TranslatePx}px, 0, 0)`,
                   }}
                 >
@@ -366,9 +342,10 @@ export function SectionFinishedCreations({
               }}
             >
               <div
-                className="flex shrink-0 flex-row gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
+                className="flex shrink-0 flex-row gap-1 transition-transform motion-reduce:duration-0"
                 style={{
-                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                  transitionDuration: `${MOBILE_CAROUSEL_TRANSITION_MS}ms`,
+                  transitionTimingFunction: MOBILE_CAROUSEL_TRANSITION_EASING,
                   transform:
                     mobileRow2StepPx > 0
                       ? `translate3d(-${mobileRow2TransformPx}px, 0, 0)`
