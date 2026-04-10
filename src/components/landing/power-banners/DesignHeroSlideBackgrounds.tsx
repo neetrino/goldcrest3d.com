@@ -36,7 +36,7 @@ export function DesignHeroSlideBackgrounds({
           alt=""
           fill
           sizes={HERO_DESKTOP_IMAGE_SIZES}
-          className="object-cover object-left"
+          className="object-cover md:max-xl:object-[30%_center] xl:object-left"
         />
       </div>
     </>

@@ -14,8 +14,6 @@ type SectionFinishedCreationsProps = {
   row1: FinishedGalleryItem[];
   row2: FinishedGalleryItem[];
 };
-const SLOT_WIDTH = 670;
-const SLOT_HEIGHT = 370;
 /**
  * Row1 fallback when peek is off (unused if `DESKTOP_ROW1_PEEK_EDGE_VISIBLE_FRACTION` is set).
  */
@@ -37,10 +35,14 @@ const DESKTOP_CAROUSEL_TRANSITION_MS = 420;
 /** Mobile gallery strips use `gap-1` (4px) — same as previous grid spacing. */
 const MOBILE_FINISHED_GALLERY_GAP_PX = 4;
 const FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS = 5000;
+const MOBILE_CAROUSEL_TRANSITION_MS = 560;
+const MOBILE_CAROUSEL_TRANSITION_EASING = "cubic-bezier(0.22,1,0.36,1)";
 
 /** Mobile gallery (`md:hidden` block): fixed block sizes from design. */
 const MOBILE_ROW1_ITEM_WIDTH_PX = 310;
 const MOBILE_ROW1_ITEM_HEIGHT_PX = 206;
+const MOBILE_ROW1_NEXT_CARD_PEEK_PX = 56;
+const MOBILE_ROW1_MIN_CARD_WIDTH_PX = 260;
 /**
  * Mobile row2 (`md:hidden`): fixed height + equal `flex-1 basis-0` columns (full `100vw` after parent `max-w` fix).
  */
@@ -49,14 +51,20 @@ const MOBILE_ROW2_CELL_HEIGHT_PX = 130;
  * Mobile row1 full-bleed breakout: pairs `width` and `marginLeft` (`50% - 50vw - N`).
  * Higher N shifts the strip left (more past the left viewport edge); lower N shifts right.
  */
-const MOBILE_TOP_ROW_BLEED_PX = 210;
+const MOBILE_TOP_ROW_BLEED_PX = 0;
 
 /** Mobile row2: pixels past each viewport edge; strip width = `100vw + 2 * N` (symmetric bleed). */
 const MOBILE_ROW2_SIDE_BLEED_PX = 68;
 
-/** Mobile row2: shifts the whole strip right (positive = right); does not change cell sizes. */
-const MOBILE_ROW2_NUDGE_RIGHT_PX = 16;
+/**
+ * Mobile-only: shifts both strips right (positive = right).
+ * Keep at 0 so the bleed fills the width; large values leave empty space on the left.
+ */
+const MOBILE_GALLERY_NUDGE_RIGHT_PX = 0;
 
+/** Mobile row2 only: sliver of the previous slide on the left edge when `activePage > 0`. */
+const MOBILE_CAROUSEL_EDGE_PEEK_PX = 220;
+  
 /** Layout helpers only; width/margin set inline with `MOBILE_ROW2_SIDE_BLEED_PX`. */
 const MOBILE_ROW2_FULL_BLEED_CLASS = "min-w-0 max-w-none shrink-0";
 
@@ -70,12 +78,6 @@ const GALLERY_OBJECT_POSITION_PORTRAIT_CLASS = "gallery-object-position-portrait
 
 /** Matches `gap-1` (0.25rem) between mobile gallery cells. */
 const MOBILE_GAP_PX = 4;
-/** One horizontal step for mobile row1 strip = card width + gap. */
-const MOBILE_ROW1_SLIDE_STEP_PX = MOBILE_ROW1_ITEM_WIDTH_PX + MOBILE_GAP_PX;
-/** Viewport width showing two row1 cards (matches current two-up layout). */
-const MOBILE_ROW1_VIEWPORT_WIDTH_PX =
-  MOBILE_ROW1_ITEM_WIDTH_PX * 2 + MOBILE_GAP_PX;
-
 /** Minimum horizontal distance to count as swipe; ignores small jitter. */
 const MOBILE_SWIPE_THRESHOLD_PX = 40;
 /** If vertical movement dominates, treat as scroll, not carousel. */
@@ -92,7 +94,7 @@ const FINISHED_HEADING_CLASS =
  * Edge-to-edge gallery on md+ (`ml` breakout from centered column).
  */
 const FINISHED_GALLERY_BLEED_OUTER_CLASS =
-  "flex w-full min-w-0 max-w-full flex-col gap-2 max-md:items-stretch md:ml-[calc(50%-50vw)] md:w-[100vw] md:max-w-[100vw] md:shrink-0 md:self-stretch";
+  "flex w-full min-w-0 max-w-full flex-col gap-2 max-md:-mx-4 max-md:w-[calc(100%+2rem)] max-md:items-stretch md:ml-[calc(50%-50vw)] md:w-[100vw] md:max-w-[100vw] md:shrink-0 md:self-stretch";
 
 export function SectionFinishedCreations({
   row1,
@@ -200,26 +202,20 @@ export function SectionFinishedCreations({
   const row2StripImages = [...ROW2_IMAGES, ...ROW2_IMAGES];
 
   const mobileRow1OverflowRef = useRef<HTMLDivElement>(null);
-  const mobileRow2OverflowRef = useRef<HTMLDivElement>(null);
   const [mobileRow1SlideWidthPx, setMobileRow1SlideWidthPx] = useState(0);
-  const [mobileRow2FrameWidthPx, setMobileRow2FrameWidthPx] = useState(0);
 
   useLayoutEffect(() => {
     const el1 = mobileRow1OverflowRef.current;
-    const el2 = mobileRow2OverflowRef.current;
     const measure = () => {
       if (el1) {
         const w = el1.getBoundingClientRect().width;
         if (w > 0) {
           setMobileRow1SlideWidthPx(
-            Math.max(0, (w - MOBILE_FINISHED_GALLERY_GAP_PX) / 2),
+            Math.max(
+              MOBILE_ROW1_MIN_CARD_WIDTH_PX,
+              w - MOBILE_ROW1_NEXT_CARD_PEEK_PX,
+            ),
           );
-        }
-      }
-      if (el2) {
-        const w = el2.getBoundingClientRect().width;
-        if (w > 0) {
-          setMobileRow2FrameWidthPx(w);
         }
       }
     };
@@ -227,9 +223,6 @@ export function SectionFinishedCreations({
     const ro = new ResizeObserver(measure);
     if (el1) {
       ro.observe(el1);
-    }
-    if (el2) {
-      ro.observe(el2);
     }
     return () => {
       ro.disconnect();
@@ -248,10 +241,13 @@ export function SectionFinishedCreations({
 
   const mobileRow2StepPx =
     mobileRow2CellWidthPx > 0 ? mobileRow2CellWidthPx + MOBILE_GAP_PX : 0;
-  const mobileRow2TransformPx =
+  const mobileRow2BaseTransformPx =
     mobileRow2StepPx > 0
       ? (activePage % ROW2_IMAGE_COUNT) * mobileRow2StepPx
       : 0;
+  const mobileRow2PeekAdjustPx =
+    activePage > 0 && mobileRow2StepPx > 0 ? MOBILE_CAROUSEL_EDGE_PEEK_PX : 0;
+  const mobileRow2TransformPx = mobileRow2BaseTransformPx - mobileRow2PeekAdjustPx;
 
   const desktopRow1TransformPx = Math.round(
     desktopMetrics.row1PeekOffsetPx +
@@ -261,11 +257,16 @@ export function SectionFinishedCreations({
     desktopMetrics.row2PeekOffsetPx +
       (activePage % ROW2_IMAGE_COUNT) * desktopMetrics.row2TranslatePx,
   );
+  const mobileTopRowBleedPx = MOBILE_TOP_ROW_BLEED_PX;
+  const mobileRow1CardWidthPx =
+    mobileRow1SlideWidthPx > 0 ? mobileRow1SlideWidthPx : MOBILE_ROW1_ITEM_WIDTH_PX;
+  const mobileRow1SlideStepPx = mobileRow1CardWidthPx + MOBILE_GAP_PX;
+  const mobileRow1TranslatePx = -activePage * mobileRow1SlideStepPx;
 
   return (
     <section
       id={LANDING_SECTION_IDS.FINISHED_CREATIONS}
-      className="overflow-x-clip bg-white px-4 pt-[56px] pb-10 md:px-6"
+      className="max-md:overflow-x-visible md:overflow-x-clip bg-white px-4 pt-[56px] pb-10 md:px-6"
       aria-labelledby="finished-heading"
     >
       <div className="mx-auto max-w-[1980px]">
@@ -275,7 +276,9 @@ export function SectionFinishedCreations({
           </h2>
         </div>
         <div className="mt-9 flex flex-col gap-2 max-md:items-stretch md:items-stretch">
-          <div className={`${FINISHED_GALLERY_BLEED_OUTER_CLASS} max-md:max-w-none`}>
+          <div
+            className={`${FINISHED_GALLERY_BLEED_OUTER_CLASS} max-md:max-w-none`}
+          >
             <div
             className="flex w-full min-w-0 touch-pan-y flex-col gap-2 max-md:max-w-none max-md:overflow-x-visible md:hidden"
             onPointerDown={onMobileSwipePointerDown}
@@ -286,19 +289,21 @@ export function SectionFinishedCreations({
             <div
               className="flex w-full min-w-0 shrink-0 max-w-none flex-row gap-1"
               style={{
-                width: `calc(100vw + ${MOBILE_TOP_ROW_BLEED_PX}px)`,
-                marginLeft: `calc(50% - 50vw - ${MOBILE_TOP_ROW_BLEED_PX}px)`,
+                width: `calc(100vw + ${mobileTopRowBleedPx}px)`,
+                marginLeft: `calc(50% - 50vw - ${mobileTopRowBleedPx}px + ${MOBILE_GALLERY_NUDGE_RIGHT_PX}px)`,
               }}
             >
               <div
+                ref={mobileRow1OverflowRef}
                 className="shrink-0 overflow-hidden"
-                style={{ width: MOBILE_ROW1_VIEWPORT_WIDTH_PX }}
+                style={{ width: "100vw" }}
               >
                 <div
-                  className="flex shrink-0 flex-row gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
+                  className="flex shrink-0 flex-row gap-1 transition-transform motion-reduce:duration-0"
                   style={{
-                    transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
-                    transform: `translate3d(-${activePage * MOBILE_ROW1_SLIDE_STEP_PX}px, 0, 0)`,
+                    transitionDuration: `${MOBILE_CAROUSEL_TRANSITION_MS}ms`,
+                    transitionTimingFunction: MOBILE_CAROUSEL_TRANSITION_EASING,
+                    transform: `translate3d(${mobileRow1TranslatePx}px, 0, 0)`,
                   }}
                 >
                   {row1StripImages.map((item, index) => (
@@ -307,7 +312,7 @@ export function SectionFinishedCreations({
                       data-landing-image={item.imageId}
                       className="relative shrink-0 overflow-hidden rounded-none"
                       style={{
-                        width: MOBILE_ROW1_ITEM_WIDTH_PX,
+                        width: mobileRow1CardWidthPx,
                         height: MOBILE_ROW1_ITEM_HEIGHT_PX,
                       }}
                     >
@@ -333,13 +338,14 @@ export function SectionFinishedCreations({
               className={`flex min-w-0 flex-row items-stretch gap-1 overflow-hidden ${MOBILE_ROW2_FULL_BLEED_CLASS}`}
               style={{
                 width: `calc(100vw + ${MOBILE_ROW2_SIDE_BLEED_PX * 2}px)`,
-                marginLeft: `calc(50% - 50vw - ${MOBILE_ROW2_SIDE_BLEED_PX}px + ${MOBILE_ROW2_NUDGE_RIGHT_PX}px)`,
+                marginLeft: `calc(50% - 50vw - ${MOBILE_ROW2_SIDE_BLEED_PX}px + ${MOBILE_GALLERY_NUDGE_RIGHT_PX}px)`,
               }}
             >
               <div
-                className="flex shrink-0 flex-row gap-1 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
+                className="flex shrink-0 flex-row gap-1 transition-transform motion-reduce:duration-0"
                 style={{
-                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                  transitionDuration: `${MOBILE_CAROUSEL_TRANSITION_MS}ms`,
+                  transitionTimingFunction: MOBILE_CAROUSEL_TRANSITION_EASING,
                   transform:
                     mobileRow2StepPx > 0
                       ? `translate3d(-${mobileRow2TransformPx}px, 0, 0)`

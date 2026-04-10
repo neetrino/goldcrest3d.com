@@ -3,7 +3,7 @@ import { QuoteForm } from "@/components/quote-form/QuoteForm";
 
 /** Mobile: Inter 12/16, tracking 1.2px. `md:` — previous Inquiry label (Manrope 10px bold). */
 const QUOTE_INQUIRY_LABEL_CLASS =
-  "text-center font-sans text-xs font-normal leading-4 tracking-[1.2px] text-[#C69F58] uppercase not-italic md:font-manrope md:text-[10px] md:font-bold md:leading-[15px] md:tracking-[3px]";
+  "text-center font-sans text-xs font-normal leading-4 tracking-[1.2px] text-[#e2c481] uppercase not-italic md:font-manrope md:text-[10px] md:font-bold md:leading-[15px] md:tracking-[3px]";
 
 /**
  * Mobile: Inter 30/36, flex `1 0 0`, #000, tracking 0.396px.

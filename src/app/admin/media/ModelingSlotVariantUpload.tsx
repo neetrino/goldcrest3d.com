@@ -29,6 +29,16 @@ const VARIANT_DESCRIPTION: Record<ModelingSlotImageVariant, string> = {
   mobile: "Shown below the medium breakpoint (phones). If empty, the desktop image is used.",
 };
 
+const VARIANT_RECOMMENDED_SIZE: Record<ModelingSlotImageVariant, string> = {
+  desktop: "942 × 488 px",
+  mobile: "345 × 259 px",
+};
+
+const VARIANT_RECOMMENDED_LABEL: Record<ModelingSlotImageVariant, string> = {
+  desktop: "Desktop / tablet preview",
+  mobile: "Mobile preview",
+};
+
 type ModelingSlotVariantUploadProps = {
   row: AdminModelingSlotRow;
   variant: ModelingSlotImageVariant;
@@ -73,6 +83,10 @@ export function ModelingSlotVariantUpload({
           {VARIANT_LABEL[variant]}
         </p>
         <p className="mt-1 text-xs text-slate-600">{VARIANT_DESCRIPTION[variant]}</p>
+        <p className="mt-1 text-xs text-slate-600">
+          <span className="font-medium text-slate-700">Recommended size:</span>{" "}
+          {VARIANT_RECOMMENDED_LABEL[variant]} — {VARIANT_RECOMMENDED_SIZE[variant]}
+        </p>
       </div>
 
       {currentFileName ? (

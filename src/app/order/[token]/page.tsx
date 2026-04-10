@@ -8,6 +8,7 @@ import { ORDER_STATUS } from "@/constants/order-status";
 import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
 import { formatOrderPaymentTypeLabel } from "@/lib/payment/paymentTypeLabels";
+import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
 import { MockPaymentHoldActions } from "./MockPaymentHoldActions";
 import { OrderPayActions } from "./OrderPayActions";
 import { OrderPaymentTypeChoice } from "./OrderPaymentTypeChoice";
@@ -43,8 +44,14 @@ export default async function OrderPaymentPage({ params, searchParams }: Props) 
   const firstHalfPaid = paid >= half;
   const needsClientPaymentTypeChoice =
     order.paymentType === ORDER_PAYMENT_TYPE.UNSET &&
+    order.paymentLinkMode === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED &&
     !isPaid &&
     order.status !== ORDER_STATUS.PAYMENT_PROCESSING;
+  const effectivePaymentType =
+    order.paymentType === ORDER_PAYMENT_TYPE.UNSET &&
+    order.paymentLinkMode === ORDER_PAYMENT_LINK_MODE.FULL_ONLY
+      ? ORDER_PAYMENT_TYPE.FULL
+      : order.paymentType;
 
   const productImageUrl = order.productImageKey
     ? getR2PublicUrl(order.productImageKey)
@@ -118,12 +125,12 @@ export default async function OrderPaymentPage({ params, searchParams }: Props) 
             <dd className="max-w-[14rem] text-right text-neutral-800">
               {needsClientPaymentTypeChoice
                 ? "You will choose below"
-                : formatOrderPaymentTypeLabel(order.paymentType)}
+                : formatOrderPaymentTypeLabel(effectivePaymentType)}
             </dd>
           </div>
         </dl>
 
-        {order.paymentType === "SPLIT" && !isPaid && (
+        {effectivePaymentType === "SPLIT" && !isPaid && (
           <p className="mt-3 text-sm text-neutral-600">
             {!firstHalfPaid
               ? "Pay the first 50%, then the remaining 50%."
@@ -164,7 +171,7 @@ export default async function OrderPaymentPage({ params, searchParams }: Props) 
           ) : order.status === ORDER_STATUS.PAYMENT_PROCESSING ? null : (
             <OrderPayActions
               orderId={order.id}
-              paymentType={order.paymentType}
+              paymentType={effectivePaymentType}
               priceCents={order.priceCents}
               paidCents={order.paidCents}
               mockPaymentEnabled={mockPaymentEnabled}

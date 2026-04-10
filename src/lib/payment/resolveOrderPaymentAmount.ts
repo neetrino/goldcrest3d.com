@@ -1,11 +1,13 @@
 import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
 import { ORDER_STATUS } from "@/constants/order-status";
+import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
 
 type OrderLike = {
   status: string;
   priceCents: number;
   paidCents: number;
   paymentType: string;
+  paymentLinkMode: string;
 };
 
 export type ResolvedPaymentAmount =
@@ -38,6 +40,9 @@ export function resolveOrderPaymentAmount(
   }
 
   if (order.paymentType === ORDER_PAYMENT_TYPE.UNSET) {
+    if (order.paymentLinkMode === ORDER_PAYMENT_LINK_MODE.FULL_ONLY) {
+      return { ok: true, amountCents: remaining, paymentIndex: undefined };
+    }
     return {
       ok: false,
       error: "Choose how you want to pay on the order page before continuing.",

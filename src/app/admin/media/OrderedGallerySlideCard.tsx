@@ -10,6 +10,7 @@ type OrderedGallerySlideCardProps = {
   index: number;
   total: number;
   rowContextLabel: string;
+  recommendedSize: string;
   pending: boolean;
   onMove: (index: number, delta: number) => void;
   onDelete: (id: string) => void;
@@ -20,6 +21,7 @@ export function OrderedGallerySlideCard({
   index,
   total,
   rowContextLabel,
+  recommendedSize,
   pending,
   onMove,
   onDelete,
@@ -38,6 +40,8 @@ export function OrderedGallerySlideCard({
         <OrderedGallerySlideToolbar
           item={item}
           positionLabel={positionLabel}
+          rowContextLabel={rowContextLabel}
+          recommendedSize={recommendedSize}
           index={index}
           total={total}
           pending={pending}

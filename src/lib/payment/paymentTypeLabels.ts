@@ -6,7 +6,7 @@ import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
 export function formatOrderPaymentTypeLabel(paymentType: string): string {
   switch (paymentType) {
     case ORDER_PAYMENT_TYPE.UNSET:
-      return "Not set — client chooses at payment";
+      return "Not set yet";
     case ORDER_PAYMENT_TYPE.SPLIT:
       return "50% + 50%";
     case ORDER_PAYMENT_TYPE.FULL:

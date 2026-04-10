@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   createOrderFormSchema,
   orderFormSchema,
+  PAYMENT_LINK_MODES,
   PAYMENT_TYPES,
 } from "./orderForm";
 
@@ -106,12 +107,13 @@ describe("orderFormSchema", () => {
 });
 
 describe("createOrderFormSchema", () => {
-  it("accepts valid data without payment type field", () => {
+  it("accepts valid data with payment link mode", () => {
     const result = createOrderFormSchema.safeParse({
       clientName: "Jane Doe",
       clientEmail: "jane@example.com",
       productTitle: "Custom bracket",
       priceAmd: 15000,
+      paymentLinkMode: "FULL_ONLY",
     });
     expect(result.success).toBe(true);
   });
@@ -122,8 +124,27 @@ describe("createOrderFormSchema", () => {
       clientEmail: "invalid",
       productTitle: "Product",
       priceAmd: 100,
+      paymentLinkMode: "SPLIT_ENABLED",
     });
     expect(result.success).toBe(false);
+  });
+
+  it("rejects missing paymentLinkMode", () => {
+    const result = createOrderFormSchema.safeParse({
+      clientName: "Jane",
+      clientEmail: "jane@example.com",
+      productTitle: "Product",
+      priceAmd: 100,
+    });
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("PAYMENT_LINK_MODES", () => {
+  it("contains FULL_ONLY and SPLIT_ENABLED", () => {
+    expect(PAYMENT_LINK_MODES).toContain("FULL_ONLY");
+    expect(PAYMENT_LINK_MODES).toContain("SPLIT_ENABLED");
+    expect(PAYMENT_LINK_MODES).toHaveLength(2);
   });
 });
 

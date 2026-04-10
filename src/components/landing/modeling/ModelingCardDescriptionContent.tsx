@@ -177,11 +177,11 @@ export function renderModelingCardDescriptionContent(
             </span>
           ))}
         </div>
-        <div className="hidden min-w-0 flex-col sm:flex sm:translate-x-[calc(1.5rem*var(--ms,1))] sm:gap-0">
+        <div className="hidden min-w-0 flex-col items-center sm:flex sm:gap-0">
           {descriptionLinesDesktop.map((line, i) => (
             <span
               key={`hiphop-desktop-${i}`}
-              className={`block ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i === 0 ? "sm:translate-x-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(0.125rem*var(--ms,1))]" : ""} ${i === 1 ? "sm:mt-[calc(0.375rem*var(--ms,1))]" : ""} ${i === 2 ? "sm:mt-[calc(0.375rem*var(--ms,1))] sm:-translate-y-[calc(0.25rem*var(--ms,1))] sm:translate-x-[min(calc(19rem*var(--ms,1)),40vw)]" : ""}`}
+              className={`block text-center ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i > 0 ? "sm:mt-[calc(0.375rem*var(--ms,1))]" : ""}`}
             >
               {line}
             </span>

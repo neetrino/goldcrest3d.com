@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
+import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
 
 export type SetOrderPaymentTypeResult =
   | { success: true }
@@ -26,6 +27,16 @@ export async function setOrderPaymentTypeByToken(
   try {
     const order = await prisma.order.findUnique({ where: { token: t } });
     if (!order) return { success: false, error: "Order not found." };
+
+    if (
+      paymentType === ORDER_PAYMENT_TYPE.SPLIT &&
+      order.paymentLinkMode !== ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+    ) {
+      return {
+        success: false,
+        error: "Split payment is not enabled for this payment link.",
+      };
+    }
 
     if (order.paymentType !== ORDER_PAYMENT_TYPE.UNSET) {
       return { success: false, error: "Payment type is already set." };

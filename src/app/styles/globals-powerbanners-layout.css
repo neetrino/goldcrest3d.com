@@ -1,13 +1,26 @@
 /**
- * Section1 Modeling — max frame ~1918×707 (274:101).
- * Height must NOT shrink when viewport narrows: only horizontal crop (cover + center).
- * aspect-ratio on the strip tied height to width — removed from md↑ in favor of fixed height.
+ * Section1 Modeling — design frame ~1918×707 (274:101).
+ * md+: height scales with viewport above 1918px (4K-friendly); below design width, min height 707px.
+ * aspect-ratio on the strip tied height to width — removed from md↑ in favor of fluid height.
  */
+.power-banners-section1-block,
+.power-banners-section2-block,
+.power-banners-section3-block {
+  /* Ultra-wide cap (4K UHD); shared by fluid height calcs */
+  --power-banners-hero-max-width: 3840px;
+  /* Unified desktop hero height baseline for section1/2/3 */
+  --power-banners-hero-height-desktop: clamp(
+    712px,
+    calc(100vw * 712 / 1920),
+    calc(100vw * 712 / 1920)
+  );
+}
+
 .power-banners-section1-block {
   width: 100%;
-  max-width: 1918px;
-  margin-inline: auto;
-  --section1-image-strip-height-desktop: 707px;
+  /* Full-bleed modeling hero (no side gutters on 4K / ultra-wide) */
+  max-width: none;
+  margin-inline: 0;
   /* Desktop hero (section1): fallback + tail; img tone + mild “shine” via contrast/saturate */
   --section1-hero-bg-top: #ededed;
   --section1-hero-bg-mid: #e0e0e0;
@@ -28,12 +41,18 @@
 }
 
 @media (min-width: 768px) {
+  /**
+   * Strip sizes from viewport — not parent block width — so scaling stays stable when layout grows.
+   * Full-bleed: 100vw + centering offset (safe when wrapper allows horizontal overflow).
+   */
   .power-banners-section1-image-strip {
+    --section1-design-width: 1918;
+    --section1-design-height: 707;
     aspect-ratio: unset;
-    height: var(--section1-image-strip-height-desktop);
-    width: 106%;
-    margin-inline: auto;
-    transform: translateX(-3%);
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    height: var(--power-banners-hero-height-desktop);
     /* Overrides Tailwind bg-white at edges / during load */
     background-color: var(--section1-hero-bg-top);
   }
@@ -48,6 +67,7 @@
 
 @media (min-width: 768px) {
   .power-banners-section1-tail {
+    min-height: var(--section1-tail-min-height, 10rem);
     background-color: var(--section1-hero-bg-bottom);
   }
 }
@@ -92,12 +112,14 @@
 
 /* PowerBanners section2 (Jewelry Rendering) — ֆրեյմ 1920×712; ֆոնը միայն cover (առանց դեֆորմացիայի) */
 .power-banners-section2-block {
-  --section2-bg-layout-height: 712px;
+  --section2-design-width: 1920;
+  --section2-design-height: 712;
+  --section2-block-visible-height: var(--power-banners-hero-height-desktop);
+  --section2-bg-layout-height: var(--section2-block-visible-height);
   --section2-block-design-width: 1920px;
-  --section2-block-visible-height: 712px;
   position: relative;
   width: 100%;
-  max-width: var(--section2-block-design-width);
+  max-width: min(100%, var(--power-banners-hero-max-width));
   margin-inline: auto;
   height: var(--section2-block-visible-height);
   flex-shrink: 0;
@@ -133,12 +155,14 @@
 
 /* PowerBanners section3 (Jewelry Design) — ֆրեյմ ինչպես section2; ֆոնը cover, якорь слева (обрезка справа) */
 .power-banners-section3-block {
+  --section3-design-width: 1920;
+  --section3-design-height: 712;
   --section3-bg-layout-height: var(--section3-block-height-md, 712px);
   --section3-block-design-width: 1920px;
   --section3-block-visible-height: var(--section3-block-height-md, 712px);
   position: relative;
   width: 100%;
-  max-width: var(--section3-block-design-width);
+  max-width: min(100%, var(--power-banners-hero-max-width));
   margin-inline: auto;
   height: var(--section3-block-visible-height);
   flex-shrink: 0;
@@ -148,6 +172,8 @@
 
 @media (min-width: 768px) {
   .power-banners-section3-block {
+    --section3-bg-layout-height: var(--power-banners-hero-height-desktop);
+    --section3-block-visible-height: var(--power-banners-hero-height-desktop);
     --power-banners-block-width-compensation-x: 3vw;
     width: var(--section3-block-design-width);
     width: 106%;

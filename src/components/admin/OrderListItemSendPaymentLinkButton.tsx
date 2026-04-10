@@ -10,6 +10,7 @@ import { getAdminSendPaymentLinkButtonClasses } from "@/components/admin/sendPay
 export type OrderListItemSendPaymentLinkButtonProps = {
   orderId: string;
   paymentLinkUrl: string;
+  paymentLinkMode: "FULL_ONLY" | "SPLIT_ENABLED";
   /** From DB: payment link email was successfully sent at least once. */
   paymentLinkSentFromDb: boolean;
 };
@@ -17,6 +18,7 @@ export type OrderListItemSendPaymentLinkButtonProps = {
 export function OrderListItemSendPaymentLinkButton({
   orderId,
   paymentLinkUrl,
+  paymentLinkMode,
   paymentLinkSentFromDb,
 }: OrderListItemSendPaymentLinkButtonProps) {
   const [isPending, startTransition] = useTransition();
@@ -27,7 +29,7 @@ export function OrderListItemSendPaymentLinkButton({
   const handleSend = () => {
     setSendResult(null);
     startTransition(async () => {
-      const result = await sendPaymentLink(orderId);
+      const result = await sendPaymentLink(orderId, paymentLinkMode);
       setSendResult(result);
       if (result?.success) {
         setSentSuccessfullyThisSession(true);

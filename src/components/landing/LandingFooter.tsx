@@ -21,10 +21,10 @@ const FOOTER_LOGO_FULL_BLEED_STYLE: CSSProperties = {
 
 /**
  * Լոգոյի ֆրեյմ — Figma 92:248 299×171, միշտ նույն aspect (գեղեցիկ և մոբայլ, և դեսքտոփ).
- * No horizontal translate on md (was clipping at viewport edge).
+ * Tablet (`md`) gets a small left nudge to match visual alignment.
  */
 const FOOTER_LOGO_FRAME_CLASS =
-  "relative mt-4 aspect-[299/171] w-full max-w-[299px] shrink-0 overflow-hidden self-start -translate-x-3.5 md:mt-0 md:translate-x-0 lg:-translate-x-3";
+  "relative mt-4 aspect-[299/171] w-full max-w-[299px] shrink-0 overflow-hidden self-start -translate-x-3.5 md:mt-0 md:-translate-x-3 lg:-translate-x-3";
 
 /** Figma-ի ներքին overflow-շերտ — նկարը կտրվում է ֆրեյմի մեջ */
 const FOOTER_LOGO_INNER_CLIP_CLASS =
@@ -89,7 +89,7 @@ const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS = "lg:-translate-y-1";
 
 /** Follow վերնագիր + 3 պատկերակ — մի քիչ աջ (քարտեզը՝ առանց շարժման). Mobile-only left nudge for heading+icons; desktop unchanged. */
 const FOOTER_FOLLOW_HEADING_AND_SOCIAL_NUDGE_RIGHT_CLASS =
-  "pl-8 sm:pl-9 max-md:-translate-x-7 md:translate-x-0 lg:pl-14 xl:pl-16 2xl:pl-20 lg:translate-x-3";
+  "pl-8 sm:pl-9 max-md:-translate-x-7 md:max-lg:-translate-x-9 lg:pl-14 xl:pl-16 2xl:pl-20 lg:translate-x-3";
 
 const FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS = `mt-[35px] flex gap-4 ${FOOTER_FOLLOW_SOCIAL_ICONS_ROW_DESKTOP_NUDGE_CLASS}`;
 

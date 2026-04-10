@@ -12,6 +12,10 @@ import {
 } from "@/lib/payment/adminPaymentDisplayStatus";
 import { DeleteOrderButton } from "./DeleteOrderButton";
 import { formatOrderPaymentTypeLabel } from "@/lib/payment/paymentTypeLabels";
+import {
+  formatOrderPaymentLinkModeLabel,
+  ORDER_PAYMENT_LINK_MODE,
+} from "@/constants/order-payment-link-mode";
 import { PaymentLinkActions } from "./PaymentLinkActions";
 
 type Props = { params: Promise<{ id: string }> };
@@ -24,7 +28,6 @@ export default async function AdminOrderDetailPage({ params }: Props) {
   const productImageUrl = order.productImageKey
     ? getR2PublicUrl(order.productImageKey)
     : null;
-
   const showPaymentLinkSection =
     getAdminOrderPaymentBadgeKind({
       status: order.status,
@@ -32,6 +35,10 @@ export default async function AdminOrderDetailPage({ params }: Props) {
       priceCents: order.priceCents,
       paidCents: order.paidCents,
     }) !== ADMIN_ORDER_PAYMENT_BADGE_KIND.PAID;
+  const selectedPaymentLinkMode =
+    order.paymentLinkMode === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+      ? ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
+      : ORDER_PAYMENT_LINK_MODE.FULL_ONLY;
 
   return (
     <div className="mx-auto w-full min-w-0 max-w-5xl space-y-8 px-4 py-6 sm:px-6">
@@ -148,12 +155,16 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             Payment link
           </h2>
           <p className="mt-1 text-sm text-neutral-500">
-            Send the link to the client or copy it.
+            Send the link to the client or copy it. Current selected mode:{" "}
+            <span className="font-medium text-neutral-700">
+              {formatOrderPaymentLinkModeLabel(order.paymentLinkMode)}
+            </span>
           </p>
           <div className="mt-4">
             <PaymentLinkActions
               orderId={order.id}
               paymentLinkUrl={getOrderPaymentUrl(order.token)}
+              paymentLinkMode={selectedPaymentLinkMode}
               paymentLinkSentFromDb={order.paymentLinkSentAt != null}
             />
           </div>

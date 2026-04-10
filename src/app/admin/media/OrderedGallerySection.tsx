@@ -18,6 +18,8 @@ type OrderedGallerySectionProps = {
   items: AdminOrderedItemRow[];
   /** Short label for “which row” (e.g. Top row / Bottom row) — shown in UI. */
   rowContextLabel: string;
+  /** Recommended upload dimensions shown near upload controls. */
+  recommendedSize: string;
 };
 
 export function OrderedGallerySection({
@@ -26,6 +28,7 @@ export function OrderedGallerySection({
   groupKey,
   items,
   rowContextLabel,
+  recommendedSize,
 }: OrderedGallerySectionProps) {
   const orderedIds = items.map((i) => i.id);
   const { pending, move, onDelete } = useOrderedGalleryActions({
@@ -48,6 +51,7 @@ export function OrderedGallerySection({
           groupKey={groupKey}
           canAdd={items.length < ORDERED_GALLERY_MAX_ITEMS}
           rowLabel={rowContextLabel}
+          recommendedSize={recommendedSize}
         />
 
         {items.length === 0 ? (
@@ -67,6 +71,7 @@ export function OrderedGallerySection({
             index={index}
             total={items.length}
             rowContextLabel={rowContextLabel}
+            recommendedSize={recommendedSize}
             pending={pending}
             onMove={move}
             onDelete={onDelete}
@@ -101,6 +106,7 @@ export function FinishedCreationsGallery({
         groupKey={SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1}
         items={row1}
         rowContextLabel="Top row"
+        recommendedSize="670 × 370 px"
       />
       <OrderedGallerySection
         title="Finished Creations — bottom row"
@@ -108,6 +114,7 @@ export function FinishedCreationsGallery({
         groupKey={SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW2}
         items={row2}
         rowContextLabel="Bottom row"
+        recommendedSize="420 × 232 px"
       />
     </div>
   );
