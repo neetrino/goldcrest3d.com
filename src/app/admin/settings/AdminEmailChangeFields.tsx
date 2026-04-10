@@ -3,97 +3,96 @@
 import { useActionState, useEffect } from "react";
 import { signOut } from "next-auth/react";
 import {
-  updateAdminEmail,
-  type UpdateEmailResult,
+  updateAdminLogin,
+  type UpdateLoginResult,
 } from "@/app/actions/admin-credentials";
 
 const inputClass =
   "mt-1.5 w-full rounded-md border border-neutral-300 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400/30 disabled:opacity-60";
 
 export type AdminEmailChangeFieldsProps = {
-  storedEmailNorm: string;
-  typedCurrentEmail: string;
-  onTypedCurrentEmailChange: (value: string) => void;
-  currentEmailVerified: boolean;
-  onVerifyCurrentEmail: () => void;
+  storedLogin: string;
+  typedCurrentLogin: string;
+  onTypedCurrentLoginChange: (value: string) => void;
+  currentLoginVerified: boolean;
+  onVerifyCurrentLogin: () => void;
   localVerifyError: string | null;
 };
 
 export function AdminEmailChangeFields({
-  storedEmailNorm,
-  typedCurrentEmail,
-  onTypedCurrentEmailChange,
-  currentEmailVerified,
-  onVerifyCurrentEmail,
+  storedLogin,
+  typedCurrentLogin,
+  onTypedCurrentLoginChange,
+  currentLoginVerified,
+  onVerifyCurrentLogin,
   localVerifyError,
 }: AdminEmailChangeFieldsProps) {
-  const emailInitial: UpdateEmailResult = null;
-  const [emailState, emailAction, isEmailPending] = useActionState<
-    UpdateEmailResult,
+  const loginInitial: UpdateLoginResult = null;
+  const [loginState, loginAction, isLoginPending] = useActionState<
+    UpdateLoginResult,
     FormData
-  >(updateAdminEmail, emailInitial);
+  >(updateAdminLogin, loginInitial);
 
   useEffect(() => {
-    if (emailState?.success === true) {
-      signOut({ callbackUrl: "/auth/signin?updated=email" });
+    if (loginState?.success === true) {
+      signOut({ callbackUrl: "/auth/signin?updated=login" });
     }
-  }, [emailState?.success]);
+  }, [loginState?.success]);
 
   const serverRejectedCurrent =
-    emailState?.success === false &&
-    emailState.clearCurrentVerification === true;
-  const showNewEmailStep = currentEmailVerified && !serverRejectedCurrent;
+    loginState?.success === false &&
+    loginState.clearCurrentVerification === true;
+  const showNewLoginStep = currentLoginVerified && !serverRejectedCurrent;
 
   return (
     <form
-      action={emailAction}
+      action={loginAction}
       className="mt-4 space-y-6"
       onSubmit={(e) => {
-        if (!showNewEmailStep) {
+        if (!showNewLoginStep) {
           e.preventDefault();
         }
       }}
     >
       <div className="space-y-2">
         <h3 className="text-sm font-semibold text-slate-700">
-          Step 1 — Confirm current email
+          Step 1 — Confirm current login
         </h3>
         <div>
           <label
-            htmlFor="settings-currentEmail"
+            htmlFor="settings-currentLogin"
             className="block text-sm font-medium text-[var(--foreground)]"
           >
-            Current email
+            Current login
           </label>
           <p className="mt-0.5 text-sm text-neutral-500">
-            Enter the email address you currently use to sign in, then verify
-            it.
+            Enter the login you currently use to sign in, then verify it.
           </p>
           <input
-            id="settings-currentEmail"
-            name="currentEmail"
-            type="email"
+            id="settings-currentLogin"
+            name="currentLogin"
+            type="text"
             autoComplete="username"
             required
-            value={typedCurrentEmail}
-            onChange={(e) => onTypedCurrentEmailChange(e.target.value)}
+            value={typedCurrentLogin}
+            onChange={(e) => onTypedCurrentLoginChange(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                onVerifyCurrentEmail();
+                onVerifyCurrentLogin();
               }
             }}
-            disabled={isEmailPending}
+            disabled={isLoginPending}
             className={inputClass}
             placeholder=""
             aria-invalid={Boolean(localVerifyError)}
             aria-describedby={
-              localVerifyError ? "email-verify-error" : undefined
+              localVerifyError ? "login-verify-error" : undefined
             }
           />
           {localVerifyError && (
             <p
-              id="email-verify-error"
+              id="login-verify-error"
               className="mt-1.5 text-sm text-red-600"
               role="alert"
             >
@@ -103,55 +102,55 @@ export function AdminEmailChangeFields({
         </div>
         <button
           type="button"
-          disabled={isEmailPending || !storedEmailNorm}
-          onClick={onVerifyCurrentEmail}
+          disabled={isLoginPending || !storedLogin}
+          onClick={onVerifyCurrentLogin}
           className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-[var(--foreground)] transition-opacity hover:bg-slate-50 disabled:opacity-50"
         >
-          Verify current email
+          Verify current login
         </button>
       </div>
 
-      {showNewEmailStep && (
+      {showNewLoginStep && (
         <div className="space-y-4 border-t border-slate-200 pt-6">
           <h3 className="text-sm font-semibold text-slate-700">
-            Step 2 — New login email
+            Step 2 — New login
           </h3>
           <div>
             <label
-              htmlFor="settings-newEmail"
+              htmlFor="settings-newLogin"
               className="block text-sm font-medium text-[var(--foreground)]"
             >
-              New email
+              New login
             </label>
             <input
-              id="settings-newEmail"
-              name="newEmail"
-              type="email"
-              autoComplete="email"
+              id="settings-newLogin"
+              name="newLogin"
+              type="text"
+              autoComplete="username"
               required
-              disabled={isEmailPending}
+              disabled={isLoginPending}
               className={inputClass}
               placeholder=""
               aria-describedby={
-                emailState?.success === false ? "email-error" : undefined
+                loginState?.success === false ? "login-error" : undefined
               }
             />
-            {emailState?.success === false && (
+            {loginState?.success === false && (
               <p
-                id="email-error"
+                id="login-error"
                 className="mt-1.5 text-sm text-red-600"
                 role="alert"
               >
-                {emailState.error}
+                {loginState.error}
               </p>
             )}
           </div>
           <button
             type="submit"
-            disabled={isEmailPending}
+            disabled={isLoginPending}
             className="rounded-md bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] transition-opacity hover:opacity-90 disabled:opacity-50"
           >
-            {isEmailPending ? "Saving…" : "Save email"}
+            {isLoginPending ? "Saving…" : "Save login"}
           </button>
         </div>
       )}

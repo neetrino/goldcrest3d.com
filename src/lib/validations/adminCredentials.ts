@@ -1,23 +1,23 @@
 import { z } from "zod";
 
 const MIN_PASSWORD_LENGTH = 8;
-const MAX_EMAIL_LENGTH = 255;
+const MAX_LOGIN_LENGTH = 255;
 
-const emailFieldSchema = z
+/** Login identifier (stored in User.email); any non-empty string, not email-only. */
+const loginIdentifierSchema = z
   .string()
-  .min(1, "Email is required")
-  .max(MAX_EMAIL_LENGTH, "Email is too long")
-  .email("Enter a valid email address")
-  .transform((s) => s.trim().toLowerCase());
+  .max(MAX_LOGIN_LENGTH, "Login is too long")
+  .transform((s) => s.trim())
+  .refine((s) => s.length > 0, { message: "Login is required" });
 
-export const changeEmailSchema = z
+export const changeLoginSchema = z
   .object({
-    currentEmail: emailFieldSchema,
-    newEmail: emailFieldSchema,
+    currentLogin: loginIdentifierSchema,
+    newLogin: loginIdentifierSchema,
   })
-  .refine((data) => data.newEmail !== data.currentEmail, {
-    message: "New email must be different from your current email.",
-    path: ["newEmail"],
+  .refine((data) => data.newLogin !== data.currentLogin, {
+    message: "New login must be different from your current login.",
+    path: ["newLogin"],
   });
 
 export const changePasswordSchema = z
@@ -33,5 +33,5 @@ export const changePasswordSchema = z
     path: ["confirmNewPassword"],
   });
 
-export type ChangeEmailData = z.infer<typeof changeEmailSchema>;
+export type ChangeLoginData = z.infer<typeof changeLoginSchema>;
 export type ChangePasswordData = z.infer<typeof changePasswordSchema>;

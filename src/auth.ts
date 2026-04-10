@@ -16,18 +16,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        email: { label: "Email", type: "email" },
+        email: { label: "Login", type: "text" },
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        const email =
+        const login =
           typeof credentials?.email === "string" ? credentials.email.trim() : "";
         const password =
           typeof credentials?.password === "string" ? credentials.password : "";
-        if (!email || !password) return null;
+        if (!login || !password) return null;
 
         const user = await prisma.user.findFirst({
-          where: { email },
+          where: { email: login },
         });
         if (!user?.password) return null;
         if (!compareSync(password, user.password)) return null;

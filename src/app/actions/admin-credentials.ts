@@ -5,13 +5,13 @@ import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import {
-  changeEmailSchema,
+  changeLoginSchema,
   changePasswordSchema,
 } from "@/lib/validations/adminCredentials";
 
 const BCRYPT_ROUNDS = 10;
 
-export type UpdateEmailResult =
+export type UpdateLoginResult =
   | { success: true }
   | { success: false; error: string; clearCurrentVerification?: boolean }
   | null;
@@ -22,35 +22,33 @@ export type UpdatePasswordResult =
   | null;
 
 /**
- * Server Action: update admin login (email). Requires `currentEmail` to match
- * the stored user email, then updates to `newEmail` (format, uniqueness, and
- * “must differ from current” checks). Compatible with useActionState.
+ * Server Action: update admin login identifier (stored in User.email).
+ * Requires `currentLogin` to match DB, then sets `newLogin` (uniqueness, must differ).
  */
-export async function updateAdminEmail(
-  _prev: UpdateEmailResult,
+export async function updateAdminLogin(
+  _prev: UpdateLoginResult,
   formData: FormData,
-): Promise<UpdateEmailResult> {
+): Promise<UpdateLoginResult> {
   const session = await requireAdminSession();
   if (!session?.user?.email) {
     return { success: false, error: "Unauthorized." };
   }
 
-  const rawCurrent = formData.get("currentEmail");
-  const rawNew = formData.get("newEmail");
-  const currentEmailInput =
-    typeof rawCurrent === "string" ? rawCurrent : "";
-  const newEmailInput = typeof rawNew === "string" ? rawNew : "";
+  const rawCurrent = formData.get("currentLogin");
+  const rawNew = formData.get("newLogin");
+  const currentLoginInput = typeof rawCurrent === "string" ? rawCurrent : "";
+  const newLoginInput = typeof rawNew === "string" ? rawNew : "";
 
-  const parsed = changeEmailSchema.safeParse({
-    currentEmail: currentEmailInput,
-    newEmail: newEmailInput,
+  const parsed = changeLoginSchema.safeParse({
+    currentLogin: currentLoginInput,
+    newLogin: newLoginInput,
   });
   if (!parsed.success) {
     const flat = parsed.error.flatten().fieldErrors;
     const msg =
-      flat.currentEmail?.[0] ??
-      flat.newEmail?.[0] ??
-      "Invalid email.";
+      flat.currentLogin?.[0] ??
+      flat.newLogin?.[0] ??
+      "Invalid login.";
     return { success: false, error: msg };
   }
 
@@ -61,44 +59,44 @@ export async function updateAdminEmail(
     where: { id: userId },
     select: { email: true },
   });
-  const storedEmail = userRow?.email?.trim().toLowerCase() ?? "";
-  if (!storedEmail) {
-    return { success: false, error: "Could not verify your account email." };
+  const storedLogin = (userRow?.email ?? "").trim();
+  if (!storedLogin) {
+    return { success: false, error: "Could not verify your account login." };
   }
 
-  if (parsed.data.currentEmail !== storedEmail) {
+  if (parsed.data.currentLogin !== storedLogin) {
     return {
       success: false,
       error:
-        "The current email you entered does not match your login email. Check the address and try again.",
+        "The current login you entered does not match your account. Check and try again.",
       clearCurrentVerification: true,
     };
   }
 
-  if (parsed.data.newEmail === storedEmail) {
+  if (parsed.data.newLogin === storedLogin) {
     return {
       success: false,
-      error: "New email must be different from your current email.",
+      error: "New login must be different from your current login.",
     };
   }
 
   const existing = await prisma.user.findFirst({
-    where: { email: parsed.data.newEmail },
+    where: { email: parsed.data.newLogin },
   });
   if (existing && existing.id !== userId) {
-    return { success: false, error: "This email is already in use." };
+    return { success: false, error: "This login is already in use." };
   }
 
   try {
     await prisma.user.update({
       where: { id: userId },
-      data: { email: parsed.data.newEmail },
+      data: { email: parsed.data.newLogin },
     });
     revalidatePath("/admin/settings");
     revalidatePath("/admin");
     return { success: true };
   } catch {
-    return { success: false, error: "Failed to update email. Please try again." };
+    return { success: false, error: "Failed to update login. Please try again." };
   }
 }
 

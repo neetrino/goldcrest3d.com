@@ -6,7 +6,7 @@ import { Suspense, useState } from "react";
 
 const CREDENTIALS_ERROR = "CredentialsSignin";
 
-const ERROR_MESSAGE = "Invalid email or password. Please try again.";
+const ERROR_MESSAGE = "Invalid login or password. Please try again.";
 
 function AuthSignInForm() {
   const searchParams = useSearchParams();
@@ -18,7 +18,8 @@ function AuthSignInForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const showError = errorParam === CREDENTIALS_ERROR;
-  const showEmailUpdated = updatedParam === "email";
+  const showLoginUpdated =
+    updatedParam === "login" || updatedParam === "email";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -38,12 +39,12 @@ function AuthSignInForm() {
         Admin sign in
       </h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {showEmailUpdated && (
+        {showLoginUpdated && (
           <p
             className="text-sm text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-950/30 px-3 py-2 rounded-md"
             role="status"
           >
-            Email updated. Please sign in with your new email.
+            Login updated. Please sign in with your new login.
           </p>
         )}
         {showError && (
@@ -59,13 +60,13 @@ function AuthSignInForm() {
             htmlFor="email"
             className="block text-sm font-medium text-[var(--foreground)] mb-1"
           >
-            Email
+            Login
           </label>
           <input
             id="email"
             name="email"
-            type="email"
-            autoComplete="email"
+            type="text"
+            autoComplete="username"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
