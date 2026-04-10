@@ -29,14 +29,14 @@ export function LandingNavMobileDrawer({
     <>
       <button
         type="button"
-        className="fixed inset-0 cursor-default bg-black/20 md:hidden"
+        className="fixed inset-0 cursor-default bg-black/20 lg:hidden"
         style={{ zIndex: Z_INDEX_MOBILE_NAV_BACKDROP }}
         aria-label="Close menu"
         onClick={onClose}
       />
       <div
         id={menuId}
-        className="fixed inset-x-0 border-b border-black/10 bg-white/98 py-4 shadow-md md:hidden"
+        className="fixed inset-x-0 border-b border-black/10 bg-white/98 py-4 shadow-md lg:hidden"
         style={{
           zIndex: Z_INDEX_MOBILE_NAV_DRAWER,
           top: "var(--landing-nav-height)",
