@@ -92,23 +92,17 @@ export function AdminSettingsForm({ currentLogin }: AdminSettingsFormProps) {
           Enter your current password, then choose a new password (at least 8
           characters).
         </p>
-        <form action={passwordAction} className="mt-4 space-y-4">
-          {/* Associates the form with the account for password managers / a11y (Chrome DOM hint). */}
-          <input
-            type="text"
-            name="username"
-            autoComplete="username"
-            defaultValue={currentLogin}
-            readOnly
-            tabIndex={-1}
-            aria-hidden="true"
-            className="sr-only"
-          />
+        <form
+          action={passwordAction}
+          className="mt-4 space-y-4"
+          autoComplete="off"
+        >
           <PasswordInputWithToggle
             id="settings-currentPassword"
             name="currentPassword"
             label="Current password"
-            autoComplete="current-password"
+            autoComplete="off"
+            readOnlyUntilFocused
             disabled={isPasswordPending}
             ariaDescribedBy={
               passwordState?.success === false ? "password-error" : undefined
