@@ -2,9 +2,9 @@
   --background: #ffffff;
   --foreground: #171717;
   --landing-nav-height: 48px;
-  /** Figma header logo frame: 71×41, aspect-ratio 71/41. */
-  --landing-nav-logo-width: 71px;
-  --landing-nav-logo-height: 41px;
+  /** Header logo reduced by 20% from 71x41 to 57x33. */
+  --landing-nav-logo-width: 57px;
+  --landing-nav-logo-height: 33px;
   /** Horizontal padding for the landing nav inner row (sync with TSX). */
   --landing-nav-padding-x: 12px;
   /** Logo column width (matches previous content box so nav links stay put). */
@@ -144,7 +144,7 @@
     --landing-nav-padding-x: 40px;
     --landing-nav-logo-slot: 90px;
     --landing-nav-logo-offset-x: 180px;
-    --landing-nav-logo-nudge-x: -116px;
+    --landing-nav-logo-nudge-x: 0px;
     --manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset: 35px;
   }
 }
