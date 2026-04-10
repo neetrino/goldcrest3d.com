@@ -5,8 +5,8 @@ import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
-const MOBILE_TITLE = "High Jewelry";
-const DESKTOP_TITLE = "Ancient & Heritag Jewelry";
+const MOBILE_TITLE = "Ancient & Heritage Jewelry";
+const DESKTOP_TITLE = "Ancient & Heritage Jewelry";
 const DESKTOP_LINE_1 =
   "Cultural and historical motifs re-engineered into structurally optimized,";
 const DESKTOP_LINE_1_EMPHASIS = "production-ready";
@@ -16,9 +16,9 @@ const DESKTOP_LINE_3 = "reconstruction and manufacturing awareness.";
 
 /** Mobile only â€” explicit line break after â€œstructuresâ€. */
 const MOBILE_DESCRIPTION_LINE_1 =
-  "Advanced pavé and fine-setting structures";
+  "Cultural and historical motifs re-engineered";
 const MOBILE_DESCRIPTION_LINE_2 =
-  "developed with micron-level precision.";
+  "into structurally optimized, production-ready CAD frameworks.";
 
 type ModelingBlockHighJewelryProps = {
   imageUrlDesktop: string;
@@ -74,7 +74,7 @@ export function ModelingBlockHighJewelry({
         )}
       </div>
       <div
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-sm:translate-y-[calc(136px*var(--ms,1))]"
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-sm:translate-y-[calc(160px*var(--ms,1))]"
         style={{ marginTop: "-33%" }}
       >
         <h3 className="font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
