@@ -14,8 +14,8 @@ const PORTRAIT_DESCRIPTION_LINES = [
 
 /** Below `sm` only; desktop unchanged. */
 const PORTRAIT_DESCRIPTION_LINES_MOBILE = [
-  "Advanced pavé and fine-setting structures developed with micron-level precision.",
-  "Invisible settings and ultra-thin tolerances engineered with strict structural discipline.",
+  "Advanced pavé and fine-setting structures",
+  "developed with micron-level precision.",
 ] as const;
 
 type ModelingBlockPortraitProps = {
@@ -51,7 +51,7 @@ export function ModelingBlockPortrait({
       titleBlockTop="34%"
       titleBlockLeft="7%"
       titleShiftClassName="md:translate-x-[calc(2.25rem*var(--ms,1))] lg:translate-x-0"
-      descriptionBlockTop="45%"
+      descriptionBlockTop="42%"
       descriptionBlockLeft="-13%"
       desktopOverlayShiftClassName="lg:translate-x-[calc(2rem*var(--ms,1))] lg:translate-y-[calc(2.25rem*var(--ms,1))]"
       mobilePortraitTypography

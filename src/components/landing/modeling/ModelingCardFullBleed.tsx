@@ -208,7 +208,7 @@ export function ModelingCardFullBleed({
         {independentTitleDescription ? (
           portraitMobileLayout ? (
             <>
-              <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(1rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:hidden">
+              <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:hidden">
                 <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
                   {title === PORTRAIT_MOBILE_TITLE_FULL ? (
                     <>
