@@ -1,27 +1,29 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
-import { signOut } from "next-auth/react";
+import { useActionState, useState } from "react";
 import {
-  updateAdminEmail,
   updateAdminPassword,
-  type UpdateEmailResult,
   type UpdatePasswordResult,
 } from "@/app/actions/admin-credentials";
+import { AdminEmailChangeFields } from "./AdminEmailChangeFields";
 
 const inputClass =
   "mt-1.5 w-full rounded-md border border-neutral-300 bg-[var(--background)] px-3 py-2 text-[var(--foreground)] placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-400/30 disabled:opacity-60";
+
+function normalizeEmail(value: string): string {
+  return value.trim().toLowerCase();
+}
 
 type AdminSettingsFormProps = {
   currentEmail: string;
 };
 
 export function AdminSettingsForm({ currentEmail }: AdminSettingsFormProps) {
-  const emailInitial: UpdateEmailResult = null;
-  const [emailState, emailAction, isEmailPending] = useActionState<
-    UpdateEmailResult,
-    FormData
-  >(updateAdminEmail, emailInitial);
+  const storedEmailNorm = normalizeEmail(currentEmail);
+  const [emailFieldsKey, setEmailFieldsKey] = useState(0);
+  const [currentEmailVerified, setCurrentEmailVerified] = useState(false);
+  const [typedCurrentEmail, setTypedCurrentEmail] = useState("");
+  const [localVerifyError, setLocalVerifyError] = useState<string | null>(null);
 
   const passwordInitial: UpdatePasswordResult = null;
   const [passwordState, passwordAction, isPasswordPending] = useActionState<
@@ -29,73 +31,60 @@ export function AdminSettingsForm({ currentEmail }: AdminSettingsFormProps) {
     FormData
   >(updateAdminPassword, passwordInitial);
 
-  useEffect(() => {
-    if (emailState?.success === true) {
-      signOut({ callbackUrl: "/auth/signin?updated=email" });
+  function handleVerifyCurrentEmail(): void {
+    setLocalVerifyError(null);
+    if (!storedEmailNorm) {
+      setLocalVerifyError(
+        "No login email is set on this account. Contact support before changing login.",
+      );
+      setCurrentEmailVerified(false);
+      return;
     }
-  }, [emailState?.success]);
+    const typed = normalizeEmail(typedCurrentEmail);
+    if (!typed) {
+      setLocalVerifyError("Enter your current email address.");
+      setCurrentEmailVerified(false);
+      return;
+    }
+    if (typed !== storedEmailNorm) {
+      setLocalVerifyError(
+        "The current email does not match your account. Enter the exact address you use to sign in.",
+      );
+      setCurrentEmailVerified(false);
+      return;
+    }
+    setCurrentEmailVerified(true);
+    setEmailFieldsKey((k) => k + 1);
+  }
+
+  function handleCurrentEmailChange(value: string): void {
+    setTypedCurrentEmail(value);
+    setLocalVerifyError(null);
+    if (currentEmailVerified) {
+      setCurrentEmailVerified(false);
+    }
+  }
 
   return (
     <div className="space-y-8">
-      <section>
-        <h2 className="text-sm font-semibold text-slate-700">
-          Current login
-        </h2>
-        <p
-          className="mt-1 text-[var(--foreground)]"
-          data-testid="settings-current-email"
-        >
-          {currentEmail || "—"}
-        </p>
-      </section>
-
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-base font-semibold text-[var(--foreground)]">
           Change login (email)
         </h2>
         <p className="mt-1 text-sm text-neutral-500">
-          After changing your email, you will need to sign in again with the new
-          address.
+          First confirm your current login email, then enter your new address.
+          After a successful change, you will need to sign in again with the new
+          email.
         </p>
-        <form action={emailAction} className="mt-4 space-y-4">
-          <div>
-            <label
-              htmlFor="settings-newEmail"
-              className="block text-sm font-medium text-[var(--foreground)]"
-            >
-              New email
-            </label>
-            <input
-              id="settings-newEmail"
-              name="newEmail"
-              type="email"
-              autoComplete="email"
-              required
-              disabled={isEmailPending}
-              className={inputClass}
-              placeholder={currentEmail || "admin@example.com"}
-              aria-describedby={
-                emailState?.success === false ? "email-error" : undefined
-              }
-            />
-            {emailState?.success === false && (
-              <p
-                id="email-error"
-                className="mt-1.5 text-sm text-red-600"
-                role="alert"
-              >
-                {emailState.error}
-              </p>
-            )}
-          </div>
-          <button
-            type="submit"
-            disabled={isEmailPending}
-            className="rounded-md bg-[var(--foreground)] px-4 py-2 text-sm font-medium text-[var(--background)] transition-opacity hover:opacity-90 disabled:opacity-50"
-          >
-            {isEmailPending ? "Saving…" : "Save email"}
-          </button>
-        </form>
+        <AdminEmailChangeFields
+          key={emailFieldsKey}
+          storedEmailNorm={storedEmailNorm}
+          typedCurrentEmail={typedCurrentEmail}
+          onTypedCurrentEmailChange={handleCurrentEmailChange}
+          currentEmailVerified={currentEmailVerified}
+          onVerifyCurrentEmail={handleVerifyCurrentEmail}
+          localVerifyError={localVerifyError}
+        />
       </section>
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
@@ -107,6 +96,17 @@ export function AdminSettingsForm({ currentEmail }: AdminSettingsFormProps) {
           characters).
         </p>
         <form action={passwordAction} className="mt-4 space-y-4">
+          {/* Associates the form with the account for password managers / a11y (Chrome DOM hint). */}
+          <input
+            type="email"
+            name="username"
+            autoComplete="username"
+            defaultValue={currentEmail}
+            readOnly
+            tabIndex={-1}
+            aria-hidden="true"
+            className="sr-only"
+          />
           <div>
             <label
               htmlFor="settings-currentPassword"

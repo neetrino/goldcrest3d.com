@@ -96,7 +96,7 @@ User-ը direct relation չունի Lead/Order-ի հետ; admin-ը մուտքով
 
 - Ֆայլեր. `prisma/migrations/`
 - Հրամաններ. `pnpm db:migrate`, `pnpm db:push` (dev)
-- Seed. `prisma db seed` — dev-ում admin user (ըստ TECH_CARD)
+- Seed. `prisma db seed` — `prisma/seed.ts` (առանց repo-ում admin fixture-ների; տվյալները DB)
 
 ---
 

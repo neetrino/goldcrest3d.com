@@ -13,7 +13,7 @@ const BCRYPT_ROUNDS = 10;
 
 export type UpdateEmailResult =
   | { success: true }
-  | { success: false; error: string }
+  | { success: false; error: string; clearCurrentVerification?: boolean }
   | null;
 
 export type UpdatePasswordResult =
@@ -22,8 +22,9 @@ export type UpdatePasswordResult =
   | null;
 
 /**
- * Server Action: update admin login (email). Validates format and uniqueness.
- * Signature compatible with useActionState(prevState, formData).
+ * Server Action: update admin login (email). Requires `currentEmail` to match
+ * the stored user email, then updates to `newEmail` (format, uniqueness, and
+ * “must differ from current” checks). Compatible with useActionState.
  */
 export async function updateAdminEmail(
   _prev: UpdateEmailResult,
@@ -34,21 +35,51 @@ export async function updateAdminEmail(
     return { success: false, error: "Unauthorized." };
   }
 
-  const raw = formData.get("newEmail");
-  const newEmail = typeof raw === "string" ? raw.trim().toLowerCase() : "";
+  const rawCurrent = formData.get("currentEmail");
+  const rawNew = formData.get("newEmail");
+  const currentEmailInput =
+    typeof rawCurrent === "string" ? rawCurrent : "";
+  const newEmailInput = typeof rawNew === "string" ? rawNew : "";
 
-  const parsed = changeEmailSchema.safeParse({ newEmail });
+  const parsed = changeEmailSchema.safeParse({
+    currentEmail: currentEmailInput,
+    newEmail: newEmailInput,
+  });
   if (!parsed.success) {
+    const flat = parsed.error.flatten().fieldErrors;
     const msg =
-      parsed.error.flatten().fieldErrors.newEmail?.[0] ?? "Invalid email.";
+      flat.currentEmail?.[0] ??
+      flat.newEmail?.[0] ??
+      "Invalid email.";
     return { success: false, error: msg };
   }
 
   const userId = (session.user as { id?: string }).id;
   if (!userId) return { success: false, error: "Unauthorized." };
 
-  if (parsed.data.newEmail === session.user.email) {
-    return { success: true };
+  const userRow = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { email: true },
+  });
+  const storedEmail = userRow?.email?.trim().toLowerCase() ?? "";
+  if (!storedEmail) {
+    return { success: false, error: "Could not verify your account email." };
+  }
+
+  if (parsed.data.currentEmail !== storedEmail) {
+    return {
+      success: false,
+      error:
+        "The current email you entered does not match your login email. Check the address and try again.",
+      clearCurrentVerification: true,
+    };
+  }
+
+  if (parsed.data.newEmail === storedEmail) {
+    return {
+      success: false,
+      error: "New email must be different from your current email.",
+    };
   }
 
   const existing = await prisma.user.findFirst({
