@@ -40,6 +40,11 @@
    * Does not change the frame’s layout box or the gradient block height — overflow clips the edges.
    */
   --manufacturing-intelligence-photo-scale-lg: 1.26;
+  /**
+   * Printing / Mechanical Stress / Tolerance detail images — tablet viewports only (see globals-manufacturing.css).
+   * Applied at 768–1023 and 1024–1366; not on mobile or wide desktop.
+   */
+  --manufacturing-intelligence-detail-photo-tablet-scale: 1.17;
   /** 3D Printing Strategy detail — նկարը մի քիչ ցածր frame-ի կենտրոնից */
   --manufacturing-printing-strategy-resin-detail-nudge-y: 16px;
   /** Mechanical Stress & Load — միայն lg+ (min-width 1024px): translateX (դրական = աջ)։ */
@@ -48,6 +53,15 @@
   --manufacturing-mechanical-stress-detail-display-width-lg: 840px;
   /** Mechanical Stress & Load — միայն lg+։ scale, երբ `max-h-full`-ը սահմանափակում է բարձրությունը։ */
   --manufacturing-mechanical-stress-detail-scale-lg: 0.88;
+  /**
+   * Mechanical Stress — tablet only (768–1366): extra translateX (negative = left).
+   * See globals-manufacturing.css; 1367px+ unchanged.
+   */
+  --manufacturing-mechanical-stress-detail-nudge-x-tablet-offset: -48px;
+  /**
+   * Tolerance Control & Assembly Precision (standard detail) — tablet only (768–1366): translateX (negative = left).
+   */
+  --manufacturing-tolerance-control-detail-nudge-x-tablet-offset: -48px;
   /** Casting Compensation detail — միայն նկարը մի քիչ վերև (բացասական = վերև) */
   --manufacturing-casting-compensation-detail-nudge-y: -25px;
   /** Casting Compensation detail — դեպի աջ (դրական = աջ) */
@@ -74,6 +88,11 @@
    * Casting Compensation — միայն mobile: դրական = նկարը ներքև։
    */
   --manufacturing-casting-compensation-detail-nudge-y-mobile-offset: 14px;
+  /**
+   * Casting Compensation — tablet band only: extra translateX (negative = left).
+   * See globals-manufacturing.css; 1367px+ unchanged.
+   */
+  --manufacturing-casting-compensation-detail-nudge-x-tablet-offset: -80px;
   /** Stone Seat Geometry detail — մի քիչ վերև (բացասական = վերև) */
   --manufacturing-stone-seat-geometry-detail-nudge-y: -12px;
   /** Stone Seat Geometry detail — մի քիչ աջ (դրական = աջ) */
@@ -87,10 +106,22 @@
    * Stone Seat Geometry — only mobile (max-width 767px): negative shifts image left.
    */
   --manufacturing-stone-seat-geometry-detail-nudge-x-mobile-offset: -40px;
+  /**
+   * Stone Seat Geometry — tablet band only (768–1023 single-column, 1024–1366 two-column): extra
+   * translateX (negative = left). Wide desktop (1367px+): unset — see globals-manufacturing.css.
+   */
+  --manufacturing-stone-seat-geometry-detail-nudge-x-tablet-offset: -64px;
   /** Wall Thickness Engineering detail — շատ քիչ դեպի աջ (դրական = աջ) */
   --manufacturing-wall-thickness-detail-nudge-x: 18px;
   /** Wall Thickness Engineering detail — մի քիչ ներքև (դրական = ներքև) */
   --manufacturing-wall-thickness-detail-nudge-y: 12px;
+  /**
+   * Wall Thickness Engineering — tablet band: added to horizontal nudge (negative = left).
+   * Used in (768–1023) single-column and in (1024–1366) two-column where lg rules would otherwise
+   * override the weaker one-class nudge — see globals-manufacturing.css.
+   * Wide desktop (1367px+): no extra offset.
+   */
+  --manufacturing-wall-thickness-detail-nudge-x-tablet-offset: -80px;
   /**
    * Wall Thickness Engineering — only mobile (max-width 767px): negative shifts image left.
    */
