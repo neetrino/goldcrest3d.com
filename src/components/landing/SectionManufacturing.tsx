@@ -92,7 +92,7 @@ function ManufacturingAccordionRow({
 
 export function SectionManufacturing() {
   const [activeId, setActiveId] = useState<ManufacturingSpecializationId>(
-    MANUFACTURING_SPECIALIZATION_IDS.TOLERANCE_CONTROL_ASSEMBLY_PRECISION,
+    MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING,
   );
 
   const activeItem = useMemo(
@@ -111,7 +111,7 @@ export function SectionManufacturing() {
   const handleToggle = (id: ManufacturingSpecializationId) => {
     setActiveId((prev) =>
       prev === id
-        ? MANUFACTURING_SPECIALIZATION_IDS.TOLERANCE_CONTROL_ASSEMBLY_PRECISION
+        ? MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING
         : id,
     );
   };

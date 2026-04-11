@@ -130,46 +130,15 @@ export type ManufacturingSpecializationItem = {
 export const MANUFACTURING_SPECIALIZATION_ITEMS: readonly ManufacturingSpecializationItem[] =
   [
     {
-      id: MANUFACTURING_SPECIALIZATION_IDS.TOLERANCE_CONTROL_ASSEMBLY_PRECISION,
-      title: "Tolerance Control & Assembly Precision",
+      id: MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING,
+      title: "Wall Thickness Engineering",
       description:
-        "Tolerance calibration for multi-part structures, articulated systems and\nlocking mechanisms. Precision alignment developed to ensure smooth\nmechanical performance after casting.",
-      detailImageSrc: LANDING_IMAGES.manufacturingToleranceControl,
+        "Controlled wall thickness calibration based on material type, casting method and structural load requirements. Optimized to prevent deformation, porosity exposure and weak stress points during production.",
+      detailImageSrc: LANDING_IMAGES.manufacturingWallThicknessEngineering,
       detailImageAlt:
-        "Technical CAD rendering of a ring with tolerance annotations",
-    },
-    {
-      id: MANUFACTURING_SPECIALIZATION_IDS.MECHANICAL_STRESS_LOAD_DISTRIBUTION,
-      title: "Mechanical Stress & Load Distribution",
-      description:
-        "Structural stress zones identified and reinforced through balanced\nmass distribution. Engineered for impact resistance, movement stability\nand long-term durability.",
-      detailImageSrc: LANDING_IMAGES.manufacturingMechanicalStressLoadDistribution,
-      detailImageAlt:
-        "Ring finite element analysis showing mechanical stress and load distribution",
+        "CAD render of a two-tone ring showing engineered wall thickness and stone settings",
       detailPhotoLayout:
-        MANUFACTURING_DETAIL_PHOTO_LAYOUT.MECHANICAL_STRESS_LOAD_DISTRIBUTION,
-    },
-    {
-      id: MANUFACTURING_SPECIALIZATION_IDS.PRINTING_STRATEGY_RESIN,
-      title: "3D Printing Strategy & Resin Behavior",
-      description:
-        "Support structure planning, overhang control and resin thickness awareness integrated into model architecture. Designed to minimize distortion and reduce post-processing risk.",
-      detailImageSrc: LANDING_IMAGES.manufacturingPrintingStrategyResinBehavior,
-      detailImageAlt:
-        "Jewelry ring SLA model with support structures on a perforated build plate",
-      detailPhotoLayout:
-        MANUFACTURING_DETAIL_PHOTO_LAYOUT.PRINTING_STRATEGY_RESIN,
-    },
-    {
-      id: MANUFACTURING_SPECIALIZATION_IDS.CASTING_COMPENSATION_METAL_FLOW,
-      title: "Casting Compensation & Metal Flow Awareness",
-      description:
-        "Shrinkage compensation and internal volume balance calculated at the\nCAD stage. Metal flow logic and structural reinforcement zones defined\nbefore mold preparation.",
-      detailImageSrc: LANDING_IMAGES.manufacturingCastingCompensationMetalFlowAwareness,
-      detailImageAlt:
-        "CAD rendering of a ring on a casting tree with sprues for investment casting",
-      detailPhotoLayout:
-        MANUFACTURING_DETAIL_PHOTO_LAYOUT.CASTING_COMPENSATION_METAL_FLOW,
+        MANUFACTURING_DETAIL_PHOTO_LAYOUT.WALL_THICKNESS_ENGINEERING,
     },
     {
       id: MANUFACTURING_SPECIALIZATION_IDS.STONE_SEAT_GEOMETRY_SETTING,
@@ -183,14 +152,45 @@ export const MANUFACTURING_SPECIALIZATION_ITEMS: readonly ManufacturingSpecializ
         MANUFACTURING_DETAIL_PHOTO_LAYOUT.STONE_SEAT_GEOMETRY_SETTING,
     },
     {
-      id: MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING,
-      title: "Wall Thickness Engineering",
+      id: MANUFACTURING_SPECIALIZATION_IDS.CASTING_COMPENSATION_METAL_FLOW,
+      title: "Casting Compensation & Metal Flow Awareness",
       description:
-        "Controlled wall thickness calibration based on material type, casting method and structural load requirements. Optimized to prevent deformation, porosity exposure and weak stress points during production.",
-      detailImageSrc: LANDING_IMAGES.manufacturingWallThicknessEngineering,
+        "Shrinkage compensation and internal volume balance calculated at the\nCAD stage. Metal flow logic and structural reinforcement zones defined\nbefore mold preparation.",
+      detailImageSrc: LANDING_IMAGES.manufacturingCastingCompensationMetalFlowAwareness,
       detailImageAlt:
-        "CAD render of a two-tone ring showing engineered wall thickness and stone settings",
+        "CAD rendering of a ring on a casting tree with sprues for investment casting",
       detailPhotoLayout:
-        MANUFACTURING_DETAIL_PHOTO_LAYOUT.WALL_THICKNESS_ENGINEERING,
+        MANUFACTURING_DETAIL_PHOTO_LAYOUT.CASTING_COMPENSATION_METAL_FLOW,
+    },
+    {
+      id: MANUFACTURING_SPECIALIZATION_IDS.PRINTING_STRATEGY_RESIN,
+      title: "3D Printing Strategy & Resin Behavior",
+      description:
+        "Support structure planning, overhang control and resin thickness awareness integrated into model architecture. Designed to minimize distortion and reduce post-processing risk.",
+      detailImageSrc: LANDING_IMAGES.manufacturingPrintingStrategyResinBehavior,
+      detailImageAlt:
+        "Jewelry ring SLA model with support structures on a perforated build plate",
+      detailPhotoLayout:
+        MANUFACTURING_DETAIL_PHOTO_LAYOUT.PRINTING_STRATEGY_RESIN,
+    },
+    {
+      id: MANUFACTURING_SPECIALIZATION_IDS.MECHANICAL_STRESS_LOAD_DISTRIBUTION,
+      title: "Mechanical Stress & Load Distribution",
+      description:
+        "Structural stress zones identified and reinforced through balanced\nmass distribution. Engineered for impact resistance, movement stability\nand long-term durability.",
+      detailImageSrc: LANDING_IMAGES.manufacturingMechanicalStressLoadDistribution,
+      detailImageAlt:
+        "Ring finite element analysis showing mechanical stress and load distribution",
+      detailPhotoLayout:
+        MANUFACTURING_DETAIL_PHOTO_LAYOUT.MECHANICAL_STRESS_LOAD_DISTRIBUTION,
+    },
+    {
+      id: MANUFACTURING_SPECIALIZATION_IDS.TOLERANCE_CONTROL_ASSEMBLY_PRECISION,
+      title: "Tolerance Control & Assembly Precision",
+      description:
+        "Tolerance calibration for multi-part structures, articulated systems and\nlocking mechanisms. Precision alignment developed to ensure smooth\nmechanical performance after casting.",
+      detailImageSrc: LANDING_IMAGES.manufacturingToleranceControl,
+      detailImageAlt:
+        "Technical CAD rendering of a ring with tolerance annotations",
     },
   ];
