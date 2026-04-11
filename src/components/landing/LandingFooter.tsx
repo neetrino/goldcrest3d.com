@@ -86,6 +86,10 @@ const FOOTER_OUTER_PADDING_CLASS =
 
 const FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS = "min-w-0";
 
+/** Logo frame artwork sits low; nudge column up on 3-col layout to align with Contact / Follow. */
+const FOOTER_BRAND_COLUMN_CLASS =
+  "flex min-w-0 w-full flex-col items-start gap-[10px] lg:max-w-none lg:-translate-y-3";
+
 /** Միայն desktop — email/հեռախոս/տեղ՝ մի քիչ վերև (վերնագիրը՝ Contact — անշարժ) */
 const FOOTER_CONTACT_LINES_BLOCK_DESKTOP_NUDGE_UP_CLASS = "lg:-translate-y-1";
 
@@ -107,7 +111,12 @@ const FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS = "";
 
 const FOOTER_FOLLOW_MAP_CORNER_CLASS = "rounded-3xl";
 
-const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS = "lg:translate-x-23";
+/**
+ * iPad Pro–class widths (≈1024–1380 CSS px): slightly less right nudge so the map sits a bit left.
+ * From 1381px: same as before (`translate-x-23`).
+ */
+const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS =
+  "lg:translate-x-16 min-[1381px]:lg:translate-x-23";
 
 const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS = "lg:-translate-y-2";
 
@@ -195,7 +204,7 @@ export function LandingFooter() {
     >
       <div className="mx-auto max-w-7xl">
         <div className={FOOTER_GRID_CLASS}>
-          <div className="flex min-w-0 w-full flex-col items-start gap-[10px] lg:max-w-none">
+          <div className={FOOTER_BRAND_COLUMN_CLASS}>
             <div
               className={FOOTER_LOGO_FRAME_CLASS}
               data-landing-image={LANDING_IMAGE_IDS.FOOTER_LOGO}
@@ -210,25 +219,22 @@ export function LandingFooter() {
                 />
               </div>
             </div>
-            <p className={FOOTER_TAGLINE_CLASS}>
-              Professional Jewelry 3D Modeling Studio
-            </p>
+            <div className={`${FOOTER_CONTACT_INTRO_CLASS} w-full max-w-[min(100%,384px)]`}>
+              <p className={FOOTER_TAGLINE_CLASS}>
+                Production-focused collaborations and custom engineering
+                inquiries are welcomed.
+              </p>
+              <p className={FOOTER_TAGLINE_CLASS}>
+                For project evaluation and technical consultation, contact
+                directly:
+              </p>
+            </div>
           </div>
           <div
             className={`${FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS} flex flex-col`}
           >
             <h3 className={FOOTER_CONTACT_HEADING_CLASS}>Contact</h3>
             <div className={FOOTER_CONTACT_LINES_BLOCK_CLASS}>
-              <div className={FOOTER_CONTACT_INTRO_CLASS}>
-                <p className={FOOTER_CONTACT_LINE_CLASS}>
-                  Production-focused collaborations and custom engineering
-                  inquiries are welcomed.
-                </p>
-                <p className={FOOTER_CONTACT_LINE_CLASS}>
-                  For project evaluation and technical consultation, contact
-                  directly:
-                </p>
-              </div>
               <div className={FOOTER_LOCATION_ROW_CLASS}>
                 <FooterEmailIcon />
                 <p
