@@ -41,6 +41,12 @@ const FOOTER_CONTACT_HEADING_CLASS =
 const FOOTER_CONTACT_LINE_CLASS =
   "font-sans text-[13px] font-normal leading-5 tracking-[-0.15px] text-[#4A5565] transition-colors hover:text-[var(--foreground)] md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:text-[12px] md:font-[457] md:leading-[18px] md:text-[#64748B] md:tracking-normal";
 
+/** Contact բլոկի ենթավերնագիրներ (Email, Direct Line, Studio Location) */
+const FOOTER_CONTACT_ITEM_LABEL_CLASS =
+  "font-sans text-[12px] font-semibold leading-5 text-[#0A0A0A] md:font-[\"SF_Compact\",-apple-system,BlinkMacSystemFont,sans-serif] md:font-[600] md:leading-[18px] md:text-[#0F172A]";
+
+const FOOTER_CONTACT_INTRO_CLASS = "flex flex-col gap-3";
+
 /** Follow վերնագիր — նույն սանդղակով մի քիչ փոքր, ինչ Contact */
 const FOOTER_FOLLOW_HEADING_CLASS =
   "font-bold text-[11px] uppercase leading-[15px] tracking-[1.2px] text-[#0f172a]";
@@ -80,6 +86,10 @@ const FOOTER_OUTER_PADDING_CLASS =
 
 const FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS = "min-w-0";
 
+/** Logo frame artwork sits low; nudge column up on 3-col layout to align with Contact / Follow. */
+const FOOTER_BRAND_COLUMN_CLASS =
+  "flex min-w-0 w-full flex-col items-start gap-[10px] lg:max-w-none lg:-translate-y-3";
+
 /** Միայն desktop — email/հեռախոս/տեղ՝ մի քիչ վերև (վերնագիրը՝ Contact — անշարժ) */
 const FOOTER_CONTACT_LINES_BLOCK_DESKTOP_NUDGE_UP_CLASS = "lg:-translate-y-1";
 
@@ -101,7 +111,12 @@ const FOOTER_FOLLOW_MAP_FRAME_DESKTOP_OFFSET_RIGHT_CLASS = "";
 
 const FOOTER_FOLLOW_MAP_CORNER_CLASS = "rounded-3xl";
 
-const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS = "lg:translate-x-23";
+/**
+ * iPad Pro–class widths (≈1024–1380 CSS px): slightly less right nudge so the map sits a bit left.
+ * From 1381px: same as before (`translate-x-23`).
+ */
+const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_RIGHT_CLASS =
+  "lg:translate-x-16 min-[1381px]:lg:translate-x-23";
 
 const FOOTER_FOLLOW_MAP_INNER_DESKTOP_NUDGE_UP_CLASS = "lg:-translate-y-2";
 
@@ -155,6 +170,32 @@ function FooterLocationIcon() {
   );
 }
 
+function FooterPhoneIcon() {
+  return (
+    <svg
+      className="mt-0.5 size-4 shrink-0 text-[#64748B]"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
+      <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+    </svg>
+  );
+}
+
+function FooterEmailIcon() {
+  return (
+    <svg
+      className="mt-0.5 size-4 shrink-0 text-[#64748B]"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
+      <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+    </svg>
+  );
+}
+
 export function LandingFooter() {
   return (
     <footer
@@ -163,7 +204,7 @@ export function LandingFooter() {
     >
       <div className="mx-auto max-w-7xl">
         <div className={FOOTER_GRID_CLASS}>
-          <div className="flex min-w-0 w-full flex-col items-start gap-[10px] lg:max-w-none">
+          <div className={FOOTER_BRAND_COLUMN_CLASS}>
             <div
               className={FOOTER_LOGO_FRAME_CLASS}
               data-landing-image={LANDING_IMAGE_IDS.FOOTER_LOGO}
@@ -178,31 +219,66 @@ export function LandingFooter() {
                 />
               </div>
             </div>
-            <p className={FOOTER_TAGLINE_CLASS}>
-              Professional Jewelry 3D Modeling Studio
-            </p>
+            <div className={`${FOOTER_CONTACT_INTRO_CLASS} w-full max-w-[min(100%,384px)]`}>
+              <p className={FOOTER_TAGLINE_CLASS}>
+                Production-focused collaborations and custom engineering
+                inquiries are welcomed.
+              </p>
+              <p className={FOOTER_TAGLINE_CLASS}>
+                For project evaluation and technical consultation, contact
+                directly:
+              </p>
+            </div>
           </div>
           <div
             className={`${FOOTER_GRID_CONTACT_AND_FOLLOW_COLUMN_CLASS} flex flex-col`}
           >
             <h3 className={FOOTER_CONTACT_HEADING_CLASS}>Contact</h3>
             <div className={FOOTER_CONTACT_LINES_BLOCK_CLASS}>
-              <a
-                href="mailto:hello@ds-jewelry.studio"
-                className={`${FOOTER_CONTACT_LINE_CLASS} break-all md:max-w-none`}
-              >
-                info@goldcrest3d.com
-              </a>
-              <a
-                href="tel:+15559023481"
-                className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-none`}
-              >
-                +374 (41) 141 - 110
-              </a>
-              <div className={FOOTER_CONTACT_LOCATION_BLOCK_CLASS}>
+              <div className={FOOTER_LOCATION_ROW_CLASS}>
+                <FooterEmailIcon />
+                <p
+                  className={`${FOOTER_CONTACT_LINE_CLASS} min-w-0 break-all md:max-w-none`}
+                >
+                  <span className={FOOTER_CONTACT_ITEM_LABEL_CLASS}>Email: </span>
+                  <a
+                    href="mailto:studio@goldcrestcad.com"
+                    className="text-inherit transition-colors hover:text-[var(--foreground)]"
+                  >
+                    studio@goldcrestcad.com
+                  </a>
+                </p>
+              </div>
+              <div className="flex flex-col gap-1">
                 <div className={FOOTER_LOCATION_ROW_CLASS}>
-                  <FooterLocationIcon />
-                  <p className={FOOTER_CONTACT_LINE_CLASS}>10/6 Gai Ave, Yerevan</p>
+                  <FooterPhoneIcon />
+                  <p className={FOOTER_CONTACT_ITEM_LABEL_CLASS}>
+                    Direct Line / WhatsApp
+                  </p>
+                </div>
+                <p className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-none`}>
+                  <a href="tel:+37441141110">+374 (41) 141 - 110</a>
+                  <span className="text-[#94A3B8]"></span>
+                  <a
+                    href="https://wa.me/37441141110"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors hover:text-[var(--foreground)]"
+                  >
+                  </a>
+                </p>
+              </div>
+              <div className={FOOTER_CONTACT_LOCATION_BLOCK_CLASS}>
+                <div className="flex flex-col gap-1">
+                  <div className={FOOTER_LOCATION_ROW_CLASS}>
+                    <FooterLocationIcon />
+                    <p className={FOOTER_CONTACT_ITEM_LABEL_CLASS}>
+                      Studio Location
+                    </p>
+                  </div>
+                  <p className={FOOTER_CONTACT_LINE_CLASS}>
+                    10/6 Gai Ave, Yerevan, Armenia
+                  </p>
                 </div>
                 <p className={FOOTER_CONTACT_LINE_CLASS}>
                   International collaborations available
@@ -217,7 +293,7 @@ export function LandingFooter() {
               <h3 className={FOOTER_FOLLOW_HEADING_CLASS}>Follow</h3>
               <div className={FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS}>
                 <a
-                  href="https://www.instagram.com/goldcrest3d?igsh=NXQ3MXk4N2xsYWRm"
+                  href="https://www.instagram.com/goldcrest3d/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
@@ -291,10 +367,10 @@ export function LandingFooter() {
       <div className={FOOTER_BOTTOM_BORDER_OUTER_CLASS}>
         <div className={FOOTER_BOTTOM_LEGAL_INNER_CLASS}>
           <p className={FOOTER_COPYRIGHT_MOBILE_CLASS}>
-            © {FOOTER_COPYRIGHT_YEAR} DS Studio Engineering. All Rights Reserved.
+            © {FOOTER_COPYRIGHT_YEAR} GOLDCREST STUDIO.
           </p>
           <p className={FOOTER_COPYRIGHT_DESKTOP_CLASS}>
-            © {FOOTER_COPYRIGHT_YEAR} DS Studio Engineering. All Rights Reserved.
+            © {FOOTER_COPYRIGHT_YEAR} GOLDCREST STUDIO.
           </p>
           <div className={FOOTER_LEGAL_LINKS_ROW_CLASS}>
             <Link href="/privacy" className={FOOTER_PRIVACY_LINK_CLASS}>
