@@ -14,7 +14,7 @@ export function RenderingHeroSubtitleLines({ body }: RenderingHeroSubtitleLinesP
     return (
       <div
         id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
-        className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] self-start text-left whitespace-normal [&_.hero-banner-rich-body]:whitespace-normal [&_.hero-banner-rich-body_p]:mb-2 [&_.hero-banner-rich-body_p:last-child]:mb-0"
+        className="hero-primary-subtitle-typography relative block w-full min-w-0 max-w-full self-start text-left whitespace-normal [&_.hero-banner-rich-body]:whitespace-normal [&_.hero-banner-rich-body_p]:mb-2 [&_.hero-banner-rich-body_p:last-child]:mb-0"
       >
         <HeroBannerBodyRichText
           body={body}
@@ -30,7 +30,7 @@ export function RenderingHeroSubtitleLines({ body }: RenderingHeroSubtitleLinesP
   return (
     <p
       id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
-      className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] self-start text-left"
+      className="hero-primary-subtitle-typography relative block w-full min-w-0 max-w-full self-start text-left"
     >
       <span className="md:hidden">
         {mobileLines.map((line, i) => (

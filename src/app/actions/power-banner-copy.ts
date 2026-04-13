@@ -6,7 +6,7 @@ import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
-import { sanitizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
+import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
 import { powerBannerCopyFormSchema } from "@/lib/validations/powerBannerCopy";
 
 export type PowerBannerCopyActionResult =
@@ -53,7 +53,7 @@ export async function updatePowerBannerCopy(
   }
 
   const { bannerKey, title, body } = parsed.data;
-  const bodyStored = sanitizeHeroBannerBodyHtml(body);
+  const bodyStored = finalizeHeroBannerBodyHtml(body);
   if (getHeroBannerBodyPlainTextLength(bodyStored) === 0) {
     return { ok: false, error: "Description is required." };
   }

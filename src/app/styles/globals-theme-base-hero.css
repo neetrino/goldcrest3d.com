@@ -40,6 +40,12 @@ section[id] {
   line-height: 28px;
 }
 
+/* Rich hero descriptions — reduce orphan lines vs narrow column (progressive enhancement) */
+.hero-banner-rich-body p {
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
 /* Jewelry Rendering — ենթավերնագիր (mobile: Inter; md+: SF Compact) */
 #hero-rendering-subtitle {
   color: rgba(255, 255, 255, 0.9);

@@ -63,6 +63,9 @@ export const SECTION3_HERO_BG_MOBILE_PATH =
 
 export const SECTION3_TEXT_COLUMN_TOP_MD_CLASS = "md:top-[47%]";
 
+/** Side hero copy column (Rendering + Design): wider than legacy 520px so wraps align with admin editor. */
+export const HERO_SIDE_COPY_COLUMN_MAX_CLASS = "md:max-w-[min(600px,52vw)]";
+
 /** Hero desktop `sizes` — մոտավորապես լայնության սահմանափակում */
 export const HERO_DESKTOP_IMAGE_SIZES = "(max-width: 767px) 0px, 100vw";
 export const HERO_MOBILE_IMAGE_SIZES = "(max-width: 767px) 100vw, 0px";

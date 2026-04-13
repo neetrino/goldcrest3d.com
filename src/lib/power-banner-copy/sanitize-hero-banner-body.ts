@@ -1,5 +1,7 @@
 import sanitizeHtml from "sanitize-html";
 
+import { normalizeHeroBannerRichLayout } from "./normalize-hero-banner-rich-layout";
+
 const ALIGN = /^(left|right|center|justify)$/;
 
 /**
@@ -25,4 +27,12 @@ export function sanitizeHeroBannerBodyHtml(dirty: string): string {
       i: "em",
     },
   });
+}
+
+/**
+ * Sanitize then fix common TinyMCE layout splits (orphan `<p><strong>word</strong></p>`, `<br>` before emphasis).
+ */
+export function finalizeHeroBannerBodyHtml(dirty: string): string {
+  const sanitized = sanitizeHeroBannerBodyHtml(dirty.trim());
+  return normalizeHeroBannerRichLayout(sanitized);
 }
