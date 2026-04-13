@@ -3,7 +3,9 @@ import {
   HERO_SECTION3_GET_QUOTE_BUTTON_ID,
 } from "@/components/landing/GetAQuoteButton";
 import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-copy.types";
+import { looksLikeHeroBannerRichBody } from "@/lib/power-banner-copy/looks-like-hero-banner-rich-body";
 import { resolveDesignSubtitleDisplay } from "./resolve-power-banner-display";
+import { HeroBannerBodyRichText } from "./HeroBannerBodyRichText";
 import { SECTION3_TEXT_COLUMN_TOP_MD_CLASS } from "./power-banners-layout.constants";
 
 type DesignHeroSlideCopyProps = {
@@ -11,7 +13,10 @@ type DesignHeroSlideCopyProps = {
 };
 
 export function DesignHeroSlideCopy({ copy }: DesignHeroSlideCopyProps) {
-  const { line1, line2 } = resolveDesignSubtitleDisplay(copy.body);
+  const useRichBody = looksLikeHeroBannerRichBody(copy.body);
+  const { lines, useDefaultLineBreakLayout } = useRichBody
+    ? { lines: [] as string[], useDefaultLineBreakLayout: false }
+    : resolveDesignSubtitleDisplay(copy.body);
 
   return (
     <div
@@ -22,10 +27,29 @@ export function DesignHeroSlideCopy({ copy }: DesignHeroSlideCopyProps) {
           {copy.title}
         </h1>
         <div className="flex w-full flex-col items-end gap-0.5 md:items-start md:gap-1">
-          <p className="hero-primary-subtitle-typography-design max-w-[433px] self-end text-right max-md:-translate-y-5 md:max-w-[433px] md:-translate-y-4 md:self-start md:text-left">
-            <span className="block">{line1}</span>
-            {line2 ? <span className="block">{line2}</span> : null}
-          </p>
+          {useRichBody ? (
+            <div className="hero-primary-subtitle-typography-design max-w-[433px] self-end text-right whitespace-normal max-md:-translate-y-5 md:max-w-[433px] md:-translate-y-4 md:self-start md:text-left [&_.hero-banner-rich-body]:whitespace-normal">
+              <HeroBannerBodyRichText
+                body={copy.body}
+                className="hero-banner-rich-body w-full [&_li]:my-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5 [&_p]:mb-2 [&_p:last-child]:mb-0"
+              />
+            </div>
+          ) : (
+            <p className="hero-primary-subtitle-typography-design max-w-[433px] self-end text-right max-md:-translate-y-5 md:max-w-[433px] md:-translate-y-4 md:self-start md:text-left">
+              {lines.map((line, i) => (
+                <span
+                  key={i}
+                  className={
+                    useDefaultLineBreakLayout
+                      ? "block"
+                      : "block whitespace-normal"
+                  }
+                >
+                  {line}
+                </span>
+              ))}
+            </p>
+          )}
           <GetAQuoteButton
             id={HERO_SECTION3_GET_QUOTE_BUTTON_ID}
             variant="gold"

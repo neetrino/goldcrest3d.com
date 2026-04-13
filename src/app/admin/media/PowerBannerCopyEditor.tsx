@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import { updatePowerBannerCopy } from "@/app/actions/power-banner-copy";
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
@@ -9,6 +9,7 @@ import { POWER_BANNER_ADMIN_LABELS } from "@/lib/power-banner-copy/power-banner-
 import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-copy.types";
 
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
+import { PowerBannerDescriptionEditor } from "./PowerBannerDescriptionEditor";
 import { PowerBannerCopyMessages } from "./PowerBannerCopyMessages";
 
 type PowerBannerCopyEditorProps = {
@@ -24,6 +25,7 @@ export function PowerBannerCopyEditor({
   const meta = POWER_BANNER_ADMIN_LABELS[bannerKey];
 
   const [state, formAction] = useActionState(updatePowerBannerCopy, null);
+  const [bodyHtml, setBodyHtml] = useState(initial.body);
 
   useEffect(() => {
     if (state?.ok) {
@@ -33,11 +35,13 @@ export function PowerBannerCopyEditor({
 
   return (
     <form
+      key={`power-banner-form-${bannerKey}-${initial.body}`}
       action={formAction}
       className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-6"
       aria-label={`Edit hero text for ${meta.name}`}
     >
       <input type="hidden" name="bannerKey" value={bannerKey} />
+      <input type="hidden" name="body" value={bodyHtml} />
 
       <div className="border-b border-slate-200/80 pb-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-[#e2c481]">
@@ -76,17 +80,14 @@ export function PowerBannerCopyEditor({
         >
           Description
         </label>
-        <textarea
+        <PowerBannerDescriptionEditor
           id={`power-banner-body-${bannerKey}`}
-          name="body"
-          rows={5}
-          required
-          defaultValue={initial.body}
-          className="min-h-[8rem] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-slate-200 transition placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
+          value={bodyHtml}
+          onChange={setBodyHtml}
         />
         <p className="text-xs text-slate-500">
-          Optional line breaks control line wrapping on the hero. Leave as a single paragraph to
-          match the original layout when text matches the defaults.
+          Use the editor to set structure: line breaks, lists, emphasis, and alignment. What you see
+          here matches how the text appears on the homepage hero (including intentional line breaks).
         </p>
       </div>
 

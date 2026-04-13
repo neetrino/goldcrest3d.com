@@ -77,10 +77,15 @@ export function resolveModelingBodyDisplay(body: string): {
   };
 }
 
+/**
+ * Jewelry Rendering — default copy keeps Figma line splits + nowrap; any custom text preserves
+ * one block per line (same structure on mobile and desktop), matching Modeling’s intent.
+ */
 export function resolveRenderingSubtitleDisplay(body: string): {
-  desktopLine1: string;
-  desktopLine2: string;
+  desktopLines: string[];
   mobileLines: string[];
+  /** When true, use legacy nowrap rules tuned for default hero copy only. */
+  useDefaultLineBreakLayout: boolean;
 } {
   const trimmed = body.trim();
   if (
@@ -89,14 +94,14 @@ export function resolveRenderingSubtitleDisplay(body: string): {
       normalizeForCompare(POWER_BANNER_DEFAULT_COPY.RENDERING.body)
   ) {
     return {
-      desktopLine1: RENDERING_SUBTITLE_LINE1,
-      desktopLine2: RENDERING_SUBTITLE_LINE2,
+      desktopLines: [RENDERING_SUBTITLE_LINE1, RENDERING_SUBTITLE_LINE2],
       mobileLines: [
         RENDERING_SUBTITLE_MOBILE_LINE1,
         RENDERING_SUBTITLE_MOBILE_LINE2,
         RENDERING_SUBTITLE_MOBILE_LINE3,
         RENDERING_SUBTITLE_MOBILE_LINE4,
       ],
+      useDefaultLineBreakLayout: true,
     };
   }
   const parts = trimmed
@@ -104,25 +109,22 @@ export function resolveRenderingSubtitleDisplay(body: string): {
     .map((line) => line.trim())
     .filter(Boolean);
   if (parts.length === 0) {
-    return { desktopLine1: "", desktopLine2: "", mobileLines: [] };
-  }
-  if (parts.length === 1) {
-    return {
-      desktopLine1: parts[0],
-      desktopLine2: "",
-      mobileLines: [parts[0]],
-    };
+    return { desktopLines: [], mobileLines: [], useDefaultLineBreakLayout: false };
   }
   return {
-    desktopLine1: parts[0],
-    desktopLine2: parts.slice(1).join(" "),
+    desktopLines: parts,
     mobileLines: parts,
+    useDefaultLineBreakLayout: false,
   };
 }
 
+/**
+ * Jewelry Design — default copy uses two Figma lines; custom text uses one block per line
+ * (no merging extra lines into a single paragraph).
+ */
 export function resolveDesignSubtitleDisplay(body: string): {
-  line1: string;
-  line2: string;
+  lines: string[];
+  useDefaultLineBreakLayout: boolean;
 } {
   const trimmed = body.trim();
   if (
@@ -130,16 +132,20 @@ export function resolveDesignSubtitleDisplay(body: string): {
     normalizeForCompare(trimmed) ===
       normalizeForCompare(POWER_BANNER_DEFAULT_COPY.DESIGN.body)
   ) {
-    return { line1: DESIGN_SUBTITLE_LINE1, line2: DESIGN_SUBTITLE_LINE2 };
+    return {
+      lines: [DESIGN_SUBTITLE_LINE1, DESIGN_SUBTITLE_LINE2],
+      useDefaultLineBreakLayout: true,
+    };
   }
   if (trimmed.includes("\n")) {
     const parts = trimmed
       .split("\n")
       .map((line) => line.trim())
       .filter(Boolean);
-    const line1 = parts[0] ?? "";
-    const line2 = parts.slice(1).join(" ");
-    return { line1, line2 };
+    return {
+      lines: parts.length > 0 ? parts : [""],
+      useDefaultLineBreakLayout: false,
+    };
   }
-  return { line1: trimmed, line2: "" };
+  return { lines: [trimmed], useDefaultLineBreakLayout: false };
 }

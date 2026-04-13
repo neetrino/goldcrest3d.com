@@ -7,11 +7,13 @@ import {
   HERO_GET_QUOTE_BUTTON_ID,
 } from "@/components/landing/GetAQuoteButton";
 import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-copy.types";
+import { looksLikeHeroBannerRichBody } from "@/lib/power-banner-copy/looks-like-hero-banner-rich-body";
 import {
   resolveModelingBodyDisplay,
   resolveModelingTitleDesktop,
   resolveModelingTitleMobileLines,
 } from "./resolve-power-banner-display";
+import { HeroBannerBodyRichText } from "./HeroBannerBodyRichText";
 import {
   SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX,
   SECTION1_HERO_TEXT_NUDGE_DOWN_PX,
@@ -27,7 +29,10 @@ export function ModelingHeroSlideTextStack({
 }: ModelingHeroSlideTextStackProps) {
   const desktopTitle = resolveModelingTitleDesktop(copy.title);
   const mobileTitleLines = resolveModelingTitleMobileLines(copy.title);
-  const { desktopParagraph, mobileLines } = resolveModelingBodyDisplay(copy.body);
+  const useRichBody = looksLikeHeroBannerRichBody(copy.body);
+  const { desktopParagraph, mobileLines } = useRichBody
+    ? { desktopParagraph: "", mobileLines: [] as string[] }
+    : resolveModelingBodyDisplay(copy.body);
 
   return (
     <div
@@ -58,26 +63,38 @@ export function ModelingHeroSlideTextStack({
         </span>
         <span className="hidden md:inline">{desktopTitle}</span>
       </h1>
-      <p
-        id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
-        className="hero-primary-subtitle-typography mt-4 shrink-0 md:mt-5"
-      >
-        <span className="md:hidden">
-          {mobileLines.map((line, i) => (
-            <Fragment key={i}>
-              {i > 0 ? (
-                <>
-                  <br className="md:hidden" />{" "}
-                </>
-              ) : null}
-              <span className={i === 0 ? "whitespace-nowrap" : undefined}>
-                {line}
-              </span>
-            </Fragment>
-          ))}
-        </span>
-        <span className="hidden md:inline">{desktopParagraph}</span>
-      </p>
+      {useRichBody ? (
+        <div
+          id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
+          className="hero-primary-subtitle-typography mt-4 w-full max-w-[min(100%,36rem)] shrink-0 md:mt-5"
+        >
+          <HeroBannerBodyRichText
+            body={copy.body}
+            className="hero-banner-rich-body w-full text-center [&_li]:my-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5 [&_p]:mb-2 [&_p:last-child]:mb-0"
+          />
+        </div>
+      ) : (
+        <p
+          id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
+          className="hero-primary-subtitle-typography mt-4 shrink-0 md:mt-5"
+        >
+          <span className="md:hidden">
+            {mobileLines.map((line, i) => (
+              <Fragment key={i}>
+                {i > 0 ? (
+                  <>
+                    <br className="md:hidden" />{" "}
+                  </>
+                ) : null}
+                <span className={i === 0 ? "whitespace-nowrap" : undefined}>
+                  {line}
+                </span>
+              </Fragment>
+            ))}
+          </span>
+          <span className="hidden md:inline">{desktopParagraph}</span>
+        </p>
+      )}
       <GetAQuoteButton
         id={HERO_GET_QUOTE_BUTTON_ID}
         variant="gold"

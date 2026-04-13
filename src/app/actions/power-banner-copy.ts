@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
+import { sanitizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
 import { powerBannerCopyFormSchema } from "@/lib/validations/powerBannerCopy";
 
 export type PowerBannerCopyActionResult =
@@ -51,10 +53,8 @@ export async function updatePowerBannerCopy(
   }
 
   const { bannerKey, title, body } = parsed.data;
-  if (title.length === 0) {
-    return { ok: false, error: "Title is required." };
-  }
-  if (body.length === 0) {
+  const bodyStored = sanitizeHeroBannerBodyHtml(body);
+  if (getHeroBannerBodyPlainTextLength(bodyStored) === 0) {
     return { ok: false, error: "Description is required." };
   }
 
@@ -64,9 +64,9 @@ export async function updatePowerBannerCopy(
       create: {
         bannerKey,
         title,
-        body,
+        body: bodyStored,
       },
-      update: { title, body },
+      update: { title, body: bodyStored },
     });
   } catch (err) {
     logger.error("updatePowerBannerCopy: failed to upsert", err);
