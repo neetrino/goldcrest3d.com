@@ -7,6 +7,10 @@ import { useLayoutEffect, useRef } from "react";
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
 import type { ModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
+import {
+  MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS,
+  MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS,
+} from "@/lib/modeling-slot-copy/modeling-text-overlay-presentation";
 
 export const MODELING_TEXT_OVERLAY_RICH_PREVIEW_CLASS =
   "[&_p:not(:last-child)]:mb-[0.45em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
@@ -17,24 +21,12 @@ export const OVERLAY_PADDING_MOBILE_CLASS = "px-6 py-8";
 
 export type ModelingOverlayLayerKey = "title" | "body";
 
-function PreviewTitleLines({ title }: { title: string }) {
-  if (!title.includes("\n")) {
-    return title;
-  }
-  return title.split(/\r?\n/).map((line, i) => (
-    <span key={`ed-title-${i}`} className="block">
-      {line}
-    </span>
-  ));
-}
-
 function layerPositionStyle(layer: ModelingTextOverlayLayout["title"]): CSSProperties {
   return {
     position: "absolute",
     left: `${layer.xPct}%`,
     top: `${layer.yPct}%`,
     transform: "translate(-50%, -50%)",
-    maxWidth: "min(92%, calc(560px * var(--ms, 1)))",
   };
 }
 
@@ -175,7 +167,7 @@ export function ModelingTextOverlayEditorSurface({
       <div className={`absolute inset-0 ${paddingClass}`}>
         <div ref={frameRef} className="relative h-full w-full min-h-0 outline-none" tabIndex={-1}>
           <div
-            className={`min-w-0 ${selectedRingClass(interactive && selectedLayer === "title")}`}
+            className={`${MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS} ${selectedRingClass(interactive && selectedLayer === "title")}`}
             style={posTitle}
           >
             {interactive && titleEditable ? (
@@ -187,11 +179,11 @@ export function ModelingTextOverlayEditorSurface({
             ) : null}
             <h3
               ref={titleEditable ? titleRef : undefined}
-              className={`min-w-0 font-manrope font-extrabold outline-none ${
+              className={`font-manrope font-extrabold outline-none ${MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS} ${
                 textDarkPreview ? "text-slate-900" : "text-white"
               } ${
                 titleEditable
-                  ? "cursor-text select-text whitespace-pre-wrap"
+                  ? "cursor-text select-text"
                   : "pointer-events-none touch-none select-none"
               } ${interactive && !titleEditable ? "pointer-events-auto cursor-grab active:cursor-grabbing" : ""}`}
               style={layerTitleFontStyle(layout.title, textDarkPreview)}
@@ -224,12 +216,12 @@ export function ModelingTextOverlayEditorSurface({
                     : undefined
               }
             >
-              {titleEditable ? null : <PreviewTitleLines title={titleText} />}
+              {titleEditable ? null : titleText}
             </h3>
           </div>
 
           <div
-            className={`min-w-0 ${selectedRingClass(interactive && selectedLayer === "body")}`}
+            className={`${MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS} ${selectedRingClass(interactive && selectedLayer === "body")}`}
             style={posBody}
           >
             {interactive && bodyEditable ? (
@@ -242,7 +234,7 @@ export function ModelingTextOverlayEditorSurface({
             {bodyEditable ? (
               <div
                 ref={bodyRef}
-                className={`modeling-slot-rich-body cursor-text select-text font-manrope font-light outline-none ${
+                className={`modeling-slot-rich-body cursor-text select-text font-manrope font-light outline-none ${MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS} ${
                   textDarkPreview ? "text-slate-800" : "text-white/90"
                 } ${MODELING_TEXT_OVERLAY_RICH_PREVIEW_CLASS}`}
                 style={layerBodyFontStyle(layout.body, textDarkPreview)}
@@ -281,7 +273,7 @@ export function ModelingTextOverlayEditorSurface({
               >
                 <HeroBannerBodyRichText
                   body={bodyHtml}
-                  className={`modeling-slot-rich-body font-manrope font-light ${MODELING_TEXT_OVERLAY_RICH_PREVIEW_CLASS}`}
+                  className={`modeling-slot-rich-body font-manrope font-light ${MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS} ${MODELING_TEXT_OVERLAY_RICH_PREVIEW_CLASS}`}
                 />
               </div>
             )}

@@ -229,9 +229,10 @@ export function ModelingTextOverlayVisualEditor({
                 </h2>
                 <p className="mt-1 text-xs text-slate-500">
                   Click title or description to type in place (Enter for new lines; description supports
-                  paragraphs). Use the grip above a selected layer to drag position. Arrow keys nudge the
-                  selected layer. Sizes apply to this layout only — close when done; save with the form
-                  when ready.
+                  paragraphs). Lines do not auto-wrap when you change size — only explicit breaks and
+                  paragraph structure apply. Use the grip above a selected layer to drag position. Arrow
+                  keys nudge the selected layer. Sizes apply to this layout only — close when done; save
+                  with the form when ready.
                 </p>
               </div>
               <button

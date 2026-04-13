@@ -7,23 +7,16 @@ import {
   type ModelingTextOverlayLayout,
 } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import {
+  MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS,
+  MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS,
+} from "@/lib/modeling-slot-copy/modeling-text-overlay-presentation";
+import {
   resolveModelingSlotBodyForMobile,
   resolveModelingSlotTitleForMobile,
 } from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 
 const MODELING_RICH_BODY =
   "[&_p:not(:last-child)]:mb-[0.45em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
-
-function OverlayTitleLines({ title }: { title: string }) {
-  if (!title.includes("\n")) {
-    return title;
-  }
-  return title.split(/\r?\n/).map((line, i) => (
-    <span key={`overlay-title-${i}`} className="block">
-      {line}
-    </span>
-  ));
-}
 
 function layerStyle(layer: ModelingTextOverlayLayout["title"]): CSSProperties {
   return {
@@ -32,7 +25,6 @@ function layerStyle(layer: ModelingTextOverlayLayout["title"]): CSSProperties {
     top: `${layer.yPct}%`,
     transform: "translate(-50%, -50%)",
     fontSize: `calc(${layer.fontSizePx}px * var(--ms, 1) * var(--mt, 1))`,
-    maxWidth: "min(92%, calc(560px * var(--ms, 1)))",
   };
 }
 
@@ -79,11 +71,11 @@ export function ModelingSlotCustomTextOverlay({
   textDark,
 }: ModelingSlotCustomTextOverlayProps) {
   const titleClass = textDark
-    ? "font-manrope font-extrabold text-black"
-    : "font-manrope font-extrabold text-white";
+    ? `font-manrope font-extrabold text-black ${MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS}`
+    : `font-manrope font-extrabold text-white ${MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS}`;
   const bodyClass = textDark
-    ? `modeling-slot-rich-body ${MODELING_RICH_BODY} font-manrope font-light text-black/90`
-    : `modeling-slot-rich-body ${MODELING_RICH_BODY} font-manrope font-light text-white/90`;
+    ? `modeling-slot-rich-body ${MODELING_RICH_BODY} font-manrope font-light text-black/90 ${MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS}`
+    : `modeling-slot-rich-body ${MODELING_RICH_BODY} font-manrope font-light text-white/90 ${MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS}`;
 
   return (
     <div
@@ -91,18 +83,30 @@ export function ModelingSlotCustomTextOverlay({
     >
       <div className="relative h-full w-full min-h-0">
         <div className="hidden md:block absolute inset-0">
-          <h3 className={titleClass} style={layerStyle(layoutDesktop.title)}>
-            <OverlayTitleLines title={titleDesktop} />
-          </h3>
-          <div style={layerStyle(layoutDesktop.body)}>
+          <div
+            className={MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS}
+            style={layerStyle(layoutDesktop.title)}
+          >
+            <h3 className={titleClass}>{titleDesktop}</h3>
+          </div>
+          <div
+            className={MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS}
+            style={layerStyle(layoutDesktop.body)}
+          >
             <HeroBannerBodyRichText body={bodyDesktopHtml} className={bodyClass} />
           </div>
         </div>
         <div className="md:hidden absolute inset-0">
-          <h3 className={titleClass} style={layerStyle(layoutMobile.title)}>
-            <OverlayTitleLines title={titleMobile} />
-          </h3>
-          <div style={layerStyle(layoutMobile.body)}>
+          <div
+            className={MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS}
+            style={layerStyle(layoutMobile.title)}
+          >
+            <h3 className={titleClass}>{titleMobile}</h3>
+          </div>
+          <div
+            className={MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS}
+            style={layerStyle(layoutMobile.body)}
+          >
             <HeroBannerBodyRichText body={bodyMobileHtml} className={bodyClass} />
           </div>
         </div>
