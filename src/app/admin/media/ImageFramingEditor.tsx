@@ -2,7 +2,13 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useActionState, useCallback, useEffect, useRef, useState } from "react";
+import {
+  useActionState,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import {
   resetModelingSlotFraming,
@@ -19,6 +25,7 @@ import {
 import {
   clampImageFraming,
   DEFAULT_IMAGE_FRAMING,
+  framingFingerprint,
   framingToCoverImageStyle,
   type ImageFraming,
 } from "@/lib/site-media/image-framing";
@@ -62,6 +69,13 @@ export function ImageFramingEditor({
   const [framing, setFraming] = useState<ImageFraming>(
     () => initialFraming ?? DEFAULT_IMAGE_FRAMING,
   );
+
+  const serverFramingKey = framingFingerprint(initialFraming);
+
+  useEffect(() => {
+    setFraming(initialFraming ?? DEFAULT_IMAGE_FRAMING);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- sync only when saved framing changes (fingerprint), not when parent passes a new object reference with the same values.
+  }, [serverFramingKey]);
 
   const [saveState, saveAction, savePending] = useActionState(
     async (
@@ -152,6 +166,11 @@ export function ImageFramingEditor({
     }
   }, []);
 
+  const defaultFramingKey = framingFingerprint(DEFAULT_IMAGE_FRAMING);
+  const localFramingKey = framingFingerprint(framing);
+  const isAtDefaultFraming = localFramingKey === defaultFramingKey;
+  const serverHasSavedFraming = initialFraming !== null;
+
   const message =
     saveState && !saveState.ok
       ? saveState.error
@@ -168,6 +187,11 @@ export function ImageFramingEditor({
   }
 
   const appearance = framingSectionAppearance(target);
+
+  const resetDisabledWhenServerSaved =
+    !enabled || savePending || resetPending;
+  const resetDisabledLocalOnly =
+    !enabled || savePending || resetPending || isAtDefaultFraming;
 
   return (
     <div
@@ -284,27 +308,38 @@ export function ImageFramingEditor({
             {savePending ? "Saving…" : "Save framing"}
           </button>
         </form>
-        <form action={resetAction} className="inline">
-          {target.kind === "gallery" ? (
-            <input type="hidden" name="itemId" value={target.itemId} />
-          ) : null}
-          {target.kind === "modeling" ? (
-            <>
-              <input type="hidden" name="slotId" value={target.slotId} />
-              <input type="hidden" name="variant" value={target.variant} />
-            </>
-          ) : null}
-          {target.kind === "powerBanner" ? (
-            <input type="hidden" name="bannerKey" value={target.bannerKey} />
-          ) : null}
+        {serverHasSavedFraming ? (
+          <form action={resetAction} className="inline">
+            {target.kind === "gallery" ? (
+              <input type="hidden" name="itemId" value={target.itemId} />
+            ) : null}
+            {target.kind === "modeling" ? (
+              <>
+                <input type="hidden" name="slotId" value={target.slotId} />
+                <input type="hidden" name="variant" value={target.variant} />
+              </>
+            ) : null}
+            {target.kind === "powerBanner" ? (
+              <input type="hidden" name="bannerKey" value={target.bannerKey} />
+            ) : null}
+            <button
+              type="submit"
+              disabled={resetDisabledWhenServerSaved}
+              className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {resetPending ? "Resetting…" : "Reset framing"}
+            </button>
+          </form>
+        ) : (
           <button
-            type="submit"
-            disabled={!enabled || savePending || resetPending || !initialFraming}
+            type="button"
+            disabled={resetDisabledLocalOnly}
+            onClick={() => setFraming(clampImageFraming(DEFAULT_IMAGE_FRAMING))}
             className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {resetPending ? "Resetting…" : "Reset framing"}
+            Reset framing
           </button>
-        </form>
+        )}
       </div>
     </div>
   );

@@ -70,6 +70,8 @@ export type ModelingCardFullBleedProps = Pick<
   titleClassNameResolved: string;
   descriptionClassName: string;
   descriptionContent: ReactNode;
+  /** When portrait layout uses distinct mobile rich HTML, render this in the small-viewport overlay. */
+  portraitOverlayDescription?: ReactNode;
   DescriptionTag: "div" | "p";
   usesRichDescription: boolean;
 };
@@ -115,6 +117,7 @@ export function ModelingCardFullBleed({
   titleClassNameResolved,
   descriptionClassName,
   descriptionContent,
+  portraitOverlayDescription,
   DescriptionTag,
   usesRichDescription,
 }: ModelingCardFullBleedProps) {
@@ -244,7 +247,7 @@ export function ModelingCardFullBleed({
                   }
                 >
                   {usesRichDescription ? (
-                    descriptionContent
+                    portraitOverlayDescription ?? descriptionContent
                   ) : (
                     descriptionLinesMobile!.map((line, i) => (
                       <span key={`portrait-mobile-${i}`} className="block">

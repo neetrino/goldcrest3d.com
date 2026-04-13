@@ -23,6 +23,7 @@ export function ModelingSlotCopyEditor({ slotKey, initial }: ModelingSlotCopyEdi
 
   const [state, formAction] = useActionState(updateModelingSlotCopy, null);
   const [bodyHtml, setBodyHtml] = useState(initial.body);
+  const [bodyMobileHtml, setBodyMobileHtml] = useState(initial.bodyMobile);
 
   useEffect(() => {
     if (state?.ok) {
@@ -32,13 +33,14 @@ export function ModelingSlotCopyEditor({ slotKey, initial }: ModelingSlotCopyEdi
 
   return (
     <form
-      key={`modeling-slot-copy-${slotKey}-${initial.body}`}
+      key={`modeling-slot-copy-${slotKey}-${initial.body}-${initial.bodyMobile}`}
       action={formAction}
       className="mt-4 flex flex-col gap-4 border-t border-slate-200/80 pt-4"
-      aria-label={`Edit title and description for ${label}`}
+      aria-label={`Edit title and descriptions for ${label}`}
     >
       <input type="hidden" name="slotKey" value={slotKey} />
       <input type="hidden" name="body" value={bodyHtml} />
+      <input type="hidden" name="bodyMobile" value={bodyMobileHtml} />
 
       <div className="flex flex-col gap-2">
         <label
@@ -60,28 +62,47 @@ export function ModelingSlotCopyEditor({ slotKey, initial }: ModelingSlotCopyEdi
         </p>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 rounded-xl border border-slate-200/90 bg-slate-50/50 p-3">
         <span
-          id={`modeling-slot-body-label-${slotKey}`}
-          className="text-sm font-medium text-slate-800"
+          id={`modeling-slot-body-desktop-label-${slotKey}`}
+          className="text-sm font-semibold text-slate-900"
         >
-          Description
+          Desktop / tablet description
         </span>
+        <p className="text-xs text-slate-500">
+          Shown from the <span className="font-medium text-slate-600">md</span> breakpoint upward
+          (tablet and desktop). Same sanitizer as hero banners.
+        </p>
         <SiteRichHtmlEditor
-          id={`modeling-slot-body-${slotKey}`}
-          ariaLabelledBy={`modeling-slot-body-label-${slotKey}`}
+          id={`modeling-slot-body-desktop-${slotKey}`}
+          ariaLabelledBy={`modeling-slot-body-desktop-label-${slotKey}`}
           value={bodyHtml}
           onChange={setBodyHtml}
         />
+      </div>
+
+      <div className="flex flex-col gap-2 rounded-xl border border-slate-200/90 bg-white p-3">
+        <span
+          id={`modeling-slot-body-mobile-label-${slotKey}`}
+          className="text-sm font-semibold text-slate-900"
+        >
+          Mobile description
+        </span>
         <p className="text-xs text-slate-500">
-          Same editor as hero banners: structure with paragraphs, lists, emphasis, and alignment. Saved
-          HTML is sanitized and rendered on the public site.
+          Optional. Shown below <span className="font-medium text-slate-600">md</span> only. Leave
+          empty to use the desktop / tablet text on phones as well.
         </p>
+        <SiteRichHtmlEditor
+          id={`modeling-slot-body-mobile-${slotKey}`}
+          ariaLabelledBy={`modeling-slot-body-mobile-label-${slotKey}`}
+          value={bodyMobileHtml}
+          onChange={setBodyMobileHtml}
+        />
       </div>
 
       <ModelingSlotCopyMessages state={state} />
 
-      <MediaFormSubmitButton pendingLabel="Saving…">Save title &amp; description</MediaFormSubmitButton>
+      <MediaFormSubmitButton pendingLabel="Saving…">Save title &amp; descriptions</MediaFormSubmitButton>
     </form>
   );
 }

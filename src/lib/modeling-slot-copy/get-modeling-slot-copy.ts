@@ -9,11 +9,17 @@ import { defaultModelingSlotCopyBundle } from "./modeling-slot-copy-defaults";
 import type { ModelingSlotCopyBundle } from "./modeling-slot-copy.types";
 
 function getModelingSlotCopyDelegate(): {
-  findMany: () => Promise<{ slotKey: string; title: string; body: string }[]>;
+  findMany: () => Promise<
+    { slotKey: string; title: string; body: string; bodyMobile: string | null }[]
+  >;
 } | null {
   const delegate = (
     prisma as unknown as {
-      modelingSlotCopy?: { findMany: () => Promise<{ slotKey: string; title: string; body: string }[]> };
+      modelingSlotCopy?: {
+        findMany: () => Promise<
+          { slotKey: string; title: string; body: string; bodyMobile: string | null }[]
+        >;
+      };
     }
   ).modelingSlotCopy;
   if (delegate == null || typeof delegate.findMany !== "function") {
@@ -34,7 +40,7 @@ export async function getModelingSlotCopyBundle(): Promise<ModelingSlotCopyBundl
     return defaultModelingSlotCopyBundle();
   }
 
-  let rows: { slotKey: string; title: string; body: string }[];
+  let rows: { slotKey: string; title: string; body: string; bodyMobile: string | null }[];
   try {
     rows = await delegate.findMany();
   } catch (err) {
@@ -51,7 +57,11 @@ export async function getModelingSlotCopyBundle(): Promise<ModelingSlotCopyBundl
   for (const key of ORDERED_MODELING_SLOT_KEYS) {
     const row = byKey.get(key);
     if (row) {
-      out[key as ModelingSlotKey] = { title: row.title, body: row.body };
+      out[key as ModelingSlotKey] = {
+        title: row.title,
+        body: row.body,
+        bodyMobile: row.bodyMobile ?? "",
+      };
     }
   }
   return out;

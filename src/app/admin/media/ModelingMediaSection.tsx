@@ -57,6 +57,10 @@ export function ModelingMediaSection({
           if mobile is omitted, the desktop file is used on small screens. Changes go live after
           a successful upload (refresh the homepage if needed).
         </p>
+        <p className="mt-3 text-sm text-slate-500">
+          Card copy: use the desktop/tablet and mobile description editors per block — they are
+          independent of the image slots. Optional mobile copy applies below the md breakpoint only.
+        </p>
       </div>
       <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {slots.map((row) => (

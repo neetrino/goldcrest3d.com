@@ -40,6 +40,7 @@ export async function updateModelingSlotCopy(
     slotKey: formData.get("slotKey"),
     title: formData.get("title"),
     body: formData.get("body"),
+    bodyMobile: formData.get("bodyMobile") ?? "",
   });
 
   if (!parsed.success) {
@@ -48,21 +49,34 @@ export async function updateModelingSlotCopy(
       first.slotKey?.[0] ??
       first.title?.[0] ??
       first.body?.[0] ??
+      first.bodyMobile?.[0] ??
       "Invalid input.";
     return { ok: false, error: msg };
   }
 
-  const { slotKey, title, body } = parsed.data;
+  const { slotKey, title, body, bodyMobile } = parsed.data;
   const bodyStored = finalizeHeroBannerBodyHtml(body);
   if (getHeroBannerBodyPlainTextLength(bodyStored) === 0) {
-    return { ok: false, error: "Description is required." };
+    return { ok: false, error: "Desktop / tablet description is required." };
   }
+
+  const bodyMobileStored =
+    bodyMobile.length > 0 ? finalizeHeroBannerBodyHtml(bodyMobile) : null;
 
   try {
     await prisma.modelingSlotCopy.upsert({
       where: { slotKey },
-      create: { slotKey, title, body: bodyStored },
-      update: { title, body: bodyStored },
+      create: {
+        slotKey,
+        title,
+        body: bodyStored,
+        bodyMobile: bodyMobileStored,
+      },
+      update: {
+        title,
+        body: bodyStored,
+        bodyMobile: bodyMobileStored,
+      },
     });
   } catch (err) {
     logger.error("updateModelingSlotCopy: failed to upsert", err);

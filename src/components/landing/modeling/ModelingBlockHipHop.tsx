@@ -27,6 +27,7 @@ export function ModelingBlockHipHop({
       title={copy.title}
       description=""
       descriptionRichHtml={copy.body}
+      descriptionRichHtmlMobile={copy.bodyMobile}
       imageSrc={imageUrlDesktop}
       imageId={LANDING_IMAGE_IDS.MODELING_HIPHOP}
       imageOnLeft={false}

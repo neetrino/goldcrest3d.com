@@ -136,5 +136,7 @@ model ModelingSlotCopy {
   slotKey   String   @id
   title     String   @db.Text
   body      String   @db.Text
+  /// Optional rich HTML for viewports below `md` (matches image mobile breakpoint). Null/empty → use `body`.
+  bodyMobile String? @db.Text
   updatedAt DateTime @updatedAt
 }

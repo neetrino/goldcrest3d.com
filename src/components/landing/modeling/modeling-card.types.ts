@@ -10,6 +10,11 @@ export type ModelingCardProps = {
    * rendered with the same sanitizer as hero banners.
    */
   descriptionRichHtml?: string;
+  /**
+   * Optional mobile-only rich HTML (Modeling Specialization — Admin). When set, shown below the
+   * card's `imagePairBreakpoint`; when omitted or empty, `descriptionRichHtml` is used on all viewports.
+   */
+  descriptionRichHtmlMobile?: string;
   /** Single paragraph; ignored when descriptionLines or descriptionRichHtml is set. */
   description: string;
   /** When set, description is rendered as one block per line (e.g. Hip-Hop). */

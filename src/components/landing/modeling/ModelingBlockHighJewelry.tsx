@@ -4,6 +4,7 @@ import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroB
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
+import { resolveModelingSlotBodyForMobile } from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
@@ -34,6 +35,8 @@ export function ModelingBlockHighJewelry({
       : "h-full w-full object-cover max-md:object-right md:object-[center_48%_center]";
   const titleLines = copy.title.split(/\r?\n/).filter((s) => s.length > 0);
   const titleDesktop = copy.title.split(/\r?\n/).join(" ");
+  const bodyDesktop = copy.body;
+  const bodyMobile = resolveModelingSlotBodyForMobile(copy);
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -111,15 +114,15 @@ export function ModelingBlockHighJewelry({
           </span>
           <span className="hidden sm:inline">{titleDesktop}</span>
         </h3>
-        <div className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden">
+        <div className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden">
           <HeroBannerBodyRichText
-            body={copy.body}
+            body={bodyMobile}
             className={`modeling-slot-rich-body ${HIGH_JEWELRY_RICH_BODY}`}
           />
         </div>
-        <div className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 sm:block">
+        <div className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 md:block">
           <HeroBannerBodyRichText
-            body={copy.body}
+            body={bodyDesktop}
             className={`modeling-slot-rich-body -translate-x-[calc(1.9rem*var(--ms,1))] text-center ${HIGH_JEWELRY_RICH_BODY}`}
           />
         </div>

@@ -25,6 +25,7 @@ export function ModelingBlockBridal({
       title={copy.title}
       description=""
       descriptionRichHtml={copy.body}
+      descriptionRichHtmlMobile={copy.bodyMobile}
       imageSrc={imageUrlDesktop}
       imageSrcMobile={imageUrlMobile}
       imagePairBreakpoint="md"

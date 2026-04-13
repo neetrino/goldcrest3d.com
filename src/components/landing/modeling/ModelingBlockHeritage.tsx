@@ -4,6 +4,7 @@ import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroB
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
+import { resolveModelingSlotBodyForMobile } from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
@@ -22,6 +23,9 @@ type ModelingBlockHeritageProps = {
 function HeritageOverlayText({ copy }: { copy: ModelingSlotCopyEntry }) {
   const titleLines = copy.title.split(/\r?\n/).filter((s) => s.length > 0);
   const desktopTitleSingleLine = copy.title.split(/\r?\n/).join(" ");
+  const bodyDesktop = copy.body;
+  const bodyMobile = resolveModelingSlotBodyForMobile(copy);
+  const hasDistinctMobileBody = copy.bodyMobile.trim().length > 0;
   return (
     <div className="absolute inset-0 z-10 flex items-start justify-end px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))]">
       <div className="-translate-x-[calc(0.3rem*var(--ms,1))] -translate-y-[calc(0rem*var(--ms,1))] max-w-[calc(540px*var(--ms,1))] text-right text-black md:-translate-x-[calc(1.5rem*var(--ms,1))] md:mt-[calc(12.7rem*var(--ms,1))] md:-translate-y-[calc(4.15rem*var(--ms,1))]">
@@ -36,10 +40,27 @@ function HeritageOverlayText({ copy }: { copy: ModelingSlotCopyEntry }) {
           <span className="hidden sm:inline">{desktopTitleSingleLine}</span>
         </h3>
         <div className="mt-[calc(3.5rem*var(--ms,1))] w-[calc(470px*var(--ms,1))] max-w-full font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:mt-[calc(1rem*var(--ms,1))] sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black">
-          <HeroBannerBodyRichText
-            body={copy.body}
-            className={`modeling-slot-rich-body text-left sm:text-right ${HERITAGE_RICH_BODY}`}
-          />
+          {hasDistinctMobileBody ? (
+            <>
+              <div className="md:hidden">
+                <HeroBannerBodyRichText
+                  body={bodyMobile}
+                  className={`modeling-slot-rich-body text-left sm:text-right ${HERITAGE_RICH_BODY}`}
+                />
+              </div>
+              <div className="hidden md:block">
+                <HeroBannerBodyRichText
+                  body={bodyDesktop}
+                  className={`modeling-slot-rich-body text-left sm:text-right ${HERITAGE_RICH_BODY}`}
+                />
+              </div>
+            </>
+          ) : (
+            <HeroBannerBodyRichText
+              body={bodyDesktop}
+              className={`modeling-slot-rich-body text-left sm:text-right ${HERITAGE_RICH_BODY}`}
+            />
+          )}
         </div>
       </div>
     </div>

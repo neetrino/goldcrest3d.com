@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
+import { resolveModelingSlotBodyForMobile } from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
@@ -46,6 +47,8 @@ export function ModelingBlockMechanical({
   imageFramingMobile,
 }: ModelingBlockMechanicalProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
+  const bodyDesktop = copy.body;
+  const bodyMobile = resolveModelingSlotBodyForMobile(copy);
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -123,18 +126,18 @@ export function ModelingBlockMechanical({
         <h3 className="z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left">
           <MechanicalTitleLines title={copy.title} />
         </h3>
-        <div className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] sm:hidden">
+        <div className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] md:hidden">
           <HeroBannerBodyRichText
-            body={copy.body}
+            body={bodyMobile}
             className={`modeling-slot-rich-body ${MECHANICAL_RICH_BODY}`}
           />
         </div>
         <div
-          className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:block"
+          className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] md:block"
           style={{ overflow: "visible" }}
         >
           <HeroBannerBodyRichText
-            body={copy.body}
+            body={bodyDesktop}
             className={`modeling-slot-rich-body ${MECHANICAL_RICH_BODY}`}
           />
         </div>

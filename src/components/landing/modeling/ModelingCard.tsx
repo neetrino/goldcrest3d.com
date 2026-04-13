@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { framingToCoverImageStyle } from "@/lib/site-media/image-framing";
@@ -16,6 +16,7 @@ export function ModelingCard({
   title,
   description,
   descriptionRichHtml,
+  descriptionRichHtmlMobile,
   descriptionLines,
   descriptionLinesDesktop,
   descriptionLinesMobile,
@@ -119,34 +120,61 @@ export function ModelingCard({
   const modelingRichBodyLayout =
     "[&_p:not(:last-child)]:mb-[0.45em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
 
-  const descriptionContent =
-    usesRichDescription && descriptionRichHtml ? (
-      <HeroBannerBodyRichText
-        body={descriptionRichHtml}
-        className={`modeling-slot-rich-body ${modelingRichBodyLayout} ${descriptionClassName}`}
-      />
-    ) : (
-      renderModelingCardDescriptionContent({
-        description,
-        descriptionLines,
-        descriptionLinesDesktop,
-        descriptionLinesMobile,
-        descriptionLayout,
-        firstDescriptionLineId,
-        firstDescriptionLineMarginRight,
-        firstDescriptionLineTranslateX,
-        secondDescriptionLineTranslateX,
-        hasLines,
-        hipHopMobileLayout,
-        bridalMobileLayout,
-        lineWrapClass,
-        hipHopMobileLineClass,
-        hipHopMobileLineSingleLineClass,
-        bridalRowWrapperClass,
-        bridalRowSpanClass,
-        bridalRowSpanClassDesktop,
-      })
+  const desktopRichHtml = descriptionRichHtml?.trim() ?? "";
+  const mobileRichDistinct = descriptionRichHtmlMobile?.trim() ?? "";
+  const hasDistinctMobileRich = mobileRichDistinct.length > 0;
+  const mobileRichHtml = hasDistinctMobileRich ? mobileRichDistinct : desktopRichHtml;
+
+  let descriptionContent: ReactNode;
+  let portraitOverlayDescription: ReactNode | undefined;
+
+  if (usesRichDescription && desktopRichHtml) {
+    const richClassName = `modeling-slot-rich-body ${modelingRichBodyLayout} ${descriptionClassName}`;
+    const richDesktopNode = (
+      <HeroBannerBodyRichText body={desktopRichHtml} className={richClassName} />
     );
+    const richMobileNode = (
+      <HeroBannerBodyRichText body={mobileRichHtml} className={richClassName} />
+    );
+    if (hasDistinctMobileRich && portraitMobileLayout) {
+      descriptionContent = richDesktopNode;
+      portraitOverlayDescription = richMobileNode;
+    } else if (hasDistinctMobileRich && !portraitMobileLayout) {
+      const mobileVisible =
+        imagePairBreakpoint === "md" ? "md:hidden" : "sm:hidden";
+      const desktopVisible =
+        imagePairBreakpoint === "md" ? "hidden md:block" : "hidden sm:block";
+      descriptionContent = (
+        <>
+          <div className={mobileVisible}>{richMobileNode}</div>
+          <div className={desktopVisible}>{richDesktopNode}</div>
+        </>
+      );
+    } else {
+      descriptionContent = richDesktopNode;
+    }
+  } else {
+    descriptionContent = renderModelingCardDescriptionContent({
+      description,
+      descriptionLines,
+      descriptionLinesDesktop,
+      descriptionLinesMobile,
+      descriptionLayout,
+      firstDescriptionLineId,
+      firstDescriptionLineMarginRight,
+      firstDescriptionLineTranslateX,
+      secondDescriptionLineTranslateX,
+      hasLines,
+      hipHopMobileLayout,
+      bridalMobileLayout,
+      lineWrapClass,
+      hipHopMobileLineClass,
+      hipHopMobileLineSingleLineClass,
+      bridalRowWrapperClass,
+      bridalRowSpanClass,
+      bridalRowSpanClassDesktop,
+    });
+  }
 
   const DescriptionTag = hasLines || usesRichDescription ? "div" : "p";
   const basePositionStyle: CSSProperties = { objectPosition: imagePosition };
@@ -256,6 +284,7 @@ export function ModelingCard({
         titleClassNameResolved={titleClassNameResolved}
         descriptionClassName={descriptionClassName}
         descriptionContent={descriptionContent}
+        portraitOverlayDescription={portraitOverlayDescription}
         DescriptionTag={DescriptionTag}
         usesRichDescription={usesRichDescription}
       />
