@@ -60,6 +60,8 @@ type OverlayEditorSurfaceProps = {
   onSelectLayer: (layer: ModelingOverlayLayerKey) => void;
   onDragStart: (layer: ModelingOverlayLayerKey, e: ReactPointerEvent<HTMLElement>) => void;
   imageSizes: string;
+  /** When true, title/body layers are hidden and ignore pointer events (image-only thumbnail). */
+  overlaySuppressed?: boolean;
   /** When false, overlay is display-only (e.g. inline preview before opening the modal editor). */
   interactive: boolean;
   /** When set with `interactive`, title is edited in place and updates parent state. */
@@ -110,6 +112,7 @@ export function ModelingTextOverlayEditorSurface({
   onSelectLayer,
   onDragStart,
   imageSizes,
+  overlaySuppressed = false,
   interactive,
   onTitleChange,
   onBodyHtmlChange,
@@ -164,7 +167,12 @@ export function ModelingTextOverlayEditorSurface({
           Upload an image above to preview this slot.
         </div>
       )}
-      <div className={`absolute inset-0 ${paddingClass}`}>
+      <div
+        className={`absolute inset-0 ${paddingClass} transition-opacity duration-150 ${
+          overlaySuppressed ? "pointer-events-none opacity-0" : ""
+        }`}
+        aria-hidden={overlaySuppressed}
+      >
         <div ref={frameRef} className="relative h-full w-full min-h-0 outline-none" tabIndex={-1}>
           <div
             className={`${MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS} ${selectedRingClass(interactive && selectedLayer === "title")}`}

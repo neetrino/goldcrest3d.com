@@ -163,8 +163,7 @@ export function ModelingTextOverlayVisualEditor({
           Editing: {variantLabel}
         </p>
         <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] text-slate-500">
-          Click preview to open canvas · edit text on the image · drag the grip to move · arrow keys nudge
-          (Shift = larger step)
+          Click the preview to open the full editor · drag the grip · arrow keys nudge (Shift = larger step)
         </span>
       </div>
 
@@ -195,6 +194,7 @@ export function ModelingTextOverlayVisualEditor({
             onSelectLayer={() => {}}
             onDragStart={() => {}}
             imageSizes={imageSizesInline}
+            overlaySuppressed
             interactive={false}
           />
           <span className="pointer-events-none absolute bottom-2 right-2 rounded-md bg-slate-900/75 px-2 py-1 text-[11px] font-medium text-white opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
