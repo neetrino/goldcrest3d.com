@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
+import { resolveModelingSlotTitleForMobile } from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 import { framingToCoverImageStyle } from "@/lib/site-media/image-framing";
 
 import { renderModelingCardDescriptionContent } from "./ModelingCardDescriptionContent";
@@ -14,6 +15,7 @@ export type { ModelingCardProps } from "./modeling-card.types";
 
 export function ModelingCard({
   title,
+  titleMobile,
   description,
   descriptionRichHtml,
   descriptionRichHtmlMobile,
@@ -79,6 +81,17 @@ export function ModelingCard({
     independentTitleDescription &&
     (usesRichDescription ||
       (descriptionLinesMobile != null && descriptionLinesMobile.length > 0));
+
+  const titleMobileResolved = resolveModelingSlotTitleForMobile({
+    title,
+    titleMobile: titleMobile ?? "",
+  });
+  const hasDistinctTitleMobile = Boolean(titleMobile?.trim());
+  const titleSplitMobileClass =
+    imagePairBreakpoint === "md" ? "md:hidden" : "sm:hidden";
+  const titleSplitDesktopClass =
+    imagePairBreakpoint === "md" ? "hidden md:block" : "hidden sm:block";
+
   const textColor = textDark ? "text-black" : "text-white";
   const descriptionColor = textDark
     ? descriptionMuted
@@ -245,6 +258,10 @@ export function ModelingCard({
     return (
       <ModelingCardFullBleed
         title={title}
+        titleMobileResolved={titleMobileResolved}
+        hasDistinctTitleMobile={hasDistinctTitleMobile}
+        titleSplitMobileClass={titleSplitMobileClass}
+        titleSplitDesktopClass={titleSplitDesktopClass}
         imageSrc={imageSrc}
         imageId={imageId}
         imageSrcMobile={imageSrcMobile}

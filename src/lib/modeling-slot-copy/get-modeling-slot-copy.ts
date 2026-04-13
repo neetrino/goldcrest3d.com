@@ -10,14 +10,26 @@ import type { ModelingSlotCopyBundle } from "./modeling-slot-copy.types";
 
 function getModelingSlotCopyDelegate(): {
   findMany: () => Promise<
-    { slotKey: string; title: string; body: string; bodyMobile: string | null }[]
+    {
+      slotKey: string;
+      title: string;
+      titleMobile: string | null;
+      body: string;
+      bodyMobile: string | null;
+    }[]
   >;
 } | null {
   const delegate = (
     prisma as unknown as {
       modelingSlotCopy?: {
         findMany: () => Promise<
-          { slotKey: string; title: string; body: string; bodyMobile: string | null }[]
+          {
+            slotKey: string;
+            title: string;
+            titleMobile: string | null;
+            body: string;
+            bodyMobile: string | null;
+          }[]
         >;
       };
     }
@@ -40,7 +52,13 @@ export async function getModelingSlotCopyBundle(): Promise<ModelingSlotCopyBundl
     return defaultModelingSlotCopyBundle();
   }
 
-  let rows: { slotKey: string; title: string; body: string; bodyMobile: string | null }[];
+  let rows: {
+    slotKey: string;
+    title: string;
+    titleMobile: string | null;
+    body: string;
+    bodyMobile: string | null;
+  }[];
   try {
     rows = await delegate.findMany();
   } catch (err) {
@@ -59,6 +77,7 @@ export async function getModelingSlotCopyBundle(): Promise<ModelingSlotCopyBundl
     if (row) {
       out[key as ModelingSlotKey] = {
         title: row.title,
+        titleMobile: row.titleMobile ?? "",
         body: row.body,
         bodyMobile: row.bodyMobile ?? "",
       };

@@ -36,6 +36,11 @@ const heroBannerBodyField = (fieldLabel: string) =>
       }
     });
 
+const optionalMobileTitleField = z
+  .string()
+  .max(MAX_TITLE_LEN, `Mobile title must be at most ${MAX_TITLE_LEN} characters`)
+  .transform((s) => s.trim());
+
 const optionalMobileBodyField = z
   .string()
   .max(
@@ -64,7 +69,8 @@ export const modelingSlotCopyFormSchema = z.object({
     .string()
     .max(MAX_TITLE_LEN, `Title must be at most ${MAX_TITLE_LEN} characters`)
     .transform((s) => s.trim())
-    .refine((s) => s.length > 0, "Title is required."),
+    .refine((s) => s.length > 0, "Desktop / tablet title is required."),
+  titleMobile: optionalMobileTitleField,
   body: heroBannerBodyField("Desktop / tablet description"),
   bodyMobile: optionalMobileBodyField,
 });

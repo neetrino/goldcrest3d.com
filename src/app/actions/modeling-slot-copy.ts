@@ -39,6 +39,7 @@ export async function updateModelingSlotCopy(
   const parsed = modelingSlotCopyFormSchema.safeParse({
     slotKey: formData.get("slotKey"),
     title: formData.get("title"),
+    titleMobile: formData.get("titleMobile") ?? "",
     body: formData.get("body"),
     bodyMobile: formData.get("bodyMobile") ?? "",
   });
@@ -48,13 +49,14 @@ export async function updateModelingSlotCopy(
     const msg =
       first.slotKey?.[0] ??
       first.title?.[0] ??
+      first.titleMobile?.[0] ??
       first.body?.[0] ??
       first.bodyMobile?.[0] ??
       "Invalid input.";
     return { ok: false, error: msg };
   }
 
-  const { slotKey, title, body, bodyMobile } = parsed.data;
+  const { slotKey, title, titleMobile, body, bodyMobile } = parsed.data;
   const bodyStored = finalizeHeroBannerBodyHtml(body);
   if (getHeroBannerBodyPlainTextLength(bodyStored) === 0) {
     return { ok: false, error: "Desktop / tablet description is required." };
@@ -62,6 +64,7 @@ export async function updateModelingSlotCopy(
 
   const bodyMobileStored =
     bodyMobile.length > 0 ? finalizeHeroBannerBodyHtml(bodyMobile) : null;
+  const titleMobileStored = titleMobile.length > 0 ? titleMobile : null;
 
   try {
     await prisma.modelingSlotCopy.upsert({
@@ -69,11 +72,13 @@ export async function updateModelingSlotCopy(
       create: {
         slotKey,
         title,
+        titleMobile: titleMobileStored,
         body: bodyStored,
         bodyMobile: bodyMobileStored,
       },
       update: {
         title,
+        titleMobile: titleMobileStored,
         body: bodyStored,
         bodyMobile: bodyMobileStored,
       },

@@ -6,6 +6,11 @@ import type { ImageFraming } from "@/lib/site-media/image-framing";
 export type ModelingCardProps = {
   title: string;
   /**
+   * Optional mobile-only title (Modeling Specialization — Admin). When set, shown below the
+   * `imagePairBreakpoint`; when omitted or empty, `title` is used on all viewports.
+   */
+  titleMobile?: string;
+  /**
    * Admin-managed HTML (Media Manager). When set, `descriptionLines*` are ignored and the body is
    * rendered with the same sanitizer as hero banners.
    */

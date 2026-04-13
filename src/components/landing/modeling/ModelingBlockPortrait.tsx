@@ -38,6 +38,7 @@ export function ModelingBlockPortrait({
   return (
     <ModelingCard
       title={copy.title}
+      titleMobile={copy.titleMobile}
       description=""
       descriptionRichHtml={copy.body}
       descriptionRichHtmlMobile={copy.bodyMobile}

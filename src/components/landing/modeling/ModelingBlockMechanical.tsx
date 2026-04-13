@@ -4,7 +4,10 @@ import type { CSSProperties } from "react";
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
-import { resolveModelingSlotBodyForMobile } from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
+import {
+  resolveModelingSlotBodyForMobile,
+  resolveModelingSlotTitleForMobile,
+} from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
@@ -49,6 +52,11 @@ export function ModelingBlockMechanical({
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   const bodyDesktop = copy.body;
   const bodyMobile = resolveModelingSlotBodyForMobile(copy);
+  const titleDesktop = copy.title;
+  const resolvedTitleMobile = resolveModelingSlotTitleForMobile(copy);
+  const hasDistinctTitleMobile = copy.titleMobile.trim().length > 0;
+  const mechanicalTitleH3Class =
+    "z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left";
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -123,9 +131,20 @@ export function ModelingBlockMechanical({
           } as CSSProperties
         }
       >
-        <h3 className="z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left">
-          <MechanicalTitleLines title={copy.title} />
-        </h3>
+        {hasDistinctTitleMobile ? (
+          <>
+            <h3 className={`${mechanicalTitleH3Class} md:hidden`}>
+              <MechanicalTitleLines title={resolvedTitleMobile} />
+            </h3>
+            <h3 className={`${mechanicalTitleH3Class} hidden md:block`}>
+              <MechanicalTitleLines title={titleDesktop} />
+            </h3>
+          </>
+        ) : (
+          <h3 className={mechanicalTitleH3Class}>
+            <MechanicalTitleLines title={copy.title} />
+          </h3>
+        )}
         <div className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] md:hidden">
           <HeroBannerBodyRichText
             body={bodyMobile}

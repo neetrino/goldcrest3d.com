@@ -4,7 +4,10 @@ import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroB
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
-import { resolveModelingSlotBodyForMobile } from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
+import {
+  resolveModelingSlotBodyForMobile,
+  resolveModelingSlotTitleForMobile,
+} from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
@@ -33,8 +36,11 @@ export function ModelingBlockHighJewelry({
     imageFramingDesktop
       ? "h-full w-full object-cover"
       : "h-full w-full object-cover max-md:object-right md:object-[center_48%_center]";
-  const titleLines = copy.title.split(/\r?\n/).filter((s) => s.length > 0);
   const titleDesktop = copy.title.split(/\r?\n/).join(" ");
+  const titleMobileResolved = resolveModelingSlotTitleForMobile(copy);
+  const titleLinesDesktop = copy.title.split(/\r?\n/).filter((s) => s.length > 0);
+  const titleLinesMobile = titleMobileResolved.split(/\r?\n/).filter((s) => s.length > 0);
+  const hasDistinctTitleMobile = copy.titleMobile.trim().length > 0;
   const bodyDesktop = copy.body;
   const bodyMobile = resolveModelingSlotBodyForMobile(copy);
   return (
@@ -105,14 +111,29 @@ export function ModelingBlockHighJewelry({
         style={{ marginTop: "-33%" }}
       >
         <h3 className="font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
-          <span className="sm:hidden">
-            {titleLines.map((line, i) => (
-              <span key={`hj-m-${i}`} className="block">
-                {line}
+          {hasDistinctTitleMobile ? (
+            <>
+              <span className="md:hidden">
+                {titleLinesMobile.map((line, i) => (
+                  <span key={`hj-m-${i}`} className="block">
+                    {line}
+                  </span>
+                ))}
               </span>
-            ))}
-          </span>
-          <span className="hidden sm:inline">{titleDesktop}</span>
+              <span className="hidden md:inline">{titleDesktop}</span>
+            </>
+          ) : (
+            <>
+              <span className="sm:hidden">
+                {titleLinesDesktop.map((line, i) => (
+                  <span key={`hj-m-${i}`} className="block">
+                    {line}
+                  </span>
+                ))}
+              </span>
+              <span className="hidden sm:inline">{titleDesktop}</span>
+            </>
+          )}
         </h3>
         <div className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden">
           <HeroBannerBodyRichText

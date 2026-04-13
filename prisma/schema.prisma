@@ -135,6 +135,8 @@ model PowerBannerCopy {
 model ModelingSlotCopy {
   slotKey   String   @id
   title     String   @db.Text
+  /// Optional title for viewports below `md`. Null/empty → use `title`.
+  titleMobile String? @db.Text
   body      String   @db.Text
   /// Optional rich HTML for viewports below `md` (matches image mobile breakpoint). Null/empty → use `body`.
   bodyMobile String? @db.Text

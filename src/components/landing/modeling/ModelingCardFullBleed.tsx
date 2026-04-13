@@ -72,6 +72,11 @@ export type ModelingCardFullBleedProps = Pick<
   descriptionContent: ReactNode;
   /** When portrait layout uses distinct mobile rich HTML, render this in the small-viewport overlay. */
   portraitOverlayDescription?: ReactNode;
+  /** Resolved mobile title (falls back to desktop `title` when no separate mobile title). */
+  titleMobileResolved: string;
+  hasDistinctTitleMobile: boolean;
+  titleSplitMobileClass: string;
+  titleSplitDesktopClass: string;
   DescriptionTag: "div" | "p";
   usesRichDescription: boolean;
 };
@@ -118,6 +123,10 @@ export function ModelingCardFullBleed({
   descriptionClassName,
   descriptionContent,
   portraitOverlayDescription,
+  titleMobileResolved,
+  hasDistinctTitleMobile,
+  titleSplitMobileClass,
+  titleSplitDesktopClass,
   DescriptionTag,
   usesRichDescription,
 }: ModelingCardFullBleedProps) {
@@ -229,14 +238,17 @@ export function ModelingCardFullBleed({
               <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:hidden">
                 <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
                   {usesRichDescription ? (
-                    <ModelingCardTitleLines title={title} />
-                  ) : title === PORTRAIT_MOBILE_TITLE_FULL ? (
+                    <ModelingCardTitleLines
+                      title={hasDistinctTitleMobile ? titleMobileResolved : title}
+                    />
+                  ) : (hasDistinctTitleMobile ? titleMobileResolved : title) ===
+                    PORTRAIT_MOBILE_TITLE_FULL ? (
                     <>
                       <span className="block whitespace-nowrap">3D Portrait</span>
                       <span className="block whitespace-nowrap">Jewelry</span>
                     </>
                   ) : (
-                    title
+                    hasDistinctTitleMobile ? titleMobileResolved : title
                   )}
                 </h3>
                 <div
@@ -296,7 +308,7 @@ export function ModelingCardFullBleed({
           ) : (
             <>
               <div
-                className={`${textAlignClass}`}
+                className={`${textAlignClass} ${hasDistinctTitleMobile ? titleSplitMobileClass : ""}`}
                 style={{
                   position: "absolute",
                   top: titleBlockTop ?? "20%",
@@ -305,9 +317,26 @@ export function ModelingCardFullBleed({
                 }}
               >
                 <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>
-                  <ModelingCardTitleLines title={title} />
+                  <ModelingCardTitleLines
+                    title={hasDistinctTitleMobile ? titleMobileResolved : title}
+                  />
                 </h3>
               </div>
+              {hasDistinctTitleMobile ? (
+                <div
+                  className={`${textAlignClass} ${titleSplitDesktopClass}`}
+                  style={{
+                    position: "absolute",
+                    top: titleBlockTop ?? "20%",
+                    left: titleBlockLeft ?? "8%",
+                    right: textAlign === "left" ? undefined : "8%",
+                  }}
+                >
+                  <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>
+                    <ModelingCardTitleLines title={title} />
+                  </h3>
+                </div>
+              ) : null}
               <div
                 className={`max-w-[calc(407px*var(--ms,1))] ${descriptionBlockAlignClass}`}
                 style={{
@@ -330,15 +359,38 @@ export function ModelingCardFullBleed({
           )
         ) : (
           <>
-            <h3
-              className={`${titleClassNameResolved} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center translate-y-[calc(0.5rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
-              style={{
-                ...(titleMarginRight != null && { marginRight: titleMarginRight }),
-                ...(titleMarginTop != null && { marginTop: titleMarginTop }),
-              }}
-            >
-              <ModelingCardTitleLines title={title} />
-            </h3>
+            {hasDistinctTitleMobile ? (
+              <>
+                <h3
+                  className={`${titleClassNameResolved} ${titleSplitMobileClass} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center translate-y-[calc(0.5rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                  style={{
+                    ...(titleMarginRight != null && { marginRight: titleMarginRight }),
+                    ...(titleMarginTop != null && { marginTop: titleMarginTop }),
+                  }}
+                >
+                  <ModelingCardTitleLines title={titleMobileResolved} />
+                </h3>
+                <h3
+                  className={`${titleClassNameResolved} ${titleSplitDesktopClass} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center translate-y-[calc(0.5rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                  style={{
+                    ...(titleMarginRight != null && { marginRight: titleMarginRight }),
+                    ...(titleMarginTop != null && { marginTop: titleMarginTop }),
+                  }}
+                >
+                  <ModelingCardTitleLines title={title} />
+                </h3>
+              </>
+            ) : (
+              <h3
+                className={`${titleClassNameResolved} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center translate-y-[calc(0.5rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                style={{
+                  ...(titleMarginRight != null && { marginRight: titleMarginRight }),
+                  ...(titleMarginTop != null && { marginTop: titleMarginTop }),
+                }}
+              >
+                <ModelingCardTitleLines title={title} />
+              </h3>
+            )}
             <DescriptionTag
               className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:-mt-[calc(0.5rem*var(--ms,1))]" : ""}${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
               style={
