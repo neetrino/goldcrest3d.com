@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
+import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
@@ -23,16 +24,22 @@ const MOBILE_DESCRIPTION_LINE_2 =
 type ModelingBlockHighJewelryProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  imageFramingDesktop?: ImageFraming | null;
+  imageFramingMobile?: ImageFraming | null;
 };
 
 /** High Jewelry â€” `object-cover` Õ¡Õ´Õ¢Õ¸Õ²Õ» block-Õ¸Ö‚Õ´; mobile-Õ¸Ö‚Õ´ Õ¡Õ» anchor, desktop-Õ¸Ö‚Õ´ Õ¯Õ¥Õ¶Õ¿Ö€Õ¸Õ¶Õ¡ÖÕ¾Õ¡Õ® cropÖ‰ */
 export function ModelingBlockHighJewelry({
   imageUrlDesktop,
   imageUrlMobile,
+  imageFramingDesktop,
+  imageFramingMobile,
 }: ModelingBlockHighJewelryProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   const objectClassName =
-    "h-full w-full object-cover max-md:object-right md:object-[center_48%_center]";
+    imageFramingDesktop
+      ? "h-full w-full object-cover"
+      : "h-full w-full object-cover max-md:object-right md:object-[center_48%_center]";
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -48,6 +55,11 @@ export function ModelingBlockHighJewelry({
             alt=""
             fill
             className={objectClassName}
+            style={
+              imageFramingDesktop
+                ? framingToCoverImageStyle(imageFramingDesktop)
+                : undefined
+            }
             sizes="(max-width: 767px) 100vw, 50vw"
           />
         ) : (
@@ -57,7 +69,16 @@ export function ModelingBlockHighJewelry({
                 src={imageUrlMobile}
                 alt=""
                 fill
-                className="min-h-0 min-w-0 h-full w-full object-cover object-right"
+                className={
+                  imageFramingMobile
+                    ? "min-h-0 min-w-0 h-full w-full object-cover"
+                    : "min-h-0 min-w-0 h-full w-full object-cover object-right"
+                }
+                style={
+                  imageFramingMobile
+                    ? framingToCoverImageStyle(imageFramingMobile)
+                    : undefined
+                }
                 sizes="(max-width: 767px) 100vw, 0px"
               />
             </div>
@@ -66,7 +87,16 @@ export function ModelingBlockHighJewelry({
                 src={imageUrlDesktop}
                 alt=""
                 fill
-                className="h-full w-full object-cover object-[center_48%_center]"
+                className={
+                  imageFramingDesktop
+                    ? "h-full w-full object-cover"
+                    : "h-full w-full object-cover object-[center_48%_center]"
+                }
+                style={
+                  imageFramingDesktop
+                    ? framingToCoverImageStyle(imageFramingDesktop)
+                    : undefined
+                }
                 sizes="(max-width: 1280px) 50vw, 33vw"
               />
             </div>

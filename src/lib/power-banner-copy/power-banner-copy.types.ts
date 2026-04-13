@@ -1,3 +1,5 @@
+import type { ImageFraming } from "@/lib/site-media/image-framing";
+
 import type { PowerBannerKey } from "./power-banner-keys";
 
 export type PowerBannerCopyEntry = {
@@ -9,6 +11,8 @@ export type PowerBannerCopyEntry = {
   mobileBgSrc: string;
   /** R2 key when the admin replaced the hero art; null when built-in assets are used. */
   heroImageR2Key: string | null;
+  /** Saved focal crop for custom uploads; null when using built-in assets or not set. */
+  heroImageFraming: ImageFraming | null;
 };
 
 /** Serializable hero copy for the landing page (merged DB + defaults). */

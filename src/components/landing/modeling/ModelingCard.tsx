@@ -1,3 +1,7 @@
+import type { CSSProperties } from "react";
+
+import { framingToCoverImageStyle } from "@/lib/site-media/image-framing";
+
 import { renderModelingCardDescriptionContent } from "./ModelingCardDescriptionContent";
 import { ModelingCardFullBleed } from "./ModelingCardFullBleed";
 import { ModelingCardGradientLayout } from "./ModelingCardGradientLayout";
@@ -57,6 +61,8 @@ export function ModelingCard({
   mobilePortraitTypography = false,
   imageFillClassName = "object-cover object-center",
   imageFillClassNameDesktop = "object-contain",
+  imageFramingDesktop,
+  imageFramingMobile,
 }: ModelingCardProps) {
   const hasLines = Boolean(descriptionLines && descriptionLines.length > 0);
   const hipHopMobileLayout = mobileHipHopTypography && hasLines;
@@ -127,7 +133,15 @@ export function ModelingCard({
     ? `font-sans w-full text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(16px*var(--ms,1)*var(--mt,1))] text-center sm:max-w-[calc(560px*var(--ms,1))] sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-center ${descriptionColor}`
     : `font-manrope font-light ${hasLines ? `text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] ${noDescriptionMaxWidth ? "" : "max-w-[calc(560px*var(--ms,1))]"}` : "text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] max-w-[calc(407px*var(--ms,1))]"} ${descriptionColor}`;
   const descriptionClassNameGradient = `font-manrope font-light text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] ${descriptionColor}`;
-  const imageStyle = { objectPosition: imagePosition };
+  const basePositionStyle: CSSProperties = { objectPosition: imagePosition };
+  const imageStyleDesktop = imageFramingDesktop
+    ? framingToCoverImageStyle(imageFramingDesktop)
+    : basePositionStyle;
+  const imageStyleMobile = imageFramingMobile
+    ? framingToCoverImageStyle(imageFramingMobile)
+    : imageFramingDesktop
+      ? framingToCoverImageStyle(imageFramingDesktop)
+      : basePositionStyle;
   const imgMobileWrapperClass =
     imagePairBreakpoint === "md"
       ? "absolute inset-0 md:hidden"
@@ -215,7 +229,8 @@ export function ModelingCard({
         portraitMobileLayout={portraitMobileLayout}
         imgMobileWrapperClass={imgMobileWrapperClass}
         imgDesktopWrapperClass={imgDesktopWrapperClass}
-        imageStyle={imageStyle}
+        imageStyleMobile={imageStyleMobile}
+        imageStyleDesktop={imageStyleDesktop}
         overlayTextContainerClass={overlayTextContainerClass}
         overlayTranslateClass={overlayTranslateClass}
         textAlignClass={textAlignClass}
@@ -248,7 +263,7 @@ export function ModelingCard({
       titleBold={titleBold}
       gradientFrameStyle={gradientFrameStyle}
       hasImage={hasImage}
-      imageStyle={imageStyle}
+      imageStyle={imageStyleDesktop}
       textAlignClass={textAlignClass}
       descriptionContent={descriptionContent}
       descriptionClassNameGradient={descriptionClassNameGradient}

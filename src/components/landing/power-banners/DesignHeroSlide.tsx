@@ -1,6 +1,7 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
 import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-copy.types";
 import { DesignHeroSlideBackgrounds } from "./DesignHeroSlideBackgrounds";
+import { resolveCustomHeroFraming } from "./resolve-custom-hero-framing";
 import { DesignHeroSlideCopy } from "./DesignHeroSlideCopy";
 
 type DesignHeroSlideProps = {
@@ -16,6 +17,7 @@ export function DesignHeroSlide({ copy }: DesignHeroSlideProps) {
       <DesignHeroSlideBackgrounds
         desktopBgSrc={copy.desktopBgSrc}
         mobileBgSrc={copy.mobileBgSrc}
+        customFraming={resolveCustomHeroFraming(copy)}
       />
       <DesignHeroSlideCopy copy={copy} />
     </div>

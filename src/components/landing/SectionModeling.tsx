@@ -37,26 +37,38 @@ export function SectionModeling({ modeling }: SectionModelingProps) {
           <ModelingBlockHipHop
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIP_HOP].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.HIP_HOP].mobile}
+            imageFramingDesktop={modeling[MODELING_SLOT_KEYS.HIP_HOP].desktopFraming}
+            imageFramingMobile={modeling[MODELING_SLOT_KEYS.HIP_HOP].mobileFraming}
           />
           <ModelingBlockBridal
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.BRIDAL].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.BRIDAL].mobile}
+            imageFramingDesktop={modeling[MODELING_SLOT_KEYS.BRIDAL].desktopFraming}
+            imageFramingMobile={modeling[MODELING_SLOT_KEYS.BRIDAL].mobileFraming}
           />
           <ModelingBlockPortrait
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.PORTRAIT].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.PORTRAIT].mobile}
+            imageFramingDesktop={modeling[MODELING_SLOT_KEYS.PORTRAIT].desktopFraming}
+            imageFramingMobile={modeling[MODELING_SLOT_KEYS.PORTRAIT].mobileFraming}
           />
           <ModelingBlockMechanical
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.MECHANICAL].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.MECHANICAL].mobile}
+            imageFramingDesktop={modeling[MODELING_SLOT_KEYS.MECHANICAL].desktopFraming}
+            imageFramingMobile={modeling[MODELING_SLOT_KEYS.MECHANICAL].mobileFraming}
           />
           <ModelingBlockHeritage
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HERITAGE].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.HERITAGE].mobile}
+            imageFramingDesktop={modeling[MODELING_SLOT_KEYS.HERITAGE].desktopFraming}
+            imageFramingMobile={modeling[MODELING_SLOT_KEYS.HERITAGE].mobileFraming}
           />
           <ModelingBlockHighJewelry
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].mobile}
+            imageFramingDesktop={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].desktopFraming}
+            imageFramingMobile={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].mobileFraming}
           />
           </div>
         </div>

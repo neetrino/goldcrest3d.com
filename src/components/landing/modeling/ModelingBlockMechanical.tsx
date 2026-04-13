@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
+import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
@@ -35,12 +36,16 @@ const DESCRIPTION_LINES = [
 type ModelingBlockMechanicalProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  imageFramingDesktop?: ImageFraming | null;
+  imageFramingMobile?: ImageFraming | null;
 };
 
 /** Mechanical & Lock Systems block. Full-bleed image with title and description overlay. */
 export function ModelingBlockMechanical({
   imageUrlDesktop,
   imageUrlMobile,
+  imageFramingDesktop,
+  imageFramingMobile,
 }: ModelingBlockMechanicalProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
@@ -56,7 +61,16 @@ export function ModelingBlockMechanical({
             src={imageUrlDesktop}
             alt=""
             fill
-            className="h-full w-full object-cover max-md:object-[56%_center] md:object-center"
+            className={
+              imageFramingDesktop
+                ? "h-full w-full object-cover"
+                : "h-full w-full object-cover max-md:object-[56%_center] md:object-center"
+            }
+            style={
+              imageFramingDesktop
+                ? framingToCoverImageStyle(imageFramingDesktop)
+                : undefined
+            }
             sizes="(max-width: 767px) 100vw, 50vw"
           />
         ) : (
@@ -66,7 +80,16 @@ export function ModelingBlockMechanical({
                 src={imageUrlMobile}
                 alt=""
                 fill
-                className="min-h-0 min-w-0 h-full w-full object-cover object-[56%_center]"
+                className={
+                  imageFramingMobile
+                    ? "min-h-0 min-w-0 h-full w-full object-cover"
+                    : "min-h-0 min-w-0 h-full w-full object-cover object-[56%_center]"
+                }
+                style={
+                  imageFramingMobile
+                    ? framingToCoverImageStyle(imageFramingMobile)
+                    : undefined
+                }
                 sizes="(max-width: 767px) 100vw, 0px"
               />
             </div>
@@ -75,7 +98,16 @@ export function ModelingBlockMechanical({
                 src={imageUrlDesktop}
                 alt=""
                 fill
-                className="h-full w-full object-cover object-center"
+                className={
+                  imageFramingDesktop
+                    ? "h-full w-full object-cover"
+                    : "h-full w-full object-cover object-center"
+                }
+                style={
+                  imageFramingDesktop
+                    ? framingToCoverImageStyle(imageFramingDesktop)
+                    : undefined
+                }
                 sizes="(max-width: 1280px) 50vw, 33vw"
               />
             </div>

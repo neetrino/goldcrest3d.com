@@ -1,5 +1,7 @@
 import type { CSSProperties } from "react";
 
+import type { ImageFraming } from "@/lib/site-media/image-framing";
+
 /** Props for one Modeling Specialization card. Լրիվ սյուն, aspect 83/43, սուր անկյուններ. */
 export type ModelingCardProps = {
   title: string;
@@ -34,9 +36,9 @@ export type ModelingCardProps = {
   /** Critical: where the image is anchored (e.g. "right center" so pendant stays visible). */
   imagePosition?: string;
   /** Figma CSS background on full-bleed layer (replaces next/image when set). */
-  imageLayerBackground?: Pick<CSSProperties, "background">;
+  imageLayerBackground?: CSSProperties;
   /** Second full-bleed background for small viewports when set (with `imageLayerBackground` for `md+`). */
-  imageLayerBackgroundMobile?: Pick<CSSProperties, "background">;
+  imageLayerBackgroundMobile?: CSSProperties;
   /**
    * Below `sm`: this URL (static asset); `sm+`: `imageSrc` (CMS / default).
    * Only with `imageSrc` and without `imageLayerBackground`.
@@ -118,4 +120,8 @@ export type ModelingCardProps = {
   imageFillClassName?: string;
   /** With `imageSrcMobile`: `sm+` image `className` (e.g. `object-contain`). */
   imageFillClassNameDesktop?: string;
+  /** Admin Media Manager focal crop for the desktop/tablet image (when set, overrides `imagePosition` for that layer). */
+  imageFramingDesktop?: ImageFraming | null;
+  /** Admin focal crop for the mobile image (falls back to desktop framing when omitted). */
+  imageFramingMobile?: ImageFraming | null;
 };

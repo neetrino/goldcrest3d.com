@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
@@ -79,7 +80,10 @@ export async function uploadPowerBannerHeroImage(
         body: finalizeHeroBannerBodyHtml(defaults.body),
         r2ObjectKey: newKey,
       },
-      update: { r2ObjectKey: newKey },
+      update: {
+        r2ObjectKey: newKey,
+        heroImageLayout: Prisma.DbNull as unknown as Prisma.InputJsonValue,
+      },
     });
   } catch (e) {
     logger.error("uploadPowerBannerHeroImage: failed", e);
@@ -121,7 +125,10 @@ export async function clearPowerBannerHeroImage(
     await deleteObjectFromR2(existing.r2ObjectKey);
     await prisma.powerBannerCopy.update({
       where: { bannerKey },
-      data: { r2ObjectKey: null },
+      data: {
+        r2ObjectKey: null,
+        heroImageLayout: Prisma.DbNull as unknown as Prisma.InputJsonValue,
+      },
     });
   } catch (e) {
     logger.error("clearPowerBannerHeroImage: failed", e);

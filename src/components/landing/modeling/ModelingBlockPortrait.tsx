@@ -1,8 +1,21 @@
+import type { CSSProperties } from "react";
+
 import { LANDING_IMAGE_IDS } from "@/constants";
+import {
+  framingToBackgroundImageStyle,
+  type ImageFraming,
+} from "@/lib/site-media/image-framing";
+
 import { ModelingCard } from "./ModelingCard";
 
-function portraitLayerBackground(imageUrl: string): string {
-  return `url("${imageUrl}") #E0F2F1 center / cover no-repeat`;
+function portraitLayerBackground(
+  imageUrl: string,
+  framing?: ImageFraming | null,
+): CSSProperties {
+  if (framing) {
+    return framingToBackgroundImageStyle(imageUrl, framing, "#E0F2F1");
+  }
+  return { background: `url("${imageUrl}") #E0F2F1 center / cover no-repeat` };
 }
 
 const PORTRAIT_DESCRIPTION_LINES = [
@@ -21,11 +34,15 @@ const PORTRAIT_DESCRIPTION_LINES_MOBILE = [
 type ModelingBlockPortraitProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  imageFramingDesktop?: ImageFraming | null;
+  imageFramingMobile?: ImageFraming | null;
 };
 
 export function ModelingBlockPortrait({
   imageUrlDesktop,
   imageUrlMobile,
+  imageFramingDesktop,
+  imageFramingMobile,
 }: ModelingBlockPortraitProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
@@ -41,9 +58,14 @@ export function ModelingBlockPortrait({
       descriptionAlign="right"
       titleCompact
       imagePosition="center center"
-      imageLayerBackground={{ background: portraitLayerBackground(imageUrlDesktop) }}
+      imageLayerBackground={portraitLayerBackground(
+        imageUrlDesktop,
+        imageFramingDesktop,
+      )}
       imageLayerBackgroundMobile={
-        sameUrl ? undefined : { background: portraitLayerBackground(imageUrlMobile) }
+        sameUrl
+          ? undefined
+          : portraitLayerBackground(imageUrlMobile, imageFramingMobile)
       }
       imagePairBreakpoint="md"
       textDark

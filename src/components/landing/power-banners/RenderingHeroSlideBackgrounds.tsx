@@ -1,6 +1,11 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import {
+  framingToCoverImageStyle,
+  type ImageFraming,
+} from "@/lib/site-media/image-framing";
+
+import {
   HERO_DESKTOP_IMAGE_SIZES,
   HERO_MOBILE_IMAGE_SIZES,
   SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX,
@@ -11,12 +16,50 @@ import {
 type RenderingHeroSlideBackgroundsProps = {
   desktopBgSrc: string;
   mobileBgSrc: string;
+  customFraming: ImageFraming | null;
 };
 
 export function RenderingHeroSlideBackgrounds({
   desktopBgSrc,
   mobileBgSrc,
+  customFraming,
 }: RenderingHeroSlideBackgroundsProps) {
+  if (customFraming) {
+    const style = framingToCoverImageStyle(customFraming);
+    return (
+      <>
+        <div
+          className="pointer-events-none absolute inset-0 z-0 md:hidden"
+          aria-hidden
+        >
+          <Image
+            src={mobileBgSrc}
+            alt=""
+            fill
+            unoptimized={mobileBgSrc.startsWith("/")}
+            sizes={HERO_MOBILE_IMAGE_SIZES}
+            className="object-cover"
+            style={style}
+          />
+        </div>
+        <div
+          className="pointer-events-none absolute left-0 top-0 z-0 hidden h-[var(--section2-bg-layout-height)] w-full overflow-hidden md:block"
+          aria-hidden
+        >
+          <Image
+            src={desktopBgSrc}
+            alt=""
+            fill
+            unoptimized={desktopBgSrc.startsWith("/")}
+            sizes={HERO_DESKTOP_IMAGE_SIZES}
+            className="object-cover"
+            style={style}
+          />
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <div

@@ -1,6 +1,7 @@
 "use client";
 
 import { LANDING_SECTION_IDS } from "@/constants";
+import { framingToCoverImageStyle } from "@/lib/site-media/image-framing";
 import type { FinishedGalleryItem } from "@/lib/site-media/landing-defaults";
 import Image from "next/image";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -320,12 +321,22 @@ export function SectionFinishedCreations({
                         src={item.src}
                         alt=""
                         fill
-                        className={`object-cover ${item.objectPositionClass ?? ""} ${
-                          index === activePage + 1 &&
-                          item.objectPositionClass !== GALLERY_OBJECT_POSITION_PORTRAIT_CLASS
-                            ? MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS
-                            : ""
-                        }`.trim()}
+                        className={
+                          item.framing
+                            ? "object-cover"
+                            : `object-cover ${item.objectPositionClass ?? ""} ${
+                                index === activePage + 1 &&
+                                item.objectPositionClass !==
+                                  GALLERY_OBJECT_POSITION_PORTRAIT_CLASS
+                                  ? MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS
+                                  : ""
+                              }`.trim()
+                        }
+                        style={
+                          item.framing
+                            ? framingToCoverImageStyle(item.framing)
+                            : undefined
+                        }
                         sizes="(max-width: 767px) 310px, 50vw"
                       />
                     </div>
@@ -374,6 +385,11 @@ export function SectionFinishedCreations({
                       alt=""
                       fill
                       className="object-cover object-center"
+                      style={
+                        item.framing
+                          ? framingToCoverImageStyle(item.framing)
+                          : undefined
+                      }
                       sizes="(max-width: 767px) 34vw, 33vw"
                     />
                   </div>
@@ -404,7 +420,16 @@ export function SectionFinishedCreations({
                       src={item.src}
                       alt=""
                       fill
-                      className={`object-cover ${item.objectPositionClass ?? ""}`.trim()}
+                      className={
+                        item.framing
+                          ? "object-cover"
+                          : `object-cover ${item.objectPositionClass ?? ""}`.trim()
+                      }
+                      style={
+                        item.framing
+                          ? framingToCoverImageStyle(item.framing)
+                          : undefined
+                      }
                       sizes="(min-width: 768px) 28vw, 670px"
                     />
                   </div>
@@ -434,6 +459,11 @@ export function SectionFinishedCreations({
                       alt=""
                       fill
                       className="object-cover"
+                      style={
+                        item.framing
+                          ? framingToCoverImageStyle(item.framing)
+                          : undefined
+                      }
                       sizes="(min-width: 768px) 20vw, 420px"
                     />
                   </div>

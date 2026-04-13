@@ -4,6 +4,10 @@ import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import {
+  parseSiteMediaLayoutMeta,
+  type SiteMediaLayoutMeta,
+} from "@/lib/site-media/site-media-layout-meta";
 import { siteMediaItem } from "@/lib/site-media/site-media-prisma";
 import {
   SITE_MEDIA_GROUP_KEYS,
@@ -44,6 +48,27 @@ async function requireAdmin(): Promise<SiteMediaActionResult | null> {
     return { ok: false, error: "Unauthorized." };
   }
   return null;
+}
+
+function clearModelingVariantFraming(
+  prev: object | null,
+  variant: "desktop" | "mobile",
+): object | null {
+  const meta = parseSiteMediaLayoutMeta(prev);
+  if (!meta) {
+    return null;
+  }
+  const next: SiteMediaLayoutMeta = { ...meta };
+  if (variant === "desktop") {
+    delete next.desktopFraming;
+  } else {
+    delete next.mobileFraming;
+  }
+  const hasData =
+    Boolean(next.desktopFraming) ||
+    Boolean(next.mobileFraming) ||
+    Boolean(next.framing);
+  return hasData ? (next as object) : null;
 }
 
 export async function upsertModelingSlotImage(
@@ -91,11 +116,16 @@ export async function upsertModelingSlotImage(
       if (oldKey) {
         await deleteObjectFromR2(oldKey);
       }
+      const prevMeta = existing.layoutMeta as object | null;
+      const clearedLayout =
+        isDesktop
+          ? clearModelingVariantFraming(prevMeta, "desktop")
+          : clearModelingVariantFraming(prevMeta, "mobile");
       await siteMediaItem.update({
         where: { id: existing.id },
         data: isDesktop
-          ? { r2ObjectKey: newKey }
-          : { r2ObjectKeyMobile: newKey },
+          ? { r2ObjectKey: newKey, layoutMeta: clearedLayout }
+          : { r2ObjectKeyMobile: newKey, layoutMeta: clearedLayout },
       });
     } else {
       await siteMediaItem.create({
@@ -196,7 +226,7 @@ export async function replaceOrderedGalleryImage(
     }
     await siteMediaItem.update({
       where: { id },
-      data: { r2ObjectKey: newKey },
+      data: { r2ObjectKey: newKey, layoutMeta: null },
     });
   } catch (e) {
     logger.error("replaceOrderedGalleryImage", e);

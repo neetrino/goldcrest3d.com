@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
+import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
@@ -28,6 +29,8 @@ const HERITAGE_DESCRIPTION_LINES = [
 type ModelingBlockHeritageProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  imageFramingDesktop?: ImageFraming | null;
+  imageFramingMobile?: ImageFraming | null;
 };
 
 function HeritageOverlayText() {
@@ -62,6 +65,8 @@ function HeritageOverlayText() {
 export function ModelingBlockHeritage({
   imageUrlDesktop,
   imageUrlMobile,
+  imageFramingDesktop,
+  imageFramingMobile,
 }: ModelingBlockHeritageProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
@@ -79,6 +84,11 @@ export function ModelingBlockHeritage({
             alt=""
             fill
             className="h-full w-full object-cover object-center"
+            style={
+              imageFramingDesktop
+                ? framingToCoverImageStyle(imageFramingDesktop)
+                : undefined
+            }
             sizes="(max-width: 767px) 100vw, 50vw"
           />
         ) : (
@@ -89,6 +99,11 @@ export function ModelingBlockHeritage({
                 alt=""
                 fill
                 className="min-h-0 min-w-0 h-full w-full object-cover object-center"
+                style={
+                  imageFramingMobile
+                    ? framingToCoverImageStyle(imageFramingMobile)
+                    : undefined
+                }
                 sizes="(max-width: 767px) 100vw, 0px"
               />
             </div>
@@ -98,6 +113,11 @@ export function ModelingBlockHeritage({
                 alt=""
                 fill
                 className="h-full w-full object-cover object-center"
+                style={
+                  imageFramingDesktop
+                    ? framingToCoverImageStyle(imageFramingDesktop)
+                    : undefined
+                }
                 sizes="(max-width: 1280px) 50vw, 33vw"
               />
             </div>

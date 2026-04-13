@@ -47,10 +47,11 @@ export function PowerBannerCopyEditor({
       </div>
 
       <PowerBannerHeroImageEditor
-        key={initial.desktopBgSrc}
+        key={`${initial.desktopBgSrc}-${initial.heroImageFraming?.zoom ?? ""}`}
         bannerKey={bannerKey}
         desktopPreviewSrc={initial.desktopBgSrc}
         heroImageR2Key={initial.heroImageR2Key}
+        heroImageFraming={initial.heroImageFraming}
       />
 
       <form
@@ -83,14 +84,15 @@ export function PowerBannerCopyEditor({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label
-          htmlFor={`power-banner-body-${bannerKey}`}
+        <span
+          id={`power-banner-body-label-${bannerKey}`}
           className="text-sm font-medium text-slate-800"
         >
           Description
-        </label>
+        </span>
         <PowerBannerDescriptionEditor
           id={`power-banner-body-${bannerKey}`}
+          ariaLabelledBy={`power-banner-body-label-${bannerKey}`}
           value={bodyHtml}
           onChange={setBodyHtml}
         />

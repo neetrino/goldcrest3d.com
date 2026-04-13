@@ -5,6 +5,7 @@ import {
   SECTION1_TAIL_MIN_HEIGHT_PX,
 } from "./power-banners-layout.constants";
 import { ModelingHeroSlideLayers } from "./ModelingHeroSlideLayers";
+import { resolveCustomHeroFraming } from "./resolve-custom-hero-framing";
 import { ModelingHeroSlideTextStack } from "./ModelingHeroSlideTextStack";
 
 type ModelingHeroSlideProps = {
@@ -28,6 +29,7 @@ export function ModelingHeroSlide({ copy }: ModelingHeroSlideProps) {
         <ModelingHeroSlideLayers
           desktopBgSrc={copy.desktopBgSrc}
           mobileBgSrc={copy.mobileBgSrc}
+          customFraming={resolveCustomHeroFraming(copy)}
         />
         <ModelingHeroSlideTextStack copy={copy} />
       </div>

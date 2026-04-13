@@ -1,4 +1,6 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
+import type { ImageFraming } from "@/lib/site-media/image-framing";
+
 import { getModelingHipHopCardBackgroundStyle } from "./modeling-hiphop-background.constants";
 import { ModelingCard } from "./ModelingCard";
 
@@ -28,12 +30,16 @@ const HIPHOP_DESCRIPTION_LINES_DESKTOP = [
 type ModelingBlockHipHopProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  imageFramingDesktop?: ImageFraming | null;
+  imageFramingMobile?: ImageFraming | null;
 };
 
 /** Hip-Hop Jewelry block — Figma background layer on image area. */
 export function ModelingBlockHipHop({
   imageUrlDesktop,
   imageUrlMobile,
+  imageFramingDesktop,
+  imageFramingMobile,
 }: ModelingBlockHipHopProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
@@ -46,9 +52,14 @@ export function ModelingBlockHipHop({
       imageId={LANDING_IMAGE_IDS.MODELING_HIPHOP}
       imageOnLeft={false}
       textAlign="left"
-      imageLayerBackground={getModelingHipHopCardBackgroundStyle(imageUrlDesktop)}
+      imageLayerBackground={getModelingHipHopCardBackgroundStyle(
+        imageUrlDesktop,
+        imageFramingDesktop,
+      )}
       imageLayerBackgroundMobile={
-        sameUrl ? undefined : getModelingHipHopCardBackgroundStyle(imageUrlMobile)
+        sameUrl
+          ? undefined
+          : getModelingHipHopCardBackgroundStyle(imageUrlMobile, imageFramingMobile)
       }
       imagePairBreakpoint="md"
       mobileHipHopTypography

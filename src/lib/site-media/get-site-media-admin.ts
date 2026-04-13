@@ -1,6 +1,8 @@
 import { logger } from "@/lib/logger";
 
+import type { ImageFraming } from "./image-framing";
 import { resolveSiteMediaDisplayUrl } from "./resolve-display-url";
+import { parseSiteMediaLayoutMeta } from "./site-media-layout-meta";
 import { isMigrationPendingError } from "./is-migration-pending-error";
 import { siteMediaItem, type SiteMediaItemRow } from "./site-media-prisma";
 import {
@@ -21,6 +23,8 @@ export type AdminModelingSlotRow = {
   displayUrl: string | null;
   displayUrlMobile: string | null;
   altText: string;
+  desktopFraming: ImageFraming | null;
+  mobileFraming: ImageFraming | null;
 };
 
 export type AdminOrderedItemRow = {
@@ -30,6 +34,7 @@ export type AdminOrderedItemRow = {
   r2ObjectKey: string | null;
   displayUrl: string | null;
   altText: string;
+  framing: ImageFraming | null;
 };
 
 export type AdminSiteMediaBundle = {
@@ -50,6 +55,8 @@ function emptyAdminBundle(): AdminSiteMediaBundle {
       displayUrl: null,
       displayUrlMobile: null,
       altText: "",
+      desktopFraming: null,
+      mobileFraming: null,
     }),
   );
   return {
@@ -61,6 +68,7 @@ function emptyAdminBundle(): AdminSiteMediaBundle {
 }
 
 function mapOrderedRow(r: SiteMediaItemRow): AdminOrderedItemRow {
+  const meta = parseSiteMediaLayoutMeta(r.layoutMeta);
   return {
     id: r.id,
     slotKey: r.slotId,
@@ -70,6 +78,7 @@ function mapOrderedRow(r: SiteMediaItemRow): AdminOrderedItemRow {
       ? resolveSiteMediaDisplayUrl(r.r2ObjectKey)
       : null,
     altText: r.alt ?? "",
+    framing: meta?.framing ?? null,
   };
 }
 
@@ -104,6 +113,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
   const modeling: AdminModelingSlotRow[] = ORDERED_MODELING_SLOT_KEYS.map(
     (slotKey) => {
       const row = modelingMap.get(slotKey);
+      const meta = row ? parseSiteMediaLayoutMeta(row.layoutMeta) : null;
       return {
         slotKey,
         label: MODELING_SLOT_LABELS[slotKey],
@@ -117,6 +127,8 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
           ? resolveSiteMediaDisplayUrl(row.r2ObjectKeyMobile)
           : null,
         altText: row?.alt ?? "",
+        desktopFraming: meta?.desktopFraming ?? null,
+        mobileFraming: meta?.mobileFraming ?? null,
       };
     },
   );

@@ -1,4 +1,5 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
+import type { ImageFraming } from "@/lib/site-media/image-framing";
 
 import { ModelingCard } from "./ModelingCard";
 
@@ -25,12 +26,16 @@ const BRIDAL_DESCRIPTION_LINES_MOBILE = [
 type ModelingBlockBridalProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  imageFramingDesktop?: ImageFraming | null;
+  imageFramingMobile?: ImageFraming | null;
 };
 
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
 export function ModelingBlockBridal({
   imageUrlDesktop,
   imageUrlMobile,
+  imageFramingDesktop,
+  imageFramingMobile,
 }: ModelingBlockBridalProps) {
   return (
     <ModelingCard
@@ -64,6 +69,8 @@ export function ModelingBlockBridal({
       textBlockMarginTop="22%"
       descriptionLayout="row"
       mobileBridalTypography
+      imageFramingDesktop={imageFramingDesktop}
+      imageFramingMobile={imageFramingMobile}
     />
   );
 }

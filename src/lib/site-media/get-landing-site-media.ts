@@ -1,6 +1,7 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { logger } from "@/lib/logger";
 
+import type { ImageFraming } from "./image-framing";
 import { isMigrationPendingError } from "./is-migration-pending-error";
 import {
   DEFAULT_FINISHED_ROW1,
@@ -9,6 +10,7 @@ import {
   type FinishedGalleryItem,
 } from "./landing-defaults";
 import { resolveSiteMediaDisplayUrl } from "./resolve-display-url";
+import { parseSiteMediaLayoutMeta } from "./site-media-layout-meta";
 import {
   siteMediaItem,
   type SiteMediaItemRow,
@@ -23,6 +25,8 @@ import {
 export type ModelingSlotResolvedMedia = {
   desktop: string;
   mobile: string;
+  desktopFraming: ImageFraming | null;
+  mobileFraming: ImageFraming | null;
 };
 
 export type LandingModelingMedia = Record<ModelingSlotKey, ModelingSlotResolvedMedia>;
@@ -49,7 +53,7 @@ function mergeModelingUrl(
 }
 
 function buildFinishedRow(
-  rows: Pick<SiteMediaItemRow, "slotId" | "r2ObjectKey" | "sortOrder">[],
+  rows: Pick<SiteMediaItemRow, "slotId" | "r2ObjectKey" | "sortOrder" | "layoutMeta">[],
   defaults: readonly FinishedGalleryItem[],
 ): FinishedGalleryItem[] {
   if (rows.length === 0) {
@@ -65,11 +69,14 @@ function buildFinishedRow(
     const src = url ?? fallback.src;
     const imageId =
       defaults[index]?.imageId ?? LANDING_IMAGE_IDS.FINISHED_1;
+    const meta = parseSiteMediaLayoutMeta(row.layoutMeta);
+    const framing = meta?.framing ?? null;
     return {
       id: row.slotId,
       imageId,
       src,
       objectPositionClass: fallback.objectPositionClass,
+      framing,
     };
   });
 }
@@ -100,13 +107,18 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
 
     const modelingBySlot = new Map<
       ModelingSlotKey,
-      { desktop: string | null; mobile: string | null }
+      {
+        desktop: string | null;
+        mobile: string | null;
+        layoutMeta: unknown | null;
+      }
     >(
       modelingRows.map((r: SiteMediaItemRow) => [
         r.slotId as ModelingSlotKey,
         {
           desktop: r.r2ObjectKey,
           mobile: r.r2ObjectKeyMobile,
+          layoutMeta: r.layoutMeta,
         },
       ]),
     );
@@ -118,13 +130,21 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
         modeling[slot] = {
           desktop: mergeModelingUrl(slot, undefined),
           mobile: mergeModelingUrl(slot, undefined),
+          desktopFraming: null,
+          mobileFraming: null,
         };
         continue;
       }
+      const meta = parseSiteMediaLayoutMeta(row.layoutMeta);
       const desktopUrl = mergeModelingUrl(slot, row.desktop);
       const mobileKey = row.mobile ?? row.desktop;
       const mobileUrl = mergeModelingUrl(slot, mobileKey);
-      modeling[slot] = { desktop: desktopUrl, mobile: mobileUrl };
+      modeling[slot] = {
+        desktop: desktopUrl,
+        mobile: mobileUrl,
+        desktopFraming: meta?.desktopFraming ?? null,
+        mobileFraming: meta?.mobileFraming ?? null,
+      };
     }
 
     const finished: LandingFinishedMedia = {
@@ -148,7 +168,12 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
   const modeling = {} as LandingModelingMedia;
   for (const slot of ORDERED_MODELING_SLOT_KEYS) {
     const url = DEFAULT_MODELING_IMAGE_URL[slot];
-    modeling[slot] = { desktop: url, mobile: url };
+    modeling[slot] = {
+      desktop: url,
+      mobile: url,
+      desktopFraming: null,
+      mobileFraming: null,
+    };
   }
   return {
     modeling,

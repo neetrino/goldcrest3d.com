@@ -126,5 +126,7 @@ model PowerBannerCopy {
   body        String   @db.Text
   /// Custom hero art (R2). When null, built-in desktop + mobile assets from the codebase are used.
   r2ObjectKey String?
+  /// Focal point + zoom for custom hero art (`focusX`/`focusY` 0–100, `zoom` 1–3). Null when using built-in assets.
+  heroImageLayout Json?
   updatedAt   DateTime @updatedAt
 }

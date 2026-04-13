@@ -19,12 +19,15 @@ const TinyEditor = dynamic(
 
 type PowerBannerDescriptionEditorProps = {
   id: string;
+  /** Associates the visible title with the editor (TinyMCE loads async; avoid <label htmlFor> until the textarea exists). */
+  ariaLabelledBy: string;
   value: string;
   onChange: (html: string) => void;
 };
 
 export function PowerBannerDescriptionEditor({
   id,
+  ariaLabelledBy,
   value,
   onChange,
 }: PowerBannerDescriptionEditorProps) {
@@ -66,7 +69,10 @@ export function PowerBannerDescriptionEditor({
   );
 
   return (
-    <div className="power-banner-description-editor overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100 transition focus-within:border-slate-300 focus-within:ring-2 focus-within:ring-slate-200/80">
+    <div
+      className="power-banner-description-editor overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-100 transition focus-within:border-slate-300 focus-within:ring-2 focus-within:ring-slate-200/80"
+      aria-labelledby={ariaLabelledBy}
+    >
       <TinyEditor
         id={id}
         licenseKey="gpl"

@@ -1,6 +1,7 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 
+import type { ImageFraming } from "./image-framing";
 import { MODELING_SLOT_KEYS, type ModelingSlotKey } from "./site-media.registry";
 
 /**
@@ -20,6 +21,8 @@ export type FinishedGalleryItem = {
   imageId: string;
   src: string;
   objectPositionClass?: string;
+  /** Admin-defined focal crop when a DB-backed asset is used. */
+  framing?: ImageFraming | null;
 };
 
 /** Верхний ряд — как в прежнем SectionFinishedCreations. */

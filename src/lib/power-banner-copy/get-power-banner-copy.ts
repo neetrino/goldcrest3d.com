@@ -10,7 +10,7 @@ import { resolveHeroBannerImageFields } from "./resolve-hero-banner-images";
 
 function defaultEntryForKey(key: PowerBannerKey): PowerBannerCopyEntry {
   const copy = POWER_BANNER_DEFAULT_COPY[key];
-  const images = resolveHeroBannerImageFields(key, null);
+  const images = resolveHeroBannerImageFields(key, null, null);
   return { ...copy, ...images };
 }
 
@@ -26,7 +26,13 @@ function emptyBundle(): PowerBannerCopyBundle {
  * Loads persisted hero copy and merges with defaults for any missing banner row.
  */
 export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle> {
-  let rows: { bannerKey: string; title: string; body: string; r2ObjectKey: string | null }[];
+  let rows: {
+    bannerKey: string;
+    title: string;
+    body: string;
+    r2ObjectKey: string | null;
+    heroImageLayout: unknown | null;
+  }[];
   try {
     rows = await prisma.powerBannerCopy.findMany();
   } catch (err) {
@@ -46,7 +52,7 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
       out[key] = {
         title: row.title,
         body: row.body,
-        ...resolveHeroBannerImageFields(key, row.r2ObjectKey),
+        ...resolveHeroBannerImageFields(key, row.r2ObjectKey, row.heroImageLayout),
       };
     }
   }

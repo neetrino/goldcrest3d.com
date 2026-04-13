@@ -11,7 +11,14 @@ import {
 } from "@/app/actions/power-banner-hero-image";
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
 import { formatR2ObjectDisplayName } from "@/lib/site-media/format-r2-object-label";
+import {
+  DEFAULT_IMAGE_FRAMING,
+  framingFingerprint,
+  framingToCoverImageStyle,
+  type ImageFraming,
+} from "@/lib/site-media/image-framing";
 
+import { ImageFramingEditor } from "./ImageFramingEditor";
 import { ImageUploadControl } from "./ImageUploadControl";
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import {
@@ -23,6 +30,7 @@ type PowerBannerHeroImageEditorProps = {
   bannerKey: PowerBannerKey;
   desktopPreviewSrc: string;
   heroImageR2Key: string | null;
+  heroImageFraming: ImageFraming | null;
 };
 
 function HeroImageMessages({ state }: { state: PowerBannerHeroImageActionResult | null }) {
@@ -53,6 +61,7 @@ export function PowerBannerHeroImageEditor({
   bannerKey,
   desktopPreviewSrc,
   heroImageR2Key,
+  heroImageFraming,
 }: PowerBannerHeroImageEditorProps) {
   const router = useRouter();
   const [uploadState, uploadAction, uploadPending] = useActionState(
@@ -84,6 +93,9 @@ export function PowerBannerHeroImageEditor({
   const combinedState = uploadState ?? clearState;
   const storedName = formatR2ObjectDisplayName(heroImageR2Key);
   const usingCustom = Boolean(heroImageR2Key);
+  const previewFraming = usingCustom
+    ? heroImageFraming ?? DEFAULT_IMAGE_FRAMING
+    : null;
 
   return (
     <div className="rounded-xl border border-slate-200/90 bg-slate-50/80 p-4 sm:p-5">
@@ -103,7 +115,12 @@ export function PowerBannerHeroImageEditor({
           fill
           unoptimized={desktopPreviewSrc.startsWith("/")}
           sizes="(max-width: 768px) 100vw, 672px"
-          className="object-cover object-center"
+          className={
+            previewFraming ? "object-cover" : "object-cover object-center"
+          }
+          style={
+            previewFraming ? framingToCoverImageStyle(previewFraming) : undefined
+          }
         />
       </div>
 
@@ -136,7 +153,16 @@ export function PowerBannerHeroImageEditor({
       </form>
 
       {usingCustom ? (
-        <form action={clearAction} className="mt-4 border-t border-slate-200/80 pt-4">
+        <>
+          <ImageFramingEditor
+            key={`${bannerKey}-${framingFingerprint(heroImageFraming)}`}
+            imageUrl={desktopPreviewSrc}
+            initialFraming={heroImageFraming}
+            aspectClassName="aspect-[21/9]"
+            target={{ kind: "powerBanner", bannerKey }}
+            enabled={!uploadPending && !clearPending}
+          />
+          <form action={clearAction} className="mt-4 border-t border-slate-200/80 pt-4">
           <input type="hidden" name="bannerKey" value={bannerKey} />
           <p className="mb-2 text-xs text-slate-600">
             Remove the uploaded file and restore the original built-in hero artwork for this slide.
@@ -150,6 +176,7 @@ export function PowerBannerHeroImageEditor({
             {clearPending ? "Resetting…" : "Restore built-in image"}
           </button>
         </form>
+        </>
       ) : null}
     </div>
   );

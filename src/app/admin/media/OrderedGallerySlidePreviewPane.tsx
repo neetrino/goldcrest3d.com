@@ -3,6 +3,7 @@
 import Image from "next/image";
 
 import type { AdminOrderedItemRow } from "@/lib/site-media/get-site-media-admin";
+import { framingToCoverImageStyle } from "@/lib/site-media/image-framing";
 
 type OrderedGallerySlidePreviewPaneProps = {
   item: AdminOrderedItemRow;
@@ -23,9 +24,12 @@ export function OrderedGallerySlidePreviewPane({
         {item.displayUrl ? (
           <Image
             src={item.displayUrl}
-            alt={`Gallery preview â€” ${positionLabel}`}
+            alt={`Gallery preview — ${positionLabel}`}
             fill
-            className="object-contain"
+            className="object-cover"
+            style={
+              item.framing ? framingToCoverImageStyle(item.framing) : undefined
+            }
             sizes="(max-width: 1024px) 100vw, 55vw"
           />
         ) : (

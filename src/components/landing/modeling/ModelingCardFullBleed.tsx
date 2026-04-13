@@ -48,7 +48,8 @@ export type ModelingCardFullBleedProps = Pick<
   portraitMobileLayout: boolean;
   imgMobileWrapperClass: string;
   imgDesktopWrapperClass: string;
-  imageStyle: CSSProperties;
+  imageStyleMobile: CSSProperties;
+  imageStyleDesktop: CSSProperties;
   overlayTextContainerClass: string;
   overlayTranslateClass: string;
   textAlignClass: string;
@@ -91,7 +92,8 @@ export function ModelingCardFullBleed({
   portraitMobileLayout,
   imgMobileWrapperClass,
   imgDesktopWrapperClass,
-  imageStyle,
+  imageStyleMobile,
+  imageStyleDesktop,
   overlayTextContainerClass,
   overlayTranslateClass,
   textAlignClass,
@@ -174,7 +176,7 @@ export function ModelingCardFullBleed({
                   alt=""
                   fill
                   className={`min-h-0 min-w-0 ${imageFillClassName}`}
-                  style={imageStyle}
+                  style={imageStyleMobile}
                   sizes="(max-width: 767px) 100vw, 0px"
                 />
               </div>
@@ -184,7 +186,7 @@ export function ModelingCardFullBleed({
                   alt=""
                   fill
                   className={imageFillClassNameDesktop}
-                  style={imageStyle}
+                  style={imageStyleDesktop}
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
@@ -195,7 +197,7 @@ export function ModelingCardFullBleed({
               alt=""
               fill
               className={imageFillClassName}
-              style={imageStyle}
+              style={imageStyleDesktop}
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           )

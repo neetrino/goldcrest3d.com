@@ -6,6 +6,7 @@ import {
   SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX,
 } from "./power-banners-layout.constants";
 import { RenderingHeroSlideBackgrounds } from "./RenderingHeroSlideBackgrounds";
+import { resolveCustomHeroFraming } from "./resolve-custom-hero-framing";
 import { RenderingHeroSlideCopy } from "./RenderingHeroSlideCopy";
 
 type RenderingHeroSlideProps = {
@@ -27,6 +28,7 @@ export function RenderingHeroSlide({ copy }: RenderingHeroSlideProps) {
       <RenderingHeroSlideBackgrounds
         desktopBgSrc={copy.desktopBgSrc}
         mobileBgSrc={copy.mobileBgSrc}
+        customFraming={resolveCustomHeroFraming(copy)}
       />
       <RenderingHeroSlideCopy copy={copy} />
     </div>
