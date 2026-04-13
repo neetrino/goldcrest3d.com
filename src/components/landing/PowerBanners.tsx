@@ -2,16 +2,15 @@
 
 import { Fragment } from "react";
 import { LANDING_SECTION_IDS } from "@/constants";
-import { LANDING_IMAGES } from "@/constants/landing-assets";
 import type { PowerBannerCopyBundle } from "@/lib/power-banner-copy/power-banner-copy.types";
 import { DesignHeroSlide } from "@/components/landing/power-banners/DesignHeroSlide";
 import { ModelingHeroSlide } from "@/components/landing/power-banners/ModelingHeroSlide";
 import { RenderingHeroSlide } from "@/components/landing/power-banners/RenderingHeroSlide";
 
 const HERO_SLIDES = [
-  { id: "modeling" as const, desktopBg: LANDING_IMAGES.heroModeling },
-  { id: "rendering" as const, desktopBg: LANDING_IMAGES.heroRendering },
-  { id: "design" as const, desktopBg: LANDING_IMAGES.heroDesign },
+  { id: "modeling" as const, copyKey: "MODELING" as const },
+  { id: "rendering" as const, copyKey: "RENDERING" as const },
+  { id: "design" as const, copyKey: "DESIGN" as const },
 ];
 
 type PowerBannersProps = {
@@ -25,7 +24,9 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
       className="relative w-full bg-white"
       aria-label="Hero"
     >
-      {HERO_SLIDES.map((slide) => (
+      {HERO_SLIDES.map((slide) => {
+        const copy = powerBannerCopy[slide.copyKey];
+        return (
         <Fragment key={slide.id}>
           <div
             className={`relative flex w-full shrink-0 flex-col ${
@@ -41,20 +42,11 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
               />
             )}
             {slide.id === "modeling" ? (
-              <ModelingHeroSlide
-                desktopBgSrc={slide.desktopBg}
-                copy={powerBannerCopy.MODELING}
-              />
+              <ModelingHeroSlide copy={copy} />
             ) : slide.id === "rendering" ? (
-              <RenderingHeroSlide
-                desktopBgSrc={slide.desktopBg}
-                copy={powerBannerCopy.RENDERING}
-              />
+              <RenderingHeroSlide copy={copy} />
             ) : (
-              <DesignHeroSlide
-                desktopBgSrc={slide.desktopBg}
-                copy={powerBannerCopy.DESIGN}
-              />
+              <DesignHeroSlide copy={copy} />
             )}
           </div>
           {slide.id === "rendering" && (
@@ -64,7 +56,8 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
             />
           )}
         </Fragment>
-      ))}
+        );
+      })}
     </section>
   );
 }

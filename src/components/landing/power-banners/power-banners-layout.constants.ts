@@ -10,8 +10,6 @@ export const SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX = 40;
 /** Section1 — նկարի մասշտաբ (1 = նույնը) */
 export const SECTION1_HERO_BG_SCALE = 1.08;
 
-export const SECTION1_HERO_BG_MOBILE_PATH = "/images/modeling/block1-mobile.png";
-
 /** Section1 — տեքստային բլոկի translateY */
 export const SECTION1_HERO_TEXT_NUDGE_DOWN_PX = 22;
 
@@ -51,15 +49,11 @@ export const SECTION2_RENDERING_SUBTITLE_AND_CTA_NUDGE_DOWN_MOBILE_PX = 20;
 export const SECTION2_GET_QUOTE_NUDGE_UP_MOBILE_PX = 28;
 
 export const SECTION2_TEXT_CLUSTER_NUDGE_MD_PX = 90;
-export const SECTION2_HERO_BG_MOBILE_PATH = "/images/rendering/block2-mobile.png";
 
 export const SECTION2_HERO_BG_SCALE = 1.22;
 export const SECTION2_HERO_BG_IMAGE_NUDGE_UP_PX = 76;
 export const SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX = 88;
 export const SECTION2_RENDERING_TITLE_NUDGE_DOWN_PX = 10;
-
-export const SECTION3_HERO_BG_MOBILE_PATH =
-  "/images/design/block3-mobile-original.png";
 
 export const SECTION3_TEXT_COLUMN_TOP_MD_CLASS = "md:top-[47%]";
 

@@ -4,17 +4,19 @@ import { DesignHeroSlideBackgrounds } from "./DesignHeroSlideBackgrounds";
 import { DesignHeroSlideCopy } from "./DesignHeroSlideCopy";
 
 type DesignHeroSlideProps = {
-  desktopBgSrc: string;
   copy: PowerBannerCopyEntry;
 };
 
-export function DesignHeroSlide({ desktopBgSrc, copy }: DesignHeroSlideProps) {
+export function DesignHeroSlide({ copy }: DesignHeroSlideProps) {
   return (
     <div
       className="power-banners-section3-block relative overflow-hidden"
       data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
     >
-      <DesignHeroSlideBackgrounds desktopBgSrc={desktopBgSrc} />
+      <DesignHeroSlideBackgrounds
+        desktopBgSrc={copy.desktopBgSrc}
+        mobileBgSrc={copy.mobileBgSrc}
+      />
       <DesignHeroSlideCopy copy={copy} />
     </div>
   );

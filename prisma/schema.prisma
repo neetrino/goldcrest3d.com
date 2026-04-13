@@ -121,8 +121,10 @@ model SiteMediaItem {
 
 /// Editable hero (power banner) title + body per landing slide — managed in Admin → Media Manager.
 model PowerBannerCopy {
-  bannerKey String   @id
-  title     String   @db.Text
-  body      String   @db.Text
-  updatedAt DateTime @updatedAt
+  bannerKey   String   @id
+  title       String   @db.Text
+  body        String   @db.Text
+  /// Custom hero art (R2). When null, built-in desktop + mobile assets from the codebase are used.
+  r2ObjectKey String?
+  updatedAt   DateTime @updatedAt
 }

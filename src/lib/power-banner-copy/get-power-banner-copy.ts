@@ -4,14 +4,21 @@ import { prisma } from "@/lib/db";
 import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
 
 import { POWER_BANNER_DEFAULT_COPY } from "./power-banner-defaults";
-import { POWER_BANNER_KEYS } from "./power-banner-keys";
-import type { PowerBannerCopyBundle } from "./power-banner-copy.types";
+import { POWER_BANNER_KEYS, type PowerBannerKey } from "./power-banner-keys";
+import type { PowerBannerCopyBundle, PowerBannerCopyEntry } from "./power-banner-copy.types";
+import { resolveHeroBannerImageFields } from "./resolve-hero-banner-images";
+
+function defaultEntryForKey(key: PowerBannerKey): PowerBannerCopyEntry {
+  const copy = POWER_BANNER_DEFAULT_COPY[key];
+  const images = resolveHeroBannerImageFields(key, null);
+  return { ...copy, ...images };
+}
 
 function emptyBundle(): PowerBannerCopyBundle {
   return {
-    MODELING: { ...POWER_BANNER_DEFAULT_COPY.MODELING },
-    RENDERING: { ...POWER_BANNER_DEFAULT_COPY.RENDERING },
-    DESIGN: { ...POWER_BANNER_DEFAULT_COPY.DESIGN },
+    MODELING: defaultEntryForKey("MODELING"),
+    RENDERING: defaultEntryForKey("RENDERING"),
+    DESIGN: defaultEntryForKey("DESIGN"),
   };
 }
 
@@ -19,7 +26,7 @@ function emptyBundle(): PowerBannerCopyBundle {
  * Loads persisted hero copy and merges with defaults for any missing banner row.
  */
 export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle> {
-  let rows: { bannerKey: string; title: string; body: string }[];
+  let rows: { bannerKey: string; title: string; body: string; r2ObjectKey: string | null }[];
   try {
     rows = await prisma.powerBannerCopy.findMany();
   } catch (err) {
@@ -36,7 +43,11 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
   for (const key of POWER_BANNER_KEYS) {
     const row = byKey.get(key);
     if (row) {
-      out[key] = { title: row.title, body: row.body };
+      out[key] = {
+        title: row.title,
+        body: row.body,
+        ...resolveHeroBannerImageFields(key, row.r2ObjectKey),
+      };
     }
   }
   return out;

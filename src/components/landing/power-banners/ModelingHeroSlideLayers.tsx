@@ -4,17 +4,18 @@ import {
   HERO_DESKTOP_IMAGE_SIZES,
   HERO_MOBILE_IMAGE_SIZES,
   SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX,
-  SECTION1_HERO_BG_MOBILE_PATH,
   SECTION1_HERO_BG_NUDGE_DOWN_PX,
   SECTION1_HERO_BG_SCALE,
 } from "./power-banners-layout.constants";
 
 type ModelingHeroSlideLayersProps = {
   desktopBgSrc: string;
+  mobileBgSrc: string;
 };
 
 export function ModelingHeroSlideLayers({
   desktopBgSrc,
+  mobileBgSrc,
 }: ModelingHeroSlideLayersProps) {
   return (
     <>
@@ -23,11 +24,11 @@ export function ModelingHeroSlideLayers({
         aria-hidden
       >
         <Image
-          src={SECTION1_HERO_BG_MOBILE_PATH}
+          src={mobileBgSrc}
           alt=""
           fill
           priority
-          unoptimized
+          unoptimized={mobileBgSrc.startsWith("/")}
           sizes={HERO_MOBILE_IMAGE_SIZES}
           className="h-full w-full object-cover object-center"
         />
@@ -47,6 +48,7 @@ export function ModelingHeroSlideLayers({
           alt=""
           fill
           priority
+          unoptimized={desktopBgSrc.startsWith("/")}
           sizes={HERO_DESKTOP_IMAGE_SIZES}
           className="object-cover"
           style={{

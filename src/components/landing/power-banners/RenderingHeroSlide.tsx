@@ -9,11 +9,10 @@ import { RenderingHeroSlideBackgrounds } from "./RenderingHeroSlideBackgrounds";
 import { RenderingHeroSlideCopy } from "./RenderingHeroSlideCopy";
 
 type RenderingHeroSlideProps = {
-  desktopBgSrc: string;
   copy: PowerBannerCopyEntry;
 };
 
-export function RenderingHeroSlide({ desktopBgSrc, copy }: RenderingHeroSlideProps) {
+export function RenderingHeroSlide({ copy }: RenderingHeroSlideProps) {
   return (
     <div
       className="power-banners-section2-block relative overflow-hidden"
@@ -25,7 +24,10 @@ export function RenderingHeroSlide({ desktopBgSrc, copy }: RenderingHeroSlidePro
         } as CSSProperties
       }
     >
-      <RenderingHeroSlideBackgrounds desktopBgSrc={desktopBgSrc} />
+      <RenderingHeroSlideBackgrounds
+        desktopBgSrc={copy.desktopBgSrc}
+        mobileBgSrc={copy.mobileBgSrc}
+      />
       <RenderingHeroSlideCopy copy={copy} />
     </div>
   );

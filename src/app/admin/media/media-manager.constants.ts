@@ -2,7 +2,7 @@
 export const SITE_MEDIA_ACCEPT = "image/png,image/jpeg,image/webp,image/gif" as const;
 
 /** Human-readable hint for labels and helper text. */
-export const SITE_MEDIA_FORMATS_LABEL = "PNG, JPG, WebP, or GIF";
+export const SITE_MEDIA_FORMATS_LABEL = "PNG, JPG, WebP";
 
 /** Max upload size shown to admins (must match server limit). */
 export const SITE_MEDIA_MAX_SIZE_MB = 15;

@@ -11,6 +11,7 @@ import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { PowerBannerDescriptionEditor } from "./PowerBannerDescriptionEditor";
 import { PowerBannerCopyMessages } from "./PowerBannerCopyMessages";
+import { PowerBannerHeroImageEditor } from "./PowerBannerHeroImageEditor";
 
 type PowerBannerCopyEditorProps = {
   bannerKey: PowerBannerKey;
@@ -34,15 +35,7 @@ export function PowerBannerCopyEditor({
   }, [state?.ok, router]);
 
   return (
-    <form
-      key={`power-banner-form-${bannerKey}-${initial.body}`}
-      action={formAction}
-      className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-6"
-      aria-label={`Edit hero text for ${meta.name}`}
-    >
-      <input type="hidden" name="bannerKey" value={bannerKey} />
-      <input type="hidden" name="body" value={bodyHtml} />
-
+    <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-6">
       <div className="border-b border-slate-200/80 pb-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-[#e2c481]">
           Hero banner
@@ -52,6 +45,22 @@ export function PowerBannerCopyEditor({
         </h3>
         <p className="mt-1 text-sm text-slate-600">{meta.hint}</p>
       </div>
+
+      <PowerBannerHeroImageEditor
+        key={initial.desktopBgSrc}
+        bannerKey={bannerKey}
+        desktopPreviewSrc={initial.desktopBgSrc}
+        heroImageR2Key={initial.heroImageR2Key}
+      />
+
+      <form
+        key={`power-banner-text-${bannerKey}-${initial.body}`}
+        action={formAction}
+        className="flex flex-col gap-4"
+        aria-label={`Edit hero title and description for ${meta.name}`}
+      >
+      <input type="hidden" name="bannerKey" value={bannerKey} />
+      <input type="hidden" name="body" value={bodyHtml} />
 
       <div className="flex flex-col gap-2">
         <label
@@ -93,7 +102,8 @@ export function PowerBannerCopyEditor({
 
       <PowerBannerCopyMessages state={state} />
 
-      <MediaFormSubmitButton pendingLabel="Saving…">Save banner text</MediaFormSubmitButton>
-    </form>
+      <MediaFormSubmitButton pendingLabel="Saving…">Save title & description</MediaFormSubmitButton>
+      </form>
+    </div>
   );
 }
