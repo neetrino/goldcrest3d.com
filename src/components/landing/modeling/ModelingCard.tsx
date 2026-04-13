@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
+import { hasCustomModelingTextLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import { resolveModelingSlotTitleForMobile } from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 import { framingToCoverImageStyle } from "@/lib/site-media/image-framing";
 
@@ -68,6 +69,8 @@ export function ModelingCard({
   imageFillClassNameDesktop = "object-contain",
   imageFramingDesktop,
   imageFramingMobile,
+  textLayoutDesktop = null,
+  textLayoutMobile = null,
 }: ModelingCardProps) {
   const usesRichDescription = Boolean(descriptionRichHtml?.trim());
   const hasLines =
@@ -254,6 +257,21 @@ export function ModelingCard({
       ? "translate-x-[calc(1.5rem*var(--ms,1))] translate-y-[calc(6rem*var(--ms,1))]"
       : "";
 
+  const customTextOverlay =
+    usesRichDescription &&
+    desktopRichHtml.trim().length > 0 &&
+    hasCustomModelingTextLayout(textLayoutDesktop, textLayoutMobile)
+      ? {
+          layoutDesktop: textLayoutDesktop!,
+          layoutMobile: textLayoutMobile!,
+          titleDesktop: title,
+          titleMobile: titleMobileResolved,
+          bodyDesktopHtml: desktopRichHtml,
+          bodyMobileHtml: mobileRichHtml,
+          textDark: textDark ?? false,
+        }
+      : null;
+
   if (!gradient) {
     return (
       <ModelingCardFullBleed
@@ -304,6 +322,7 @@ export function ModelingCard({
         portraitOverlayDescription={portraitOverlayDescription}
         DescriptionTag={DescriptionTag}
         usesRichDescription={usesRichDescription}
+        customTextOverlay={customTextOverlay}
       />
     );
   }

@@ -140,5 +140,9 @@ model ModelingSlotCopy {
   body      String   @db.Text
   /// Optional rich HTML for viewports below `md` (matches image mobile breakpoint). Null/empty → use `body`.
   bodyMobile String? @db.Text
+  /// Admin Media Manager — title + body overlay positions/sizes for md+ (percent of padded frame).
+  textLayoutDesktop Json?
+  /// Admin Media Manager — same for viewports below `md`.
+  textLayoutMobile Json?
   updatedAt DateTime @updatedAt
 }

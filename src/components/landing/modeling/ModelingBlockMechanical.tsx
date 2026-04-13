@@ -11,6 +11,10 @@ import {
 import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
+import {
+  getModelingSlotCustomTextOverlayProps,
+  ModelingSlotCustomTextOverlay,
+} from "./ModelingSlotCustomTextOverlay";
 
 /** Mobile-only overlay nudge down (`max-sm:translate-y`); paired with `--mechanical-overlay-ty`. */
 const MOBILE_OVERLAY_TRANSLATE_Y_PX = 100;
@@ -50,6 +54,78 @@ export function ModelingBlockMechanical({
   imageFramingMobile,
 }: ModelingBlockMechanicalProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
+  const customOverlay = getModelingSlotCustomTextOverlayProps(copy, true);
+  if (customOverlay) {
+    return (
+      <article
+        className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
+      >
+        <div
+          className="absolute inset-0"
+          style={{ backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }}
+        >
+          {sameUrl ? (
+            <Image
+              src={imageUrlDesktop}
+              alt=""
+              fill
+              className={
+                imageFramingDesktop
+                  ? "h-full w-full object-cover"
+                  : "h-full w-full object-cover max-md:object-[56%_center] md:object-center"
+              }
+              style={
+                imageFramingDesktop
+                  ? framingToCoverImageStyle(imageFramingDesktop)
+                  : undefined
+              }
+              sizes="(max-width: 767px) 100vw, 50vw"
+            />
+          ) : (
+            <>
+              <div className="absolute inset-0 md:hidden">
+                <Image
+                  src={imageUrlMobile}
+                  alt=""
+                  fill
+                  className={
+                    imageFramingMobile
+                      ? "min-h-0 min-w-0 h-full w-full object-cover"
+                      : "min-h-0 min-w-0 h-full w-full object-cover object-[56%_center]"
+                  }
+                  style={
+                    imageFramingMobile
+                      ? framingToCoverImageStyle(imageFramingMobile)
+                      : undefined
+                  }
+                  sizes="(max-width: 767px) 100vw, 0px"
+                />
+              </div>
+              <div className="absolute inset-0 hidden md:block">
+                <Image
+                  src={imageUrlDesktop}
+                  alt=""
+                  fill
+                  className={
+                    imageFramingDesktop
+                      ? "h-full w-full object-cover"
+                      : "h-full w-full object-cover object-center"
+                  }
+                  style={
+                    imageFramingDesktop
+                      ? framingToCoverImageStyle(imageFramingDesktop)
+                      : undefined
+                  }
+                  sizes="(max-width: 1280px) 50vw, 33vw"
+                />
+              </div>
+            </>
+          )}
+        </div>
+        <ModelingSlotCustomTextOverlay {...customOverlay} />
+      </article>
+    );
+  }
   const bodyDesktop = copy.body;
   const bodyMobile = resolveModelingSlotBodyForMobile(copy);
   const titleDesktop = copy.title;

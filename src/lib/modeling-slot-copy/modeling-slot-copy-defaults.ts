@@ -15,6 +15,8 @@ const HIP_HOP: ModelingSlotCopyEntry = {
   title: "Hip-Hop Jewelry",
   titleMobile: "",
   bodyMobile: "",
+  textLayoutDesktop: null,
+  textLayoutMobile: null,
   body: body(
     "<p>High-mass, fully iced-out structures engineered for structural durability and controlled weight distribution.</p><p>Advanced pavé density calibration and reinforced stone retention designed for intensive wear and long-term performance.</p>",
   ),
@@ -24,6 +26,8 @@ const BRIDAL: ModelingSlotCopyEntry = {
   title: "Bridal & Engagement",
   titleMobile: "",
   bodyMobile: "",
+  textLayoutDesktop: null,
+  textLayoutMobile: null,
   body: body(
     "<p>Engineered engagement and bridal settings built for durability, comfort and precise stone alignment. Secure prong architecture developed for long-term wear.</p>",
   ),
@@ -33,6 +37,8 @@ const PORTRAIT: ModelingSlotCopyEntry = {
   title: "High Jewelry",
   titleMobile: "",
   bodyMobile: "",
+  textLayoutDesktop: null,
+  textLayoutMobile: null,
   body: body(
     "<p>Advanced pavé and fine-setting structures developed with micron-level precision.</p><p>Invisible settings and ultra-thin tolerances engineered with strict structural discipline.</p>",
   ),
@@ -42,6 +48,8 @@ const MECHANICAL: ModelingSlotCopyEntry = {
   title: "Mechanical &\nLock Systems",
   titleMobile: "",
   bodyMobile: "",
+  textLayoutDesktop: null,
+  textLayoutMobile: null,
   body: body(
     "<p>Tolerance-calibrated clasps, hinges and multi-part articulated structures engineered for controlled movement and secure locking performance.</p><p>Functional systems developed for durability, precision alignment and long-term mechanical reliability.</p>",
   ),
@@ -51,6 +59,8 @@ const HERITAGE: ModelingSlotCopyEntry = {
   title: "3D Portrait Jewelry",
   titleMobile: "",
   bodyMobile: "",
+  textLayoutDesktop: null,
+  textLayoutMobile: null,
   body: body(
     "<p>High-relief sculptural portraits engineered with controlled volume distribution and balanced weight architecture.</p><p>Developed to integrate pavé surfaces, deep dimensional detail and reinforced structural support for long-term durability.</p>",
   ),
@@ -60,6 +70,8 @@ const HIGH_JEWELRY: ModelingSlotCopyEntry = {
   title: "Ancient & Heritage Jewelry",
   titleMobile: "",
   bodyMobile: "",
+  textLayoutDesktop: null,
+  textLayoutMobile: null,
   body: body(
     "<p>Cultural and historical motifs re-engineered into structurally optimized, <strong>production-ready</strong> CAD frameworks.</p><p>Authentic design language preserved through precise digital reconstruction and manufacturing awareness.</p>",
   ),

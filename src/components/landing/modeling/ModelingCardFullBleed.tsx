@@ -14,6 +14,8 @@ import {
   PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS,
   PORTRAIT_MOBILE_TITLE_FULL,
 } from "./modeling-card.typography-layout.constants";
+import type { ModelingSlotCustomTextOverlayProps } from "./ModelingSlotCustomTextOverlay";
+import { ModelingSlotCustomTextOverlay } from "./ModelingSlotCustomTextOverlay";
 import type { ModelingCardProps } from "./modeling-card.types";
 
 function ModelingCardTitleLines({ title }: { title: string }) {
@@ -79,6 +81,8 @@ export type ModelingCardFullBleedProps = Pick<
   titleSplitDesktopClass: string;
   DescriptionTag: "div" | "p";
   usesRichDescription: boolean;
+  /** When set, replaces the legacy overlay (both viewports use saved layouts from Admin). */
+  customTextOverlay?: ModelingSlotCustomTextOverlayProps | null;
 };
 
 export function ModelingCardFullBleed({
@@ -129,6 +133,7 @@ export function ModelingCardFullBleed({
   titleSplitDesktopClass,
   DescriptionTag,
   usesRichDescription,
+  customTextOverlay = null,
 }: ModelingCardFullBleedProps) {
   const [hipHopZoomCompensation, setHipHopZoomCompensation] = useState(1);
 
@@ -228,6 +233,9 @@ export function ModelingCardFullBleed({
           )
         ) : null}
       </div>
+      {customTextOverlay ? (
+        <ModelingSlotCustomTextOverlay {...customTextOverlay} />
+      ) : (
       <div
         className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] max-sm:translate-y-[calc(-0.3rem*var(--ms,1))] text-center sm:gap-[calc(1.5rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:pb-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(1.6rem*var(--ms,1))]" : bridalMobileLayout ? "justify-center max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-[calc(5rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(13.5rem*var(--ms,1)),32vw)] sm:-translate-y-[min(calc(12rem*var(--ms,1)),28vh)] sm:items-end sm:text-right" : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
         style={overlayTextStyleResolved}
@@ -411,6 +419,7 @@ export function ModelingCardFullBleed({
           </>
         )}
       </div>
+      )}
     </article>
   );
 }

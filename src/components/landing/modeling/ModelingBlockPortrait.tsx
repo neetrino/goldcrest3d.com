@@ -68,6 +68,8 @@ export function ModelingBlockPortrait({
       descriptionBlockLeft="-13%"
       desktopOverlayShiftClassName="lg:translate-x-[calc(2rem*var(--ms,1))] lg:translate-y-[calc(2.25rem*var(--ms,1))]"
       mobilePortraitTypography
+      textLayoutDesktop={copy.textLayoutDesktop}
+      textLayoutMobile={copy.textLayoutMobile}
     />
   );
 }

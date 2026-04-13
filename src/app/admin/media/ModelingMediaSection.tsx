@@ -5,10 +5,15 @@ import type {
   ModelingSlotCopyEntry,
 } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
 import type { AdminModelingSlotRow } from "@/lib/site-media/get-site-media-admin";
+import { MODELING_SLOT_KEYS, type ModelingSlotKey } from "@/lib/site-media/site-media.registry";
 
 import { ModelingSlotCopyEditor } from "./ModelingSlotCopyEditor";
 import { ModelingSlotPreview } from "./ModelingSlotPreview";
 import { ModelingSlotVariantUpload } from "./ModelingSlotVariantUpload";
+
+function modelingSlotTextDarkPreview(slotKey: ModelingSlotKey): boolean {
+  return slotKey !== MODELING_SLOT_KEYS.HIP_HOP;
+}
 
 type ModelingSlotFormProps = {
   row: AdminModelingSlotRow;
@@ -16,6 +21,7 @@ type ModelingSlotFormProps = {
 };
 
 function ModelingSlotForm({ row, copy }: ModelingSlotFormProps) {
+  const copySyncKey = `${copy.title}-${copy.body}-${copy.bodyMobile}-${copy.titleMobile}-${JSON.stringify(copy.textLayoutDesktop)}-${JSON.stringify(copy.textLayoutMobile)}`;
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100">
       <div>
@@ -27,7 +33,13 @@ function ModelingSlotForm({ row, copy }: ModelingSlotFormProps) {
       <ModelingSlotPreview row={row} />
       <ModelingSlotVariantUpload row={row} variant="desktop" />
       <ModelingSlotVariantUpload row={row} variant="mobile" />
-      <ModelingSlotCopyEditor slotKey={row.slotKey} initial={copy} />
+      <ModelingSlotCopyEditor
+        key={copySyncKey}
+        slotKey={row.slotKey}
+        initial={copy}
+        previewRow={row}
+        textDarkPreview={modelingSlotTextDarkPreview(row.slotKey)}
+      />
     </div>
   );
 }

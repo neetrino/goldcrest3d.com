@@ -5,6 +5,7 @@ import {
   HERO_BANNER_BODY_MAX_STORAGE_CHARS,
 } from "@/lib/power-banner-copy/hero-banner-body-constants";
 import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
+import { modelingTextOverlayLayoutSchema } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import { ORDERED_MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 import type { ModelingSlotKey } from "@/lib/site-media/site-media.registry";
 
@@ -61,16 +62,69 @@ const optionalMobileBodyField = z
     }
   });
 
-export const modelingSlotCopyFormSchema = z.object({
-  slotKey: z
-    .string()
-    .refine((k): k is ModelingSlotKey => ORDERED_SLOT_KEY_SET.has(k), "Invalid slot."),
-  title: z
-    .string()
-    .max(MAX_TITLE_LEN, `Title must be at most ${MAX_TITLE_LEN} characters`)
-    .transform((s) => s.trim())
-    .refine((s) => s.length > 0, "Desktop / tablet title is required."),
-  titleMobile: optionalMobileTitleField,
-  body: heroBannerBodyField("Desktop / tablet description"),
-  bodyMobile: optionalMobileBodyField,
-});
+type ParsedTextLayout = z.infer<typeof modelingTextOverlayLayoutSchema>;
+
+function parseTextLayoutFromForm(
+  raw: string | undefined,
+): { ok: true; value: ParsedTextLayout } | { ok: false; message: string } {
+  const trimmed = raw?.trim() ?? "";
+  if (trimmed === "") {
+    return {
+      ok: false,
+      message: "Text layout is required when custom overlay is enabled.",
+    };
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(trimmed) as unknown;
+  } catch {
+    return { ok: false, message: "Text layout must be valid JSON." };
+  }
+  const result = modelingTextOverlayLayoutSchema.safeParse(parsed);
+  if (!result.success) {
+    return {
+      ok: false,
+      message: result.error.issues[0]?.message ?? "Invalid text layout shape.",
+    };
+  }
+  return { ok: true, value: result.data };
+}
+
+export const modelingSlotCopyFormSchema = z
+  .object({
+    slotKey: z
+      .string()
+      .refine((k): k is ModelingSlotKey => ORDERED_SLOT_KEY_SET.has(k), "Invalid slot."),
+    title: z
+      .string()
+      .max(MAX_TITLE_LEN, `Title must be at most ${MAX_TITLE_LEN} characters`)
+      .transform((s) => s.trim())
+      .refine((s) => s.length > 0, "Desktop / tablet title is required."),
+    titleMobile: optionalMobileTitleField,
+    body: heroBannerBodyField("Desktop / tablet description"),
+    bodyMobile: optionalMobileBodyField,
+    useCustomTextLayout: z.enum(["0", "1"]).default("0"),
+    textLayoutDesktop: z.string().optional().default(""),
+    textLayoutMobile: z.string().optional().default(""),
+  })
+  .superRefine((data, ctx) => {
+    if (data.useCustomTextLayout !== "1") {
+      return;
+    }
+    const desktop = parseTextLayoutFromForm(data.textLayoutDesktop);
+    if (!desktop.ok) {
+      ctx.addIssue({
+        code: "custom",
+        message: desktop.message,
+        path: ["textLayoutDesktop"],
+      });
+    }
+    const mobile = parseTextLayoutFromForm(data.textLayoutMobile);
+    if (!mobile.ok) {
+      ctx.addIssue({
+        code: "custom",
+        message: mobile.message,
+        path: ["textLayoutMobile"],
+      });
+    }
+  });

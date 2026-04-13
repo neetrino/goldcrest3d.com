@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 
+import type { ModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import type { ImageFraming } from "@/lib/site-media/image-framing";
 
 /** Props for one Modeling Specialization card. Լրիվ սյուն, aspect 83/43, սուր անկյուններ. */
@@ -139,4 +140,8 @@ export type ModelingCardProps = {
   imageFramingDesktop?: ImageFraming | null;
   /** Admin focal crop for the mobile image (falls back to desktop framing when omitted). */
   imageFramingMobile?: ImageFraming | null;
+  /** Saved absolute text overlay for md+ (used with `textLayoutMobile` on the public site). */
+  textLayoutDesktop?: ModelingTextOverlayLayout | null;
+  /** Saved absolute text overlay below md. */
+  textLayoutMobile?: ModelingTextOverlayLayout | null;
 };

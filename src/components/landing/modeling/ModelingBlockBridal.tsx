@@ -53,6 +53,8 @@ export function ModelingBlockBridal({
       descriptionLayout="row"
       imageFramingDesktop={imageFramingDesktop}
       imageFramingMobile={imageFramingMobile}
+      textLayoutDesktop={copy.textLayoutDesktop}
+      textLayoutMobile={copy.textLayoutMobile}
     />
   );
 }

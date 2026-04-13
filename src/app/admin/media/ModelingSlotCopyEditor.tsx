@@ -1,15 +1,26 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
 
 import { updateModelingSlotCopy } from "@/app/actions/modeling-slot-copy";
+import type { AdminModelingSlotRow } from "@/lib/site-media/get-site-media-admin";
 import type { ModelingSlotKey } from "@/lib/site-media/site-media.registry";
 import { MODELING_SLOT_LABELS } from "@/lib/site-media/site-media.registry";
+import {
+  DEFAULT_MODELING_TEXT_OVERLAY_LAYOUT_DESKTOP,
+  DEFAULT_MODELING_TEXT_OVERLAY_LAYOUT_MOBILE,
+  hasCustomModelingTextLayout,
+} from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
+import {
+  resolveModelingSlotBodyForMobile,
+  resolveModelingSlotTitleForMobile,
+} from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotCopyMessages } from "./ModelingSlotCopyMessages";
+import { ModelingTextOverlayVisualEditor } from "./ModelingTextOverlayVisualEditor";
 import { SiteRichHtmlEditor } from "./SiteRichHtmlEditor";
 
 const TITLE_TEXTAREA_CLASS =
@@ -18,15 +29,35 @@ const TITLE_TEXTAREA_CLASS =
 type ModelingSlotCopyEditorProps = {
   slotKey: ModelingSlotKey;
   initial: ModelingSlotCopyEntry;
+  previewRow: AdminModelingSlotRow;
+  /** Matches public card: Hip-Hop uses light text; most blocks use dark text on light areas. */
+  textDarkPreview: boolean;
 };
 
-export function ModelingSlotCopyEditor({ slotKey, initial }: ModelingSlotCopyEditorProps) {
+export function ModelingSlotCopyEditor({
+  slotKey,
+  initial,
+  previewRow,
+  textDarkPreview,
+}: ModelingSlotCopyEditorProps) {
   const router = useRouter();
   const label = MODELING_SLOT_LABELS[slotKey];
 
   const [state, formAction] = useActionState(updateModelingSlotCopy, null);
   const [bodyHtml, setBodyHtml] = useState(initial.body);
   const [bodyMobileHtml, setBodyMobileHtml] = useState(initial.bodyMobile);
+  const [titleDesktop, setTitleDesktop] = useState(initial.title);
+  const [titleMobile, setTitleMobile] = useState(initial.titleMobile);
+  const [layoutDesktop, setLayoutDesktop] = useState(
+    initial.textLayoutDesktop ?? DEFAULT_MODELING_TEXT_OVERLAY_LAYOUT_DESKTOP,
+  );
+  const [layoutMobile, setLayoutMobile] = useState(
+    initial.textLayoutMobile ?? DEFAULT_MODELING_TEXT_OVERLAY_LAYOUT_MOBILE,
+  );
+  const [useCustom, setUseCustom] = useState(() =>
+    hasCustomModelingTextLayout(initial.textLayoutDesktop, initial.textLayoutMobile),
+  );
+  const [overlayVariant, setOverlayVariant] = useState<"desktop" | "mobile">("desktop");
 
   useEffect(() => {
     if (state?.ok) {
@@ -34,9 +65,31 @@ export function ModelingSlotCopyEditor({ slotKey, initial }: ModelingSlotCopyEdi
     }
   }, [state?.ok, router]);
 
+  const desktopImageUrl = previewRow.displayUrl;
+  const mobileImageUrl = previewRow.displayUrlMobile ?? previewRow.displayUrl;
+
+  const titleForMobilePreview = useMemo(
+    () => resolveModelingSlotTitleForMobile({ title: titleDesktop, titleMobile }),
+    [titleDesktop, titleMobile],
+  );
+
+  const bodyForMobilePreview = useMemo(() => {
+    const entry: ModelingSlotCopyEntry = {
+      title: titleDesktop,
+      titleMobile,
+      body: bodyHtml,
+      bodyMobile: bodyMobileHtml,
+      textLayoutDesktop: null,
+      textLayoutMobile: null,
+    };
+    return resolveModelingSlotBodyForMobile(entry);
+  }, [titleDesktop, titleMobile, bodyHtml, bodyMobileHtml]);
+
+  const activeLayout = overlayVariant === "desktop" ? layoutDesktop : layoutMobile;
+  const setActiveLayout = overlayVariant === "desktop" ? setLayoutDesktop : setLayoutMobile;
+
   return (
     <form
-      key={`modeling-slot-copy-${slotKey}-${initial.title}-${initial.titleMobile}-${initial.body}-${initial.bodyMobile}`}
       action={formAction}
       className="mt-4 flex flex-col gap-4 border-t border-slate-200/80 pt-4"
       aria-label={`Edit titles and descriptions for ${label}`}
@@ -44,6 +97,17 @@ export function ModelingSlotCopyEditor({ slotKey, initial }: ModelingSlotCopyEdi
       <input type="hidden" name="slotKey" value={slotKey} />
       <input type="hidden" name="body" value={bodyHtml} />
       <input type="hidden" name="bodyMobile" value={bodyMobileHtml} />
+      <input type="hidden" name="useCustomTextLayout" value={useCustom ? "1" : "0"} />
+      <input
+        type="hidden"
+        name="textLayoutDesktop"
+        value={useCustom ? JSON.stringify(layoutDesktop) : ""}
+      />
+      <input
+        type="hidden"
+        name="textLayoutMobile"
+        value={useCustom ? JSON.stringify(layoutMobile) : ""}
+      />
 
       <div className="flex flex-col gap-2 rounded-xl border border-slate-200/90 bg-slate-50/50 p-3">
         <p className="text-sm font-semibold text-slate-900">Desktop / tablet</p>
@@ -63,7 +127,8 @@ export function ModelingSlotCopyEditor({ slotKey, initial }: ModelingSlotCopyEdi
             name="title"
             rows={2}
             required
-            defaultValue={initial.title}
+            value={titleDesktop}
+            onChange={(e) => setTitleDesktop(e.target.value)}
             className={TITLE_TEXTAREA_CLASS}
           />
           <p className="text-xs text-slate-500">
@@ -108,7 +173,8 @@ export function ModelingSlotCopyEditor({ slotKey, initial }: ModelingSlotCopyEdi
             id={`modeling-slot-title-mobile-${slotKey}`}
             name="titleMobile"
             rows={2}
-            defaultValue={initial.titleMobile}
+            value={titleMobile}
+            onChange={(e) => setTitleMobile(e.target.value)}
             className={TITLE_TEXTAREA_CLASS}
           />
           <p className="text-xs text-slate-500">
@@ -133,6 +199,83 @@ export function ModelingSlotCopyEditor({ slotKey, initial }: ModelingSlotCopyEdi
             Optional. Empty uses the desktop / tablet description on small screens.
           </p>
         </div>
+      </div>
+
+      <div className="flex flex-col gap-3 rounded-xl border border-slate-200/90 bg-white p-3">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-slate-900">Visual text layout (optional)</p>
+            <p className="mt-1 max-w-prose text-xs text-slate-500">
+              Place title and description on the image with separate Desktop and Mobile layouts. Adjust
+              here first, then save once — no need to save after every nudge. Requires both layouts when
+              enabled; the homepage matches this preview when saved.
+            </p>
+          </div>
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-800">
+            <input
+              type="checkbox"
+              checked={useCustom}
+              onChange={(e) => {
+                const on = e.target.checked;
+                setUseCustom(on);
+                if (on) {
+                  setLayoutDesktop((prev) => ({ ...prev }));
+                  setLayoutMobile((prev) => ({ ...prev }));
+                }
+              }}
+              className="h-4 w-4 rounded border-slate-300 text-[#e2c481] focus:ring-[#e2c481]"
+            />
+            Use custom overlay positions
+          </label>
+        </div>
+
+        {useCustom ? (
+          <>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => setOverlayVariant("desktop")}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+                  overlayVariant === "desktop"
+                    ? "bg-slate-900 text-white"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                Desktop / tablet layout
+              </button>
+              <button
+                type="button"
+                onClick={() => setOverlayVariant("mobile")}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+                  overlayVariant === "mobile"
+                    ? "bg-slate-900 text-white"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                Mobile layout
+              </button>
+            </div>
+            <ModelingTextOverlayVisualEditor
+              variant={overlayVariant}
+              layout={activeLayout}
+              onLayoutChange={setActiveLayout}
+              imageUrl={overlayVariant === "desktop" ? desktopImageUrl : mobileImageUrl}
+              titleText={
+                overlayVariant === "desktop" ? titleDesktop : titleForMobilePreview
+              }
+              bodyHtml={
+                overlayVariant === "desktop" ? bodyHtml : bodyForMobilePreview
+              }
+              textDarkPreview={textDarkPreview}
+              onTitleChange={
+                overlayVariant === "desktop" ? setTitleDesktop : setTitleMobile
+              }
+              onBodyHtmlChange={
+                overlayVariant === "desktop" ? setBodyHtml : setBodyMobileHtml
+              }
+            />
+          </>
+        ) : null}
       </div>
 
       <ModelingSlotCopyMessages state={state} />
