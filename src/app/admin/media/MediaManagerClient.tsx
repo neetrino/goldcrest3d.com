@@ -20,6 +20,7 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
 
   return (
     <div className="space-y-10">
+      <PowerBannerCopySection bundle={powerBannerCopy} />
       <ModelingMediaSection
         title={modelingMeta?.label ?? "Modeling Specialization"}
         description={
@@ -29,7 +30,6 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
         slots={bundle.modeling}
       />
       <FinishedCreationsGallery row1={bundle.finishedRow1} row2={bundle.finishedRow2} />
-      <PowerBannerCopySection bundle={powerBannerCopy} />
     </div>
   );
 }
