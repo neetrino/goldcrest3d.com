@@ -21,7 +21,6 @@ type ModelingSlotFormProps = {
 };
 
 function ModelingSlotForm({ row, copy }: ModelingSlotFormProps) {
-  const copySyncKey = `${copy.title}-${copy.body}-${copy.bodyMobile}-${copy.titleMobile}-${JSON.stringify(copy.textLayoutDesktop)}-${JSON.stringify(copy.textLayoutMobile)}`;
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100">
       <div>
@@ -34,7 +33,7 @@ function ModelingSlotForm({ row, copy }: ModelingSlotFormProps) {
       <ModelingSlotVariantUpload row={row} variant="desktop" />
       <ModelingSlotVariantUpload row={row} variant="mobile" />
       <ModelingSlotCopyEditor
-        key={copySyncKey}
+        key={row.slotKey}
         slotKey={row.slotKey}
         initial={copy}
         previewRow={row}

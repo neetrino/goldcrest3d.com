@@ -12,6 +12,7 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "node_modules/**",
     // Bundled / vendored output (minified JS triggers no-unused-expressions hundreds of times)
     "magicpath-project/**",
     "src/generated/**",
