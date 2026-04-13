@@ -16,6 +16,17 @@ import {
 } from "./modeling-card.typography-layout.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
 
+function ModelingCardTitleLines({ title }: { title: string }) {
+  if (!title.includes("\n")) {
+    return title;
+  }
+  return title.split(/\r?\n/).map((line, i) => (
+    <span key={`modeling-title-line-${i}`} className="block">
+      {line}
+    </span>
+  ));
+}
+
 export type ModelingCardFullBleedProps = Pick<
   ModelingCardProps,
   | "title"
@@ -60,6 +71,7 @@ export type ModelingCardFullBleedProps = Pick<
   descriptionClassName: string;
   descriptionContent: ReactNode;
   DescriptionTag: "div" | "p";
+  usesRichDescription: boolean;
 };
 
 export function ModelingCardFullBleed({
@@ -104,6 +116,7 @@ export function ModelingCardFullBleed({
   descriptionClassName,
   descriptionContent,
   DescriptionTag,
+  usesRichDescription,
 }: ModelingCardFullBleedProps) {
   const [hipHopZoomCompensation, setHipHopZoomCompensation] = useState(1);
 
@@ -212,7 +225,9 @@ export function ModelingCardFullBleed({
             <>
               <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:hidden">
                 <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
-                  {title === PORTRAIT_MOBILE_TITLE_FULL ? (
+                  {usesRichDescription ? (
+                    <ModelingCardTitleLines title={title} />
+                  ) : title === PORTRAIT_MOBILE_TITLE_FULL ? (
                     <>
                       <span className="block whitespace-nowrap">3D Portrait</span>
                       <span className="block whitespace-nowrap">Jewelry</span>
@@ -221,12 +236,22 @@ export function ModelingCardFullBleed({
                     title
                   )}
                 </h3>
-                <div className={PORTRAIT_MOBILE_OVERLAY_DESC_CLASS}>
-                  {descriptionLinesMobile!.map((line, i) => (
-                    <span key={`portrait-mobile-${i}`} className="block">
-                      {line}
-                    </span>
-                  ))}
+                <div
+                  className={
+                    usesRichDescription
+                      ? `${PORTRAIT_MOBILE_OVERLAY_DESC_CLASS} modeling-slot-rich-body`
+                      : PORTRAIT_MOBILE_OVERLAY_DESC_CLASS
+                  }
+                >
+                  {usesRichDescription ? (
+                    descriptionContent
+                  ) : (
+                    descriptionLinesMobile!.map((line, i) => (
+                      <span key={`portrait-mobile-${i}`} className="block">
+                        {line}
+                      </span>
+                    ))
+                  )}
                 </div>
               </div>
               <div
@@ -241,7 +266,9 @@ export function ModelingCardFullBleed({
                     right: textAlign === "left" ? undefined : "8%",
                   }}
                 >
-                  <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>{title}</h3>
+                  <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>
+                    <ModelingCardTitleLines title={title} />
+                  </h3>
                 </div>
                 <div
                   className={`max-w-[calc(407px*var(--ms,1))] ${descriptionBlockAlignClass}`}
@@ -274,7 +301,9 @@ export function ModelingCardFullBleed({
                   right: textAlign === "left" ? undefined : "8%",
                 }}
               >
-                <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>{title}</h3>
+                <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>
+                  <ModelingCardTitleLines title={title} />
+                </h3>
               </div>
               <div
                 className={`max-w-[calc(407px*var(--ms,1))] ${descriptionBlockAlignClass}`}
@@ -305,7 +334,7 @@ export function ModelingCardFullBleed({
                 ...(titleMarginTop != null && { marginTop: titleMarginTop }),
               }}
             >
-              {title}
+              <ModelingCardTitleLines title={title} />
             </h3>
             <DescriptionTag
               className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:-mt-[calc(0.5rem*var(--ms,1))]" : ""}${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}

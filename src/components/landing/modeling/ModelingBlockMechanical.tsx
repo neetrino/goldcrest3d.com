@@ -1,6 +1,9 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
+import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
+import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
 import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
@@ -8,32 +11,26 @@ import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 /** Mobile-only overlay nudge down (`max-sm:translate-y`); paired with `--mechanical-overlay-ty`. */
 const MOBILE_OVERLAY_TRANSLATE_Y_PX = 100;
 
-const TITLE_LINE1 = "Mechanical &";
-const TITLE_LINE2 = "Lock Systems";
-
 /** Desktop (md+): nudge first title line up without shifting the rest of the overlay. */
 const TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS = "md:-translate-y-1.5";
 
-/** Mobile only: Inter 12/300, width 283px; explicit line breaks. */
-const DESCRIPTION_MOBILE_LINES = [
-  "Tolerance-calibrated clasps, hinges and",
-  "multi-part articulated structures",
-  "engineered for controlled movement.",
-] as const;
+const MECHANICAL_RICH_BODY =
+  "[&_p:not(:last-child)]:mb-[0.45em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
 
-/** Desktop line breaks â€” match design baseline (left-aligned block, ragged right). */
-const DESCRIPTION_LINES = [
-  "Tolerance-calibrated clasps, hinges and",
-  "multi-part articulated",
-  "structures engineered for controlled",
-  "movement and secure locking",
-  "performance. Functional systems",
-  "developed for durability, precision",
-  "alignment and long-term",
-  "mechanical reliability.",
-] as const;
+function MechanicalTitleLines({ title }: { title: string }) {
+  const lines = title.split(/\r?\n/);
+  return lines.map((line, i) => (
+    <span
+      key={`mechanical-title-${i}`}
+      className={`block ${i === 0 ? TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS : ""}`}
+    >
+      {line}
+    </span>
+  ));
+}
 
 type ModelingBlockMechanicalProps = {
+  copy: ModelingSlotCopyEntry;
   imageUrlDesktop: string;
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
@@ -42,6 +39,7 @@ type ModelingBlockMechanicalProps = {
 
 /** Mechanical & Lock Systems block. Full-bleed image with title and description overlay. */
 export function ModelingBlockMechanical({
+  copy,
   imageUrlDesktop,
   imageUrlMobile,
   imageFramingDesktop,
@@ -119,31 +117,26 @@ export function ModelingBlockMechanical({
         style={
           {
             ["--mechanical-overlay-ty" as string]: `${MOBILE_OVERLAY_TRANSLATE_Y_PX}px`,
-          } as React.CSSProperties
+          } as CSSProperties
         }
       >
         <h3 className="z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left">
-          <span className={`block ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
-            {TITLE_LINE1}
-          </span>
-          <span className="block">{TITLE_LINE2}</span>
+          <MechanicalTitleLines title={copy.title} />
         </h3>
-        <p className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] sm:hidden">
-          {DESCRIPTION_MOBILE_LINES.map((line, i) => (
-            <span key={i} className="block">
-              {line}
-            </span>
-          ))}
-        </p>
+        <div className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] sm:hidden">
+          <HeroBannerBodyRichText
+            body={copy.body}
+            className={`modeling-slot-rich-body ${MECHANICAL_RICH_BODY}`}
+          />
+        </div>
         <div
           className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:block"
           style={{ overflow: "visible" }}
         >
-          {DESCRIPTION_LINES.map((line, i) => (
-            <span key={i} className="block whitespace-nowrap">
-              {line}
-            </span>
-          ))}
+          <HeroBannerBodyRichText
+            body={copy.body}
+            className={`modeling-slot-rich-body ${MECHANICAL_RICH_BODY}`}
+          />
         </div>
       </div>
     </article>

@@ -130,3 +130,11 @@ model PowerBannerCopy {
   heroImageLayout Json?
   updatedAt   DateTime @updatedAt
 }
+
+/// Modeling Specialization card title + rich body — Admin → Media Manager (matches hero sanitizer).
+model ModelingSlotCopy {
+  slotKey   String   @id
+  title     String   @db.Text
+  body      String   @db.Text
+  updatedAt DateTime @updatedAt
+}

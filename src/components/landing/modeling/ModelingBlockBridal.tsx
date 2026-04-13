@@ -1,29 +1,11 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
+import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
 import type { ImageFraming } from "@/lib/site-media/image-framing";
 
 import { ModelingCard } from "./ModelingCard";
 
-/** Desktop / `sm+`: stacked lines (controlled breaks); fallback row layout uses `BRIDAL_DESCRIPTION_LINES`. */
-const BRIDAL_DESCRIPTION_LINES_DESKTOP = [
-  "Engineered engagement and bridal",
-  "settings built for durability, comfort and",
-  "precise stone alignment. Secure prong",
-  "architecture developed for long-term wear.",
-] as const;
-
-/** Fallback when `descriptionLinesDesktop` omitted: two logical rows (row layout + transforms). */
-const BRIDAL_DESCRIPTION_LINES = [
-  "Engineered engagement and bridal settings built for durability, comfort and precise stone alignment.",
-  "Secure prong architecture developed for long-term wear.",
-] as const;
-
-/** Mobile only: first paragraph split into two lines (third desktop line hidden below `sm`). */
-const BRIDAL_DESCRIPTION_LINES_MOBILE = [
-  "Engineered engagement and bridal settings built for",
-  "durability, comfort and precise stone alignment.",
-] as const;
-
 type ModelingBlockBridalProps = {
+  copy: ModelingSlotCopyEntry;
   imageUrlDesktop: string;
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
@@ -32,6 +14,7 @@ type ModelingBlockBridalProps = {
 
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
 export function ModelingBlockBridal({
+  copy,
   imageUrlDesktop,
   imageUrlMobile,
   imageFramingDesktop,
@@ -39,11 +22,9 @@ export function ModelingBlockBridal({
 }: ModelingBlockBridalProps) {
   return (
     <ModelingCard
-      title="Bridal & Engagement"
+      title={copy.title}
       description=""
-      descriptionLines={[...BRIDAL_DESCRIPTION_LINES]}
-      descriptionLinesDesktop={[...BRIDAL_DESCRIPTION_LINES_DESKTOP]}
-      descriptionLinesMobile={[...BRIDAL_DESCRIPTION_LINES_MOBILE]}
+      descriptionRichHtml={copy.body}
       imageSrc={imageUrlDesktop}
       imageSrcMobile={imageUrlMobile}
       imagePairBreakpoint="md"
@@ -68,7 +49,6 @@ export function ModelingBlockBridal({
       textBlockMarginLeft="12%"
       textBlockMarginTop="22%"
       descriptionLayout="row"
-      mobileBridalTypography
       imageFramingDesktop={imageFramingDesktop}
       imageFramingMobile={imageFramingMobile}
     />

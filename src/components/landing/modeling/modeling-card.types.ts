@@ -5,7 +5,12 @@ import type { ImageFraming } from "@/lib/site-media/image-framing";
 /** Props for one Modeling Specialization card. Լրիվ սյուն, aspect 83/43, սուր անկյուններ. */
 export type ModelingCardProps = {
   title: string;
-  /** Single paragraph; ignored when descriptionLines is set. */
+  /**
+   * Admin-managed HTML (Media Manager). When set, `descriptionLines*` are ignored and the body is
+   * rendered with the same sanitizer as hero banners.
+   */
+  descriptionRichHtml?: string;
+  /** Single paragraph; ignored when descriptionLines or descriptionRichHtml is set. */
   description: string;
   /** When set, description is rendered as one block per line (e.g. Hip-Hop). */
   descriptionLines?: string[];

@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 
 import { LANDING_IMAGE_IDS } from "@/constants";
+import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
 import {
   framingToBackgroundImageStyle,
   type ImageFraming,
@@ -18,20 +19,8 @@ function portraitLayerBackground(
   return { background: `url("${imageUrl}") #E0F2F1 center / cover no-repeat` };
 }
 
-const PORTRAIT_DESCRIPTION_LINES = [
-  "Advanced pavé and fine-setting structures",
-  "developed with micron-level precision.",
-  "Invisible settings and ultra-thin tolerances",
-  "engineered with strict structural discipline.",
-] as const;
-
-/** Below `sm` only; desktop unchanged. */
-const PORTRAIT_DESCRIPTION_LINES_MOBILE = [
-  "Advanced pavé and fine-setting structures",
-  "developed with micron-level precision.",
-] as const;
-
 type ModelingBlockPortraitProps = {
+  copy: ModelingSlotCopyEntry;
   imageUrlDesktop: string;
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
@@ -39,6 +28,7 @@ type ModelingBlockPortraitProps = {
 };
 
 export function ModelingBlockPortrait({
+  copy,
   imageUrlDesktop,
   imageUrlMobile,
   imageFramingDesktop,
@@ -47,10 +37,9 @@ export function ModelingBlockPortrait({
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
     <ModelingCard
-      title="High Jewelry"
+      title={copy.title}
       description=""
-      descriptionLines={[...PORTRAIT_DESCRIPTION_LINES]}
-      descriptionLinesMobile={[...PORTRAIT_DESCRIPTION_LINES_MOBILE]}
+      descriptionRichHtml={copy.body}
       imageSrc={imageUrlDesktop}
       imageId={LANDING_IMAGE_IDS.MODELING_PORTRAIT}
       imageOnLeft={false}

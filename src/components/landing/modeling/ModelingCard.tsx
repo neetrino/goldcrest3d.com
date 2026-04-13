@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 
+import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { framingToCoverImageStyle } from "@/lib/site-media/image-framing";
 
 import { renderModelingCardDescriptionContent } from "./ModelingCardDescriptionContent";
@@ -14,6 +15,7 @@ export type { ModelingCardProps } from "./modeling-card.types";
 export function ModelingCard({
   title,
   description,
+  descriptionRichHtml,
   descriptionLines,
   descriptionLinesDesktop,
   descriptionLinesMobile,
@@ -64,16 +66,18 @@ export function ModelingCard({
   imageFramingDesktop,
   imageFramingMobile,
 }: ModelingCardProps) {
-  const hasLines = Boolean(descriptionLines && descriptionLines.length > 0);
+  const usesRichDescription = Boolean(descriptionRichHtml?.trim());
+  const hasLines =
+    Boolean(descriptionLines && descriptionLines.length > 0) && !usesRichDescription;
   const hipHopMobileLayout = mobileHipHopTypography && hasLines;
   const bridalMobileLayout =
     mobileBridalTypography && hasLines && fluidTextLayout && descriptionLayout === "row";
   const portraitMobileLayout =
     mobilePortraitTypography &&
-    hasLines &&
+    (hasLines || usesRichDescription) &&
     independentTitleDescription &&
-    descriptionLinesMobile != null &&
-    descriptionLinesMobile.length > 0;
+    (usesRichDescription ||
+      (descriptionLinesMobile != null && descriptionLinesMobile.length > 0));
   const textColor = textDark ? "text-black" : "text-white";
   const descriptionColor = textDark
     ? descriptionMuted
@@ -97,28 +101,6 @@ export function ModelingCard({
     : "";
   const bridalRowSpanClassDesktop = `${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""}`;
 
-  const descriptionContent = renderModelingCardDescriptionContent({
-    description,
-    descriptionLines,
-    descriptionLinesDesktop,
-    descriptionLinesMobile,
-    descriptionLayout,
-    firstDescriptionLineId,
-    firstDescriptionLineMarginRight,
-    firstDescriptionLineTranslateX,
-    secondDescriptionLineTranslateX,
-    hasLines,
-    hipHopMobileLayout,
-    bridalMobileLayout,
-    lineWrapClass,
-    hipHopMobileLineClass,
-    hipHopMobileLineSingleLineClass,
-    bridalRowWrapperClass,
-    bridalRowSpanClass,
-    bridalRowSpanClassDesktop,
-  });
-
-  const DescriptionTag = hasLines ? "div" : "p";
   const titleSizeClass =
     titleCompact || hasLines
       ? "text-[calc(32px*var(--ms,1)*var(--mt,1))] leading-[calc(24px*var(--ms,1)*var(--mt,1))] scale-x-105 origin-left"
@@ -133,6 +115,40 @@ export function ModelingCard({
     ? `font-sans w-full text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(16px*var(--ms,1)*var(--mt,1))] text-center sm:max-w-[calc(560px*var(--ms,1))] sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-center ${descriptionColor}`
     : `font-manrope font-light ${hasLines ? `text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] ${noDescriptionMaxWidth ? "" : "max-w-[calc(560px*var(--ms,1))]"}` : "text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] max-w-[calc(407px*var(--ms,1))]"} ${descriptionColor}`;
   const descriptionClassNameGradient = `font-manrope font-light text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] ${descriptionColor}`;
+
+  const modelingRichBodyLayout =
+    "[&_p:not(:last-child)]:mb-[0.45em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
+
+  const descriptionContent =
+    usesRichDescription && descriptionRichHtml ? (
+      <HeroBannerBodyRichText
+        body={descriptionRichHtml}
+        className={`modeling-slot-rich-body ${modelingRichBodyLayout} ${descriptionClassName}`}
+      />
+    ) : (
+      renderModelingCardDescriptionContent({
+        description,
+        descriptionLines,
+        descriptionLinesDesktop,
+        descriptionLinesMobile,
+        descriptionLayout,
+        firstDescriptionLineId,
+        firstDescriptionLineMarginRight,
+        firstDescriptionLineTranslateX,
+        secondDescriptionLineTranslateX,
+        hasLines,
+        hipHopMobileLayout,
+        bridalMobileLayout,
+        lineWrapClass,
+        hipHopMobileLineClass,
+        hipHopMobileLineSingleLineClass,
+        bridalRowWrapperClass,
+        bridalRowSpanClass,
+        bridalRowSpanClassDesktop,
+      })
+    );
+
+  const DescriptionTag = hasLines || usesRichDescription ? "div" : "p";
   const basePositionStyle: CSSProperties = { objectPosition: imagePosition };
   const imageStyleDesktop = imageFramingDesktop
     ? framingToCoverImageStyle(imageFramingDesktop)
@@ -241,6 +257,7 @@ export function ModelingCard({
         descriptionClassName={descriptionClassName}
         descriptionContent={descriptionContent}
         DescriptionTag={DescriptionTag}
+        usesRichDescription={usesRichDescription}
       />
     );
   }

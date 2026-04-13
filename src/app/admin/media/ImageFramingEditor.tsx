@@ -22,19 +22,17 @@ import {
   framingToCoverImageStyle,
   type ImageFraming,
 } from "@/lib/site-media/image-framing";
-import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
-
 import { FramingDirectionPad } from "./FramingDirectionPad";
 import {
   IMAGE_FRAMING_DRAG_SENSITIVITY,
   IMAGE_FRAMING_FOCUS_STEP,
   IMAGE_FRAMING_ZOOM_STEP,
 } from "./image-framing-editor.constants";
+import { framingSectionAppearance } from "./framing-section-appearance";
+import type { ImageFramingTarget } from "./image-framing-target";
+import { ModelingFramePositionHelpText } from "./ModelingFramePositionHelpText";
 
-export type ImageFramingTarget =
-  | { kind: "gallery"; itemId: string }
-  | { kind: "modeling"; slotId: string; variant: "desktop" | "mobile" }
-  | { kind: "powerBanner"; bannerKey: PowerBannerKey };
+export type { ImageFramingTarget } from "./image-framing-target";
 
 type ImageFramingEditorProps = {
   imageUrl: string | null;
@@ -169,13 +167,21 @@ export function ImageFramingEditor({
     return null;
   }
 
+  const appearance = framingSectionAppearance(target);
+
   return (
-    <div className="mt-4 space-y-3 rounded-xl border border-slate-200/90 bg-slate-50/80 p-4">
+    <div
+      className={`mt-4 space-y-3 rounded-xl border border-slate-200/90 p-4 ${appearance.cardClass}`}
+    >
       <div>
-        <p className="text-sm font-semibold text-slate-900">Frame &amp; position</p>
-        <p className="mt-1 text-xs text-slate-600">
-          Drag the image inside the preview or use the controls. Save to apply on the live site.
-        </p>
+        <p className="text-sm font-semibold text-slate-900">{appearance.title}</p>
+        {target.kind === "modeling" ? (
+          <ModelingFramePositionHelpText variant={target.variant} />
+        ) : (
+          <p className="mt-1 text-xs text-slate-600">
+            Drag the image inside the preview or use the controls. Save to apply on the live site.
+          </p>
+        )}
       </div>
 
       <div

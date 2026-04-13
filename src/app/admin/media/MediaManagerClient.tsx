@@ -1,5 +1,6 @@
 "use client";
 
+import type { ModelingSlotCopyBundle } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
 import type { PowerBannerCopyBundle } from "@/lib/power-banner-copy/power-banner-copy.types";
 import type { AdminSiteMediaBundle } from "@/lib/site-media/get-site-media-admin";
 import { SITE_MEDIA_GROUP_KEYS } from "@/lib/site-media/site-media.registry";
@@ -11,9 +12,14 @@ import { PowerBannerCopySection } from "./PowerBannerCopySection";
 type MediaManagerClientProps = {
   bundle: AdminSiteMediaBundle;
   powerBannerCopy: PowerBannerCopyBundle;
+  modelingSlotCopy: ModelingSlotCopyBundle;
 };
 
-export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClientProps) {
+export function MediaManagerClient({
+  bundle,
+  powerBannerCopy,
+  modelingSlotCopy,
+}: MediaManagerClientProps) {
   const modelingMeta = bundle.groupsMeta.find(
     (g) => g.key === SITE_MEDIA_GROUP_KEYS.MODELING_SPECIALIZATION,
   );
@@ -28,6 +34,7 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
           "Fixed slots for each Modeling Specialization card."
         }
         slots={bundle.modeling}
+        slotCopy={modelingSlotCopy}
       />
       <FinishedCreationsGallery row1={bundle.finishedRow1} row2={bundle.finishedRow2} />
     </div>

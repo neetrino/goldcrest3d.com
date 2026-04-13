@@ -1,12 +1,14 @@
+import { getModelingSlotCopyBundle } from "@/lib/modeling-slot-copy/get-modeling-slot-copy";
 import { getPowerBannerCopyBundle } from "@/lib/power-banner-copy/get-power-banner-copy";
 import { getSiteMediaAdminBundle } from "@/lib/site-media/get-site-media-admin";
 
 import { MediaManagerClient } from "./MediaManagerClient";
 
 export default async function AdminMediaPage() {
-  const [bundle, powerBannerCopy] = await Promise.all([
+  const [bundle, powerBannerCopy, modelingSlotCopy] = await Promise.all([
     getSiteMediaAdminBundle(),
     getPowerBannerCopyBundle(),
+    getModelingSlotCopyBundle(),
   ]);
 
   return (
@@ -23,7 +25,11 @@ export default async function AdminMediaPage() {
           preview, and you&apos;re done — updates apply as soon as each upload succeeds.
         </p>
       </header>
-      <MediaManagerClient bundle={bundle} powerBannerCopy={powerBannerCopy} />
+      <MediaManagerClient
+        bundle={bundle}
+        powerBannerCopy={powerBannerCopy}
+        modelingSlotCopy={modelingSlotCopy}
+      />
     </div>
   );
 }

@@ -9,6 +9,10 @@ import {
   type ImageFraming,
 } from "@/lib/site-media/image-framing";
 
+import {
+  MODELING_DESKTOP_FRAME_POSITION_LABEL,
+  MODELING_MOBILE_FRAME_POSITION_LABEL,
+} from "./image-framing-editor.constants";
 import { ImageFramingEditor } from "./ImageFramingEditor";
 
 type ModelingSlotPreviewProps = {
@@ -38,7 +42,10 @@ export function ModelingSlotPreview({ row }: ModelingSlotPreviewProps) {
         />
       </div>
       {row.itemId && row.displayUrl ? (
-        <div className="border-t border-slate-200 bg-white px-3 py-3">
+        <section
+          aria-label={`${MODELING_DESKTOP_FRAME_POSITION_LABEL} — ${row.label}`}
+          className="border-t border-slate-200 bg-white px-3 pb-3 pt-2"
+        >
           <ImageFramingEditor
             key={`${row.slotKey}-desktop-${framingFingerprint(row.desktopFraming)}`}
             imageUrl={row.displayUrl}
@@ -47,10 +54,13 @@ export function ModelingSlotPreview({ row }: ModelingSlotPreviewProps) {
             target={{ kind: "modeling", slotId: row.slotKey, variant: "desktop" }}
             enabled
           />
-        </div>
+        </section>
       ) : null}
       {row.itemId && row.displayUrlMobile ? (
-        <div className="border-t border-slate-200 bg-white px-3 py-3">
+        <section
+          aria-label={`${MODELING_MOBILE_FRAME_POSITION_LABEL} — ${row.label}`}
+          className="border-t border-slate-200 bg-white px-3 pb-3 pt-2"
+        >
           <ImageFramingEditor
             key={`${row.slotKey}-mobile-${framingFingerprint(row.mobileFraming)}`}
             imageUrl={row.displayUrlMobile}
@@ -59,7 +69,7 @@ export function ModelingSlotPreview({ row }: ModelingSlotPreviewProps) {
             target={{ kind: "modeling", slotId: row.slotKey, variant: "mobile" }}
             enabled
           />
-        </div>
+        </section>
       ) : null}
       <div className="border-t border-slate-200/80 bg-slate-900 px-4 py-3 text-white">
         <p className="text-[15px] font-semibold leading-snug">{row.label}</p>
