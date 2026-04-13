@@ -162,9 +162,6 @@ export function ModelingTextOverlayVisualEditor({
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">
           Editing: {variantLabel}
         </p>
-        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] text-slate-500">
-          Click the preview to open the full editor · drag the grip · arrow keys nudge (Shift = larger step)
-        </span>
       </div>
 
       <div
