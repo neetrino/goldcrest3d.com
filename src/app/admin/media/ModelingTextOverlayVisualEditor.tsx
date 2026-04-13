@@ -203,10 +203,6 @@ export function ModelingTextOverlayVisualEditor({
         </button>
       </div>
 
-      <div className={editorOpen ? "hidden" : undefined}>
-        <ModelingTextOverlayFontSliders variantLabel={variantLabel} layout={layout} updateLayer={updateLayer} />
-      </div>
-
       <dialog
         ref={dialogRef}
         className="fixed left-0 top-0 z-50 m-0 h-full max-h-none w-full max-w-none border-0 bg-transparent p-0 shadow-none [&::backdrop]:bg-slate-900/50"
