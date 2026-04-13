@@ -119,7 +119,7 @@ section[id] {
   }
 }
 
-/* Modeling hero subtitle — Figma 16/24 +1px nudge */
+/* Modeling hero subtitle — same type scale as #hero-rendering-subtitle (Jewelry Rendering) */
 #hero-modeling-subtitle {
   align-self: stretch;
   margin-inline: auto;
@@ -127,11 +127,28 @@ section[id] {
   white-space: normal;
   transform: translateY(-8px);
   color: rgba(255, 255, 255, 0.9);
-  font-family: "SF Compact", -apple-system, system-ui, sans-serif;
-  font-size: 17px;
-  font-style: italic;
-  font-weight: 350;
-  line-height: 25px;
+}
+
+@media (max-width: 767px) {
+  #hero-modeling-subtitle {
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 24px;
+    letter-spacing: -0.312px;
+  }
+}
+
+@media (min-width: 768px) {
+  #hero-modeling-subtitle {
+    font-family: "SF Compact", -apple-system, system-ui, sans-serif;
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 350;
+    line-height: 28px;
+    transform: translateY(-8px);
+  }
 }
 
 /* Hero slide 1 — modeling title: mobile Figma 30/30 +1px nudge; md+ unchanged */
