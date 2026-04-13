@@ -1,9 +1,10 @@
 "use client";
 
 import type { AdminOrderedItemRow } from "@/lib/site-media/get-site-media-admin";
+import { framingFingerprint } from "@/lib/site-media/image-framing";
 
 import { GallerySlideReorderButtons } from "./GallerySlideReorderButtons";
-
+import { ImageFramingEditor } from "./ImageFramingEditor";
 import { ReplaceOrderedGalleryImageForm } from "./ReplaceOrderedGalleryImageForm";
 
 type OrderedGallerySlideToolbarProps = {
@@ -58,6 +59,16 @@ export function OrderedGallerySlideToolbar({
         rowLabel={rowContextLabel}
         recommendedSize={recommendedSize}
       />
+      {item.displayUrl ? (
+        <ImageFramingEditor
+          key={`${item.id}-${framingFingerprint(item.framing)}`}
+          imageUrl={item.displayUrl}
+          initialFraming={item.framing}
+          aspectClassName="aspect-video"
+          target={{ kind: "gallery", itemId: item.id }}
+          enabled={!pending}
+        />
+      ) : null}
     </div>
   );
 }
