@@ -1,13 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import { useLayoutEffect, useRef } from "react";
+import type { PointerEvent as ReactPointerEvent, RefObject } from "react";
 
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
-import type { ModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
+import { ModelingTextOverlayAlignmentGuidesOverlay } from "./ModelingTextOverlayAlignmentGuidesOverlay";
+import { ModelingTextOverlayDragMoveHandle } from "./ModelingTextOverlayDragMoveHandle";
+import type { ModelingTextOverlayAlignmentGuides } from "@/lib/modeling-slot-copy/modeling-text-overlay-alignment-guides";
+import type {
+  ModelingOverlayLayerKey,
+  ModelingTextOverlayLayout,
+} from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import {
+  getModelingTextOverlayLayerFrameStyle,
+  MODELING_TEXT_OVERLAY_FRAME_PADDING_DESKTOP_CLASS,
+  MODELING_TEXT_OVERLAY_FRAME_PADDING_MOBILE_CLASS,
   MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS,
   MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS,
 } from "@/lib/modeling-slot-copy/modeling-text-overlay-presentation";
@@ -15,34 +24,7 @@ import {
 export const MODELING_TEXT_OVERLAY_RICH_PREVIEW_CLASS =
   "[&_p:not(:last-child)]:mb-[0.45em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
 
-/** Matches `ModelingSlotCustomTextOverlay` padding for each breakpoint. */
-export const OVERLAY_PADDING_DESKTOP_CLASS = "px-8 py-10";
-export const OVERLAY_PADDING_MOBILE_CLASS = "px-6 py-8";
-
-export type ModelingOverlayLayerKey = "title" | "body";
-
-function layerPositionStyle(layer: ModelingTextOverlayLayout["title"]): CSSProperties {
-  return {
-    position: "absolute",
-    left: `${layer.xPct}%`,
-    top: `${layer.yPct}%`,
-    transform: "translate(-50%, -50%)",
-  };
-}
-
-function layerTitleFontStyle(layer: ModelingTextOverlayLayout["title"], textDark: boolean): CSSProperties {
-  return {
-    fontSize: `calc(${layer.fontSizePx}px * var(--ms, 1) * var(--mt, 1))`,
-    color: textDark ? "#0f172a" : "#ffffff",
-  };
-}
-
-function layerBodyFontStyle(layer: ModelingTextOverlayLayout["title"], textDark: boolean): CSSProperties {
-  return {
-    fontSize: `calc(${layer.fontSizePx}px * var(--ms, 1) * var(--mt, 1))`,
-    color: textDark ? "#0f172a" : "#ffffff",
-  };
-}
+export type { ModelingOverlayLayerKey };
 
 function selectedRingClass(isSelected: boolean): string {
   return isSelected ? "ring-2 ring-[#e2c481] ring-offset-2 ring-offset-black/20 rounded-sm" : "";
@@ -55,7 +37,7 @@ type OverlayEditorSurfaceProps = {
   titleText: string;
   bodyHtml: string;
   textDarkPreview: boolean;
-  frameRef: React.RefObject<HTMLDivElement | null>;
+  frameRef: RefObject<HTMLDivElement | null>;
   selectedLayer: ModelingOverlayLayerKey | null;
   onSelectLayer: (layer: ModelingOverlayLayerKey) => void;
   onDragStart: (layer: ModelingOverlayLayerKey, e: ReactPointerEvent<HTMLElement>) => void;
@@ -68,37 +50,14 @@ type OverlayEditorSurfaceProps = {
   onTitleChange?: (value: string) => void;
   /** When set with `interactive`, description HTML is edited in place. */
   onBodyHtmlChange?: (value: string) => void;
+  /** Alignment guide lines (frame %); shown during drag/nudge in the visual editor. */
+  alignmentGuides?: ModelingTextOverlayAlignmentGuides | null;
+  /** Refs to positioned layer wrappers (for alignment measurements). */
+  layerRefs?: {
+    readonly title: RefObject<HTMLDivElement | null>;
+    readonly body: RefObject<HTMLDivElement | null>;
+  };
 };
-
-function DragMoveHandle({
-  label,
-  onActivate,
-  onPointerDown,
-}: {
-  label: string;
-  onActivate: () => void;
-  onPointerDown: (e: ReactPointerEvent<HTMLButtonElement>) => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      title={label}
-      onPointerDown={(e) => {
-        e.stopPropagation();
-        onActivate();
-        onPointerDown(e);
-      }}
-      className="absolute left-1/2 top-0 z-20 flex h-7 w-7 -translate-x-1/2 -translate-y-[calc(100%+4px)] cursor-grab items-center justify-center rounded-md border border-slate-400/90 bg-white/95 text-slate-600 shadow-sm hover:bg-white active:cursor-grabbing"
-    >
-      <span className="flex flex-col gap-0.5" aria-hidden>
-        <span className="block h-0.5 w-3 rounded-full bg-slate-500" />
-        <span className="block h-0.5 w-3 rounded-full bg-slate-500" />
-        <span className="block h-0.5 w-3 rounded-full bg-slate-500" />
-      </span>
-    </button>
-  );
-}
 
 export function ModelingTextOverlayEditorSurface({
   variant,
@@ -116,10 +75,14 @@ export function ModelingTextOverlayEditorSurface({
   interactive,
   onTitleChange,
   onBodyHtmlChange,
+  alignmentGuides = null,
+  layerRefs,
 }: OverlayEditorSurfaceProps) {
   const aspectClass = variant === "desktop" ? "aspect-[83/43]" : "aspect-[360/259]";
   const paddingClass =
-    variant === "desktop" ? OVERLAY_PADDING_DESKTOP_CLASS : OVERLAY_PADDING_MOBILE_CLASS;
+    variant === "desktop"
+      ? MODELING_TEXT_OVERLAY_FRAME_PADDING_DESKTOP_CLASS
+      : MODELING_TEXT_OVERLAY_FRAME_PADDING_MOBILE_CLASS;
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   const titleFocusedRef = useRef(false);
@@ -148,8 +111,8 @@ export function ModelingTextOverlayEditorSurface({
     }
   }, [bodyEditable, bodyHtml]);
 
-  const posTitle = layerPositionStyle(layout.title);
-  const posBody = layerPositionStyle(layout.body);
+  const posTitle = getModelingTextOverlayLayerFrameStyle(layout.title);
+  const posBody = getModelingTextOverlayLayerFrameStyle(layout.body);
 
   return (
     <div className={`relative w-full overflow-hidden rounded-lg bg-slate-200 ${aspectClass}`}>
@@ -175,11 +138,12 @@ export function ModelingTextOverlayEditorSurface({
       >
         <div ref={frameRef} className="relative h-full w-full min-h-0 outline-none" tabIndex={-1}>
           <div
+            ref={layerRefs?.title}
             className={`${MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS} ${selectedRingClass(interactive && selectedLayer === "title")}`}
             style={posTitle}
           >
             {interactive && titleEditable ? (
-              <DragMoveHandle
+              <ModelingTextOverlayDragMoveHandle
                 label="Drag to move title"
                 onActivate={() => onSelectLayer("title")}
                 onPointerDown={(e) => onDragStart("title", e)}
@@ -194,7 +158,6 @@ export function ModelingTextOverlayEditorSurface({
                   ? "cursor-text select-text"
                   : "pointer-events-none touch-none select-none"
               } ${interactive && !titleEditable ? "pointer-events-auto cursor-grab active:cursor-grabbing" : ""}`}
-              style={layerTitleFontStyle(layout.title, textDarkPreview)}
               contentEditable={titleEditable}
               suppressHydrationWarning
               onFocus={() => {
@@ -229,11 +192,12 @@ export function ModelingTextOverlayEditorSurface({
           </div>
 
           <div
+            ref={layerRefs?.body}
             className={`${MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS} ${selectedRingClass(interactive && selectedLayer === "body")}`}
             style={posBody}
           >
             {interactive && bodyEditable ? (
-              <DragMoveHandle
+              <ModelingTextOverlayDragMoveHandle
                 label="Drag to move description"
                 onActivate={() => onSelectLayer("body")}
                 onPointerDown={(e) => onDragStart("body", e)}
@@ -245,7 +209,6 @@ export function ModelingTextOverlayEditorSurface({
                 className={`modeling-slot-rich-body cursor-text select-text font-manrope font-light outline-none ${MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS} ${
                   textDarkPreview ? "text-slate-800" : "text-white/90"
                 } ${MODELING_TEXT_OVERLAY_RICH_PREVIEW_CLASS}`}
-                style={layerBodyFontStyle(layout.body, textDarkPreview)}
                 contentEditable
                 suppressHydrationWarning
                 onFocus={() => {
@@ -269,7 +232,6 @@ export function ModelingTextOverlayEditorSurface({
                     ? "pointer-events-auto cursor-grab active:cursor-grabbing"
                     : "pointer-events-none"
                 }`}
-                style={layerBodyFontStyle(layout.body, textDarkPreview)}
                 onPointerDown={
                   interactive
                     ? (e) => {
@@ -286,6 +248,7 @@ export function ModelingTextOverlayEditorSurface({
               </div>
             )}
           </div>
+          {alignmentGuides ? <ModelingTextOverlayAlignmentGuidesOverlay guides={alignmentGuides} /> : null}
         </div>
       </div>
     </div>

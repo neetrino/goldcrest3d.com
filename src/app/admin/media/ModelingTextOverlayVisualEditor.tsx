@@ -1,12 +1,17 @@
 "use client";
 
-import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
+import {
+  computeOverlayAlignment,
+  type ModelingTextOverlayAlignmentGuides,
+} from "@/lib/modeling-slot-copy/modeling-text-overlay-alignment-guides";
 import type { ModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import { clampModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 
 import {
+  MODELING_TEXT_OVERLAY_EDITOR_CANVAS_CSS_VARS,
   MODELING_TEXT_OVERLAY_EDITOR_DESKTOP_CANVAS_MAX_WIDTH_PX,
   MODELING_TEXT_OVERLAY_EDITOR_MOBILE_CANVAS_MAX_WIDTH_PX,
   MODELING_TEXT_OVERLAY_EDITOR_NUDGE_PCT,
@@ -47,9 +52,15 @@ export function ModelingTextOverlayVisualEditor({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const inlineFrameRef = useRef<HTMLDivElement>(null);
   const modalFrameRef = useRef<HTMLDivElement>(null);
+  const titleLayerRef = useRef<HTMLDivElement>(null);
+  const bodyLayerRef = useRef<HTMLDivElement>(null);
+  const alignmentGuideClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dialogTitleId = useId();
   const [editorOpen, setEditorOpen] = useState(false);
   const [selectedLayer, setSelectedLayer] = useState<LayerKey | null>(null);
+  const [alignmentGuides, setAlignmentGuides] = useState<ModelingTextOverlayAlignmentGuides | null>(
+    null,
+  );
 
   const updateLayer = useCallback(
     (key: LayerKey, patch: Partial<ModelingTextOverlayLayout["title"]>) => {
@@ -72,19 +83,32 @@ export function ModelingTextOverlayVisualEditor({
       event.preventDefault();
       const el = event.currentTarget;
       const frame = frameRef.current;
+      const titleEl = titleLayerRef.current;
+      const bodyEl = bodyLayerRef.current;
       if (!frame) {
         return;
       }
       el.setPointerCapture(event.pointerId);
-      const rect = frame.getBoundingClientRect();
 
       const onMove = (ev: PointerEvent) => {
-        const xPct = ((ev.clientX - rect.left) / rect.width) * 100;
-        const yPct = ((ev.clientY - rect.top) / rect.height) * 100;
-        updateLayer(layer, { xPct, yPct });
+        const fr = frame.getBoundingClientRect();
+        const rawCenterXPx = ev.clientX - fr.left;
+        const rawCenterYPx = ev.clientY - fr.top;
+        if (!titleEl || !bodyEl) {
+          const xPct = (rawCenterXPx / fr.width) * 100;
+          const yPct = (rawCenterYPx / fr.height) * 100;
+          updateLayer(layer, { xPct, yPct });
+          return;
+        }
+        const movingEl = layer === "title" ? titleEl : bodyEl;
+        const otherEl = layer === "title" ? bodyEl : titleEl;
+        const result = computeOverlayAlignment(fr, layer, movingEl, otherEl, rawCenterXPx, rawCenterYPx);
+        updateLayer(layer, { xPct: result.xPct, yPct: result.yPct });
+        setAlignmentGuides(result.guides);
       };
 
       const onUp = (ev: PointerEvent) => {
+        setAlignmentGuides(null);
         if (el.hasPointerCapture(ev.pointerId)) {
           el.releasePointerCapture(ev.pointerId);
         }
@@ -122,6 +146,11 @@ export function ModelingTextOverlayVisualEditor({
   }, []);
 
   const closeModal = useCallback(() => {
+    setAlignmentGuides(null);
+    if (alignmentGuideClearRef.current !== null) {
+      clearTimeout(alignmentGuideClearRef.current);
+      alignmentGuideClearRef.current = null;
+    }
     dialogRef.current?.close();
     setEditorOpen(false);
   }, []);
@@ -145,15 +174,51 @@ export function ModelingTextOverlayVisualEditor({
       const step =
         e.shiftKey ? MODELING_TEXT_OVERLAY_EDITOR_NUDGE_PCT * 4 : MODELING_TEXT_OVERLAY_EDITOR_NUDGE_PCT;
       const cur = layout[selectedLayer];
-      let { xPct, yPct } = cur;
-      if (e.key === "ArrowLeft") xPct -= step;
-      if (e.key === "ArrowRight") xPct += step;
-      if (e.key === "ArrowUp") yPct -= step;
-      if (e.key === "ArrowDown") yPct += step;
-      updateLayer(selectedLayer, { xPct, yPct });
+      let nextXPct = cur.xPct;
+      let nextYPct = cur.yPct;
+      if (e.key === "ArrowLeft") nextXPct -= step;
+      if (e.key === "ArrowRight") nextXPct += step;
+      if (e.key === "ArrowUp") nextYPct -= step;
+      if (e.key === "ArrowDown") nextYPct += step;
+
+      const frame = modalFrameRef.current;
+      const titleEl = titleLayerRef.current;
+      const bodyEl = bodyLayerRef.current;
+      if (frame && titleEl && bodyEl) {
+        const fr = frame.getBoundingClientRect();
+        const rawCenterXPx = (nextXPct / 100) * fr.width;
+        const rawCenterYPx = (nextYPct / 100) * fr.height;
+        const movingEl = selectedLayer === "title" ? titleEl : bodyEl;
+        const otherEl = selectedLayer === "title" ? bodyEl : titleEl;
+        const result = computeOverlayAlignment(
+          fr,
+          selectedLayer,
+          movingEl,
+          otherEl,
+          rawCenterXPx,
+          rawCenterYPx,
+        );
+        updateLayer(selectedLayer, { xPct: result.xPct, yPct: result.yPct });
+        setAlignmentGuides(result.guides);
+        if (alignmentGuideClearRef.current !== null) {
+          clearTimeout(alignmentGuideClearRef.current);
+        }
+        alignmentGuideClearRef.current = setTimeout(() => {
+          setAlignmentGuides(null);
+          alignmentGuideClearRef.current = null;
+        }, 420);
+      } else {
+        updateLayer(selectedLayer, { xPct: nextXPct, yPct: nextYPct });
+      }
     };
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      if (alignmentGuideClearRef.current !== null) {
+        clearTimeout(alignmentGuideClearRef.current);
+        alignmentGuideClearRef.current = null;
+      }
+    };
   }, [editorOpen, layout, selectedLayer, updateLayer]);
 
   return (
@@ -164,40 +229,34 @@ export function ModelingTextOverlayVisualEditor({
         </p>
       </div>
 
-      <div
-        className="modeling-specialization-cq rounded-xl border border-slate-200 bg-slate-100 p-2 shadow-inner"
-        style={
-          {
-            ["--ms" as string]: "1",
-            ["--mt" as string]: "1",
-          } as CSSProperties
-        }
-      >
-        <button
-          type="button"
-          onClick={openModal}
-          className="group relative w-full cursor-zoom-in rounded-lg text-left outline-none ring-slate-300 transition hover:ring-2 focus-visible:ring-2"
-          aria-label={`Open ${variantLabel} visual layout editor`}
-        >
-          <ModelingTextOverlayEditorSurface
-            variant={variant}
-            layout={layout}
-            imageUrl={imageUrl}
-            titleText={titleText}
-            bodyHtml={bodyHtml}
-            textDarkPreview={textDarkPreview}
-            frameRef={inlineFrameRef}
-            selectedLayer={null}
-            onSelectLayer={() => {}}
-            onDragStart={() => {}}
-            imageSizes={imageSizesInline}
-            overlaySuppressed
-            interactive={false}
-          />
+      <div className="w-full rounded-xl border border-slate-200 bg-slate-100 p-2 shadow-inner">
+        <div className="w-full" style={MODELING_TEXT_OVERLAY_EDITOR_CANVAS_CSS_VARS}>
+          <button
+            type="button"
+            onClick={openModal}
+            className="group relative w-full cursor-zoom-in rounded-lg text-left outline-none ring-slate-300 transition hover:ring-2 focus-visible:ring-2"
+            aria-label={`Open ${variantLabel} visual layout editor`}
+          >
+            <ModelingTextOverlayEditorSurface
+              variant={variant}
+              layout={layout}
+              imageUrl={imageUrl}
+              titleText={titleText}
+              bodyHtml={bodyHtml}
+              textDarkPreview={textDarkPreview}
+              frameRef={inlineFrameRef}
+              selectedLayer={null}
+              onSelectLayer={() => {}}
+              onDragStart={() => {}}
+              imageSizes={imageSizesInline}
+              overlaySuppressed
+              interactive={false}
+            />
           <span className="pointer-events-none absolute bottom-2 right-2 rounded-md bg-slate-900/75 px-2 py-1 text-[11px] font-medium text-white opacity-0 transition group-hover:opacity-100 group-focus-visible:opacity-100">
             Open full editor
           </span>
-        </button>
+          </button>
+        </div>
       </div>
 
       <dialog
@@ -237,31 +296,27 @@ export function ModelingTextOverlayVisualEditor({
               </button>
             </div>
 
-            <div
-              className="modeling-specialization-cq rounded-xl border border-slate-200 bg-slate-100 p-3 shadow-inner"
-              style={
-                {
-                  ["--ms" as string]: "1",
-                  ["--mt" as string]: "1",
-                } as CSSProperties
-              }
-            >
-              <ModelingTextOverlayEditorSurface
-                variant={variant}
-                layout={layout}
-                imageUrl={imageUrl}
-                titleText={titleText}
-                bodyHtml={bodyHtml}
-                textDarkPreview={textDarkPreview}
-                frameRef={modalFrameRef}
-                selectedLayer={selectedLayer}
-                onSelectLayer={setSelectedLayer}
-                onDragStart={(layer, e) => startDrag(layer, modalFrameRef, e)}
-                imageSizes={imageSizesModal}
-                interactive
-                onTitleChange={onTitleChange}
-                onBodyHtmlChange={onBodyHtmlChange}
-              />
+            <div className="w-full rounded-xl border border-slate-200 bg-slate-100 p-3 shadow-inner">
+              <div className="w-full" style={MODELING_TEXT_OVERLAY_EDITOR_CANVAS_CSS_VARS}>
+                <ModelingTextOverlayEditorSurface
+                  variant={variant}
+                  layout={layout}
+                  imageUrl={imageUrl}
+                  titleText={titleText}
+                  bodyHtml={bodyHtml}
+                  textDarkPreview={textDarkPreview}
+                  frameRef={modalFrameRef}
+                  selectedLayer={selectedLayer}
+                  onSelectLayer={setSelectedLayer}
+                  onDragStart={(layer, e) => startDrag(layer, modalFrameRef, e)}
+                  imageSizes={imageSizesModal}
+                  interactive
+                  onTitleChange={onTitleChange}
+                  onBodyHtmlChange={onBodyHtmlChange}
+                  alignmentGuides={alignmentGuides}
+                  layerRefs={{ title: titleLayerRef, body: bodyLayerRef }}
+                />
+              </div>
             </div>
 
             <ModelingTextOverlayFontSliders variantLabel={variantLabel} layout={layout} updateLayer={updateLayer} />

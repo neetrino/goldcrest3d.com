@@ -1,3 +1,15 @@
+import type { CSSProperties } from "react";
+
+/**
+ * Admin visual editor only: disable landing `--ms` (container scale) and card `--mt` so
+ * `fontSizePx` from sliders matches rendered CSS px (WYSIWYG for the numbers).
+ * Live site still uses scaled vars from `ModelingSlotCustomTextOverlay`.
+ */
+export const MODELING_TEXT_OVERLAY_EDITOR_CANVAS_CSS_VARS: CSSProperties = {
+  ["--ms" as string]: "1",
+  ["--mt" as string]: "1",
+};
+
 /** Range inputs in the Modeling text overlay visual editor (px). */
 export const MODELING_TEXT_OVERLAY_TITLE_FONT_MIN_PX = 8;
 export const MODELING_TEXT_OVERLAY_TITLE_FONT_MAX_PX = 96;

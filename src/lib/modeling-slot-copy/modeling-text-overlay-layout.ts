@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+/** Keys for title/body overlay layers in the modeling text overlay editor. */
+export type ModelingOverlayLayerKey = "title" | "body";
+
 const layerSchema = z.object({
   xPct: z.number().min(0).max(100),
   yPct: z.number().min(0).max(100),

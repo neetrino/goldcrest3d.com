@@ -1,5 +1,3 @@
-import type { CSSProperties } from "react";
-
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
 import {
@@ -7,7 +5,9 @@ import {
   type ModelingTextOverlayLayout,
 } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import {
+  getModelingTextOverlayLayerFrameStyle,
   MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS,
+  MODELING_TEXT_OVERLAY_OUTER_PADDING_CLASS,
   MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS,
 } from "@/lib/modeling-slot-copy/modeling-text-overlay-presentation";
 import {
@@ -17,16 +17,6 @@ import {
 
 const MODELING_RICH_BODY =
   "[&_p:not(:last-child)]:mb-[0.45em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
-
-function layerStyle(layer: ModelingTextOverlayLayout["title"]): CSSProperties {
-  return {
-    position: "absolute",
-    left: `${layer.xPct}%`,
-    top: `${layer.yPct}%`,
-    transform: "translate(-50%, -50%)",
-    fontSize: `calc(${layer.fontSizePx}px * var(--ms, 1) * var(--mt, 1))`,
-  };
-}
 
 export type ModelingSlotCustomTextOverlayProps = {
   layoutDesktop: ModelingTextOverlayLayout;
@@ -79,19 +69,19 @@ export function ModelingSlotCustomTextOverlay({
 
   return (
     <div
-      className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textDark ? "text-black" : "text-white"}`}
+      className={`absolute inset-0 z-10 ${MODELING_TEXT_OVERLAY_OUTER_PADDING_CLASS} ${textDark ? "text-black" : "text-white"}`}
     >
       <div className="relative h-full w-full min-h-0">
         <div className="hidden md:block absolute inset-0">
           <div
             className={MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS}
-            style={layerStyle(layoutDesktop.title)}
+            style={getModelingTextOverlayLayerFrameStyle(layoutDesktop.title)}
           >
             <h3 className={titleClass}>{titleDesktop}</h3>
           </div>
           <div
             className={MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS}
-            style={layerStyle(layoutDesktop.body)}
+            style={getModelingTextOverlayLayerFrameStyle(layoutDesktop.body)}
           >
             <HeroBannerBodyRichText body={bodyDesktopHtml} className={bodyClass} />
           </div>
@@ -99,13 +89,13 @@ export function ModelingSlotCustomTextOverlay({
         <div className="md:hidden absolute inset-0">
           <div
             className={MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS}
-            style={layerStyle(layoutMobile.title)}
+            style={getModelingTextOverlayLayerFrameStyle(layoutMobile.title)}
           >
             <h3 className={titleClass}>{titleMobile}</h3>
           </div>
           <div
             className={MODELING_TEXT_OVERLAY_LAYER_BOX_CLASS}
-            style={layerStyle(layoutMobile.body)}
+            style={getModelingTextOverlayLayerFrameStyle(layoutMobile.body)}
           >
             <HeroBannerBodyRichText body={bodyMobileHtml} className={bodyClass} />
           </div>
