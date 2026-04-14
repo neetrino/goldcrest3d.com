@@ -18,6 +18,11 @@
   --landing-nav-logo-nudge-x: 0px;
   /** Manufacturing Intelligence — gradient card width (inside max-w 1612 shell) */
   --manufacturing-intelligence-card-max-w: 1421px;
+  /**
+   * Manufacturing Intelligence — accordion column (six title rows + expanded detail text) top inset, lg+ only.
+   * Slightly less than historical 94px so the block sits a little higher on desktop; unchanged below lg.
+   */
+  --manufacturing-intelligence-accordion-col-padding-top-lg: 46px;
   /** Primary section titles (LTR), md+ — stable left inset vs viewport when shell is start-aligned. */
   --landing-section-title-indent-md: 0px;
   /** md+ extra nudge (negative = further left); pairs with indent (padding cannot be negative). */
