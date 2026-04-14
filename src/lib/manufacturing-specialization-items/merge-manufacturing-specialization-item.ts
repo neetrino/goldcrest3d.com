@@ -39,10 +39,13 @@ export function mergeManufacturingSpecializationItem(
       ? resolveSiteMediaDisplayUrl(row.r2ObjectKey)
       : null;
   const detailImageSrc = customUrl ?? base.detailImageSrc;
+  const parsedLayout = parseImageFramingJson(row?.heroImageLayout);
   const detailImageFraming =
-    customUrl != null
-      ? parseImageFramingJson(row?.heroImageLayout) ?? DEFAULT_IMAGE_FRAMING
-      : null;
+    parsedLayout != null
+      ? parsedLayout
+      : customUrl != null
+        ? DEFAULT_IMAGE_FRAMING
+        : null;
 
   return {
     ...base,

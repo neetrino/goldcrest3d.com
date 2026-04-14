@@ -4,8 +4,11 @@ import { revalidatePath } from "next/cache";
 import { Prisma } from "@/generated/prisma/client";
 
 import { requireAdminSession } from "@/auth";
+import { baseById } from "@/lib/manufacturing-specialization-items/base-by-id";
 import { parseManufacturingSpecializationItemKey } from "@/lib/manufacturing-specialization-items/manufacturing-specialization-item-keys";
+import { plainManufacturingDescriptionToHtml } from "@/lib/manufacturing-specialization-items/plain-default-description-html";
 import { prisma } from "@/lib/db";
+import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
 import { logger } from "@/lib/logger";
 import {
   clampImageFraming,
@@ -62,18 +65,21 @@ export async function saveManufacturingSpecializationItemFraming(
   }
 
   try {
-    const row = await prisma.manufacturingSpecializationItemCopy.findUnique({
+    const base = baseById(itemKey);
+    const initialBody = finalizeHeroBannerBodyHtml(
+      plainManufacturingDescriptionToHtml(base.description),
+    );
+    await prisma.manufacturingSpecializationItemCopy.upsert({
       where: { itemKey },
-    });
-    if (!row?.r2ObjectKey) {
-      return {
-        ok: false,
-        error: "Upload a custom image before adjusting framing.",
-      };
-    }
-    await prisma.manufacturingSpecializationItemCopy.update({
-      where: { itemKey },
-      data: { heroImageLayout: framing as object },
+      create: {
+        itemKey,
+        title: base.title,
+        body: initialBody,
+        heroImageLayout: framing as object,
+      },
+      update: {
+        heroImageLayout: framing as object,
+      },
     });
   } catch (e) {
     logger.error("saveManufacturingSpecializationItemFraming", e);

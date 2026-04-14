@@ -12,7 +12,10 @@ import {
   type ManufacturingDetailPhotoLayout,
   type ManufacturingSpecializationItem,
 } from "@/constants/manufacturing-specialization";
-import type { ImageFraming } from "@/lib/site-media/image-framing";
+import {
+  framingFingerprint,
+  type ImageFraming,
+} from "@/lib/site-media/image-framing";
 import { MANUFACTURING_IMAGE_TRANSITION_MS } from "./manufacturing-image.constants";
 
 export type ManufacturingDetailPayload = {
@@ -116,7 +119,17 @@ export function useManufacturingDetailLayers({
     const frontPayload = front === 0 ? s0 : s1;
 
     if (frontPayload?.id === target.id && frontPayload?.src === target.src) {
+      const framingEqual =
+        framingFingerprint(frontPayload.imageFraming) ===
+        framingFingerprint(target.imageFraming);
       startTransition(() => {
+        if (!framingEqual) {
+          if (front === 0) {
+            setSlot0(target);
+          } else {
+            setSlot1(target);
+          }
+        }
         if (front === 0) {
           setSlot0Visible(true);
           setSlot1Visible(false);

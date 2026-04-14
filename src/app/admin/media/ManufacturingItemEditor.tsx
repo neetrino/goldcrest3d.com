@@ -96,9 +96,12 @@ export function ManufacturingItemEditor({ entry }: ManufacturingItemEditorProps)
   const imageState = uploadState ?? clearState;
   const storedName = formatR2ObjectDisplayName(entry.heroImageR2Key);
   const usingCustom = Boolean(entry.heroImageR2Key);
-  const previewFraming = usingCustom
-    ? entry.heroImageFraming ?? DEFAULT_IMAGE_FRAMING
-    : null;
+  const previewFraming =
+    entry.heroImageFraming != null
+      ? entry.heroImageFraming
+      : usingCustom
+        ? DEFAULT_IMAGE_FRAMING
+        : null;
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-6">
@@ -160,37 +163,38 @@ export function ManufacturingItemEditor({ entry }: ManufacturingItemEditorProps)
           </MediaFormSubmitButton>
         </form>
 
+        {entry.desktopPreviewSrc ? (
+          <div
+            className={`mt-4 w-full ${MANUFACTURING_DETAIL_ADMIN_FRAME_MAX_CLASS} mx-auto min-h-0`}
+          >
+            <ImageFramingEditor
+              key={`mfg-item-framing-${entry.itemKey}-${entry.editorSyncKey}-${framingFingerprint(entry.heroImageFraming)}`}
+              imageUrl={entry.desktopPreviewSrc}
+              initialFraming={entry.heroImageFraming}
+              aspectClassName={PREVIEW_ASPECT}
+              target={{ kind: "manufacturingItem", itemKey: entry.itemKey }}
+              enabled={!uploadPending && !clearPending}
+              previewSizes={MANUFACTURING_DETAIL_ADMIN_IMAGE_SIZES}
+            />
+          </div>
+        ) : null}
+
         {usingCustom ? (
-          <>
-            <div
-              className={`w-full ${MANUFACTURING_DETAIL_ADMIN_FRAME_MAX_CLASS} mx-auto min-h-0`}
+          <form action={clearAction} className="mt-4 border-t border-slate-200/80 pt-4">
+            <input type="hidden" name="itemKey" value={entry.itemKey} />
+            <p className="mb-2 text-xs text-slate-600">
+              Remove the upload and restore the original built-in image for this row on the
+              homepage.
+            </p>
+            <ItemImageMessages state={clearState} />
+            <button
+              type="submit"
+              disabled={clearPending}
+              className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <ImageFramingEditor
-                key={`mfg-item-framing-${entry.itemKey}-${framingFingerprint(entry.heroImageFraming)}`}
-                imageUrl={entry.desktopPreviewSrc}
-                initialFraming={entry.heroImageFraming}
-                aspectClassName={PREVIEW_ASPECT}
-                target={{ kind: "manufacturingItem", itemKey: entry.itemKey }}
-                enabled={!uploadPending && !clearPending}
-                previewSizes={MANUFACTURING_DETAIL_ADMIN_IMAGE_SIZES}
-              />
-            </div>
-            <form action={clearAction} className="mt-4 border-t border-slate-200/80 pt-4">
-              <input type="hidden" name="itemKey" value={entry.itemKey} />
-              <p className="mb-2 text-xs text-slate-600">
-                Remove the upload and restore the original built-in image for this row on the
-                homepage.
-              </p>
-              <ItemImageMessages state={clearState} />
-              <button
-                type="submit"
-                disabled={clearPending}
-                className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {clearPending ? "Resetting…" : "Restore built-in image"}
-              </button>
-            </form>
-          </>
+              {clearPending ? "Resetting…" : "Restore built-in image"}
+            </button>
+          </form>
         ) : null}
       </div>
 
