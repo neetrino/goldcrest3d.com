@@ -108,12 +108,9 @@ export function SectionManufacturing() {
     elevatedSlot,
   } = useManufacturingDetailLayers({ activeItem });
 
-  const handleToggle = (id: ManufacturingSpecializationId) => {
-    setActiveId((prev) =>
-      prev === id
-        ? MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING
-        : id,
-    );
+  /** Exclusive accordion: exactly one panel open; re-clicking the open row is a no-op. */
+  const handleSelectItem = (id: ManufacturingSpecializationId) => {
+    setActiveId((prev) => (prev === id ? prev : id));
   };
 
   return (
@@ -142,7 +139,7 @@ export function SectionManufacturing() {
                   <ManufacturingAccordionRow
                     item={item}
                     isActive={activeId === item.id}
-                    onToggle={() => handleToggle(item.id)}
+                    onToggle={() => handleSelectItem(item.id)}
                   />
                 </div>
               ))}
