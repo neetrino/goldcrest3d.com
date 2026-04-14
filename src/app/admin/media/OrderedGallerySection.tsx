@@ -20,6 +20,8 @@ type OrderedGallerySectionProps = {
   rowContextLabel: string;
   /** Recommended upload dimensions shown near upload controls. */
   recommendedSize: string;
+  /** When false, Frame & position is hidden for slides in this section. */
+  showFramePositionEditor?: boolean;
 };
 
 export function OrderedGallerySection({
@@ -29,6 +31,7 @@ export function OrderedGallerySection({
   items,
   rowContextLabel,
   recommendedSize,
+  showFramePositionEditor = true,
 }: OrderedGallerySectionProps) {
   const orderedIds = items.map((i) => i.id);
   const { pending, move, onDelete } = useOrderedGalleryActions({
@@ -75,6 +78,7 @@ export function OrderedGallerySection({
             pending={pending}
             onMove={move}
             onDelete={onDelete}
+            showFramePositionEditor={showFramePositionEditor}
           />
         ))}
 
@@ -107,6 +111,7 @@ export function FinishedCreationsGallery({
         items={row1}
         rowContextLabel="Top row"
         recommendedSize="670 × 370 px"
+        showFramePositionEditor={false}
       />
       <OrderedGallerySection
         title="Finished Creations — bottom row"
@@ -115,6 +120,7 @@ export function FinishedCreationsGallery({
         items={row2}
         rowContextLabel="Bottom row"
         recommendedSize="420 × 232 px"
+        showFramePositionEditor={false}
       />
     </div>
   );

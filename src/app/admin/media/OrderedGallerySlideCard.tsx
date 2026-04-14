@@ -14,6 +14,7 @@ type OrderedGallerySlideCardProps = {
   pending: boolean;
   onMove: (index: number, delta: number) => void;
   onDelete: (id: string) => void;
+  showFramePositionEditor?: boolean;
 };
 
 export function OrderedGallerySlideCard({
@@ -25,6 +26,7 @@ export function OrderedGallerySlideCard({
   pending,
   onMove,
   onDelete,
+  showFramePositionEditor = true,
 }: OrderedGallerySlideCardProps) {
   const positionLabel = `${rowContextLabel} · slide ${index + 1}`;
 
@@ -47,6 +49,7 @@ export function OrderedGallerySlideCard({
           pending={pending}
           onMove={onMove}
           onDelete={onDelete}
+          showFramePositionEditor={showFramePositionEditor}
         />
       </div>
     </article>

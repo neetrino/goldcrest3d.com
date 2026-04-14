@@ -17,6 +17,8 @@ type OrderedGallerySlideToolbarProps = {
   pending: boolean;
   onMove: (index: number, delta: number) => void;
   onDelete: (id: string) => void;
+  /** When false, hides Frame & position controls (drag, zoom, reset, save). */
+  showFramePositionEditor?: boolean;
 };
 
 export function OrderedGallerySlideToolbar({
@@ -29,6 +31,7 @@ export function OrderedGallerySlideToolbar({
   pending,
   onMove,
   onDelete,
+  showFramePositionEditor = true,
 }: OrderedGallerySlideToolbarProps) {
   return (
     <div className="flex flex-col gap-4 p-5">
@@ -59,7 +62,7 @@ export function OrderedGallerySlideToolbar({
         rowLabel={rowContextLabel}
         recommendedSize={recommendedSize}
       />
-      {item.displayUrl ? (
+      {item.displayUrl && showFramePositionEditor ? (
         <ImageFramingEditor
           key={`${item.id}-${framingFingerprint(item.framing)}`}
           imageUrl={item.displayUrl}
