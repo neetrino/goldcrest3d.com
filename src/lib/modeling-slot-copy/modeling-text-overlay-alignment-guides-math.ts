@@ -1,5 +1,11 @@
 import type { ModelingOverlayLayerKey } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 
+/**
+ * Extra drag/snap range vs strict “bounding box inside frame” (fraction of frame width/height).
+ * Lets alignment guides and layers move further toward or past edges.
+ */
+export const MODELING_TEXT_OVERLAY_DRAG_OVERFLOW_FRAC = 0.28;
+
 /** Ignore duplicate targets closer than this (px) in frame space. */
 const TARGET_DEDUPE_PX = 0.75;
 
@@ -165,8 +171,9 @@ export function bestSnap1D(
   thresholdPx: number,
 ): number {
   const half = size / 2;
-  const minC = half;
-  const maxC = frameSpan - half;
+  const overflow = frameSpan * MODELING_TEXT_OVERLAY_DRAG_OVERFLOW_FRAC;
+  const minC = half - overflow;
+  const maxC = frameSpan - half + overflow;
   const clampC = (c: number): number => Math.min(Math.max(c, minC), maxC);
 
   let best: number | null = null;

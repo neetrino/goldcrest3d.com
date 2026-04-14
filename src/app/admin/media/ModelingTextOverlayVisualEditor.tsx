@@ -130,15 +130,18 @@ export function ModelingTextOverlayVisualEditor({
       ? { maxWidth: MODELING_TEXT_OVERLAY_EDITOR_DESKTOP_CANVAS_MAX_WIDTH_PX }
       : { maxWidth: MODELING_TEXT_OVERLAY_EDITOR_MOBILE_CANVAS_MAX_WIDTH_PX };
 
+  const desktopCanvasW = MODELING_TEXT_OVERLAY_EDITOR_DESKTOP_CANVAS_MAX_WIDTH_PX;
+  const mobileCanvasW = MODELING_TEXT_OVERLAY_EDITOR_MOBILE_CANVAS_MAX_WIDTH_PX;
+
   const imageSizesInline =
     variant === "desktop"
-      ? "(max-width: 768px) 100vw, min(800px, 100vw)"
-      : "(max-width: 768px) 100vw, 480px";
+      ? `(max-width: 768px) 100vw, min(${desktopCanvasW}px, 100vw)`
+      : `(max-width: 768px) 100vw, min(${mobileCanvasW}px, 100vw)`;
 
   const imageSizesModal =
     variant === "desktop"
-      ? `(max-width: 1280px) 100vw, ${MODELING_TEXT_OVERLAY_EDITOR_DESKTOP_CANVAS_MAX_WIDTH_PX}px`
-      : `(max-width: 480px) 100vw, ${MODELING_TEXT_OVERLAY_EDITOR_MOBILE_CANVAS_MAX_WIDTH_PX}px`;
+      ? `(max-width: 1280px) 100vw, ${desktopCanvasW}px`
+      : `(max-width: 480px) 100vw, ${mobileCanvasW}px`;
 
   const openModal = useCallback(() => {
     setEditorOpen(true);
@@ -229,7 +232,14 @@ export function ModelingTextOverlayVisualEditor({
         </p>
       </div>
 
-      <div className="w-full rounded-xl border border-slate-200 bg-slate-100 p-2 shadow-inner">
+      <div
+        className="mx-auto w-full rounded-xl border border-slate-200 bg-slate-100 py-2 shadow-inner"
+        style={
+          variant === "desktop"
+            ? { maxWidth: MODELING_TEXT_OVERLAY_EDITOR_DESKTOP_CANVAS_MAX_WIDTH_PX }
+            : { maxWidth: MODELING_TEXT_OVERLAY_EDITOR_MOBILE_CANVAS_MAX_WIDTH_PX }
+        }
+      >
         <div className="w-full" style={MODELING_TEXT_OVERLAY_EDITOR_CANVAS_CSS_VARS}>
           <button
             type="button"
@@ -270,8 +280,7 @@ export function ModelingTextOverlayVisualEditor({
           onClick={closeModal}
         >
           <div
-            className="flex max-h-[min(100dvh-2rem,1000px)] w-full flex-col gap-4 overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 shadow-xl sm:p-6"
-            style={modalCanvasMaxStyle}
+            className="flex max-h-[min(100dvh-2rem,1000px)] w-full max-w-[min(100dvw-2rem,65rem)] flex-col gap-4 overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 shadow-xl sm:p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 pb-3">
@@ -284,7 +293,8 @@ export function ModelingTextOverlayVisualEditor({
                   paragraphs). Lines do not auto-wrap when you change size — only explicit breaks and
                   paragraph structure apply. Use the grip above a selected layer to drag position. Arrow
                   keys nudge the selected layer. Sizes apply to this layout only — close when done; save
-                  with the form when ready.
+                  with either &quot;Save desktop / tablet copy&quot; or &quot;Save mobile copy&quot; when
+                  ready.
                 </p>
               </div>
               <button
@@ -296,7 +306,10 @@ export function ModelingTextOverlayVisualEditor({
               </button>
             </div>
 
-            <div className="w-full rounded-xl border border-slate-200 bg-slate-100 p-3 shadow-inner">
+            <div
+              className="mx-auto w-full rounded-xl border border-slate-200 bg-slate-100 py-3 shadow-inner"
+              style={modalCanvasMaxStyle}
+            >
               <div className="w-full" style={MODELING_TEXT_OVERLAY_EDITOR_CANVAS_CSS_VARS}>
                 <ModelingTextOverlayEditorSurface
                   variant={variant}

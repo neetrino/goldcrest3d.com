@@ -4,6 +4,7 @@ import {
   bestSnap1D,
   collectHorizontalTargetsPx,
   collectVerticalTargetsPx,
+  MODELING_TEXT_OVERLAY_DRAG_OVERFLOW_FRAC,
   movingLineRectsAfterShift,
   rectToFrameLocalPx,
   type FrameLocalPx,
@@ -77,8 +78,16 @@ export function computeOverlayAlignment(
   const verticalTargets = collectVerticalTargetsPx(frameW, otherLocal, otherLines, frameRect);
   const horizontalTargets = collectHorizontalTargetsPx(frameH, otherLocal, otherLines, frameRect);
 
-  const clampedCenterX = Math.min(Math.max(rawCenterXPx, w / 2), frameW - w / 2);
-  const clampedCenterY = Math.min(Math.max(rawCenterYPx, h / 2), frameH - h / 2);
+  const overflowX = frameW * MODELING_TEXT_OVERLAY_DRAG_OVERFLOW_FRAC;
+  const overflowY = frameH * MODELING_TEXT_OVERLAY_DRAG_OVERFLOW_FRAC;
+  const clampedCenterX = Math.min(
+    Math.max(rawCenterXPx, w / 2 - overflowX),
+    frameW - w / 2 + overflowX,
+  );
+  const clampedCenterY = Math.min(
+    Math.max(rawCenterYPx, h / 2 - overflowY),
+    frameH - h / 2 + overflowY,
+  );
 
   const centerXSnapped = snap
     ? bestSnap1D(rawCenterXPx, w, verticalTargets, frameW, thresholdPx)

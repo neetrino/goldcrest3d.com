@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 
 import { updateModelingSlotCopy } from "@/app/actions/modeling-slot-copy";
 import type { AdminModelingSlotRow } from "@/lib/site-media/get-site-media-admin";
@@ -58,6 +58,7 @@ export function ModelingSlotCopyEditor({
     hasCustomModelingTextLayout(initial.textLayoutDesktop, initial.textLayoutMobile),
   );
   const [overlayVariant, setOverlayVariant] = useState<"desktop" | "mobile">("desktop");
+  const saveSubmitIntentRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (state?.ok) {
@@ -207,8 +208,8 @@ export function ModelingSlotCopyEditor({
             <p className="text-sm font-semibold text-slate-900">Visual text layout (optional)</p>
             <p className="mt-1 max-w-prose text-xs text-slate-500">
               Place title and description on the image with separate Desktop and Mobile layouts. Adjust
-              here first, then save once — no need to save after every nudge. Requires both layouts when
-              enabled; the homepage matches this preview when saved.
+              here first, then use either save button below — no need to save after every nudge. Requires
+              both layouts when enabled; the homepage matches this preview when saved.
             </p>
           </div>
           <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-800">
@@ -280,7 +281,30 @@ export function ModelingSlotCopyEditor({
 
       <ModelingSlotCopyMessages state={state} />
 
-      <MediaFormSubmitButton pendingLabel="Saving…">Save titles &amp; descriptions</MediaFormSubmitButton>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch sm:gap-3">
+          <MediaFormSubmitButton
+            pendingLabel="Saving…"
+            submitIntentId="desktop"
+            activeSubmitIntentRef={saveSubmitIntentRef}
+          >
+            Save desktop / tablet copy
+          </MediaFormSubmitButton>
+          <MediaFormSubmitButton
+            pendingLabel="Saving…"
+            pendingSpinnerClassName="border-slate-300 border-t-slate-800"
+            className="inline-flex min-h-[2.5rem] w-full items-center justify-center gap-2 rounded-xl border-2 border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+            submitIntentId="mobile"
+            activeSubmitIntentRef={saveSubmitIntentRef}
+          >
+            Save mobile copy
+          </MediaFormSubmitButton>
+        </div>
+        <p className="text-xs text-slate-500">
+          Both buttons save the full slot (desktop and mobile titles, descriptions, and optional overlay
+          layouts).
+        </p>
+      </div>
     </form>
   );
 }

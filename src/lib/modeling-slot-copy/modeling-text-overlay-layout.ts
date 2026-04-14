@@ -3,9 +3,13 @@ import { z } from "zod";
 /** Keys for title/body overlay layers in the modeling text overlay editor. */
 export type ModelingOverlayLayerKey = "title" | "body";
 
+/** Wider than 0–100 so layers can extend past the image frame (matches editor drag overflow). */
+export const MODELING_TEXT_OVERLAY_POSITION_PCT_MIN = -30;
+export const MODELING_TEXT_OVERLAY_POSITION_PCT_MAX = 130;
+
 const layerSchema = z.object({
-  xPct: z.number().min(0).max(100),
-  yPct: z.number().min(0).max(100),
+  xPct: z.number().min(MODELING_TEXT_OVERLAY_POSITION_PCT_MIN).max(MODELING_TEXT_OVERLAY_POSITION_PCT_MAX),
+  yPct: z.number().min(MODELING_TEXT_OVERLAY_POSITION_PCT_MIN).max(MODELING_TEXT_OVERLAY_POSITION_PCT_MAX),
   fontSizePx: z.number().min(8).max(120),
 });
 
@@ -50,8 +54,8 @@ export function clampModelingTextOverlayLayout(
   layout: ModelingTextOverlayLayout,
 ): ModelingTextOverlayLayout {
   const clampLayer = (l: ModelingTextOverlayLayout["title"]) => ({
-    xPct: Math.min(100, Math.max(0, l.xPct)),
-    yPct: Math.min(100, Math.max(0, l.yPct)),
+    xPct: Math.min(MODELING_TEXT_OVERLAY_POSITION_PCT_MAX, Math.max(MODELING_TEXT_OVERLAY_POSITION_PCT_MIN, l.xPct)),
+    yPct: Math.min(MODELING_TEXT_OVERLAY_POSITION_PCT_MAX, Math.max(MODELING_TEXT_OVERLAY_POSITION_PCT_MIN, l.yPct)),
     fontSizePx: Math.min(120, Math.max(8, l.fontSizePx)),
   });
   return {
