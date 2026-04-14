@@ -146,3 +146,25 @@ model ModelingSlotCopy {
   textLayoutMobile Json?
   updatedAt DateTime @updatedAt
 }
+
+/// Manufacturing Intelligence section — homepage title, optional rich intro, optional custom right-column image.
+/// Single row: application id `singleton`.
+model ManufacturingIntelligenceCopy {
+  id        String   @id
+  title     String   @db.Text
+  body      String   @db.Text
+  r2ObjectKey String?
+  heroImageLayout Json?
+  updatedAt DateTime @updatedAt
+}
+
+/// Per-row Manufacturing Intelligence accordion — title, rich body, optional detail image (R2).
+/// `itemKey` matches `MANUFACTURING_SPECIALIZATION_IDS` in application code.
+model ManufacturingSpecializationItemCopy {
+  itemKey     String   @id
+  title       String   @db.Text
+  body        String   @db.Text
+  r2ObjectKey String?
+  heroImageLayout Json?
+  updatedAt   DateTime @updatedAt
+}

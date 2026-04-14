@@ -12,6 +12,7 @@ import {
   type ManufacturingDetailPhotoLayout,
   type ManufacturingSpecializationItem,
 } from "@/constants/manufacturing-specialization";
+import type { ImageFraming } from "@/lib/site-media/image-framing";
 import { MANUFACTURING_IMAGE_TRANSITION_MS } from "./manufacturing-image.constants";
 
 export type ManufacturingDetailPayload = {
@@ -21,6 +22,8 @@ export type ManufacturingDetailPayload = {
   widthPx: number;
   heightPx: number;
   photoLayout: ManufacturingDetailPhotoLayout;
+  /** Set when the detail image is an admin upload (focal crop). */
+  imageFraming: ImageFraming | null;
 };
 
 type UseManufacturingDetailLayersArgs = {
@@ -42,6 +45,10 @@ export function useManufacturingDetailLayers({
     const dims = resolveManufacturingDetailImageDimensions(
       activeItem.detailPhotoLayout,
     );
+    const framing =
+      activeItem.detailImageFraming !== undefined && activeItem.detailImageFraming !== null
+        ? activeItem.detailImageFraming
+        : null;
     return {
       id: activeItem.id,
       src: activeItem.detailImageSrc,
@@ -49,6 +56,7 @@ export function useManufacturingDetailLayers({
       widthPx: dims.widthPx,
       heightPx: dims.heightPx,
       photoLayout: dims.photoLayout,
+      imageFraming: framing,
     };
   }, [activeItem]);
 
@@ -107,7 +115,7 @@ export function useManufacturingDetailLayers({
     const front = frontSlotRef.current as SlotIndex;
     const frontPayload = front === 0 ? s0 : s1;
 
-    if (frontPayload?.id === target.id) {
+    if (frontPayload?.id === target.id && frontPayload?.src === target.src) {
       startTransition(() => {
         if (front === 0) {
           setSlot0Visible(true);

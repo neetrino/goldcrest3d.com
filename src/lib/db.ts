@@ -3,7 +3,25 @@ import { PrismaPg } from "@prisma/adapter-pg";
 
 import { normalizePostgresConnectionStringSslMode } from "@/lib/normalizePostgresConnectionStringSslMode";
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+
+/**
+ * After `prisma generate`, Next dev can still hold a pre-generate PrismaClient on `globalThis`
+ * with no delegates for new models — `prisma.foo` is then undefined and throws on `.findMany()`.
+ */
+function shouldReplacePrismaClient(existing: PrismaClient | undefined): boolean {
+  if (!existing) {
+    return true;
+  }
+  const c = existing as PrismaClient & {
+    manufacturingIntelligenceCopy?: unknown;
+    manufacturingSpecializationItemCopy?: unknown;
+  };
+  return (
+    typeof c.manufacturingIntelligenceCopy === "undefined" ||
+    typeof c.manufacturingSpecializationItemCopy === "undefined"
+  );
+}
 
 /** Single-process Next dev / Node: bounded pool + keepalive reduces idle connection drops from remote Postgres. */
 const PG_POOL_MAX = 10;
@@ -38,7 +56,16 @@ function createPrismaClient(): PrismaClient {
   });
 }
 
-export const prisma =
-  globalForPrisma.prisma ?? createPrismaClient();
-
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+export const prisma: PrismaClient = ((): PrismaClient => {
+  if (shouldReplacePrismaClient(globalForPrisma.prisma)) {
+    if (globalForPrisma.prisma) {
+      void globalForPrisma.prisma.$disconnect();
+    }
+    globalForPrisma.prisma = createPrismaClient();
+  }
+  const client = globalForPrisma.prisma as PrismaClient;
+  if (process.env.NODE_ENV !== "production") {
+    globalForPrisma.prisma = client;
+  }
+  return client;
+})();

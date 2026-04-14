@@ -4,12 +4,18 @@ import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import {
   getManufacturingDetailPhotoLayoutClassName,
   MANUFACTURING_SPECIALIZATION_IDS,
-  MANUFACTURING_SPECIALIZATION_ITEMS,
   type ManufacturingSpecializationId,
   type ManufacturingSpecializationItem,
 } from "@/constants/manufacturing-specialization";
+import type { ManufacturingIntelligenceCopyEntry } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy.types";
+import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
+import {
+  DEFAULT_IMAGE_FRAMING,
+  framingToCoverImageStyle,
+} from "@/lib/site-media/image-framing";
 import Image from "next/image";
 import { useMemo, useState } from "react";
+import { HeroBannerBodyRichText } from "./power-banners/HeroBannerBodyRichText";
 import { MANUFACTURING_IMAGE_OPACITY_CLASS } from "./manufacturing-image.constants";
 import { useManufacturingDetailLayers } from "./useManufacturingDetailLayers";
 
@@ -28,8 +34,8 @@ function ManufacturingAccordionRow({
   isActive,
   onToggle,
 }: ManufacturingAccordionRowProps) {
-  const showDescription = isActive && Boolean(item.description);
-  const descriptionHasManualLineBreaks = item.description?.includes("\n") ?? false;
+  const descriptionPlainLen = getHeroBannerBodyPlainTextLength(item.description ?? "");
+  const showDescription = isActive && descriptionPlainLen > 0;
 
   return (
     <>
@@ -38,7 +44,9 @@ function ManufacturingAccordionRow({
         onClick={onToggle}
         className="flex min-h-[69px] w-full shrink-0 items-center justify-between bg-transparent px-[30px] text-left transition-colors hover:bg-black/[0.02]"
         aria-expanded={isActive}
-        aria-controls={item.description ? `manufacturing-detail-${item.id}` : undefined}
+        aria-controls={
+          descriptionPlainLen > 0 ? `manufacturing-detail-${item.id}` : undefined
+        }
       >
         <span className="manufacturing-intelligence-accordion-label pr-4">
           {item.title}
@@ -69,36 +77,34 @@ function ManufacturingAccordionRow({
       {showDescription ? (
         <div
           id={`manufacturing-detail-${item.id}`}
-          className={
-            descriptionHasManualLineBreaks
-              ? "overflow-x-visible border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left md:overflow-x-auto"
-              : "border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left"
-          }
+          className="border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left"
         >
-          <p
-            className={`manufacturing-intelligence-accordion-detail text-[15px] font-normal leading-[22px] tracking-normal text-black/80 ${
-              descriptionHasManualLineBreaks
-                ? "whitespace-pre-line break-words md:whitespace-pre"
-                : ""
-            }`}
-          >
-            {item.description}
-          </p>
+          <HeroBannerBodyRichText
+            body={item.description ?? ""}
+            className="manufacturing-intelligence-accordion-detail text-[15px] font-normal leading-[22px] tracking-normal text-black/80 [&_li]:mb-1 [&_ol]:mb-2 [&_p]:mb-2 [&_p:last-child]:mb-0 [&_ul]:mb-2"
+          />
         </div>
       ) : null}
     </>
   );
 }
 
-export function SectionManufacturing() {
+type SectionManufacturingProps = {
+  copy: ManufacturingIntelligenceCopyEntry;
+  specializationItems: ManufacturingSpecializationItem[];
+};
+
+export function SectionManufacturing({ copy, specializationItems }: SectionManufacturingProps) {
   const [activeId, setActiveId] = useState<ManufacturingSpecializationId>(
     MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING,
   );
 
   const activeItem = useMemo(
-    () => MANUFACTURING_SPECIALIZATION_ITEMS.find((i) => i.id === activeId),
-    [activeId],
+    () => specializationItems.find((i) => i.id === activeId),
+    [activeId, specializationItems],
   );
+
+  const useCustomColumnImage = Boolean(copy.customImageDisplayUrl);
 
   const {
     slot0,
@@ -106,7 +112,12 @@ export function SectionManufacturing() {
     slot0Visible,
     slot1Visible,
     elevatedSlot,
-  } = useManufacturingDetailLayers({ activeItem });
+  } = useManufacturingDetailLayers({
+    activeItem: useCustomColumnImage ? undefined : activeItem,
+  });
+
+  const customFraming = copy.heroImageFraming ?? DEFAULT_IMAGE_FRAMING;
+  const showIntroCopy = getHeroBannerBodyPlainTextLength(copy.body) > 0;
 
   /** Exclusive accordion: exactly one panel open; re-clicking the open row is a no-op. */
   const handleSelectItem = (id: ManufacturingSpecializationId) => {
@@ -124,17 +135,39 @@ export function SectionManufacturing() {
           id="manufacturing-heading"
           className="manufacturing-intelligence-heading manufacturing-intelligence-heading-desktop hidden text-left font-manrope text-[48px] font-normal leading-[40px] tracking-[-0.9px] text-black lg:block lg:whitespace-nowrap"
         >
-          Manufacturing Intelligence
+          {copy.title}
         </h2>
 
-        <div className="manufacturing-intelligence-card-shell mt-0 overflow-hidden rounded-none bg-[linear-gradient(-65.02deg,#f8f7f6_0.94%,#c0c6cd_99.4%)] lg:mt-[76px]">
+        {showIntroCopy ? (
+          <div className="mt-4 hidden max-w-[720px] lg:block">
+            <HeroBannerBodyRichText
+              body={copy.body}
+              className="manufacturing-intelligence-intro text-left text-base leading-relaxed text-black/75 [&_p]:mb-3 [&_p:last-child]:mb-0"
+            />
+          </div>
+        ) : null}
+
+        <div
+          className={`manufacturing-intelligence-card-shell mt-0 overflow-hidden rounded-none bg-[linear-gradient(-65.02deg,#f8f7f6_0.94%,#c0c6cd_99.4%)] ${
+            showIntroCopy ? "lg:mt-10" : "lg:mt-[76px]"
+          }`}
+        >
           <div className="grid min-h-0 grid-cols-1 gap-12 py-16 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)] lg:gap-0 lg:py-8 lg:pl-[2.61%] lg:pr-[4.59%]">
             <h2 className="manufacturing-intelligence-heading mx-auto w-[257px] max-w-full text-center font-sans text-[30px] font-medium leading-[36px] tracking-[0.396px] text-black lg:hidden">
-              Manufacturing Intelligence
+              {copy.title}
             </h2>
 
+            {showIntroCopy ? (
+              <div className="col-span-1 -mt-6 px-4 pb-2 lg:hidden">
+                <HeroBannerBodyRichText
+                  body={copy.body}
+                  className="manufacturing-intelligence-intro mx-auto max-w-md text-center text-[15px] font-normal leading-[22px] text-black/75 [&_p]:mb-3 [&_p:last-child]:mb-0"
+                />
+              </div>
+            ) : null}
+
             <div className="flex min-w-0 flex-col divide-y divide-black/10 lg:pt-[var(--manufacturing-intelligence-accordion-col-padding-top-lg)]">
-              {MANUFACTURING_SPECIALIZATION_ITEMS.map((item) => (
+              {specializationItems.map((item) => (
                 <div key={item.id} className="flex min-w-0 flex-col">
                   <ManufacturingAccordionRow
                     item={item}
@@ -150,50 +183,77 @@ export function SectionManufacturing() {
                 className="manufacturing-intelligence-image-frame relative mx-auto aspect-[750/625] w-full overflow-hidden lg:ml-auto lg:mr-0"
                 data-landing-image={LANDING_IMAGE_IDS.MANUFACTURING_MAIN}
               >
-                {slot0 ? (
-                  <div
-                    className={`pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-start ${
-                      elevatedSlot === 0 ? "z-[2]" : "z-[1]"
-                    }`}
-                  >
-                    <Image
-                      key="mfg-detail-slot-0"
-                      src={slot0.src}
-                      alt={slot0.alt}
-                      width={slot0.widthPx}
-                      height={slot0.heightPx}
-                      sizes="(max-width: 1024px) 100vw, 45vw"
-                      className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
-                        slot0.photoLayout,
-                      )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
-                        slot0Visible ? "opacity-100" : "opacity-0"
-                      }`}
-                      aria-hidden={!slot0Visible}
-                    />
-                  </div>
-                ) : null}
-                {slot1 ? (
-                  <div
-                    className={`pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-start ${
-                      elevatedSlot === 1 ? "z-[2]" : "z-[1]"
-                    }`}
-                  >
-                    <Image
-                      key="mfg-detail-slot-1"
-                      src={slot1.src}
-                      alt={slot1.alt}
-                      width={slot1.widthPx}
-                      height={slot1.heightPx}
-                      sizes="(max-width: 1024px) 100vw, 45vw"
-                      className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
-                        slot1.photoLayout,
-                      )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
-                        slot1Visible ? "opacity-100" : "opacity-0"
-                      }`}
-                      aria-hidden={!slot1Visible}
-                    />
-                  </div>
-                ) : null}
+                {useCustomColumnImage && copy.customImageDisplayUrl ? (
+                  <Image
+                    src={copy.customImageDisplayUrl}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 45vw"
+                    className="object-cover"
+                    style={framingToCoverImageStyle(customFraming)}
+                  />
+                ) : (
+                  <>
+                    {slot0 ? (
+                      <div
+                        className={`pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-start ${
+                          elevatedSlot === 0 ? "z-[2]" : "z-[1]"
+                        }`}
+                      >
+                        <Image
+                          key="mfg-detail-slot-0"
+                          src={slot0.src}
+                          alt={slot0.alt}
+                          width={slot0.widthPx}
+                          height={slot0.heightPx}
+                          sizes="(max-width: 1024px) 100vw, 45vw"
+                          className={`manufacturing-intelligence-photo-detail relative max-h-full ${
+                            slot0.imageFraming
+                              ? "object-cover"
+                              : getManufacturingDetailPhotoLayoutClassName(slot0.photoLayout)
+                          } ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
+                            slot0Visible ? "opacity-100" : "opacity-0"
+                          }`}
+                          style={
+                            slot0.imageFraming
+                              ? framingToCoverImageStyle(slot0.imageFraming)
+                              : undefined
+                          }
+                          aria-hidden={!slot0Visible}
+                        />
+                      </div>
+                    ) : null}
+                    {slot1 ? (
+                      <div
+                        className={`pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-start ${
+                          elevatedSlot === 1 ? "z-[2]" : "z-[1]"
+                        }`}
+                      >
+                        <Image
+                          key="mfg-detail-slot-1"
+                          src={slot1.src}
+                          alt={slot1.alt}
+                          width={slot1.widthPx}
+                          height={slot1.heightPx}
+                          sizes="(max-width: 1024px) 100vw, 45vw"
+                          className={`manufacturing-intelligence-photo-detail relative max-h-full ${
+                            slot1.imageFraming
+                              ? "object-cover"
+                              : getManufacturingDetailPhotoLayoutClassName(slot1.photoLayout)
+                          } ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
+                            slot1Visible ? "opacity-100" : "opacity-0"
+                          }`}
+                          style={
+                            slot1.imageFraming
+                              ? framingToCoverImageStyle(slot1.imageFraming)
+                              : undefined
+                          }
+                          aria-hidden={!slot1Visible}
+                        />
+                      </div>
+                    ) : null}
+                  </>
+                )}
               </div>
             </div>
           </div>

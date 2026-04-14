@@ -3,7 +3,10 @@
 import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
-import { SITE_MEDIA_ACCEPT } from "./media-manager.constants";
+import {
+  MANUFACTURING_DETAIL_ADMIN_IMAGE_SIZES,
+  SITE_MEDIA_ACCEPT,
+} from "./media-manager.constants";
 
 type ImageUploadControlProps = {
   /** When false, e.g. while parent form is submitting */
@@ -15,6 +18,11 @@ type ImageUploadControlProps = {
    * `useId()` can diverge between SSR and hydration when many client trees mount together.
    */
   stableDomId?: string;
+  /**
+   * When set, the selected-file preview uses this container (e.g. same aspect/max-width as the
+   * live section) instead of a fixed height strip. Omit for the default compact preview.
+   */
+  previewContainerClassName?: string;
 };
 
 /**
@@ -24,6 +32,7 @@ export function ImageUploadControl({
   disabled,
   onFileChosen,
   stableDomId,
+  previewContainerClassName,
 }: ImageUploadControlProps) {
   const generatedId = useId();
   const inputId = stableDomId ?? generatedId;
@@ -114,14 +123,27 @@ export function ImageUploadControl({
         />
         {previewUrl ? (
           <div className="p-3">
-            <div className="relative h-40 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+            <div
+              className={
+                previewContainerClassName ??
+                "relative h-40 overflow-hidden rounded-lg border border-slate-200 bg-slate-100"
+              }
+            >
               <Image
                 src={previewUrl}
                 alt={displayName ? `Preview of ${displayName}` : "Selected image preview"}
                 fill
                 unoptimized
-                sizes="100vw"
-                className="object-contain"
+                sizes={
+                  previewContainerClassName
+                    ? MANUFACTURING_DETAIL_ADMIN_IMAGE_SIZES
+                    : "100vw"
+                }
+                className={
+                  previewContainerClassName
+                    ? "object-cover object-center"
+                    : "object-contain"
+                }
               />
             </div>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2">

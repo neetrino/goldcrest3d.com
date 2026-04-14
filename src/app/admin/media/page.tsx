@@ -1,3 +1,5 @@
+import { getManufacturingIntelligenceCopyBundle } from "@/lib/manufacturing-intelligence-copy/get-manufacturing-intelligence-copy";
+import { getManufacturingSpecializationItemsAdmin } from "@/lib/manufacturing-specialization-items/get-manufacturing-specialization-items";
 import { getModelingSlotCopyBundle } from "@/lib/modeling-slot-copy/get-modeling-slot-copy";
 import { getPowerBannerCopyBundle } from "@/lib/power-banner-copy/get-power-banner-copy";
 import { getSiteMediaAdminBundle } from "@/lib/site-media/get-site-media-admin";
@@ -5,10 +7,18 @@ import { getSiteMediaAdminBundle } from "@/lib/site-media/get-site-media-admin";
 import { MediaManagerClient } from "./MediaManagerClient";
 
 export default async function AdminMediaPage() {
-  const [bundle, powerBannerCopy, modelingSlotCopy] = await Promise.all([
+  const [
+    bundle,
+    powerBannerCopy,
+    modelingSlotCopy,
+    manufacturingIntelligenceCopy,
+    manufacturingSpecializationItems,
+  ] = await Promise.all([
     getSiteMediaAdminBundle(),
     getPowerBannerCopyBundle(),
     getModelingSlotCopyBundle(),
+    getManufacturingIntelligenceCopyBundle(),
+    getManufacturingSpecializationItemsAdmin(),
   ]);
 
   return (
@@ -29,6 +39,8 @@ export default async function AdminMediaPage() {
         bundle={bundle}
         powerBannerCopy={powerBannerCopy}
         modelingSlotCopy={modelingSlotCopy}
+        manufacturingIntelligenceCopy={manufacturingIntelligenceCopy}
+        manufacturingSpecializationItems={manufacturingSpecializationItems}
       />
     </div>
   );

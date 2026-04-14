@@ -18,6 +18,11 @@ import {
   saveOrderedGalleryFraming,
 } from "@/app/actions/site-media-framing";
 import {
+  resetManufacturingSpecializationItemFraming,
+  saveManufacturingSpecializationItemFraming,
+  type ManufacturingSpecializationItemFramingActionResult,
+} from "@/app/actions/manufacturing-specialization-item-framing";
+import {
   resetPowerBannerHeroFraming,
   savePowerBannerHeroFraming,
   type PowerBannerHeroFramingActionResult,
@@ -49,6 +54,8 @@ type ImageFramingEditorProps = {
   target: ImageFramingTarget;
   /** When false, controls are disabled (e.g. no upload yet). */
   enabled: boolean;
+  /** Passed to `next/image` `sizes` for the preview (match bounded preview width when set). */
+  previewSizes?: string;
 };
 
 function mergeFraming(
@@ -58,12 +65,15 @@ function mergeFraming(
   return clampImageFraming({ ...prev, ...patch });
 }
 
+const DEFAULT_FRAMING_PREVIEW_SIZES = "(max-width: 1024px) 100vw, 640px";
+
 export function ImageFramingEditor({
   imageUrl,
   initialFraming,
   aspectClassName,
   target,
   enabled,
+  previewSizes = DEFAULT_FRAMING_PREVIEW_SIZES,
 }: ImageFramingEditorProps) {
   const router = useRouter();
   const [framing, setFraming] = useState<ImageFraming>(
@@ -79,12 +89,27 @@ export function ImageFramingEditor({
 
   const [saveState, saveAction, savePending] = useActionState(
     async (
-      _p: SiteMediaFramingActionResult | PowerBannerHeroFramingActionResult | null,
+      _p:
+        | SiteMediaFramingActionResult
+        | PowerBannerHeroFramingActionResult
+        | ManufacturingSpecializationItemFramingActionResult
+        | null,
       formData: FormData,
-    ): Promise<SiteMediaFramingActionResult | PowerBannerHeroFramingActionResult | null> => {
+    ): Promise<
+      | SiteMediaFramingActionResult
+      | PowerBannerHeroFramingActionResult
+      | ManufacturingSpecializationItemFramingActionResult
+      | null
+    > => {
       if (target.kind === "powerBanner") {
         return savePowerBannerHeroFraming(
           _p as PowerBannerHeroFramingActionResult | null,
+          formData,
+        );
+      }
+      if (target.kind === "manufacturingItem") {
+        return saveManufacturingSpecializationItemFraming(
+          _p as ManufacturingSpecializationItemFramingActionResult | null,
           formData,
         );
       }
@@ -98,12 +123,27 @@ export function ImageFramingEditor({
 
   const [resetState, resetAction, resetPending] = useActionState(
     async (
-      _p: SiteMediaFramingActionResult | PowerBannerHeroFramingActionResult | null,
+      _p:
+        | SiteMediaFramingActionResult
+        | PowerBannerHeroFramingActionResult
+        | ManufacturingSpecializationItemFramingActionResult
+        | null,
       formData: FormData,
-    ): Promise<SiteMediaFramingActionResult | PowerBannerHeroFramingActionResult | null> => {
+    ): Promise<
+      | SiteMediaFramingActionResult
+      | PowerBannerHeroFramingActionResult
+      | ManufacturingSpecializationItemFramingActionResult
+      | null
+    > => {
       if (target.kind === "powerBanner") {
         return resetPowerBannerHeroFraming(
           _p as PowerBannerHeroFramingActionResult | null,
+          formData,
+        );
+      }
+      if (target.kind === "manufacturingItem") {
+        return resetManufacturingSpecializationItemFraming(
+          _p as ManufacturingSpecializationItemFramingActionResult | null,
           formData,
         );
       }
@@ -223,7 +263,7 @@ export function ImageFramingEditor({
           fill
           className="object-cover"
           style={framingToCoverImageStyle(framing)}
-          sizes="(max-width: 1024px) 100vw, 640px"
+          sizes={previewSizes}
         />
       </div>
 
@@ -297,6 +337,9 @@ export function ImageFramingEditor({
           {target.kind === "powerBanner" ? (
             <input type="hidden" name="bannerKey" value={target.bannerKey} />
           ) : null}
+          {target.kind === "manufacturingItem" ? (
+            <input type="hidden" name="itemKey" value={target.itemKey} />
+          ) : null}
           <input type="hidden" name="focusX" value={String(framing.focusX)} />
           <input type="hidden" name="focusY" value={String(framing.focusY)} />
           <input type="hidden" name="zoom" value={String(framing.zoom)} />
@@ -321,6 +364,9 @@ export function ImageFramingEditor({
             ) : null}
             {target.kind === "powerBanner" ? (
               <input type="hidden" name="bannerKey" value={target.bannerKey} />
+            ) : null}
+            {target.kind === "manufacturingItem" ? (
+              <input type="hidden" name="itemKey" value={target.itemKey} />
             ) : null}
             <button
               type="submit"

@@ -1,4 +1,6 @@
 import { LANDING_SECTION_IDS } from "@/constants";
+import type { ManufacturingSpecializationItem } from "@/constants/manufacturing-specialization";
+import type { ManufacturingIntelligenceCopyEntry } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy.types";
 import type { ModelingSlotCopyBundle } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
 import type { PowerBannerCopyBundle } from "@/lib/power-banner-copy/power-banner-copy.types";
 import type { LandingSiteMedia } from "@/lib/site-media/get-landing-site-media";
@@ -16,12 +18,16 @@ type LandingSectionsProps = {
   siteMedia: LandingSiteMedia;
   powerBannerCopy: PowerBannerCopyBundle;
   modelingSlotCopy: ModelingSlotCopyBundle;
+  manufacturingIntelligenceCopy: ManufacturingIntelligenceCopyEntry;
+  manufacturingSpecializationItems: ManufacturingSpecializationItem[];
 };
 
 export function LandingSections({
   siteMedia,
   powerBannerCopy,
   modelingSlotCopy,
+  manufacturingIntelligenceCopy,
+  manufacturingSpecializationItems,
 }: LandingSectionsProps) {
   return (
     <>
@@ -31,7 +37,10 @@ export function LandingSections({
 
       <SectionModeling modeling={siteMedia.modeling} modelingSlotCopy={modelingSlotCopy} />
 
-      <SectionManufacturing />
+      <SectionManufacturing
+        copy={manufacturingIntelligenceCopy}
+        specializationItems={manufacturingSpecializationItems}
+      />
 
       <SectionFounder />
 

@@ -1,9 +1,14 @@
 import type { CSSProperties } from "react";
 
-/** Normalized focal point (percent) and zoom for cover-style crops inside a fixed frame. */
+/** Normalized focal point (percent) and zoom for image placement inside a fixed frame. */
 export type ImageFraming = {
   focusX: number;
   focusY: number;
+  /**
+   * Uniform scale (aspect ratio preserved). Layout uses `contain` (full image visible at the
+   * fitted size), then `transform: scale(zoom)` — below `1` shrinks, above `1` zooms in
+   * (overflow clipped by the frame).
+   */
   zoom: number;
 };
 
@@ -15,8 +20,11 @@ export const DEFAULT_IMAGE_FRAMING: ImageFraming = {
 
 const MIN_FOCUS = 0;
 const MAX_FOCUS = 100;
-const MIN_ZOOM = 1;
+/** Smallest allowed scale vs default visible size (uniform; aspect ratio preserved via `object-fit` / background sizing). */
+export const IMAGE_FRAMING_MIN_ZOOM = 0.25;
 const MAX_ZOOM = 3;
+
+const MIN_ZOOM = IMAGE_FRAMING_MIN_ZOOM;
 
 export function clampImageFraming(input: Partial<ImageFraming> | null | undefined): ImageFraming {
   const base = { ...DEFAULT_IMAGE_FRAMING, ...input };
@@ -34,11 +42,14 @@ function clampNumber(n: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, n));
 }
 
-/** Styles for Next/Image with `fill` + `object-cover` inside an overflow-hidden frame. */
+/**
+ * Styles for Next/Image with `fill` inside an overflow-hidden frame.
+ * `object-fit: contain` keeps the full image uncropped; `scale(zoom)` applies zoom in/out.
+ */
 export function framingToCoverImageStyle(framing: ImageFraming): CSSProperties {
   const f = clampImageFraming(framing);
   return {
-    objectFit: "cover",
+    objectFit: "contain",
     objectPosition: `${f.focusX}% ${f.focusY}%`,
     transform: `scale(${f.zoom})`,
     transformOrigin: "center center",
@@ -55,13 +66,14 @@ export function framingToBackgroundImageStyle(
   fallbackColor: string,
 ): CSSProperties {
   const f = clampImageFraming(framing);
-  const size = f.zoom <= 1.001 ? "cover" : `${f.zoom * 100}%`;
   return {
     backgroundImage: `url("${imageUrl}")`,
     backgroundColor: fallbackColor,
     backgroundPosition: `${f.focusX}% ${f.focusY}%`,
-    backgroundSize: size,
+    backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
+    transform: `scale(${f.zoom})`,
+    transformOrigin: "center center",
   };
 }
 

@@ -1,4 +1,5 @@
 import { LANDING_IMAGES } from "@/constants/landing-assets";
+import type { ImageFraming } from "@/lib/site-media/image-framing";
 
 /** Տեսանելի չափ միայն detail նկարի համար (frame/column չի փոխվում) */
 export const MANUFACTURING_DETAIL_IMAGE_WIDTH_PX = 980;
@@ -113,6 +114,17 @@ export const MANUFACTURING_SPECIALIZATION_IDS = {
 export type ManufacturingSpecializationId =
   (typeof MANUFACTURING_SPECIALIZATION_IDS)[keyof typeof MANUFACTURING_SPECIALIZATION_IDS];
 
+/** Homepage accordion order — must match `MANUFACTURING_SPECIALIZATION_ITEMS`. */
+export const ORDERED_MANUFACTURING_SPECIALIZATION_IDS: readonly ManufacturingSpecializationId[] =
+  [
+    MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING,
+    MANUFACTURING_SPECIALIZATION_IDS.STONE_SEAT_GEOMETRY_SETTING,
+    MANUFACTURING_SPECIALIZATION_IDS.CASTING_COMPENSATION_METAL_FLOW,
+    MANUFACTURING_SPECIALIZATION_IDS.PRINTING_STRATEGY_RESIN,
+    MANUFACTURING_SPECIALIZATION_IDS.MECHANICAL_STRESS_LOAD_DISTRIBUTION,
+    MANUFACTURING_SPECIALIZATION_IDS.TOLERANCE_CONTROL_ASSEMBLY_PRECISION,
+  ];
+
 export type ManufacturingSpecializationItem = {
   id: ManufacturingSpecializationId;
   title: string;
@@ -121,6 +133,8 @@ export type ManufacturingSpecializationItem = {
   detailImageAlt?: string;
   /** Երբ տրված է `detailImageSrc`-ի հետ — detail նկարի intrinsic չափեր և CSS մոդիֆիկատոր */
   detailPhotoLayout?: ManufacturingDetailPhotoLayout;
+  /** Admin-uploaded detail image only — focal crop for `next/image` cover. */
+  detailImageFraming?: ImageFraming | null;
 };
 
 /**
