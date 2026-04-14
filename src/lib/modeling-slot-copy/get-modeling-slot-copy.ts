@@ -1,5 +1,6 @@
 import { logger } from "@/lib/logger";
 import { prisma } from "@/lib/db";
+import { withPrismaConnectionRetry } from "@/lib/db/prisma-transient-retry";
 
 import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
 import { ORDERED_MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
@@ -67,7 +68,7 @@ export async function getModelingSlotCopyBundle(): Promise<ModelingSlotCopyBundl
     textLayoutMobile: unknown | null;
   }[];
   try {
-    rows = await delegate.findMany();
+    rows = await withPrismaConnectionRetry(prisma, () => delegate.findMany());
   } catch (err) {
     if (isMigrationPendingError(err)) {
       logger.info("getModelingSlotCopyBundle: migration pending, using defaults");
