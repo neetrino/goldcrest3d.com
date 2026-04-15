@@ -28,6 +28,11 @@ import {
   type PowerBannerHeroFramingActionResult,
 } from "@/app/actions/power-banner-hero-framing";
 import {
+  resetFounderSectionFraming,
+  saveFounderSectionFraming,
+  type FounderSectionFramingActionResult,
+} from "@/app/actions/founder-section-framing";
+import {
   clampImageFraming,
   DEFAULT_IMAGE_FRAMING,
   framingFingerprint,
@@ -93,12 +98,14 @@ export function ImageFramingEditor({
         | SiteMediaFramingActionResult
         | PowerBannerHeroFramingActionResult
         | ManufacturingSpecializationItemFramingActionResult
+        | FounderSectionFramingActionResult
         | null,
       formData: FormData,
     ): Promise<
       | SiteMediaFramingActionResult
       | PowerBannerHeroFramingActionResult
       | ManufacturingSpecializationItemFramingActionResult
+      | FounderSectionFramingActionResult
       | null
     > => {
       if (target.kind === "powerBanner") {
@@ -110,6 +117,12 @@ export function ImageFramingEditor({
       if (target.kind === "manufacturingItem") {
         return saveManufacturingSpecializationItemFraming(
           _p as ManufacturingSpecializationItemFramingActionResult | null,
+          formData,
+        );
+      }
+      if (target.kind === "founder") {
+        return saveFounderSectionFraming(
+          _p as FounderSectionFramingActionResult | null,
           formData,
         );
       }
@@ -127,12 +140,14 @@ export function ImageFramingEditor({
         | SiteMediaFramingActionResult
         | PowerBannerHeroFramingActionResult
         | ManufacturingSpecializationItemFramingActionResult
+        | FounderSectionFramingActionResult
         | null,
       formData: FormData,
     ): Promise<
       | SiteMediaFramingActionResult
       | PowerBannerHeroFramingActionResult
       | ManufacturingSpecializationItemFramingActionResult
+      | FounderSectionFramingActionResult
       | null
     > => {
       if (target.kind === "powerBanner") {
@@ -144,6 +159,12 @@ export function ImageFramingEditor({
       if (target.kind === "manufacturingItem") {
         return resetManufacturingSpecializationItemFraming(
           _p as ManufacturingSpecializationItemFramingActionResult | null,
+          formData,
+        );
+      }
+      if (target.kind === "founder") {
+        return resetFounderSectionFraming(
+          _p as FounderSectionFramingActionResult | null,
           formData,
         );
       }

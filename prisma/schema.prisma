@@ -168,3 +168,14 @@ model ManufacturingSpecializationItemCopy {
   heroImageLayout Json?
   updatedAt   DateTime @updatedAt
 }
+
+/// Founder & Lead CAD Engineer section — name, rich bio, optional photo (R2).
+/// Single row: application id `singleton`.
+model FounderSectionCopy {
+  id              String   @id
+  name            String   @db.Text
+  body            String   @db.Text
+  r2ObjectKey     String?
+  heroImageLayout Json?
+  updatedAt       DateTime @updatedAt
+}

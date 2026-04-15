@@ -3,6 +3,7 @@ import { getManufacturingSpecializationItemsAdmin } from "@/lib/manufacturing-sp
 import { getModelingSlotCopyBundle } from "@/lib/modeling-slot-copy/get-modeling-slot-copy";
 import { getPowerBannerCopyBundle } from "@/lib/power-banner-copy/get-power-banner-copy";
 import { getSiteMediaAdminBundle } from "@/lib/site-media/get-site-media-admin";
+import { getFounderSectionEntry } from "@/lib/founder-section/get-founder-section";
 
 import { MediaManagerClient } from "./MediaManagerClient";
 
@@ -13,12 +14,14 @@ export default async function AdminMediaPage() {
     modelingSlotCopy,
     manufacturingIntelligenceCopy,
     manufacturingSpecializationItems,
+    founderSection,
   ] = await Promise.all([
     getSiteMediaAdminBundle(),
     getPowerBannerCopyBundle(),
     getModelingSlotCopyBundle(),
     getManufacturingIntelligenceCopyBundle(),
     getManufacturingSpecializationItemsAdmin(),
+    getFounderSectionEntry(),
   ]);
 
   return (
@@ -41,6 +44,7 @@ export default async function AdminMediaPage() {
         modelingSlotCopy={modelingSlotCopy}
         manufacturingIntelligenceCopy={manufacturingIntelligenceCopy}
         manufacturingSpecializationItems={manufacturingSpecializationItems}
+        founderSection={founderSection}
       />
     </div>
   );
