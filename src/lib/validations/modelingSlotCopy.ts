@@ -13,8 +13,9 @@ const MAX_TITLE_LEN = 280;
 
 const ORDERED_SLOT_KEY_SET = new Set<string>(ORDERED_MODELING_SLOT_KEYS);
 
-const heroBannerBodyField = (fieldLabel: string) =>
-  z
+/** Allows empty stored copy; when non-empty, enforces hero sanitizer size limits (plain + storage). */
+function optionalHeroBannerRichBodyField(fieldLabel: string) {
+  return z
     .string()
     .max(
       HERO_BANNER_BODY_MAX_STORAGE_CHARS,
@@ -22,13 +23,10 @@ const heroBannerBodyField = (fieldLabel: string) =>
     )
     .transform((s) => s.trim())
     .superRefine((val, ctx) => {
-      const len = getHeroBannerBodyPlainTextLength(val);
-      if (len === 0) {
-        ctx.addIssue({
-          code: "custom",
-          message: `${fieldLabel} is required.`,
-        });
+      if (val.length === 0) {
+        return;
       }
+      const len = getHeroBannerBodyPlainTextLength(val);
       if (len > HERO_BANNER_BODY_MAX_PLAIN_TEXT_CHARS) {
         ctx.addIssue({
           code: "custom",
@@ -36,31 +34,14 @@ const heroBannerBodyField = (fieldLabel: string) =>
         });
       }
     });
+}
 
 const optionalMobileTitleField = z
   .string()
   .max(MAX_TITLE_LEN, `Mobile title must be at most ${MAX_TITLE_LEN} characters`)
   .transform((s) => s.trim());
 
-const optionalMobileBodyField = z
-  .string()
-  .max(
-    HERO_BANNER_BODY_MAX_STORAGE_CHARS,
-    `Mobile description must be at most ${HERO_BANNER_BODY_MAX_STORAGE_CHARS} characters (including markup).`,
-  )
-  .transform((s) => s.trim())
-  .superRefine((val, ctx) => {
-    if (val.length === 0) {
-      return;
-    }
-    const len = getHeroBannerBodyPlainTextLength(val);
-    if (len > HERO_BANNER_BODY_MAX_PLAIN_TEXT_CHARS) {
-      ctx.addIssue({
-        code: "custom",
-        message: `Mobile description must be at most ${HERO_BANNER_BODY_MAX_PLAIN_TEXT_CHARS} characters of text.`,
-      });
-    }
-  });
+const optionalMobileBodyField = optionalHeroBannerRichBodyField("Mobile description");
 
 type ParsedTextLayout = z.infer<typeof modelingTextOverlayLayoutSchema>;
 
@@ -98,10 +79,9 @@ export const modelingSlotCopyFormSchema = z
     title: z
       .string()
       .max(MAX_TITLE_LEN, `Title must be at most ${MAX_TITLE_LEN} characters`)
-      .transform((s) => s.trim())
-      .refine((s) => s.length > 0, "Desktop / tablet title is required."),
+      .transform((s) => s.trim()),
     titleMobile: optionalMobileTitleField,
-    body: heroBannerBodyField("Desktop / tablet description"),
+    body: optionalHeroBannerRichBodyField("Desktop / tablet description"),
     bodyMobile: optionalMobileBodyField,
     useCustomTextLayout: z.enum(["0", "1"]).default("0"),
     textLayoutDesktop: z.string().optional().default(""),

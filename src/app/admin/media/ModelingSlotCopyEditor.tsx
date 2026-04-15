@@ -127,7 +127,6 @@ export function ModelingSlotCopyEditor({
             id={`modeling-slot-title-desktop-${slotKey}`}
             name="title"
             rows={2}
-            required
             value={titleDesktop}
             onChange={(e) => setTitleDesktop(e.target.value)}
             className={TITLE_TEXTAREA_CLASS}

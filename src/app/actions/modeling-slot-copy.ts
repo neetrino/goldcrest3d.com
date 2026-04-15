@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
 import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
 import { modelingTextOverlayLayoutSchema } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import { modelingSlotCopyFormSchema } from "@/lib/validations/modelingSlotCopy";
@@ -74,9 +73,6 @@ export async function updateModelingSlotCopy(
     textLayoutMobile: textLayoutMobileRaw,
   } = parsed.data;
   const bodyStored = finalizeHeroBannerBodyHtml(body);
-  if (getHeroBannerBodyPlainTextLength(bodyStored) === 0) {
-    return { ok: false, error: "Desktop / tablet description is required." };
-  }
 
   const bodyMobileStored =
     bodyMobile.length > 0 ? finalizeHeroBannerBodyHtml(bodyMobile) : null;
