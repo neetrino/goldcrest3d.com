@@ -110,6 +110,46 @@
   );
 }
 
+/* Hero-only fixed image stage: keeps artwork from shrinking below design size, crops via container overflow. */
+.power-banners-fixed-bg-stage {
+  --hero-bg-min-width: 100%;
+  --hero-bg-min-height: 100%;
+  --hero-bg-scale: 1;
+  --hero-bg-shift-x-base: 0px;
+  --hero-bg-shift-y-base: 0px;
+  --hero-bg-shift-factor-x: 0;
+  --hero-bg-shift-factor-y: 0;
+  --hero-bg-object-position: 50% 50%;
+  --hero-bg-overflow-x: max(0px, calc((var(--hero-bg-min-width) - 100vw) / 2));
+  --hero-bg-overflow-y: max(0px, calc((var(--hero-bg-min-height) - 100%) / 2));
+  --hero-bg-shift-x: calc(
+    var(--hero-bg-shift-x-base) +
+      (var(--hero-bg-overflow-x) * var(--hero-bg-shift-factor-x))
+  );
+  --hero-bg-shift-y: calc(
+    var(--hero-bg-shift-y-base) +
+      (var(--hero-bg-overflow-y) * var(--hero-bg-shift-factor-y))
+  );
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  width: max(100%, var(--hero-bg-min-width));
+  height: max(100%, var(--hero-bg-min-height));
+  transform: translate3d(
+      calc(-50% + var(--hero-bg-shift-x)),
+      calc(-50% + var(--hero-bg-shift-y)),
+      0
+    )
+    scale(var(--hero-bg-scale));
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.power-banners-fixed-bg-image {
+  object-fit: cover;
+  object-position: var(--hero-bg-object-position);
+}
+
 /* PowerBanners section2 (Jewelry Rendering) — ֆրեյմ 1920×712; ֆոնը միայն cover (առանց դեֆորմացիայի) */
 .power-banners-section2-block {
   --section2-design-width: 1920;
