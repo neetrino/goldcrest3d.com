@@ -9,8 +9,6 @@ export type PowerBannerCopyEntry = {
   mobileTitle: string;
   /** Mobile-only rich/plain description (below `md`). Empty string means intentionally no description on mobile. */
   mobileBody: string;
-  /** Optional mobile-only eyebrow/caption shown above hero title on mobile. */
-  mobileOverlayText: string;
   /** Large hero image (desktop / tablet). */
   desktopBgSrc: string;
   /** Hero image on small screens. */

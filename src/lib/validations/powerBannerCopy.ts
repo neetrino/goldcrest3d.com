@@ -9,7 +9,6 @@ import { POWER_BANNER_KEY_SET } from "@/lib/power-banner-copy/power-banner-keys"
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
 
 const MAX_TITLE_LEN = 280;
-const MAX_OVERLAY_LEN = 280;
 
 export const powerBannerCopyFormSchema = z.object({
   bannerKey: z
@@ -75,11 +74,4 @@ export const powerBannerMobileCopyFormSchema = z.object({
     .max(MAX_TITLE_LEN, `Mobile title must be at most ${MAX_TITLE_LEN} characters`)
     .transform((s) => s.trim()),
   mobileBody: optionalHeroBannerRichBodyField("Mobile description"),
-  mobileOverlayText: z
-    .string()
-    .max(
-      MAX_OVERLAY_LEN,
-      `Mobile overlay text must be at most ${MAX_OVERLAY_LEN} characters`,
-    )
-    .transform((s) => s.trim()),
 });

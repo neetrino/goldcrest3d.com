@@ -19,7 +19,6 @@ function defaultEntryForKey(key: PowerBannerKey): PowerBannerCopyEntry {
     ...copy,
     mobileTitle: mobile.title,
     mobileBody: mobile.body,
-    mobileOverlayText: mobile.overlayText,
     ...images,
   };
 }
@@ -44,7 +43,6 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
     r2ObjectKeyMobile: string | null;
     titleMobile: string | null;
     bodyMobile: string | null;
-    mobileOverlayText: string | null;
     heroImageLayout: unknown | null;
   }[];
   try {
@@ -68,7 +66,6 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
         body: row.body,
         mobileTitle: row.titleMobile ?? "",
         mobileBody: row.bodyMobile ?? "",
-        mobileOverlayText: row.mobileOverlayText ?? "",
         ...resolveHeroBannerImageFields(
           key,
           row.r2ObjectKey,

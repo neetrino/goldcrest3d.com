@@ -13,17 +13,11 @@ type RenderingHeroSlideCopyProps = {
 };
 
 export function RenderingHeroSlideCopy({ copy }: RenderingHeroSlideCopyProps) {
-  const mobileOverlay = copy.mobileOverlayText.trim();
   return (
     <div
       className={`relative z-10 flex h-full w-full flex-col items-start justify-end px-6 pb-16 pt-16 md:absolute md:left-0 md:right-auto md:top-[38%] ${HERO_SIDE_COPY_COLUMN_MAX_CLASS} md:-translate-y-1/2 md:items-start md:justify-center md:pl-12 md:pr-6 md:pb-0 md:pt-0 lg:pl-20`}
     >
       <div className="power-banners-section2-text-cluster flex w-full flex-col items-start gap-8 text-left text-white">
-        {mobileOverlay.length > 0 ? (
-          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[#e2c481] md:hidden">
-            {mobileOverlay}
-          </p>
-        ) : null}
         <RenderingHeroSlideTitle desktopTitle={copy.title} mobileTitle={copy.mobileTitle} />
         <RenderingHeroSubtitleLines desktopBody={copy.body} mobileBody={copy.mobileBody} />
         <GetAQuoteButton

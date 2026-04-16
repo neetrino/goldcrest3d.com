@@ -59,22 +59,6 @@ export function PowerBannerMobileCopyEditor({
         <input type="hidden" name="mobileBody" value={mobileBodyHtml} />
 
         <div className="flex flex-col gap-2">
-          <label htmlFor={`power-banner-mobile-overlay-${bannerKey}`} className="text-sm font-medium text-slate-800">
-            Mobile overlay text
-          </label>
-          <input
-            id={`power-banner-mobile-overlay-${bannerKey}`}
-            name="mobileOverlayText"
-            defaultValue={initial.mobileOverlayText}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-slate-200 transition placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
-            placeholder="Optional caption shown above the mobile title"
-          />
-          <p className="text-xs text-slate-500">
-            Optional. Leave blank to hide this mobile-only overlay text.
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-2">
           <label htmlFor={`power-banner-mobile-title-${bannerKey}`} className="text-sm font-medium text-slate-800">
             Mobile title
           </label>

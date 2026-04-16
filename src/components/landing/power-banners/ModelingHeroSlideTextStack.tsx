@@ -44,8 +44,6 @@ export function ModelingHeroSlideTextStack({
   const desktopPlain = desktopBody.replace(/\s+/g, " ");
   const mobilePlainLines = toPlainLines(mobileBody);
 
-  const hasMobileOverlay = copy.mobileOverlayText.trim().length > 0;
-
   return (
     <div
       id={LANDING_ELEMENT_IDS.HERO_MODELING_TEXT_GROUP}
@@ -63,11 +61,6 @@ export function ModelingHeroSlideTextStack({
           transform: `translateY(-${SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
         }}
       >
-        {hasMobileOverlay ? (
-          <span className="mb-2 block text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[#e2c481] md:hidden">
-            {copy.mobileOverlayText}
-          </span>
-        ) : null}
         <span className="md:hidden">
           {mobileTitleLines.map((line, i) => (
             <span key={i} className={i === 0 ? "block whitespace-nowrap" : "block"}>

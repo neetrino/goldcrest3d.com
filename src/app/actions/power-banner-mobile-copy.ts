@@ -41,7 +41,6 @@ export async function updatePowerBannerMobileCopy(
     bannerKey: formData.get("bannerKey"),
     mobileTitle: formData.get("mobileTitle"),
     mobileBody: formData.get("mobileBody"),
-    mobileOverlayText: formData.get("mobileOverlayText"),
   });
 
   if (!parsed.success) {
@@ -50,12 +49,11 @@ export async function updatePowerBannerMobileCopy(
       first.bannerKey?.[0] ??
       first.mobileTitle?.[0] ??
       first.mobileBody?.[0] ??
-      first.mobileOverlayText?.[0] ??
       "Invalid input.";
     return { ok: false, error: msg };
   }
 
-  const { bannerKey, mobileTitle, mobileBody, mobileOverlayText } = parsed.data;
+  const { bannerKey, mobileTitle, mobileBody } = parsed.data;
   const mobileBodyStored =
     mobileBody.length > 0 ? finalizeHeroBannerBodyHtml(mobileBody) : "";
 
@@ -69,12 +67,10 @@ export async function updatePowerBannerMobileCopy(
         body: finalizeHeroBannerBodyHtml(desktopDefaults.body),
         titleMobile: mobileTitle.length > 0 ? mobileTitle : null,
         bodyMobile: mobileBodyStored.length > 0 ? mobileBodyStored : null,
-        mobileOverlayText: mobileOverlayText.length > 0 ? mobileOverlayText : null,
       },
       update: {
         titleMobile: mobileTitle.length > 0 ? mobileTitle : null,
         bodyMobile: mobileBodyStored.length > 0 ? mobileBodyStored : null,
-        mobileOverlayText: mobileOverlayText.length > 0 ? mobileOverlayText : null,
       },
     });
   } catch (err) {
