@@ -12,7 +12,6 @@ import {
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
 import { formatR2ObjectDisplayName } from "@/lib/site-media/format-r2-object-label";
 import {
-  DEFAULT_IMAGE_FRAMING,
   framingFingerprint,
   framingToCoverImageStyle,
   type ImageFraming,
@@ -92,9 +91,7 @@ export function PowerBannerMobileHeroImageEditor({
 
   const storedName = formatR2ObjectDisplayName(heroImageMobileR2Key);
   const usingCustom = Boolean(heroImageMobileR2Key);
-  const previewFraming = usingCustom
-    ? heroImageFramingMobile ?? DEFAULT_IMAGE_FRAMING
-    : null;
+  const previewFraming = heroImageFramingMobile ?? null;
 
   return (
     <div className="rounded-xl border border-slate-200/90 bg-slate-50/80 p-4 sm:p-5">
@@ -148,17 +145,17 @@ export function PowerBannerMobileHeroImageEditor({
         </MediaFormSubmitButton>
       </form>
 
+      <ImageFramingEditor
+        key={`${bannerKey}-mobile-${framingFingerprint(heroImageFramingMobile)}`}
+        imageUrl={mobilePreviewSrc}
+        initialFraming={heroImageFramingMobile}
+        aspectClassName="aspect-[9/16]"
+        target={{ kind: "powerBanner", bannerKey, variant: "mobile" }}
+        enabled={!uploadPending && !clearPending}
+        previewSizes="(max-width: 768px) 100vw, 320px"
+      />
       {usingCustom ? (
         <>
-          <ImageFramingEditor
-            key={`${bannerKey}-mobile-${framingFingerprint(heroImageFramingMobile)}`}
-            imageUrl={mobilePreviewSrc}
-            initialFraming={heroImageFramingMobile}
-            aspectClassName="aspect-[9/16]"
-            target={{ kind: "powerBanner", bannerKey, variant: "mobile" }}
-            enabled={!uploadPending && !clearPending}
-            previewSizes="(max-width: 768px) 100vw, 320px"
-          />
           <form action={clearAction} className="mt-4 border-t border-slate-200/80 pt-4">
             <input type="hidden" name="bannerKey" value={bannerKey} />
             <p className="mb-2 text-xs text-slate-600">

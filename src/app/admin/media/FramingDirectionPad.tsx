@@ -1,5 +1,6 @@
 type FramingDirectionPadProps = {
   disabled: boolean;
+  compact?: boolean;
   onUp: () => void;
   onDown: () => void;
   onLeft: () => void;
@@ -8,25 +9,31 @@ type FramingDirectionPadProps = {
 
 export function FramingDirectionPad({
   disabled,
+  compact = false,
   onUp,
   onDown,
   onLeft,
   onRight,
 }: FramingDirectionPadProps) {
+  const rootClassName = compact
+    ? "flex flex-wrap items-center justify-center gap-1.5"
+    : "flex flex-wrap items-center justify-center gap-2";
+  const stackClassName = compact ? "flex flex-col gap-0.5" : "flex flex-col gap-1";
+
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2">
-      <PadBtn label="Move up" disabled={disabled} onClick={onUp}>
+    <div className={rootClassName}>
+      <PadBtn label="Move up" disabled={disabled} onClick={onUp} compact={compact}>
         ↑
       </PadBtn>
-      <div className="flex flex-col gap-1">
-        <PadBtn label="Move left" disabled={disabled} onClick={onLeft}>
+      <div className={stackClassName}>
+        <PadBtn label="Move left" disabled={disabled} onClick={onLeft} compact={compact}>
           ←
         </PadBtn>
-        <PadBtn label="Move right" disabled={disabled} onClick={onRight}>
+        <PadBtn label="Move right" disabled={disabled} onClick={onRight} compact={compact}>
           →
         </PadBtn>
       </div>
-      <PadBtn label="Move down" disabled={disabled} onClick={onDown}>
+      <PadBtn label="Move down" disabled={disabled} onClick={onDown} compact={compact}>
         ↓
       </PadBtn>
     </div>
@@ -36,11 +43,16 @@ export function FramingDirectionPad({
 type PadBtnProps = {
   label: string;
   disabled: boolean;
+  compact: boolean;
   onClick: () => void;
   children: React.ReactNode;
 };
 
-function PadBtn({ label, disabled, onClick, children }: PadBtnProps) {
+function PadBtn({ label, disabled, compact, onClick, children }: PadBtnProps) {
+  const className = compact
+    ? "flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 bg-white text-base font-semibold text-slate-800 hover:bg-slate-50 disabled:opacity-50"
+    : "flex h-10 w-10 items-center justify-center rounded-lg border border-slate-300 bg-white text-lg font-semibold text-slate-800 hover:bg-slate-50 disabled:opacity-50";
+
   return (
     <button
       type="button"
@@ -48,7 +60,7 @@ function PadBtn({ label, disabled, onClick, children }: PadBtnProps) {
       title={label}
       disabled={disabled}
       onClick={onClick}
-      className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-300 bg-white text-lg font-semibold text-slate-800 hover:bg-slate-50 disabled:opacity-50"
+      className={className}
     >
       {children}
     </button>

@@ -44,7 +44,7 @@ export function resolveHeroBannerImageFields(
     mobileBgSrc: mobileUrl ?? mobileDefault,
     heroImageR2Key: r2ObjectKey ?? null,
     heroImageMobileR2Key: r2ObjectKeyMobile ?? null,
-    heroImageFraming: r2ObjectKey ? heroImageFraming : null,
-    heroImageFramingMobile: r2ObjectKeyMobile ? heroImageFramingMobile : null,
+    heroImageFraming,
+    heroImageFramingMobile,
   };
 }

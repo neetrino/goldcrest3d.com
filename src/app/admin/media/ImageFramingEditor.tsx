@@ -269,6 +269,40 @@ export function ImageFramingEditor({
   }
 
   const appearance = framingSectionAppearance(target);
+  const isPowerBannerMobileCompact =
+    target.kind === "powerBanner" && target.variant === "mobile";
+  const cardClassName = isPowerBannerMobileCompact
+    ? `mt-3 space-y-2.5 rounded-xl border border-slate-200/90 p-3 sm:p-3.5 ${appearance.cardClass}`
+    : `mt-4 space-y-3 rounded-xl border border-slate-200/90 p-4 ${appearance.cardClass}`;
+  const titleClassName = isPowerBannerMobileCompact
+    ? "text-[0.82rem] font-semibold text-slate-900"
+    : "text-sm font-semibold text-slate-900";
+  const hintClassName = isPowerBannerMobileCompact
+    ? "mt-1 text-[11px] text-slate-600"
+    : "mt-1 text-xs text-slate-600";
+  const previewClassName = isPowerBannerMobileCompact
+    ? `relative mx-auto w-full max-w-[clamp(10.5rem,42vw,12.5rem)] overflow-hidden rounded-lg border border-slate-200 bg-slate-100 ${aspectClassName} ${
+        enabled ? "cursor-grab active:cursor-grabbing touch-none" : "opacity-70"
+      }`
+    : `relative w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100 ${aspectClassName} ${
+        enabled ? "cursor-grab active:cursor-grabbing touch-none" : "opacity-70"
+      }`;
+  const zoomControlsClassName = isPowerBannerMobileCompact
+    ? "flex flex-wrap justify-center gap-1.5"
+    : "flex flex-wrap justify-center gap-2";
+  const zoomButtonClassName = isPowerBannerMobileCompact
+    ? "rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-50"
+    : "rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-50";
+  const messageClassName = isPowerBannerMobileCompact ? "text-xs" : "text-sm";
+  const actionsClassName = isPowerBannerMobileCompact
+    ? "flex flex-wrap gap-1.5 border-t border-slate-200/80 pt-2.5"
+    : "flex flex-wrap gap-2 border-t border-slate-200/80 pt-3";
+  const primaryActionClassName = isPowerBannerMobileCompact
+    ? "inline-flex items-center rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+    : "inline-flex items-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60";
+  const secondaryActionClassName = isPowerBannerMobileCompact
+    ? "inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+    : "inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60";
 
   const resetDisabledWhenServerSaved =
     !enabled || savePending || resetPending;
@@ -276,24 +310,20 @@ export function ImageFramingEditor({
     !enabled || savePending || resetPending || isAtDefaultFraming;
 
   return (
-    <div
-      className={`mt-4 space-y-3 rounded-xl border border-slate-200/90 p-4 ${appearance.cardClass}`}
-    >
+    <div className={cardClassName}>
       <div>
-        <p className="text-sm font-semibold text-slate-900">{appearance.title}</p>
+        <p className={titleClassName}>{appearance.title}</p>
         {target.kind === "modeling" ? (
           <ModelingFramePositionHelpText variant={target.variant} />
         ) : (
-          <p className="mt-1 text-xs text-slate-600">
+          <p className={hintClassName}>
             Drag the image inside the preview or use the controls. Save to apply on the live site.
           </p>
         )}
       </div>
 
       <div
-        className={`relative w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100 ${aspectClassName} ${
-          enabled ? "cursor-grab active:cursor-grabbing touch-none" : "opacity-70"
-        }`}
+        className={previewClassName}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -310,6 +340,7 @@ export function ImageFramingEditor({
       </div>
 
       <FramingDirectionPad
+        compact={isPowerBannerMobileCompact}
         disabled={!enabled || savePending || resetPending}
         onUp={() =>
           setFraming((f) => mergeFraming(f, { focusY: f.focusY - IMAGE_FRAMING_FOCUS_STEP }))
@@ -325,7 +356,7 @@ export function ImageFramingEditor({
         }
       />
 
-      <div className="flex flex-wrap justify-center gap-2">
+      <div className={zoomControlsClassName}>
         <button
           type="button"
           disabled={!enabled || savePending || resetPending}
@@ -334,7 +365,7 @@ export function ImageFramingEditor({
               mergeFraming(f, { zoom: f.zoom + IMAGE_FRAMING_ZOOM_STEP }),
             )
           }
-          className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-50"
+          className={zoomButtonClassName}
         >
           Zoom in
         </button>
@@ -346,7 +377,7 @@ export function ImageFramingEditor({
               mergeFraming(f, { zoom: f.zoom - IMAGE_FRAMING_ZOOM_STEP }),
             )
           }
-          className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-50"
+          className={zoomButtonClassName}
         >
           Zoom out
         </button>
@@ -354,7 +385,7 @@ export function ImageFramingEditor({
 
       {message ? (
         <p
-          className={`text-sm ${
+          className={`${messageClassName} ${
             (saveState && !saveState.ok) || (resetState && !resetState.ok)
               ? "text-red-700"
               : "text-emerald-800"
@@ -365,7 +396,7 @@ export function ImageFramingEditor({
         </p>
       ) : null}
 
-      <div className="flex flex-wrap gap-2 border-t border-slate-200/80 pt-3">
+      <div className={actionsClassName}>
         <form action={saveAction} className="inline">
           {target.kind === "gallery" ? (
             <input type="hidden" name="itemId" value={target.itemId} />
@@ -388,7 +419,7 @@ export function ImageFramingEditor({
           <button
             type="submit"
             disabled={!enabled || savePending || resetPending}
-            className="inline-flex items-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className={primaryActionClassName}
           >
             {savePending ? "Saving…" : "Save framing"}
           </button>
@@ -413,7 +444,7 @@ export function ImageFramingEditor({
             <button
               type="submit"
               disabled={resetDisabledWhenServerSaved}
-              className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className={secondaryActionClassName}
             >
               {resetPending ? "Resetting…" : "Reset framing"}
             </button>
@@ -423,7 +454,7 @@ export function ImageFramingEditor({
             type="button"
             disabled={resetDisabledLocalOnly}
             onClick={() => setFraming(clampImageFraming(DEFAULT_IMAGE_FRAMING))}
-            className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className={secondaryActionClassName}
           >
             Reset framing
           </button>

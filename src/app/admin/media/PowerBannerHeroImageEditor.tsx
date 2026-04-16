@@ -12,7 +12,6 @@ import {
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
 import { formatR2ObjectDisplayName } from "@/lib/site-media/format-r2-object-label";
 import {
-  DEFAULT_IMAGE_FRAMING,
   framingFingerprint,
   framingToCoverImageStyle,
   type ImageFraming,
@@ -92,9 +91,7 @@ export function PowerBannerHeroImageEditor({
 
   const storedName = formatR2ObjectDisplayName(heroImageR2Key);
   const usingCustom = Boolean(heroImageR2Key);
-  const previewFraming = usingCustom
-    ? heroImageFraming ?? DEFAULT_IMAGE_FRAMING
-    : null;
+  const previewFraming = heroImageFraming ?? null;
 
   return (
     <div className="rounded-xl border border-slate-200/90 bg-slate-50/80 p-4 sm:p-5">
@@ -151,16 +148,16 @@ export function PowerBannerHeroImageEditor({
         </MediaFormSubmitButton>
       </form>
 
+      <ImageFramingEditor
+        key={`${bannerKey}-${framingFingerprint(heroImageFraming)}`}
+        imageUrl={desktopPreviewSrc}
+        initialFraming={heroImageFraming}
+        aspectClassName="aspect-[21/9]"
+        target={{ kind: "powerBanner", bannerKey, variant: "desktop" }}
+        enabled={!uploadPending && !clearPending}
+      />
       {usingCustom ? (
         <>
-          <ImageFramingEditor
-            key={`${bannerKey}-${framingFingerprint(heroImageFraming)}`}
-            imageUrl={desktopPreviewSrc}
-            initialFraming={heroImageFraming}
-            aspectClassName="aspect-[21/9]"
-            target={{ kind: "powerBanner", bannerKey, variant: "desktop" }}
-            enabled={!uploadPending && !clearPending}
-          />
           <form action={clearAction} className="mt-4 border-t border-slate-200/80 pt-4">
           <input type="hidden" name="bannerKey" value={bannerKey} />
           <p className="mb-2 text-xs text-slate-600">

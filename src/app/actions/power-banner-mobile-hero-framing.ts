@@ -6,7 +6,9 @@ import { Prisma } from "@/generated/prisma/client";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { POWER_BANNER_DEFAULT_COPY } from "@/lib/power-banner-copy/power-banner-defaults";
 import { POWER_BANNER_KEY_SET } from "@/lib/power-banner-copy/power-banner-keys";
+import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
 import {
   clampImageFraming,
   type ImageFraming,
@@ -73,16 +75,25 @@ export async function savePowerBannerMobileHeroFraming(
   }
 
   try {
-    const row = await prisma.powerBannerCopy.findUnique({ where: { bannerKey } });
-    if (!row?.r2ObjectKeyMobile) {
-      return {
-        ok: false,
-        error: "Upload a custom mobile hero image before adjusting framing.",
-      };
-    }
-    await prisma.powerBannerCopy.update({
+    const defaults = POWER_BANNER_DEFAULT_COPY[bannerKey];
+    await prisma.powerBannerCopy.upsert({
       where: { bannerKey },
-      data: {
+      create: {
+        bannerKey,
+        title: defaults.title,
+        body: finalizeHeroBannerBodyHtml(defaults.body),
+        heroImageLayoutMobile: {
+          focusX: framing.focusX,
+          focusY: framing.focusY,
+          zoom: framing.zoom,
+          mobilePositionX: framing.focusX,
+          mobilePositionY: framing.focusY,
+          mobileScale: framing.zoom,
+          mobileFrameWidth: MOBILE_HERO_FRAME_WIDTH,
+          mobileFrameHeight: MOBILE_HERO_FRAME_HEIGHT,
+        } as object,
+      },
+      update: {
         heroImageLayoutMobile: {
           focusX: framing.focusX,
           focusY: framing.focusY,
@@ -124,6 +135,11 @@ export async function resetPowerBannerMobileHeroFraming(
   }
 
   try {
+    const row = await prisma.powerBannerCopy.findUnique({ where: { bannerKey } });
+    if (!row) {
+      revalidateHero();
+      return { ok: true };
+    }
     await prisma.powerBannerCopy.update({
       where: { bannerKey },
       data: {

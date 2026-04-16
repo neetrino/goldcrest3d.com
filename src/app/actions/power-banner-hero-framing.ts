@@ -6,6 +6,10 @@ import { Prisma } from "@/generated/prisma/client";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { POWER_BANNER_DEFAULT_COPY } from "@/lib/power-banner-copy/power-banner-defaults";
+import {
+  finalizeHeroBannerBodyHtml,
+} from "@/lib/power-banner-copy/sanitize-hero-banner-body";
 import {
   clampImageFraming,
   type ImageFraming,
@@ -70,13 +74,18 @@ export async function savePowerBannerHeroFraming(
   }
 
   try {
-    const row = await prisma.powerBannerCopy.findUnique({ where: { bannerKey } });
-    if (!row?.r2ObjectKey) {
-      return { ok: false, error: "Upload a custom hero image before adjusting framing." };
-    }
-    await prisma.powerBannerCopy.update({
+    const defaults = POWER_BANNER_DEFAULT_COPY[bannerKey];
+    await prisma.powerBannerCopy.upsert({
       where: { bannerKey },
-      data: { heroImageLayout: framing as object },
+      create: {
+        bannerKey,
+        title: defaults.title,
+        body: finalizeHeroBannerBodyHtml(defaults.body),
+        heroImageLayout: framing as object,
+      },
+      update: {
+        heroImageLayout: framing as object,
+      },
     });
   } catch (e) {
     logger.error("savePowerBannerHeroFraming", e);
@@ -107,6 +116,11 @@ export async function resetPowerBannerHeroFraming(
   }
 
   try {
+    const row = await prisma.powerBannerCopy.findUnique({ where: { bannerKey } });
+    if (!row) {
+      revalidateHero();
+      return { ok: true };
+    }
     await prisma.powerBannerCopy.update({
       where: { bannerKey },
       data: {
