@@ -15,12 +15,12 @@ export function PowerBannerCopySection({ bundle }: PowerBannerCopySectionProps) 
           Hero banners
         </p>
         <h2 className="mt-2 text-xl font-semibold tracking-tight text-slate-900">
-          Homepage hero (three slides)
+          Hero Banners - Desktop/Tablet
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
           For each slide, preview and replace the banner image, then edit the headline and
-          description. Image uploads apply immediately; use &quot;Save title &amp; description&quot;
-          to persist text changes.
+          description for desktop/tablet. Image uploads apply immediately; use &quot;Save title &amp;
+          description&quot; to persist text changes.
         </p>
       </div>
 

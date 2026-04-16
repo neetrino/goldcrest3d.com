@@ -19,6 +19,9 @@ function normalizeForCompare(value: string): string {
 
 export function resolveModelingTitleMobileLines(title: string): string[] {
   const trimmed = title.trim();
+  if (trimmed.length === 0) {
+    return [];
+  }
   if (trimmed.includes("\n")) {
     return trimmed
       .split("\n")

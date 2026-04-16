@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { Prisma } from "@/generated/prisma/client";
 
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
@@ -9,13 +8,13 @@ import { logger } from "@/lib/logger";
 import { POWER_BANNER_DEFAULT_COPY } from "@/lib/power-banner-copy/power-banner-defaults";
 import { POWER_BANNER_KEY_SET } from "@/lib/power-banner-copy/power-banner-keys";
 import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
+import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
 import { deleteObjectFromR2, uploadSiteMediaToR2 } from "@/lib/storage";
 import { validateSiteMediaImage } from "@/lib/validations/siteMediaImage";
-import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
 
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
 
-export type PowerBannerHeroImageActionResult =
+export type PowerBannerMobileHeroImageActionResult =
   | { ok: true }
   | { ok: false; error: string };
 
@@ -24,7 +23,7 @@ function revalidateHero(): void {
   revalidatePath("/");
 }
 
-async function requireAdmin(): Promise<PowerBannerHeroImageActionResult | null> {
+async function requireAdmin(): Promise<PowerBannerMobileHeroImageActionResult | null> {
   const session = await requireAdminSession();
   if (!session) {
     return { ok: false, error: "Unauthorized." };
@@ -39,10 +38,10 @@ function parseBannerKey(raw: unknown): PowerBannerKey | null {
   return raw as PowerBannerKey;
 }
 
-export async function uploadPowerBannerHeroImage(
-  _prev: PowerBannerHeroImageActionResult | null,
+export async function uploadPowerBannerMobileHeroImage(
+  _prev: PowerBannerMobileHeroImageActionResult | null,
   formData: FormData,
-): Promise<PowerBannerHeroImageActionResult> {
+): Promise<PowerBannerMobileHeroImageActionResult> {
   const denied = await requireAdmin();
   if (denied) return denied;
 
@@ -67,8 +66,8 @@ export async function uploadPowerBannerHeroImage(
     const existing = await prisma.powerBannerCopy.findUnique({
       where: { bannerKey },
     });
-    if (existing?.r2ObjectKey && existing.r2ObjectKey !== newKey) {
-      await deleteObjectFromR2(existing.r2ObjectKey);
+    if (existing?.r2ObjectKeyMobile && existing.r2ObjectKeyMobile !== newKey) {
+      await deleteObjectFromR2(existing.r2ObjectKeyMobile);
     }
 
     const defaults = POWER_BANNER_DEFAULT_COPY[bannerKey];
@@ -78,18 +77,14 @@ export async function uploadPowerBannerHeroImage(
         bannerKey,
         title: defaults.title,
         body: finalizeHeroBannerBodyHtml(defaults.body),
-        r2ObjectKey: newKey,
         r2ObjectKeyMobile: newKey,
-        titleMobile: defaults.title,
-        bodyMobile: finalizeHeroBannerBodyHtml(defaults.body),
       },
       update: {
-        r2ObjectKey: newKey,
-        heroImageLayout: Prisma.DbNull as unknown as Prisma.InputJsonValue,
+        r2ObjectKeyMobile: newKey,
       },
     });
   } catch (e) {
-    logger.error("uploadPowerBannerHeroImage: failed", e);
+    logger.error("uploadPowerBannerMobileHeroImage: failed", e);
     await deleteObjectFromR2(newKey);
     if (isMigrationPendingError(e)) {
       return {
@@ -105,10 +100,10 @@ export async function uploadPowerBannerHeroImage(
   return { ok: true };
 }
 
-export async function clearPowerBannerHeroImage(
-  _prev: PowerBannerHeroImageActionResult | null,
+export async function clearPowerBannerMobileHeroImage(
+  _prev: PowerBannerMobileHeroImageActionResult | null,
   formData: FormData,
-): Promise<PowerBannerHeroImageActionResult> {
+): Promise<PowerBannerMobileHeroImageActionResult> {
   const denied = await requireAdmin();
   if (denied) return denied;
 
@@ -121,20 +116,19 @@ export async function clearPowerBannerHeroImage(
     const existing = await prisma.powerBannerCopy.findUnique({
       where: { bannerKey },
     });
-    if (!existing?.r2ObjectKey) {
+    if (!existing?.r2ObjectKeyMobile) {
       revalidateHero();
       return { ok: true };
     }
-    await deleteObjectFromR2(existing.r2ObjectKey);
+    await deleteObjectFromR2(existing.r2ObjectKeyMobile);
     await prisma.powerBannerCopy.update({
       where: { bannerKey },
       data: {
-        r2ObjectKey: null,
-        heroImageLayout: Prisma.DbNull as unknown as Prisma.InputJsonValue,
+        r2ObjectKeyMobile: null,
       },
     });
   } catch (e) {
-    logger.error("clearPowerBannerHeroImage: failed", e);
+    logger.error("clearPowerBannerMobileHeroImage: failed", e);
     if (isMigrationPendingError(e)) {
       return {
         ok: false,

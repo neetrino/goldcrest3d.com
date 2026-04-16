@@ -126,6 +126,14 @@ model PowerBannerCopy {
   body        String   @db.Text
   /// Custom hero art (R2). When null, built-in desktop + mobile assets from the codebase are used.
   r2ObjectKey String?
+  /// Mobile-only hero art (R2). When null, built-in mobile asset is used.
+  r2ObjectKeyMobile String?
+  /// Mobile-only title displayed below `md`. Null/empty means intentionally blank mobile title.
+  titleMobile String? @db.Text
+  /// Mobile-only rich body displayed below `md`. Null/empty means intentionally blank mobile description.
+  bodyMobile  String? @db.Text
+  /// Optional mobile-only text overlay (e.g. eyebrow/caption) displayed below `md`.
+  mobileOverlayText String? @db.Text
   /// Focal point + zoom for custom hero art (`focusX`/`focusY` 0–100, `zoom` 1–3). Null when using built-in assets.
   heroImageLayout Json?
   updatedAt   DateTime @updatedAt

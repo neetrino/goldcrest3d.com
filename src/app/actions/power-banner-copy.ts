@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
 import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
+import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
 import { powerBannerCopyFormSchema } from "@/lib/validations/powerBannerCopy";
 
 export type PowerBannerCopyActionResult =
@@ -65,10 +66,19 @@ export async function updatePowerBannerCopy(
         bannerKey,
         title,
         body: bodyStored,
+        titleMobile: title,
+        bodyMobile: bodyStored,
       },
       update: { title, body: bodyStored },
     });
   } catch (err) {
+    if (isMigrationPendingError(err)) {
+      return {
+        ok: false,
+        error:
+          "Database schema is out of date. Run: pnpm prisma migrate deploy (or migrate dev locally), then try again.",
+      };
+    }
     logger.error("updatePowerBannerCopy: failed to upsert", err);
     return {
       ok: false,

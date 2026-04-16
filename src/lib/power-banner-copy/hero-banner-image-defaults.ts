@@ -11,7 +11,6 @@ export const HERO_BANNER_DEFAULT_DESKTOP: Record<PowerBannerKey, string> = {
 
 /**
  * Art-directed mobile crops when no custom upload exists.
- * When a custom image is set, the same URL is used on mobile and desktop (`object-cover`).
  */
 export const HERO_BANNER_DEFAULT_MOBILE: Record<PowerBannerKey, string> = {
   MODELING: "/images/modeling/block1-mobile.png",

@@ -19,6 +19,28 @@ export const POWER_BANNER_DEFAULT_COPY: Record<
   },
 };
 
+/** Canonical mobile copy fallback used for initial/mobile defaults. */
+export const POWER_BANNER_DEFAULT_MOBILE_COPY: Record<
+  PowerBannerKey,
+  { title: string; body: string; overlayText: string }
+> = {
+  MODELING: {
+    title: POWER_BANNER_DEFAULT_COPY.MODELING.title,
+    body: POWER_BANNER_DEFAULT_COPY.MODELING.body,
+    overlayText: "",
+  },
+  RENDERING: {
+    title: POWER_BANNER_DEFAULT_COPY.RENDERING.title,
+    body: POWER_BANNER_DEFAULT_COPY.RENDERING.body,
+    overlayText: "",
+  },
+  DESIGN: {
+    title: POWER_BANNER_DEFAULT_COPY.DESIGN.title,
+    body: POWER_BANNER_DEFAULT_COPY.DESIGN.body,
+    overlayText: "",
+  },
+};
+
 /** Admin section labels — maps each banner to its hero identity. */
 export const POWER_BANNER_ADMIN_LABELS: Record<
   PowerBannerKey,

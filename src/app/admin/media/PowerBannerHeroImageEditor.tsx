@@ -90,7 +90,6 @@ export function PowerBannerHeroImageEditor({
     }
   }, [uploadState?.ok, clearState?.ok, router]);
 
-  const combinedState = uploadState ?? clearState;
   const storedName = formatR2ObjectDisplayName(heroImageR2Key);
   const usingCustom = Boolean(heroImageR2Key);
   const previewFraming = usingCustom
@@ -102,8 +101,8 @@ export function PowerBannerHeroImageEditor({
       <div className="mb-4 border-b border-slate-200/80 pb-3">
         <p className="text-sm font-semibold text-slate-900">Banner image</p>
         <p className="mt-1 text-xs text-slate-600">
-          Shown on the homepage hero for this slide. Custom uploads are used on both mobile and
-          desktop with the same crop rules as the live site ({SITE_MEDIA_FORMATS_LABEL}, max{" "}
+          Shown on desktop/tablet hero for this slide. Mobile uses its own editor below. Custom
+          uploads follow the same crop rules as the live site ({SITE_MEDIA_FORMATS_LABEL}, max{" "}
           {SITE_MEDIA_MAX_SIZE_MB} MB).
         </p>
       </div>

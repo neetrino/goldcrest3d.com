@@ -38,7 +38,7 @@ export function PowerBannerCopyEditor({
     <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-6">
       <div className="border-b border-slate-200/80 pb-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-[#e2c481]">
-          Hero banner
+          Desktop/tablet hero
         </p>
         <h3 className="mt-2 text-lg font-semibold tracking-tight text-slate-900">
           {meta.name}

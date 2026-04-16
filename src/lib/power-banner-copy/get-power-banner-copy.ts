@@ -3,15 +3,25 @@ import { prisma } from "@/lib/db";
 
 import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
 
-import { POWER_BANNER_DEFAULT_COPY } from "./power-banner-defaults";
+import {
+  POWER_BANNER_DEFAULT_COPY,
+  POWER_BANNER_DEFAULT_MOBILE_COPY,
+} from "./power-banner-defaults";
 import { POWER_BANNER_KEYS, type PowerBannerKey } from "./power-banner-keys";
 import type { PowerBannerCopyBundle, PowerBannerCopyEntry } from "./power-banner-copy.types";
 import { resolveHeroBannerImageFields } from "./resolve-hero-banner-images";
 
 function defaultEntryForKey(key: PowerBannerKey): PowerBannerCopyEntry {
   const copy = POWER_BANNER_DEFAULT_COPY[key];
-  const images = resolveHeroBannerImageFields(key, null, null);
-  return { ...copy, ...images };
+  const mobile = POWER_BANNER_DEFAULT_MOBILE_COPY[key];
+  const images = resolveHeroBannerImageFields(key, null, null, null);
+  return {
+    ...copy,
+    mobileTitle: mobile.title,
+    mobileBody: mobile.body,
+    mobileOverlayText: mobile.overlayText,
+    ...images,
+  };
 }
 
 function emptyBundle(): PowerBannerCopyBundle {
@@ -31,6 +41,10 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
     title: string;
     body: string;
     r2ObjectKey: string | null;
+    r2ObjectKeyMobile: string | null;
+    titleMobile: string | null;
+    bodyMobile: string | null;
+    mobileOverlayText: string | null;
     heroImageLayout: unknown | null;
   }[];
   try {
@@ -52,7 +66,15 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
       out[key] = {
         title: row.title,
         body: row.body,
-        ...resolveHeroBannerImageFields(key, row.r2ObjectKey, row.heroImageLayout),
+        mobileTitle: row.titleMobile ?? "",
+        mobileBody: row.bodyMobile ?? "",
+        mobileOverlayText: row.mobileOverlayText ?? "",
+        ...resolveHeroBannerImageFields(
+          key,
+          row.r2ObjectKey,
+          row.r2ObjectKeyMobile,
+          row.heroImageLayout,
+        ),
       };
     }
   }

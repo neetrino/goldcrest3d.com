@@ -6,13 +6,15 @@ import {
 } from "@/lib/power-banner-copy/hero-banner-body-constants";
 import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
 import { POWER_BANNER_KEY_SET } from "@/lib/power-banner-copy/power-banner-keys";
+import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
 
 const MAX_TITLE_LEN = 280;
+const MAX_OVERLAY_LEN = 280;
 
 export const powerBannerCopyFormSchema = z.object({
   bannerKey: z
     .string()
-    .refine((k) => POWER_BANNER_KEY_SET.has(k), "Invalid banner."),
+    .refine((k): k is PowerBannerKey => POWER_BANNER_KEY_SET.has(k), "Invalid banner."),
   title: z
     .string()
     .max(MAX_TITLE_LEN, `Title must be at most ${MAX_TITLE_LEN} characters`)
@@ -40,4 +42,44 @@ export const powerBannerCopyFormSchema = z.object({
         });
       }
     }),
+});
+
+function optionalHeroBannerRichBodyField(fieldLabel: string) {
+  return z
+    .string()
+    .max(
+      HERO_BANNER_BODY_MAX_STORAGE_CHARS,
+      `${fieldLabel} must be at most ${HERO_BANNER_BODY_MAX_STORAGE_CHARS} characters (including markup).`,
+    )
+    .transform((s) => s.trim())
+    .superRefine((val, ctx) => {
+      if (val.length === 0) {
+        return;
+      }
+      const len = getHeroBannerBodyPlainTextLength(val);
+      if (len > HERO_BANNER_BODY_MAX_PLAIN_TEXT_CHARS) {
+        ctx.addIssue({
+          code: "custom",
+          message: `${fieldLabel} must be at most ${HERO_BANNER_BODY_MAX_PLAIN_TEXT_CHARS} characters of text.`,
+        });
+      }
+    });
+}
+
+export const powerBannerMobileCopyFormSchema = z.object({
+  bannerKey: z
+    .string()
+    .refine((k): k is PowerBannerKey => POWER_BANNER_KEY_SET.has(k), "Invalid banner."),
+  mobileTitle: z
+    .string()
+    .max(MAX_TITLE_LEN, `Mobile title must be at most ${MAX_TITLE_LEN} characters`)
+    .transform((s) => s.trim()),
+  mobileBody: optionalHeroBannerRichBodyField("Mobile description"),
+  mobileOverlayText: z
+    .string()
+    .max(
+      MAX_OVERLAY_LEN,
+      `Mobile overlay text must be at most ${MAX_OVERLAY_LEN} characters`,
+    )
+    .transform((s) => s.trim()),
 });

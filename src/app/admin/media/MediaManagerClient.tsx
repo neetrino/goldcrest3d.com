@@ -14,6 +14,7 @@ import { ManufacturingIntelligenceSection } from "./ManufacturingIntelligenceSec
 import { ManufacturingSpecializationItemsSection } from "./ManufacturingSpecializationItemsSection";
 import { ModelingMediaSection } from "./ModelingMediaSection";
 import { PowerBannerCopySection } from "./PowerBannerCopySection";
+import { PowerBannerMobileCopySection } from "./PowerBannerMobileCopySection";
 import { FounderSection } from "./FounderSection";
 import { EngineeringProcessSection } from "./EngineeringProcessSection";
 
@@ -43,6 +44,7 @@ export function MediaManagerClient({
   return (
     <div className="space-y-10">
       <PowerBannerCopySection bundle={powerBannerCopy} />
+      <PowerBannerMobileCopySection bundle={powerBannerCopy} />
       <ModelingMediaSection
         title={modelingMeta?.label ?? "Modeling Specialization"}
         description={

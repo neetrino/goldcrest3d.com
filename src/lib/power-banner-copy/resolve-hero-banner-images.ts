@@ -10,7 +10,11 @@ import type { PowerBannerCopyEntry } from "./power-banner-copy.types";
 
 type HeroImageResolved = Pick<
   PowerBannerCopyEntry,
-  "desktopBgSrc" | "mobileBgSrc" | "heroImageR2Key" | "heroImageFraming"
+  | "desktopBgSrc"
+  | "mobileBgSrc"
+  | "heroImageR2Key"
+  | "heroImageMobileR2Key"
+  | "heroImageFraming"
 >;
 
 /**
@@ -21,32 +25,21 @@ type HeroImageResolved = Pick<
 export function resolveHeroBannerImageFields(
   key: PowerBannerKey,
   r2ObjectKey: string | null | undefined,
+  r2ObjectKeyMobile: string | null | undefined,
   heroImageLayout: unknown | null | undefined,
 ): HeroImageResolved {
   const desktopDefault = HERO_BANNER_DEFAULT_DESKTOP[key];
   const mobileDefault = HERO_BANNER_DEFAULT_MOBILE[key];
   const heroImageFraming = parseImageFramingJson(heroImageLayout);
-  if (!r2ObjectKey) {
-    return {
-      desktopBgSrc: desktopDefault,
-      mobileBgSrc: mobileDefault,
-      heroImageR2Key: null,
-      heroImageFraming: null,
-    };
-  }
-  const url = resolveSiteMediaDisplayUrl(r2ObjectKey);
-  if (!url) {
-    return {
-      desktopBgSrc: desktopDefault,
-      mobileBgSrc: mobileDefault,
-      heroImageR2Key: r2ObjectKey,
-      heroImageFraming,
-    };
-  }
+  const desktopUrl = r2ObjectKey ? resolveSiteMediaDisplayUrl(r2ObjectKey) : null;
+  const mobileUrl = r2ObjectKeyMobile
+    ? resolveSiteMediaDisplayUrl(r2ObjectKeyMobile)
+    : null;
   return {
-    desktopBgSrc: url,
-    mobileBgSrc: url,
-    heroImageR2Key: r2ObjectKey,
-    heroImageFraming,
+    desktopBgSrc: desktopUrl ?? desktopDefault,
+    mobileBgSrc: mobileUrl ?? mobileDefault,
+    heroImageR2Key: r2ObjectKey ?? null,
+    heroImageMobileR2Key: r2ObjectKeyMobile ?? null,
+    heroImageFraming: r2ObjectKey ? heroImageFraming : null,
   };
 }
