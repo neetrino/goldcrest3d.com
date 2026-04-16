@@ -7,7 +7,7 @@ import {
 import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
 import { POWER_BANNER_KEY_SET } from "@/lib/power-banner-copy/power-banner-keys";
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
-import { modelingTextOverlayLayoutSchema } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
+import { powerBannerMobileHeroTextLayoutSchema } from "@/lib/power-banner-copy/power-banner-mobile-hero-text-layout";
 
 const MAX_TITLE_LEN = 280;
 
@@ -103,7 +103,7 @@ export const powerBannerMobileCopyFormSchema = z
       });
       return;
     }
-    const layout = modelingTextOverlayLayoutSchema.safeParse(parsed);
+    const layout = powerBannerMobileHeroTextLayoutSchema.safeParse(parsed);
     if (!layout.success) {
       ctx.addIssue({
         code: "custom",

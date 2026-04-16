@@ -8,21 +8,26 @@ import { GetAQuoteButton } from "@/components/landing/GetAQuoteButton";
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
-import type { ModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
-import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
+import type {
+  PowerBannerMobileHeroOverlayLayerKey,
+  PowerBannerMobileHeroTextLayout,
+} from "@/lib/power-banner-copy/power-banner-mobile-hero-text-layout";
+import { getPowerBannerMobileHeroBgStageInlineStyle } from "@/lib/power-banner-copy/power-banner-mobile-hero-bg-stage";
 import {
+  getPowerBannerMobileHeroCtaLayerStyle,
   getPowerBannerMobileHeroTextPositionStyle,
   POWER_BANNER_MOBILE_HERO_TEXT_FRAME_PADDING_CLASS,
   POWER_BANNER_MOBILE_HERO_TEXT_LAYER_BOX_CLASS,
 } from "@/lib/power-banner-copy/power-banner-mobile-hero-text-overlay-presentation";
+import { HERO_MOBILE_IMAGE_SIZES } from "@/components/landing/power-banners/power-banners-layout.constants";
+import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
 import { ModelingTextOverlayAlignmentGuidesOverlay } from "./ModelingTextOverlayAlignmentGuidesOverlay";
 import { ModelingTextOverlayDragMoveHandle } from "./ModelingTextOverlayDragMoveHandle";
 import type { ModelingTextOverlayAlignmentGuides } from "@/lib/modeling-slot-copy/modeling-text-overlay-alignment-guides";
-import type { ModelingOverlayLayerKey } from "./ModelingTextOverlayEditorSurface";
 import { MODELING_TEXT_OVERLAY_RICH_PREVIEW_CLASS } from "./ModelingTextOverlayEditorSurface";
 
-export type { ModelingOverlayLayerKey };
+export type { PowerBannerMobileHeroOverlayLayerKey };
 
 function selectedRingClass(isSelected: boolean): string {
   return isSelected ? "ring-2 ring-[#e2c481] ring-offset-2 ring-offset-black/20 rounded-sm" : "";
@@ -30,16 +35,15 @@ function selectedRingClass(isSelected: boolean): string {
 
 type PowerBannerMobileHeroTextEditorSurfaceProps = {
   bannerKey: PowerBannerKey;
-  layout: ModelingTextOverlayLayout;
+  layout: PowerBannerMobileHeroTextLayout;
   imageUrl: string;
   mobileFraming: ImageFraming | null;
   titleText: string;
   bodyHtml: string;
   frameRef: RefObject<HTMLDivElement | null>;
-  selectedLayer: ModelingOverlayLayerKey | null;
-  onSelectLayer: (layer: ModelingOverlayLayerKey) => void;
-  onDragStart: (layer: ModelingOverlayLayerKey, e: ReactPointerEvent<HTMLElement>) => void;
-  imageSizes: string;
+  selectedLayer: PowerBannerMobileHeroOverlayLayerKey | null;
+  onSelectLayer: (layer: PowerBannerMobileHeroOverlayLayerKey) => void;
+  onDragStart: (layer: PowerBannerMobileHeroOverlayLayerKey, e: ReactPointerEvent<HTMLElement>) => void;
   overlaySuppressed?: boolean;
   interactive: boolean;
   onTitleChange?: (value: string) => void;
@@ -48,6 +52,7 @@ type PowerBannerMobileHeroTextEditorSurfaceProps = {
   layerRefs?: {
     readonly title: RefObject<HTMLDivElement | null>;
     readonly body: RefObject<HTMLDivElement | null>;
+    readonly cta: RefObject<HTMLDivElement | null>;
   };
 };
 
@@ -62,7 +67,6 @@ export function PowerBannerMobileHeroTextEditorSurface({
   selectedLayer,
   onSelectLayer,
   onDragStart,
-  imageSizes,
   overlaySuppressed = false,
   interactive,
   onTitleChange,
@@ -79,6 +83,7 @@ export function PowerBannerMobileHeroTextEditorSurface({
   const bodyEditable = Boolean(interactive && onBodyHtmlChange);
 
   const imageStyle = mobileFraming ? framingToCoverImageStyle(mobileFraming) : undefined;
+  const bgStageStyle = getPowerBannerMobileHeroBgStageInlineStyle(bannerKey, mobileFraming != null);
 
   const titleLight = bannerKey === "MODELING" || bannerKey === "RENDERING";
   const titleClass = titleLight
@@ -111,6 +116,7 @@ export function PowerBannerMobileHeroTextEditorSurface({
 
   const posTitle = getPowerBannerMobileHeroTextPositionStyle(layout.title);
   const posBody = getPowerBannerMobileHeroTextPositionStyle(layout.body);
+  const posCta = getPowerBannerMobileHeroCtaLayerStyle(layout.cta);
 
   const bodyWrapperClass =
     bannerKey === "DESIGN"
@@ -122,15 +128,20 @@ export function PowerBannerMobileHeroTextEditorSurface({
   return (
     <div className="relative w-full overflow-hidden rounded-lg bg-slate-200 aspect-[20/37]">
       {imageUrl ? (
-        <Image
-          src={imageUrl}
-          alt=""
-          fill
-          className="object-cover"
-          sizes={imageSizes}
-          style={imageStyle}
-          priority={false}
-        />
+        <div className="pointer-events-none absolute inset-0">
+          <div className="power-banners-fixed-bg-stage relative" style={bgStageStyle}>
+            <Image
+              src={imageUrl}
+              alt=""
+              fill
+              className="power-banners-fixed-bg-image"
+              sizes={HERO_MOBILE_IMAGE_SIZES}
+              style={imageStyle}
+              unoptimized={imageUrl.startsWith("/")}
+              priority={false}
+            />
+          </div>
+        </div>
       ) : (
         <div className="flex h-full w-full items-center justify-center text-xs text-slate-500">
           No mobile hero image.
@@ -252,13 +263,28 @@ export function PowerBannerMobileHeroTextEditorSurface({
                 </div>
               )}
             </div>
+          </div>
+
+          <div
+            ref={layerRefs?.cta}
+            className={`${POWER_BANNER_MOBILE_HERO_TEXT_LAYER_BOX_CLASS} ${selectedRingClass(interactive && selectedLayer === "cta")}`}
+            style={posCta}
+          >
+            {interactive ? (
+              <ModelingTextOverlayDragMoveHandle
+                label="Drag to move Get a Quote"
+                onActivate={() => onSelectLayer("cta")}
+                onPointerDown={(e) => onDragStart("cta", e)}
+              />
+            ) : null}
             <GetAQuoteButton
               variant="gold"
-              className={`pointer-events-none mt-4 shrink-0 opacity-90 ${
-                bannerKey === "DESIGN" ? "self-end" : bannerKey === "RENDERING" ? "self-start" : ""
+              className={`pointer-events-none opacity-90 ${
+                bannerKey === "DESIGN" ? "" : bannerKey === "RENDERING" ? "" : ""
               }`}
             />
           </div>
+
           {alignmentGuides ? <ModelingTextOverlayAlignmentGuidesOverlay guides={alignmentGuides} /> : null}
         </div>
       </div>

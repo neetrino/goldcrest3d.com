@@ -2,7 +2,7 @@ import { logger } from "@/lib/logger";
 import { prisma } from "@/lib/db";
 
 import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
-import { parseModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
+import { parsePowerBannerMobileHeroTextLayout } from "@/lib/power-banner-copy/power-banner-mobile-hero-text-layout";
 
 import {
   POWER_BANNER_DEFAULT_COPY,
@@ -77,7 +77,7 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
           row.heroImageLayout,
           row.heroImageLayoutMobile,
         ),
-        heroTextLayoutMobile: parseModelingTextOverlayLayout(row.heroTextLayoutMobile),
+        heroTextLayoutMobile: parsePowerBannerMobileHeroTextLayout(row.heroTextLayoutMobile),
       };
     }
   }

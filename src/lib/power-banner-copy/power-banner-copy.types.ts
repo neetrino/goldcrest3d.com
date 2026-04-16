@@ -1,4 +1,4 @@
-import type { ModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
+import type { PowerBannerMobileHeroTextLayout } from "@/lib/power-banner-copy/power-banner-mobile-hero-text-layout";
 import type { ImageFraming } from "@/lib/site-media/image-framing";
 
 import type { PowerBannerKey } from "./power-banner-keys";
@@ -22,8 +22,8 @@ export type PowerBannerCopyEntry = {
   heroImageFraming: ImageFraming | null;
   /** Saved focal crop for custom mobile uploads; null when using built-in assets or not set. */
   heroImageFramingMobile: ImageFraming | null;
-  /** Mobile-only visual title + body positions; null uses legacy flex layout below `md`. */
-  heroTextLayoutMobile: ModelingTextOverlayLayout | null;
+  /** Mobile-only visual title + body + CTA positions; null uses legacy flex layout below `md`. */
+  heroTextLayoutMobile: PowerBannerMobileHeroTextLayout | null;
 };
 
 /** Serializable hero copy for the landing page (merged DB + defaults). */

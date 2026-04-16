@@ -5,27 +5,29 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
 import {
+  clampPowerBannerMobileHeroTextLayout,
+  type PowerBannerMobileHeroOverlayLayerKey,
+  type PowerBannerMobileHeroTextLayout,
+} from "@/lib/power-banner-copy/power-banner-mobile-hero-text-layout";
+import {
   computeOverlayAlignment,
   type ModelingTextOverlayAlignmentGuides,
 } from "@/lib/modeling-slot-copy/modeling-text-overlay-alignment-guides";
-import type { ModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
-import { clampModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import type { ImageFraming } from "@/lib/site-media/image-framing";
 
 import { MODELING_TEXT_OVERLAY_EDITOR_NUDGE_PCT } from "./modeling-text-overlay-editor.constants";
-import { ModelingTextOverlayFontSliders } from "./ModelingTextOverlayFontSliders";
+import { PowerBannerMobileHeroFontSliders } from "./PowerBannerMobileHeroFontSliders";
 import {
-  type ModelingOverlayLayerKey,
   PowerBannerMobileHeroTextEditorSurface,
 } from "./PowerBannerMobileHeroTextEditorSurface";
 import { POWER_BANNER_MOBILE_HERO_TEXT_EDITOR_FRAME_MAX_WIDTH_PX } from "./power-banner-mobile-hero-text-editor.constants";
 
-type LayerKey = ModelingOverlayLayerKey;
+type LayerKey = PowerBannerMobileHeroOverlayLayerKey;
 
 type PowerBannerMobileHeroTextVisualEditorProps = {
   bannerKey: PowerBannerKey;
-  layout: ModelingTextOverlayLayout;
-  onLayoutChange: (next: ModelingTextOverlayLayout) => void;
+  layout: PowerBannerMobileHeroTextLayout;
+  onLayoutChange: (next: PowerBannerMobileHeroTextLayout) => void;
   mobileBgSrc: string;
   mobileFraming: ImageFraming | null;
   titleText: string;
@@ -50,6 +52,7 @@ export function PowerBannerMobileHeroTextVisualEditor({
   const modalFrameRef = useRef<HTMLDivElement>(null);
   const titleLayerRef = useRef<HTMLDivElement>(null);
   const bodyLayerRef = useRef<HTMLDivElement>(null);
+  const ctaLayerRef = useRef<HTMLDivElement>(null);
   const alignmentGuideClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dialogTitleId = useId();
   const [editorOpen, setEditorOpen] = useState(false);
@@ -57,9 +60,9 @@ export function PowerBannerMobileHeroTextVisualEditor({
   const [alignmentGuides, setAlignmentGuides] = useState<ModelingTextOverlayAlignmentGuides | null>(null);
 
   const updateLayer = useCallback(
-    (key: LayerKey, patch: Partial<ModelingTextOverlayLayout["title"]>) => {
+    (key: LayerKey, patch: Partial<PowerBannerMobileHeroTextLayout["title"]>) => {
       onLayoutChange(
-        clampModelingTextOverlayLayout({
+        clampPowerBannerMobileHeroTextLayout({
           ...layout,
           [key]: { ...layout[key], ...patch },
         }),
@@ -88,15 +91,23 @@ export function PowerBannerMobileHeroTextVisualEditor({
         const fr = frame.getBoundingClientRect();
         const rawCenterXPx = ev.clientX - fr.left;
         const rawCenterYPx = ev.clientY - fr.top;
-        if (!titleEl || !bodyEl) {
+        if (layer === "cta" || !titleEl || !bodyEl) {
           const xPct = (rawCenterXPx / fr.width) * 100;
           const yPct = (rawCenterYPx / fr.height) * 100;
           updateLayer(layer, { xPct, yPct });
+          setAlignmentGuides(null);
           return;
         }
         const movingEl = layer === "title" ? titleEl : bodyEl;
         const otherEl = layer === "title" ? bodyEl : titleEl;
-        const result = computeOverlayAlignment(fr, layer, movingEl, otherEl, rawCenterXPx, rawCenterYPx);
+        const result = computeOverlayAlignment(
+          fr,
+          layer,
+          movingEl,
+          otherEl,
+          rawCenterXPx,
+          rawCenterYPx,
+        );
         updateLayer(layer, { xPct: result.xPct, yPct: result.yPct });
         setAlignmentGuides(result.guides);
       };
@@ -119,8 +130,6 @@ export function PowerBannerMobileHeroTextVisualEditor({
   );
 
   const modalCanvasMaxStyle = { maxWidth: POWER_BANNER_MOBILE_HERO_TEXT_EDITOR_FRAME_MAX_WIDTH_PX };
-  const imageSizesInline = `(max-width: 768px) 100vw, min(${POWER_BANNER_MOBILE_HERO_TEXT_EDITOR_FRAME_MAX_WIDTH_PX}px, 100vw)`;
-  const imageSizesModal = `(max-width: 480px) 100vw, ${POWER_BANNER_MOBILE_HERO_TEXT_EDITOR_FRAME_MAX_WIDTH_PX}px`;
 
   const openModal = useCallback(() => {
     setEditorOpen(true);
@@ -162,6 +171,11 @@ export function PowerBannerMobileHeroTextVisualEditor({
       if (e.key === "ArrowRight") nextXPct += step;
       if (e.key === "ArrowUp") nextYPct -= step;
       if (e.key === "ArrowDown") nextYPct += step;
+
+      if (selectedLayer === "cta") {
+        updateLayer("cta", { xPct: nextXPct, yPct: nextYPct });
+        return;
+      }
 
       const frame = modalFrameRef.current;
       const titleEl = titleLayerRef.current;
@@ -223,7 +237,6 @@ export function PowerBannerMobileHeroTextVisualEditor({
             selectedLayer={null}
             onSelectLayer={() => {}}
             onDragStart={() => {}}
-            imageSizes={imageSizesInline}
             overlaySuppressed
             interactive={false}
           />
@@ -250,9 +263,8 @@ export function PowerBannerMobileHeroTextVisualEditor({
                   Visual text layout — Mobile hero
                 </h2>
                 <p className="mt-1 text-xs text-slate-500">
-                  Drag the title or description (or use arrow keys when a layer is selected). Sizes apply to
-                  the mobile hero only. This preview uses the same frame proportions and padding as the live
-                  mobile site. Save mobile content below when finished.
+                  Drag title, description, or Get a Quote (or arrow keys when a layer is selected). Sizes apply
+                  to the mobile hero only. Save mobile content below when finished.
                 </p>
               </div>
               <button
@@ -276,16 +288,15 @@ export function PowerBannerMobileHeroTextVisualEditor({
                 selectedLayer={selectedLayer}
                 onSelectLayer={setSelectedLayer}
                 onDragStart={(layer, e) => startDrag(layer, modalFrameRef, e)}
-                imageSizes={imageSizesModal}
                 interactive
                 onTitleChange={onTitleChange}
                 onBodyHtmlChange={onBodyHtmlChange}
                 alignmentGuides={alignmentGuides}
-                layerRefs={{ title: titleLayerRef, body: bodyLayerRef }}
+                layerRefs={{ title: titleLayerRef, body: bodyLayerRef, cta: ctaLayerRef }}
               />
             </div>
 
-            <ModelingTextOverlayFontSliders variantLabel="Mobile hero" layout={layout} updateLayer={updateLayer} />
+            <PowerBannerMobileHeroFontSliders variantLabel="Mobile hero" layout={layout} updateLayer={updateLayer} />
           </div>
         </div>
       </dialog>

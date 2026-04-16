@@ -6,7 +6,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { modelingTextOverlayLayoutSchema } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
+import { powerBannerMobileHeroTextLayoutSchema } from "@/lib/power-banner-copy/power-banner-mobile-hero-text-layout";
 import { POWER_BANNER_DEFAULT_COPY } from "@/lib/power-banner-copy/power-banner-defaults";
 import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
 import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
@@ -65,7 +65,7 @@ export async function updatePowerBannerMobileCopy(
 
   const useVisualLayout = useHeroVisualTextLayout === "1";
   const layoutStored = useVisualLayout
-    ? modelingTextOverlayLayoutSchema.parse(JSON.parse(heroTextLayoutMobile ?? "") as unknown)
+    ? powerBannerMobileHeroTextLayoutSchema.parse(JSON.parse(heroTextLayoutMobile ?? "") as unknown)
     : null;
 
   try {
