@@ -267,3 +267,24 @@ section[id] {
     line-height: 20px;
   }
 }
+
+/**
+ * Admin “Visual text layout” mobile hero — saved title/body px sizes must override global
+ * `.hero-primary-*` and rich HTML font sizes (those classes set font-size on the same nodes).
+ */
+[data-power-banner-mobile-visual-text="1"] .pb-mobile-hero-title-dynamic-fs {
+  font-size: var(--pb-hero-title-fs) !important;
+  line-height: 1.15;
+}
+
+[data-power-banner-mobile-visual-text="1"] .pb-mobile-hero-body-dynamic-fs {
+  font-size: var(--pb-hero-body-fs) !important;
+  line-height: 1.35;
+}
+
+[data-power-banner-mobile-visual-text="1"] .pb-mobile-hero-body-dynamic-fs .hero-primary-subtitle-typography,
+[data-power-banner-mobile-visual-text="1"] .pb-mobile-hero-body-dynamic-fs .hero-primary-subtitle-typography-design,
+[data-power-banner-mobile-visual-text="1"] .pb-mobile-hero-body-dynamic-fs .hero-banner-rich-body,
+[data-power-banner-mobile-visual-text="1"] .pb-mobile-hero-body-dynamic-fs .hero-banner-rich-body * {
+  font-size: inherit !important;
+}

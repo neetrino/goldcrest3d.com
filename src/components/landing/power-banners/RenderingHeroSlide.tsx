@@ -8,6 +8,7 @@ import {
 import { RenderingHeroSlideBackgrounds } from "./RenderingHeroSlideBackgrounds";
 import { resolveCustomHeroFramingByViewport } from "./resolve-custom-hero-framing";
 import { RenderingHeroSlideCopy } from "./RenderingHeroSlideCopy";
+import { PowerBannerMobileCustomTextOverlay } from "./PowerBannerMobileCustomTextOverlay";
 
 type RenderingHeroSlideProps = {
   copy: PowerBannerCopyEntry;
@@ -33,6 +34,13 @@ export function RenderingHeroSlide({ copy }: RenderingHeroSlideProps) {
         customDesktopFraming={framing.desktop}
         customMobileFraming={framing.mobile}
       />
+      {copy.heroTextLayoutMobile ? (
+        <PowerBannerMobileCustomTextOverlay
+          bannerKey="RENDERING"
+          layout={copy.heroTextLayoutMobile}
+          copy={copy}
+        />
+      ) : null}
       <RenderingHeroSlideCopy copy={copy} />
     </div>
   );

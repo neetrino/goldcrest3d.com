@@ -35,13 +35,58 @@ export function ModelingHeroSlideTextStack({
   copy,
 }: ModelingHeroSlideTextStackProps) {
   const desktopTitle = resolveModelingTitleDesktop(copy.title);
-  const mobileTitleLines = resolveModelingTitleMobileLines(copy.mobileTitle);
-
   const desktopBody = copy.body.trim();
   const mobileBody = copy.mobileBody.trim();
   const useRichDesktopBody = looksLikeHeroBannerRichBody(desktopBody);
-  const useRichMobileBody = looksLikeHeroBannerRichBody(mobileBody);
   const desktopPlain = desktopBody.replace(/\s+/g, " ");
+
+  if (copy.heroTextLayoutMobile) {
+    return (
+      <div
+        id={LANDING_ELEMENT_IDS.HERO_MODELING_TEXT_GROUP}
+        className="absolute inset-x-0 bottom-0 z-10 hidden flex-col items-center px-6 pb-16 pt-12 text-center md:flex md:translate-y-[var(--section1-modeling-text-nudge-y-desktop)]"
+        style={
+          {
+            ["--section1-modeling-text-nudge-y-desktop" as string]: `${SECTION1_HERO_TEXT_NUDGE_DOWN_PX}px`,
+          } as CSSProperties
+        }
+      >
+        <h1
+          className="inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance md:max-w-none"
+          style={{
+            transform: `translateY(-${SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
+          }}
+        >
+          {desktopTitle}
+        </h1>
+
+        <div
+          id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
+          className="hero-primary-subtitle-typography mt-4 w-full max-w-[min(100%,36rem)] shrink-0 md:mt-5"
+        >
+          {desktopBody.length > 0 ? (
+            useRichDesktopBody ? (
+              <HeroBannerBodyRichText
+                body={desktopBody}
+                className="hero-banner-rich-body w-full text-center [&_li]:my-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5 [&_p]:mb-2 [&_p:last-child]:mb-0"
+              />
+            ) : (
+              <p>{desktopPlain}</p>
+            )
+          ) : null}
+        </div>
+
+        <GetAQuoteButton
+          id={HERO_GET_QUOTE_BUTTON_ID}
+          variant="gold"
+          className="mt-6 shrink-0 md:mt-8"
+        />
+      </div>
+    );
+  }
+
+  const mobileTitleLines = resolveModelingTitleMobileLines(copy.mobileTitle);
+  const useRichMobileBody = looksLikeHeroBannerRichBody(mobileBody);
   const mobilePlainLines = toPlainLines(mobileBody);
 
   return (

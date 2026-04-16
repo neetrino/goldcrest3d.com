@@ -7,6 +7,7 @@ import {
 import { ModelingHeroSlideLayers } from "./ModelingHeroSlideLayers";
 import { resolveCustomHeroFramingByViewport } from "./resolve-custom-hero-framing";
 import { ModelingHeroSlideTextStack } from "./ModelingHeroSlideTextStack";
+import { PowerBannerMobileCustomTextOverlay } from "./PowerBannerMobileCustomTextOverlay";
 
 type ModelingHeroSlideProps = {
   copy: PowerBannerCopyEntry;
@@ -34,6 +35,13 @@ export function ModelingHeroSlide({ copy }: ModelingHeroSlideProps) {
           customDesktopFraming={framing.desktop}
           customMobileFraming={framing.mobile}
         />
+        {copy.heroTextLayoutMobile ? (
+          <PowerBannerMobileCustomTextOverlay
+            bannerKey="MODELING"
+            layout={copy.heroTextLayoutMobile}
+            copy={copy}
+          />
+        ) : null}
         <ModelingHeroSlideTextStack copy={copy} />
       </div>
       <div className="power-banners-section1-tail shrink-0" aria-hidden />

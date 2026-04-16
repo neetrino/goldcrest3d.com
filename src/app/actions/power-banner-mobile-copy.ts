@@ -1,10 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@/generated/prisma/client";
 
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { modelingTextOverlayLayoutSchema } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import { POWER_BANNER_DEFAULT_COPY } from "@/lib/power-banner-copy/power-banner-defaults";
 import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
 import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
@@ -41,6 +43,8 @@ export async function updatePowerBannerMobileCopy(
     bannerKey: formData.get("bannerKey"),
     mobileTitle: formData.get("mobileTitle"),
     mobileBody: formData.get("mobileBody"),
+    useHeroVisualTextLayout: formData.get("useHeroVisualTextLayout") ?? "0",
+    heroTextLayoutMobile: formData.get("heroTextLayoutMobile") ?? "",
   });
 
   if (!parsed.success) {
@@ -49,13 +53,20 @@ export async function updatePowerBannerMobileCopy(
       first.bannerKey?.[0] ??
       first.mobileTitle?.[0] ??
       first.mobileBody?.[0] ??
+      first.heroTextLayoutMobile?.[0] ??
       "Invalid input.";
     return { ok: false, error: msg };
   }
 
-  const { bannerKey, mobileTitle, mobileBody } = parsed.data;
+  const { bannerKey, mobileTitle, mobileBody, useHeroVisualTextLayout, heroTextLayoutMobile } =
+    parsed.data;
   const mobileBodyStored =
     mobileBody.length > 0 ? finalizeHeroBannerBodyHtml(mobileBody) : "";
+
+  const useVisualLayout = useHeroVisualTextLayout === "1";
+  const layoutStored = useVisualLayout
+    ? modelingTextOverlayLayoutSchema.parse(JSON.parse(heroTextLayoutMobile ?? "") as unknown)
+    : null;
 
   try {
     const desktopDefaults = POWER_BANNER_DEFAULT_COPY[bannerKey];
@@ -67,10 +78,18 @@ export async function updatePowerBannerMobileCopy(
         body: finalizeHeroBannerBodyHtml(desktopDefaults.body),
         titleMobile: mobileTitle.length > 0 ? mobileTitle : null,
         bodyMobile: mobileBodyStored.length > 0 ? mobileBodyStored : null,
+        heroTextLayoutMobile:
+          layoutStored !== null
+            ? (layoutStored as unknown as Prisma.InputJsonValue)
+            : Prisma.DbNull,
       },
       update: {
         titleMobile: mobileTitle.length > 0 ? mobileTitle : null,
         bodyMobile: mobileBodyStored.length > 0 ? mobileBodyStored : null,
+        heroTextLayoutMobile:
+          layoutStored !== null
+            ? (layoutStored as unknown as Prisma.InputJsonValue)
+            : Prisma.DbNull,
       },
     });
   } catch (err) {

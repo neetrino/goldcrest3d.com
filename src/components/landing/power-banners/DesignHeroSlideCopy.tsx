@@ -24,11 +24,15 @@ export function DesignHeroSlideCopy({ copy }: DesignHeroSlideCopyProps) {
   const desktopPlain = resolveDesignSubtitleDisplay(desktopBody);
   const mobilePlain = resolveDesignSubtitleDisplay(mobileBody);
 
+  const clusterClass = copy.heroTextLayoutMobile
+    ? "power-banners-section3-text-cluster hidden w-full flex-col items-end gap-7 text-right text-[#121212] md:flex md:translate-y-0 md:items-start md:gap-8 md:text-left"
+    : "power-banners-section3-text-cluster flex w-full flex-col items-end gap-7 text-right text-[#121212] max-md:-translate-y-[7.5rem] md:translate-y-0 md:items-start md:gap-8 md:text-left";
+
   return (
     <div
       className={`relative z-10 flex h-full w-full flex-col items-start justify-end px-6 pb-16 pt-16 md:absolute md:left-0 md:right-auto ${SECTION3_TEXT_COLUMN_TOP_MD_CLASS} ${HERO_SIDE_COPY_COLUMN_MAX_CLASS} md:-translate-y-1/2 md:items-start md:justify-center md:pl-12 md:pr-6 md:pb-0 md:pt-0 lg:pl-20`}
     >
-      <div className="power-banners-section3-text-cluster flex w-full flex-col items-end gap-7 text-right text-[#121212] max-md:-translate-y-[7.5rem] md:translate-y-0 md:items-start md:gap-8 md:text-left">
+      <div className={clusterClass}>
         <h1 className="hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal text-balance md:whitespace-nowrap">
           <span className="md:hidden">{copy.mobileTitle}</span>
           <span className="hidden md:inline">{copy.title}</span>

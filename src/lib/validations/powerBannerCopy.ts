@@ -7,6 +7,7 @@ import {
 import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
 import { POWER_BANNER_KEY_SET } from "@/lib/power-banner-copy/power-banner-keys";
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
+import { modelingTextOverlayLayoutSchema } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 
 const MAX_TITLE_LEN = 280;
 
@@ -65,13 +66,49 @@ function optionalHeroBannerRichBodyField(fieldLabel: string) {
     });
 }
 
-export const powerBannerMobileCopyFormSchema = z.object({
-  bannerKey: z
-    .string()
-    .refine((k): k is PowerBannerKey => POWER_BANNER_KEY_SET.has(k), "Invalid banner."),
-  mobileTitle: z
-    .string()
-    .max(MAX_TITLE_LEN, `Mobile title must be at most ${MAX_TITLE_LEN} characters`)
-    .transform((s) => s.trim()),
-  mobileBody: optionalHeroBannerRichBodyField("Mobile description"),
-});
+export const powerBannerMobileCopyFormSchema = z
+  .object({
+    bannerKey: z
+      .string()
+      .refine((k): k is PowerBannerKey => POWER_BANNER_KEY_SET.has(k), "Invalid banner."),
+    mobileTitle: z
+      .string()
+      .max(MAX_TITLE_LEN, `Mobile title must be at most ${MAX_TITLE_LEN} characters`)
+      .transform((s) => s.trim()),
+    mobileBody: optionalHeroBannerRichBodyField("Mobile description"),
+    useHeroVisualTextLayout: z.enum(["0", "1"]).optional(),
+    heroTextLayoutMobile: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.useHeroVisualTextLayout !== "1") {
+      return;
+    }
+    const raw = data.heroTextLayoutMobile?.trim() ?? "";
+    if (raw.length === 0) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Visual text layout is enabled but layout data is missing.",
+        path: ["heroTextLayoutMobile"],
+      });
+      return;
+    }
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(raw) as unknown;
+    } catch {
+      ctx.addIssue({
+        code: "custom",
+        message: "Invalid visual layout JSON.",
+        path: ["heroTextLayoutMobile"],
+      });
+      return;
+    }
+    const layout = modelingTextOverlayLayoutSchema.safeParse(parsed);
+    if (!layout.success) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Invalid visual layout values.",
+        path: ["heroTextLayoutMobile"],
+      });
+    }
+  });

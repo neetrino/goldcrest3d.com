@@ -136,6 +136,8 @@ model PowerBannerCopy {
   heroImageLayout Json?
   /// Mobile-only focal point + zoom for custom hero art (below `md`). Null/empty falls back to desktop framing.
   heroImageLayoutMobile Json?
+  /// Mobile-only visual title + body positions (percent of padded frame; matches Admin visual editor).
+  heroTextLayoutMobile Json?
   updatedAt   DateTime @updatedAt
 }
 

@@ -3,6 +3,7 @@ import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-
 import { DesignHeroSlideBackgrounds } from "./DesignHeroSlideBackgrounds";
 import { resolveCustomHeroFramingByViewport } from "./resolve-custom-hero-framing";
 import { DesignHeroSlideCopy } from "./DesignHeroSlideCopy";
+import { PowerBannerMobileCustomTextOverlay } from "./PowerBannerMobileCustomTextOverlay";
 
 type DesignHeroSlideProps = {
   copy: PowerBannerCopyEntry;
@@ -22,6 +23,13 @@ export function DesignHeroSlide({ copy }: DesignHeroSlideProps) {
         customDesktopFraming={framing.desktop}
         customMobileFraming={framing.mobile}
       />
+      {copy.heroTextLayoutMobile ? (
+        <PowerBannerMobileCustomTextOverlay
+          bannerKey="DESIGN"
+          layout={copy.heroTextLayoutMobile}
+          copy={copy}
+        />
+      ) : null}
       <DesignHeroSlideCopy copy={copy} />
     </div>
   );

@@ -2,6 +2,7 @@ import { logger } from "@/lib/logger";
 import { prisma } from "@/lib/db";
 
 import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
+import { parseModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 
 import {
   POWER_BANNER_DEFAULT_COPY,
@@ -19,6 +20,7 @@ function defaultEntryForKey(key: PowerBannerKey): PowerBannerCopyEntry {
     ...copy,
     mobileTitle: mobile.title,
     mobileBody: mobile.body,
+    heroTextLayoutMobile: null,
     ...images,
   };
 }
@@ -45,6 +47,7 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
     bodyMobile: string | null;
     heroImageLayout: unknown | null;
     heroImageLayoutMobile: unknown | null;
+    heroTextLayoutMobile: unknown | null;
   }[];
   try {
     rows = await prisma.powerBannerCopy.findMany();
@@ -74,6 +77,7 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
           row.heroImageLayout,
           row.heroImageLayoutMobile,
         ),
+        heroTextLayoutMobile: parseModelingTextOverlayLayout(row.heroTextLayoutMobile),
       };
     }
   }
