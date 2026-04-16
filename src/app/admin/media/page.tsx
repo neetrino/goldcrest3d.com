@@ -4,6 +4,7 @@ import { getModelingSlotCopyBundle } from "@/lib/modeling-slot-copy/get-modeling
 import { getPowerBannerCopyBundle } from "@/lib/power-banner-copy/get-power-banner-copy";
 import { getSiteMediaAdminBundle } from "@/lib/site-media/get-site-media-admin";
 import { getFounderSectionEntry } from "@/lib/founder-section/get-founder-section";
+import { getEngineeringProcessCopyBundle } from "@/lib/engineering-process-copy/get-engineering-process-copy";
 
 import { MediaManagerClient } from "./MediaManagerClient";
 
@@ -15,6 +16,7 @@ export default async function AdminMediaPage() {
     manufacturingIntelligenceCopy,
     manufacturingSpecializationItems,
     founderSection,
+    engineeringProcessCopy,
   ] = await Promise.all([
     getSiteMediaAdminBundle(),
     getPowerBannerCopyBundle(),
@@ -22,6 +24,7 @@ export default async function AdminMediaPage() {
     getManufacturingIntelligenceCopyBundle(),
     getManufacturingSpecializationItemsAdmin(),
     getFounderSectionEntry(),
+    getEngineeringProcessCopyBundle(),
   ]);
 
   return (
@@ -45,6 +48,7 @@ export default async function AdminMediaPage() {
         manufacturingIntelligenceCopy={manufacturingIntelligenceCopy}
         manufacturingSpecializationItems={manufacturingSpecializationItems}
         founderSection={founderSection}
+        engineeringProcessCopy={engineeringProcessCopy}
       />
     </div>
   );

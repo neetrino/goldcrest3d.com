@@ -179,3 +179,26 @@ model FounderSectionCopy {
   heroImageLayout Json?
   updatedAt       DateTime @updatedAt
 }
+
+/// Our Engineering Process section copy — section title and per-step text content.
+/// Single row: application id `singleton`.
+model EngineeringProcessCopy {
+  id               String   @id
+  sectionTitle     String   @db.Text
+  step1Title       String   @db.Text
+  step1Subtitle    String   @db.Text
+  step1Description String   @db.Text
+  step2Title       String   @db.Text
+  step2Subtitle    String   @db.Text
+  step2Description String   @db.Text
+  step3Title       String   @db.Text
+  step3Subtitle    String   @db.Text
+  step3Description String   @db.Text
+  step4Title       String   @db.Text
+  step4Subtitle    String   @db.Text
+  step4Description String   @db.Text
+  step5Title       String   @db.Text
+  step5Subtitle    String   @db.Text
+  step5Description String   @db.Text
+  updatedAt        DateTime @updatedAt
+}

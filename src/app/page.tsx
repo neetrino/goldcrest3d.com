@@ -6,6 +6,7 @@ import { getModelingSlotCopyBundle } from "@/lib/modeling-slot-copy/get-modeling
 import { getPowerBannerCopyBundle } from "@/lib/power-banner-copy/get-power-banner-copy";
 import { getLandingSiteMedia } from "@/lib/site-media/get-landing-site-media";
 import { getFounderSectionEntry } from "@/lib/founder-section/get-founder-section";
+import { getEngineeringProcessCopyBundle } from "@/lib/engineering-process-copy/get-engineering-process-copy";
 
 export default async function Home() {
   const [
@@ -15,6 +16,7 @@ export default async function Home() {
     manufacturingIntelligenceCopy,
     manufacturingSpecializationItems,
     founderSection,
+    engineeringProcessCopy,
   ] = await Promise.all([
     getLandingSiteMedia(),
     getPowerBannerCopyBundle(),
@@ -22,6 +24,7 @@ export default async function Home() {
     getManufacturingIntelligenceCopyBundle(),
     getManufacturingSpecializationItemsResolved(),
     getFounderSectionEntry(),
+    getEngineeringProcessCopyBundle(),
   ]);
   return (
     <>
@@ -34,6 +37,7 @@ export default async function Home() {
           manufacturingIntelligenceCopy={manufacturingIntelligenceCopy}
           manufacturingSpecializationItems={manufacturingSpecializationItems}
           founderSection={founderSection}
+          engineeringProcessCopy={engineeringProcessCopy}
         />
       </main>
     </>
