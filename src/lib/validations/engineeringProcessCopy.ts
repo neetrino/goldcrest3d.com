@@ -6,10 +6,16 @@ const MAX_STEP_SUBTITLE_LEN = 280;
 const MAX_STEP_DESCRIPTION_LEN = 4000;
 
 const optionalTrimmed = (max: number, label: string) =>
-  z
-    .string()
-    .max(max, `${label} must be at most ${max} characters`)
-    .transform((s) => s.trim());
+  z.preprocess(
+    (value) => {
+      if (value === null || value === undefined) return "";
+      return value;
+    },
+    z
+      .string()
+      .max(max, `${label} must be at most ${max} characters`)
+      .transform((s) => s.trim()),
+  );
 
 export const engineeringProcessCopyFormSchema = z.object({
   sectionTitle: optionalTrimmed(MAX_SECTION_TITLE_LEN, "Section title"),

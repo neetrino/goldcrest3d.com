@@ -69,19 +69,6 @@ function StepCard({ step, index }: StepCardProps) {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label htmlFor={`${prefix}-subtitle`} className="text-sm font-medium text-slate-800">
-            Subtitle
-          </label>
-          <textarea
-            id={`${prefix}-subtitle`}
-            name={`${prefix}Subtitle`}
-            rows={2}
-            defaultValue={step.subtitle}
-            className="min-h-[3rem] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-slate-200 transition placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
-          />
-        </div>
-
-        <div className="flex flex-col gap-2">
           <label htmlFor={`${prefix}-description`} className="text-sm font-medium text-slate-800">
             Description
           </label>
