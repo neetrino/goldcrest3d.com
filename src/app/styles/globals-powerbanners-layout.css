@@ -25,11 +25,11 @@
   --section1-hero-bg-top: #ededed;
   --section1-hero-bg-mid: #e0e0e0;
   --section1-hero-bg-bottom: #d2d2d2;
-  --section1-hero-img-brightness: 0.89;
-  --section1-hero-img-contrast: 1.12;
-  --section1-hero-img-saturate: 1.1;
-  --section1-hero-overlay-top: rgba(0, 0, 0, 0.11);
-  --section1-hero-overlay-mid: rgba(0, 0, 0, 0.06);
+  --section1-hero-img-brightness: 1;
+  --section1-hero-img-contrast: 1;
+  --section1-hero-img-saturate: 1;
+  --section1-hero-overlay-top: rgba(0, 0, 0, 0);
+  --section1-hero-overlay-mid: rgba(0, 0, 0, 0);
 }
 
 /* Base (mobile-first): proportional strip until md override */
@@ -91,24 +91,6 @@
   overflow: hidden;
 }
 
-.power-banners-section1-bg :where(img) {
-  filter: brightness(var(--section1-hero-img-brightness))
-    contrast(var(--section1-hero-img-contrast)) saturate(var(--section1-hero-img-saturate));
-}
-
-.power-banners-section1-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    var(--section1-hero-overlay-top) 0%,
-    var(--section1-hero-overlay-mid) 42%,
-    transparent 72%
-  );
-}
 
 /* Hero-only fixed image stage: keeps artwork from shrinking below design size, crops via container overflow. */
 .power-banners-fixed-bg-stage {
