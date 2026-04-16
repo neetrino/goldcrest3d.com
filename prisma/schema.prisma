@@ -134,6 +134,8 @@ model PowerBannerCopy {
   bodyMobile  String? @db.Text
   /// Focal point + zoom for custom hero art (`focusX`/`focusY` 0–100, `zoom` 1–3). Null when using built-in assets.
   heroImageLayout Json?
+  /// Mobile-only focal point + zoom for custom hero art (below `md`). Null/empty falls back to desktop framing.
+  heroImageLayoutMobile Json?
   updatedAt   DateTime @updatedAt
 }
 

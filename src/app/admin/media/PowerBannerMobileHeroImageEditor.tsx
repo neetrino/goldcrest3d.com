@@ -11,7 +11,14 @@ import {
 } from "@/app/actions/power-banner-mobile-hero-image";
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
 import { formatR2ObjectDisplayName } from "@/lib/site-media/format-r2-object-label";
+import {
+  DEFAULT_IMAGE_FRAMING,
+  framingFingerprint,
+  framingToCoverImageStyle,
+  type ImageFraming,
+} from "@/lib/site-media/image-framing";
 
+import { ImageFramingEditor } from "./ImageFramingEditor";
 import { ImageUploadControl } from "./ImageUploadControl";
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import {
@@ -23,6 +30,7 @@ type PowerBannerMobileHeroImageEditorProps = {
   bannerKey: PowerBannerKey;
   mobilePreviewSrc: string;
   heroImageMobileR2Key: string | null;
+  heroImageFramingMobile: ImageFraming | null;
 };
 
 function HeroImageMessages({ state }: { state: PowerBannerMobileHeroImageActionResult | null }) {
@@ -53,6 +61,7 @@ export function PowerBannerMobileHeroImageEditor({
   bannerKey,
   mobilePreviewSrc,
   heroImageMobileR2Key,
+  heroImageFramingMobile,
 }: PowerBannerMobileHeroImageEditorProps) {
   const router = useRouter();
   const [uploadState, uploadAction, uploadPending] = useActionState(
@@ -83,6 +92,9 @@ export function PowerBannerMobileHeroImageEditor({
 
   const storedName = formatR2ObjectDisplayName(heroImageMobileR2Key);
   const usingCustom = Boolean(heroImageMobileR2Key);
+  const previewFraming = usingCustom
+    ? heroImageFramingMobile ?? DEFAULT_IMAGE_FRAMING
+    : null;
 
   return (
     <div className="rounded-xl border border-slate-200/90 bg-slate-50/80 p-4 sm:p-5">
@@ -101,7 +113,12 @@ export function PowerBannerMobileHeroImageEditor({
           fill
           unoptimized={mobilePreviewSrc.startsWith("/")}
           sizes="(max-width: 768px) 100vw, 320px"
-          className="object-cover object-center"
+          className={
+            previewFraming ? "object-cover" : "object-cover object-center"
+          }
+          style={
+            previewFraming ? framingToCoverImageStyle(previewFraming) : undefined
+          }
         />
       </div>
 
@@ -132,20 +149,31 @@ export function PowerBannerMobileHeroImageEditor({
       </form>
 
       {usingCustom ? (
-        <form action={clearAction} className="mt-4 border-t border-slate-200/80 pt-4">
-          <input type="hidden" name="bannerKey" value={bannerKey} />
-          <p className="mb-2 text-xs text-slate-600">
-            Remove the uploaded mobile file and restore the built-in mobile artwork for this slide.
-          </p>
-          <HeroImageMessages state={clearState} />
-          <button
-            type="submit"
-            disabled={clearPending}
-            className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {clearPending ? "Resetting..." : "Restore built-in mobile image"}
-          </button>
-        </form>
+        <>
+          <ImageFramingEditor
+            key={`${bannerKey}-mobile-${framingFingerprint(heroImageFramingMobile)}`}
+            imageUrl={mobilePreviewSrc}
+            initialFraming={heroImageFramingMobile}
+            aspectClassName="aspect-[9/16]"
+            target={{ kind: "powerBanner", bannerKey, variant: "mobile" }}
+            enabled={!uploadPending && !clearPending}
+            previewSizes="(max-width: 768px) 100vw, 320px"
+          />
+          <form action={clearAction} className="mt-4 border-t border-slate-200/80 pt-4">
+            <input type="hidden" name="bannerKey" value={bannerKey} />
+            <p className="mb-2 text-xs text-slate-600">
+              Remove the uploaded mobile file and restore the built-in mobile artwork for this slide.
+            </p>
+            <HeroImageMessages state={clearState} />
+            <button
+              type="submit"
+              disabled={clearPending}
+              className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-800 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {clearPending ? "Resetting..." : "Restore built-in mobile image"}
+            </button>
+          </form>
+        </>
       ) : null}
     </div>
   );

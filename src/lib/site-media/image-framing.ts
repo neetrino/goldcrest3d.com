@@ -91,8 +91,23 @@ export function parseImageFramingJson(raw: unknown): ImageFraming | null {
     return null;
   }
   const o = raw as Record<string, unknown>;
-  const focusX = typeof o.focusX === "number" ? o.focusX : DEFAULT_IMAGE_FRAMING.focusX;
-  const focusY = typeof o.focusY === "number" ? o.focusY : DEFAULT_IMAGE_FRAMING.focusY;
-  const zoom = typeof o.zoom === "number" ? o.zoom : DEFAULT_IMAGE_FRAMING.zoom;
+  const focusX =
+    typeof o.focusX === "number"
+      ? o.focusX
+      : typeof o.mobilePositionX === "number"
+        ? o.mobilePositionX
+        : DEFAULT_IMAGE_FRAMING.focusX;
+  const focusY =
+    typeof o.focusY === "number"
+      ? o.focusY
+      : typeof o.mobilePositionY === "number"
+        ? o.mobilePositionY
+        : DEFAULT_IMAGE_FRAMING.focusY;
+  const zoom =
+    typeof o.zoom === "number"
+      ? o.zoom
+      : typeof o.mobileScale === "number"
+        ? o.mobileScale
+        : DEFAULT_IMAGE_FRAMING.zoom;
   return clampImageFraming({ focusX, focusY, zoom });
 }

@@ -28,6 +28,11 @@ import {
   type PowerBannerHeroFramingActionResult,
 } from "@/app/actions/power-banner-hero-framing";
 import {
+  resetPowerBannerMobileHeroFraming,
+  savePowerBannerMobileHeroFraming,
+  type PowerBannerMobileHeroFramingActionResult,
+} from "@/app/actions/power-banner-mobile-hero-framing";
+import {
   resetFounderSectionFraming,
   saveFounderSectionFraming,
   type FounderSectionFramingActionResult,
@@ -97,6 +102,7 @@ export function ImageFramingEditor({
       _p:
         | SiteMediaFramingActionResult
         | PowerBannerHeroFramingActionResult
+        | PowerBannerMobileHeroFramingActionResult
         | ManufacturingSpecializationItemFramingActionResult
         | FounderSectionFramingActionResult
         | null,
@@ -104,11 +110,18 @@ export function ImageFramingEditor({
     ): Promise<
       | SiteMediaFramingActionResult
       | PowerBannerHeroFramingActionResult
+      | PowerBannerMobileHeroFramingActionResult
       | ManufacturingSpecializationItemFramingActionResult
       | FounderSectionFramingActionResult
       | null
     > => {
       if (target.kind === "powerBanner") {
+        if (target.variant === "mobile") {
+          return savePowerBannerMobileHeroFraming(
+            _p as PowerBannerMobileHeroFramingActionResult | null,
+            formData,
+          );
+        }
         return savePowerBannerHeroFraming(
           _p as PowerBannerHeroFramingActionResult | null,
           formData,
@@ -139,6 +152,7 @@ export function ImageFramingEditor({
       _p:
         | SiteMediaFramingActionResult
         | PowerBannerHeroFramingActionResult
+        | PowerBannerMobileHeroFramingActionResult
         | ManufacturingSpecializationItemFramingActionResult
         | FounderSectionFramingActionResult
         | null,
@@ -146,11 +160,18 @@ export function ImageFramingEditor({
     ): Promise<
       | SiteMediaFramingActionResult
       | PowerBannerHeroFramingActionResult
+      | PowerBannerMobileHeroFramingActionResult
       | ManufacturingSpecializationItemFramingActionResult
       | FounderSectionFramingActionResult
       | null
     > => {
       if (target.kind === "powerBanner") {
+        if (target.variant === "mobile") {
+          return resetPowerBannerMobileHeroFraming(
+            _p as PowerBannerMobileHeroFramingActionResult | null,
+            formData,
+          );
+        }
         return resetPowerBannerHeroFraming(
           _p as PowerBannerHeroFramingActionResult | null,
           formData,

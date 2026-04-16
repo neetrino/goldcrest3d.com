@@ -4,15 +4,24 @@ import {
   type ImageFraming,
 } from "@/lib/site-media/image-framing";
 
+type HeroFramingByViewport = {
+  desktop: ImageFraming | null;
+  mobile: ImageFraming | null;
+};
+
 /**
- * When a custom R2 hero image is active, returns the saved framing or defaults.
- * When built-in artwork is used, returns null (call sites keep slide-specific layouts).
+ * Resolves independent hero framing values per viewport.
+ * Each viewport requires its own custom upload key to activate custom framing behavior.
  */
-export function resolveCustomHeroFraming(
+export function resolveCustomHeroFramingByViewport(
   copy: PowerBannerCopyEntry,
-): ImageFraming | null {
-  if (!copy.heroImageR2Key) {
-    return null;
-  }
-  return copy.heroImageFraming ?? DEFAULT_IMAGE_FRAMING;
+): HeroFramingByViewport {
+  return {
+    desktop: copy.heroImageR2Key
+      ? copy.heroImageFraming ?? DEFAULT_IMAGE_FRAMING
+      : null,
+    mobile: copy.heroImageMobileR2Key
+      ? copy.heroImageFramingMobile ?? DEFAULT_IMAGE_FRAMING
+      : null,
+  };
 }

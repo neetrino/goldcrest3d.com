@@ -4,6 +4,8 @@ export const MODELING_MOBILE_FRAME_POSITION_LABEL = "Mobile Frame & Position";
 
 /** Default framing block title (gallery, hero, etc.). */
 export const DEFAULT_FRAME_POSITION_LABEL = "Frame & position";
+export const POWER_BANNER_DESKTOP_FRAME_POSITION_LABEL = "Frame & Position - Desktop/Tablet";
+export const POWER_BANNER_MOBILE_FRAME_POSITION_LABEL = "Frame & Position - Mobile";
 
 /** Percent points moved per nudge button press. */
 export const IMAGE_FRAMING_FOCUS_STEP = 2;

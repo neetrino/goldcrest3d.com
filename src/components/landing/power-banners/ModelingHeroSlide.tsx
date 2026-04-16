@@ -5,7 +5,7 @@ import {
   SECTION1_TAIL_MIN_HEIGHT_PX,
 } from "./power-banners-layout.constants";
 import { ModelingHeroSlideLayers } from "./ModelingHeroSlideLayers";
-import { resolveCustomHeroFraming } from "./resolve-custom-hero-framing";
+import { resolveCustomHeroFramingByViewport } from "./resolve-custom-hero-framing";
 import { ModelingHeroSlideTextStack } from "./ModelingHeroSlideTextStack";
 
 type ModelingHeroSlideProps = {
@@ -13,6 +13,8 @@ type ModelingHeroSlideProps = {
 };
 
 export function ModelingHeroSlide({ copy }: ModelingHeroSlideProps) {
+  const framing = resolveCustomHeroFramingByViewport(copy);
+
   return (
     <div
       className="power-banners-section1-block shrink-0"
@@ -29,7 +31,8 @@ export function ModelingHeroSlide({ copy }: ModelingHeroSlideProps) {
         <ModelingHeroSlideLayers
           desktopBgSrc={copy.desktopBgSrc}
           mobileBgSrc={copy.mobileBgSrc}
-          customFraming={resolveCustomHeroFraming(copy)}
+          customDesktopFraming={framing.desktop}
+          customMobileFraming={framing.mobile}
         />
         <ModelingHeroSlideTextStack copy={copy} />
       </div>

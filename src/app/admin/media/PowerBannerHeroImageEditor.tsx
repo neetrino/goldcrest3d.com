@@ -158,7 +158,7 @@ export function PowerBannerHeroImageEditor({
             imageUrl={desktopPreviewSrc}
             initialFraming={heroImageFraming}
             aspectClassName="aspect-[21/9]"
-            target={{ kind: "powerBanner", bannerKey }}
+            target={{ kind: "powerBanner", bannerKey, variant: "desktop" }}
             enabled={!uploadPending && !clearPending}
           />
           <form action={clearAction} className="mt-4 border-t border-slate-200/80 pt-4">

@@ -16,69 +16,22 @@ import {
 type RenderingHeroSlideBackgroundsProps = {
   desktopBgSrc: string;
   mobileBgSrc: string;
-  customFraming: ImageFraming | null;
+  customDesktopFraming: ImageFraming | null;
+  customMobileFraming: ImageFraming | null;
 };
 
 export function RenderingHeroSlideBackgrounds({
   desktopBgSrc,
   mobileBgSrc,
-  customFraming,
+  customDesktopFraming,
+  customMobileFraming,
 }: RenderingHeroSlideBackgroundsProps) {
-  if (customFraming) {
-    const style = framingToCoverImageStyle(customFraming);
-    return (
-      <>
-        <div
-          className="pointer-events-none absolute inset-0 z-0 md:hidden"
-          aria-hidden
-        >
-          <div
-            className="power-banners-fixed-bg-stage relative"
-            style={
-              {
-                ["--hero-bg-min-width" as string]: "390px",
-                ["--hero-bg-min-height" as string]: "679px",
-              } as CSSProperties
-            }
-          >
-            <Image
-              src={mobileBgSrc}
-              alt=""
-              fill
-              unoptimized={mobileBgSrc.startsWith("/")}
-              sizes={HERO_MOBILE_IMAGE_SIZES}
-              className="power-banners-fixed-bg-image"
-              style={style}
-            />
-          </div>
-        </div>
-        <div
-          className="pointer-events-none absolute left-0 top-0 z-0 hidden h-[var(--section2-bg-layout-height)] w-full overflow-hidden md:block"
-          aria-hidden
-        >
-          <div
-            className="power-banners-fixed-bg-stage relative"
-            style={
-              {
-                ["--hero-bg-min-width" as string]: "1920px",
-                ["--hero-bg-min-height" as string]: "712px",
-              } as CSSProperties
-            }
-          >
-            <Image
-              src={desktopBgSrc}
-              alt=""
-              fill
-              unoptimized={desktopBgSrc.startsWith("/")}
-              sizes={HERO_DESKTOP_IMAGE_SIZES}
-              className="power-banners-fixed-bg-image"
-              style={style}
-            />
-          </div>
-        </div>
-      </>
-    );
-  }
+  const mobileCustomStyle = customMobileFraming
+    ? framingToCoverImageStyle(customMobileFraming)
+    : undefined;
+  const desktopCustomStyle = customDesktopFraming
+    ? framingToCoverImageStyle(customDesktopFraming)
+    : undefined;
 
   return (
     <>
@@ -92,8 +45,12 @@ export function RenderingHeroSlideBackgrounds({
             {
               ["--hero-bg-min-width" as string]: "390px",
               ["--hero-bg-min-height" as string]: "679px",
-              ["--hero-bg-shift-factor-x" as string]: "-0.1",
-              ["--hero-bg-object-position" as string]: "left center",
+              ...(mobileCustomStyle
+                ? {}
+                : {
+                    ["--hero-bg-shift-factor-x" as string]: "-0.1",
+                    ["--hero-bg-object-position" as string]: "left center",
+                  }),
             } as CSSProperties
           }
         >
@@ -104,6 +61,7 @@ export function RenderingHeroSlideBackgrounds({
             unoptimized={mobileBgSrc.startsWith("/")}
             sizes={HERO_MOBILE_IMAGE_SIZES}
             className="power-banners-fixed-bg-image"
+            style={mobileCustomStyle}
           />
         </div>
       </div>
@@ -117,11 +75,15 @@ export function RenderingHeroSlideBackgrounds({
             {
               ["--hero-bg-min-width" as string]: "1920px",
               ["--hero-bg-min-height" as string]: "712px",
-              ["--hero-bg-shift-x-base" as string]: `-${SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX}px`,
-              ["--hero-bg-shift-y-base" as string]: `-${SECTION2_HERO_BG_IMAGE_NUDGE_UP_PX}px`,
-              ["--hero-bg-shift-factor-x" as string]: "-0.18",
-              ["--hero-bg-scale" as string]: `${SECTION2_HERO_BG_SCALE}`,
-              ["--hero-bg-object-position" as string]: "left center",
+              ...(desktopCustomStyle
+                ? {}
+                : {
+                    ["--hero-bg-shift-x-base" as string]: `-${SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX}px`,
+                    ["--hero-bg-shift-y-base" as string]: `-${SECTION2_HERO_BG_IMAGE_NUDGE_UP_PX}px`,
+                    ["--hero-bg-shift-factor-x" as string]: "-0.18",
+                    ["--hero-bg-scale" as string]: `${SECTION2_HERO_BG_SCALE}`,
+                    ["--hero-bg-object-position" as string]: "left center",
+                  }),
             } as CSSProperties
           }
         >
@@ -132,6 +94,7 @@ export function RenderingHeroSlideBackgrounds({
             unoptimized={desktopBgSrc.startsWith("/")}
             sizes={HERO_DESKTOP_IMAGE_SIZES}
             className="power-banners-fixed-bg-image"
+            style={desktopCustomStyle}
           />
         </div>
       </div>

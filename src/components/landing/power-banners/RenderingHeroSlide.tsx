@@ -6,7 +6,7 @@ import {
   SECTION2_TEXT_CLUSTER_NUDGE_MOBILE_PX,
 } from "./power-banners-layout.constants";
 import { RenderingHeroSlideBackgrounds } from "./RenderingHeroSlideBackgrounds";
-import { resolveCustomHeroFraming } from "./resolve-custom-hero-framing";
+import { resolveCustomHeroFramingByViewport } from "./resolve-custom-hero-framing";
 import { RenderingHeroSlideCopy } from "./RenderingHeroSlideCopy";
 
 type RenderingHeroSlideProps = {
@@ -14,6 +14,8 @@ type RenderingHeroSlideProps = {
 };
 
 export function RenderingHeroSlide({ copy }: RenderingHeroSlideProps) {
+  const framing = resolveCustomHeroFramingByViewport(copy);
+
   return (
     <div
       className="power-banners-section2-block relative overflow-hidden"
@@ -28,7 +30,8 @@ export function RenderingHeroSlide({ copy }: RenderingHeroSlideProps) {
       <RenderingHeroSlideBackgrounds
         desktopBgSrc={copy.desktopBgSrc}
         mobileBgSrc={copy.mobileBgSrc}
-        customFraming={resolveCustomHeroFraming(copy)}
+        customDesktopFraming={framing.desktop}
+        customMobileFraming={framing.mobile}
       />
       <RenderingHeroSlideCopy copy={copy} />
     </div>

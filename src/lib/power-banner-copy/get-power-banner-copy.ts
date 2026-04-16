@@ -14,7 +14,7 @@ import { resolveHeroBannerImageFields } from "./resolve-hero-banner-images";
 function defaultEntryForKey(key: PowerBannerKey): PowerBannerCopyEntry {
   const copy = POWER_BANNER_DEFAULT_COPY[key];
   const mobile = POWER_BANNER_DEFAULT_MOBILE_COPY[key];
-  const images = resolveHeroBannerImageFields(key, null, null, null);
+  const images = resolveHeroBannerImageFields(key, null, null, null, null);
   return {
     ...copy,
     mobileTitle: mobile.title,
@@ -44,6 +44,7 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
     titleMobile: string | null;
     bodyMobile: string | null;
     heroImageLayout: unknown | null;
+    heroImageLayoutMobile: unknown | null;
   }[];
   try {
     rows = await prisma.powerBannerCopy.findMany();
@@ -71,6 +72,7 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
           row.r2ObjectKey,
           row.r2ObjectKeyMobile,
           row.heroImageLayout,
+          row.heroImageLayoutMobile,
         ),
       };
     }

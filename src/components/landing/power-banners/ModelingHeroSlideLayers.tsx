@@ -16,72 +16,24 @@ import {
 type ModelingHeroSlideLayersProps = {
   desktopBgSrc: string;
   mobileBgSrc: string;
-  /** When set, admin-uploaded hero uses this framing instead of built-in nudges. */
-  customFraming: ImageFraming | null;
+  /** Admin-uploaded desktop/tablet framing (md+). */
+  customDesktopFraming: ImageFraming | null;
+  /** Admin-uploaded mobile framing (below md). */
+  customMobileFraming: ImageFraming | null;
 };
 
 export function ModelingHeroSlideLayers({
   desktopBgSrc,
   mobileBgSrc,
-  customFraming,
+  customDesktopFraming,
+  customMobileFraming,
 }: ModelingHeroSlideLayersProps) {
-  if (customFraming) {
-    const style = framingToCoverImageStyle(customFraming);
-    return (
-      <>
-        <div
-          className="pointer-events-none absolute inset-0 z-0 overflow-hidden md:hidden"
-          aria-hidden
-        >
-          <div
-            className="power-banners-fixed-bg-stage relative"
-            style={
-              {
-                ["--hero-bg-min-width" as string]: "390px",
-                ["--hero-bg-min-height" as string]: "679px",
-              } as CSSProperties
-            }
-          >
-            <Image
-              src={mobileBgSrc}
-              alt=""
-              fill
-              priority
-              unoptimized={mobileBgSrc.startsWith("/")}
-              sizes={HERO_MOBILE_IMAGE_SIZES}
-              className="power-banners-fixed-bg-image"
-              style={style}
-            />
-          </div>
-        </div>
-        <div
-          className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden md:block"
-          aria-hidden
-        >
-          <div
-            className="power-banners-fixed-bg-stage relative"
-            style={
-              {
-                ["--hero-bg-min-width" as string]: "1918px",
-                ["--hero-bg-min-height" as string]: "707px",
-              } as CSSProperties
-            }
-          >
-            <Image
-              src={desktopBgSrc}
-              alt=""
-              fill
-              priority
-              unoptimized={desktopBgSrc.startsWith("/")}
-              sizes={HERO_DESKTOP_IMAGE_SIZES}
-              className="power-banners-fixed-bg-image"
-              style={style}
-            />
-          </div>
-        </div>
-      </>
-    );
-  }
+  const mobileCustomStyle = customMobileFraming
+    ? framingToCoverImageStyle(customMobileFraming)
+    : undefined;
+  const desktopCustomStyle = customDesktopFraming
+    ? framingToCoverImageStyle(customDesktopFraming)
+    : undefined;
 
   return (
     <>
@@ -95,7 +47,7 @@ export function ModelingHeroSlideLayers({
             {
               ["--hero-bg-min-width" as string]: "390px",
               ["--hero-bg-min-height" as string]: "679px",
-              ["--hero-bg-shift-factor-x" as string]: "-0.08",
+              ...(mobileCustomStyle ? {} : { ["--hero-bg-shift-factor-x" as string]: "-0.08" }),
             } as CSSProperties
           }
         >
@@ -107,6 +59,7 @@ export function ModelingHeroSlideLayers({
             unoptimized={mobileBgSrc.startsWith("/")}
             sizes={HERO_MOBILE_IMAGE_SIZES}
             className="power-banners-fixed-bg-image"
+            style={mobileCustomStyle}
           />
         </div>
       </div>
@@ -126,10 +79,14 @@ export function ModelingHeroSlideLayers({
             {
               ["--hero-bg-min-width" as string]: "1918px",
               ["--hero-bg-min-height" as string]: "707px",
-              ["--hero-bg-shift-y-base" as string]: `-${SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX}px`,
-              ["--hero-bg-shift-factor-x" as string]: "-0.03",
-              ["--hero-bg-scale" as string]: `${SECTION1_HERO_BG_SCALE}`,
-              ["--hero-bg-object-position" as string]: `50% calc(50% + ${SECTION1_HERO_BG_NUDGE_DOWN_PX}px)`,
+              ...(desktopCustomStyle
+                ? {}
+                : {
+                    ["--hero-bg-shift-y-base" as string]: `-${SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX}px`,
+                    ["--hero-bg-shift-factor-x" as string]: "-0.03",
+                    ["--hero-bg-scale" as string]: `${SECTION1_HERO_BG_SCALE}`,
+                    ["--hero-bg-object-position" as string]: `50% calc(50% + ${SECTION1_HERO_BG_NUDGE_DOWN_PX}px)`,
+                  }),
             } as CSSProperties
           }
         >
@@ -141,6 +98,7 @@ export function ModelingHeroSlideLayers({
             unoptimized={desktopBgSrc.startsWith("/")}
             sizes={HERO_DESKTOP_IMAGE_SIZES}
             className="power-banners-fixed-bg-image"
+            style={desktopCustomStyle}
           />
         </div>
       </div>

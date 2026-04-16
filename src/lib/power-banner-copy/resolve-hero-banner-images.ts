@@ -15,6 +15,7 @@ type HeroImageResolved = Pick<
   | "heroImageR2Key"
   | "heroImageMobileR2Key"
   | "heroImageFraming"
+  | "heroImageFramingMobile"
 >;
 
 /**
@@ -27,10 +28,13 @@ export function resolveHeroBannerImageFields(
   r2ObjectKey: string | null | undefined,
   r2ObjectKeyMobile: string | null | undefined,
   heroImageLayout: unknown | null | undefined,
+  heroImageLayoutMobile: unknown | null | undefined,
 ): HeroImageResolved {
   const desktopDefault = HERO_BANNER_DEFAULT_DESKTOP[key];
   const mobileDefault = HERO_BANNER_DEFAULT_MOBILE[key];
   const heroImageFraming = parseImageFramingJson(heroImageLayout);
+  const heroImageFramingMobileRaw = parseImageFramingJson(heroImageLayoutMobile);
+  const heroImageFramingMobile = heroImageFramingMobileRaw ?? heroImageFraming;
   const desktopUrl = r2ObjectKey ? resolveSiteMediaDisplayUrl(r2ObjectKey) : null;
   const mobileUrl = r2ObjectKeyMobile
     ? resolveSiteMediaDisplayUrl(r2ObjectKeyMobile)
@@ -41,5 +45,6 @@ export function resolveHeroBannerImageFields(
     heroImageR2Key: r2ObjectKey ?? null,
     heroImageMobileR2Key: r2ObjectKeyMobile ?? null,
     heroImageFraming: r2ObjectKey ? heroImageFraming : null,
+    heroImageFramingMobile: r2ObjectKeyMobile ? heroImageFramingMobile : null,
   };
 }

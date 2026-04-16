@@ -19,6 +19,8 @@ export type PowerBannerCopyEntry = {
   heroImageMobileR2Key: string | null;
   /** Saved focal crop for custom uploads; null when using built-in assets or not set. */
   heroImageFraming: ImageFraming | null;
+  /** Saved focal crop for custom mobile uploads; null when using built-in assets or not set. */
+  heroImageFramingMobile: ImageFraming | null;
 };
 
 /** Serializable hero copy for the landing page (merged DB + defaults). */

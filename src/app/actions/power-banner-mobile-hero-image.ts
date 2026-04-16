@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@/generated/prisma/client";
 
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
@@ -81,6 +82,7 @@ export async function uploadPowerBannerMobileHeroImage(
       },
       update: {
         r2ObjectKeyMobile: newKey,
+        heroImageLayoutMobile: Prisma.DbNull as unknown as Prisma.InputJsonValue,
       },
     });
   } catch (e) {
@@ -125,6 +127,7 @@ export async function clearPowerBannerMobileHeroImage(
       where: { bannerKey },
       data: {
         r2ObjectKeyMobile: null,
+        heroImageLayoutMobile: Prisma.DbNull as unknown as Prisma.InputJsonValue,
       },
     });
   } catch (e) {

@@ -43,10 +43,11 @@ export function PowerBannerMobileCopyEditor({
       </div>
 
       <PowerBannerMobileHeroImageEditor
-        key={`${initial.mobileBgSrc}-${initial.heroImageMobileR2Key ?? ""}`}
+        key={`${initial.mobileBgSrc}-${initial.heroImageMobileR2Key ?? ""}-${initial.heroImageFramingMobile?.zoom ?? ""}`}
         bannerKey={bannerKey}
         mobilePreviewSrc={initial.mobileBgSrc}
         heroImageMobileR2Key={initial.heroImageMobileR2Key}
+        heroImageFramingMobile={initial.heroImageFramingMobile}
       />
 
       <form
