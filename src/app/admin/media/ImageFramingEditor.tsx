@@ -89,23 +89,30 @@ export function ImageFramingEditor({
   const [framing, setFraming] = useState<ImageFraming>(
     () => initialFraming ?? DEFAULT_IMAGE_FRAMING,
   );
+  const framingRef = useRef<ImageFraming>(initialFraming ?? DEFAULT_IMAGE_FRAMING);
+  const saveInFlightRef = useRef(false);
+  const [savePending, setSavePending] = useState(false);
 
   const serverFramingKey = framingFingerprint(initialFraming);
 
   useEffect(() => {
-    setFraming(initialFraming ?? DEFAULT_IMAGE_FRAMING);
+    const nextFraming = initialFraming ?? DEFAULT_IMAGE_FRAMING;
+    framingRef.current = nextFraming;
+    setFraming(nextFraming);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- sync only when saved framing changes (fingerprint), not when parent passes a new object reference with the same values.
   }, [serverFramingKey]);
 
-  const [saveState, saveAction, savePending] = useActionState(
+  const [saveState, setSaveState] = useState<
+    | SiteMediaFramingActionResult
+    | PowerBannerHeroFramingActionResult
+    | PowerBannerMobileHeroFramingActionResult
+    | ManufacturingSpecializationItemFramingActionResult
+    | FounderSectionFramingActionResult
+    | null
+  >(null);
+
+  const runSaveFramingAction = useCallback(
     async (
-      _p:
-        | SiteMediaFramingActionResult
-        | PowerBannerHeroFramingActionResult
-        | PowerBannerMobileHeroFramingActionResult
-        | ManufacturingSpecializationItemFramingActionResult
-        | FounderSectionFramingActionResult
-        | null,
       formData: FormData,
     ): Promise<
       | SiteMediaFramingActionResult
@@ -117,34 +124,22 @@ export function ImageFramingEditor({
     > => {
       if (target.kind === "powerBanner") {
         if (target.variant === "mobile") {
-          return savePowerBannerMobileHeroFraming(
-            _p as PowerBannerMobileHeroFramingActionResult | null,
-            formData,
-          );
+          return savePowerBannerMobileHeroFraming(null, formData);
         }
-        return savePowerBannerHeroFraming(
-          _p as PowerBannerHeroFramingActionResult | null,
-          formData,
-        );
+        return savePowerBannerHeroFraming(null, formData);
       }
       if (target.kind === "manufacturingItem") {
-        return saveManufacturingSpecializationItemFraming(
-          _p as ManufacturingSpecializationItemFramingActionResult | null,
-          formData,
-        );
+        return saveManufacturingSpecializationItemFraming(null, formData);
       }
       if (target.kind === "founder") {
-        return saveFounderSectionFraming(
-          _p as FounderSectionFramingActionResult | null,
-          formData,
-        );
+        return saveFounderSectionFraming(null, formData);
       }
       if (target.kind === "gallery") {
-        return saveOrderedGalleryFraming(_p as SiteMediaFramingActionResult | null, formData);
+        return saveOrderedGalleryFraming(null, formData);
       }
-      return saveModelingSlotFraming(_p as SiteMediaFramingActionResult | null, formData);
+      return saveModelingSlotFraming(null, formData);
     },
-    null,
+    [target],
   );
 
   const [resetState, resetAction, resetPending] = useActionState(
@@ -203,6 +198,57 @@ export function ImageFramingEditor({
     }
   }, [saveState?.ok, resetState?.ok, router]);
 
+  const updateFraming = useCallback(
+    (updater: ImageFraming | ((prev: ImageFraming) => ImageFraming)) => {
+      const next =
+        typeof updater === "function"
+          ? (updater as (prev: ImageFraming) => ImageFraming)(framingRef.current)
+          : updater;
+      framingRef.current = next;
+      setFraming(next);
+    },
+    [],
+  );
+
+  const handleSaveFraming = useCallback(async () => {
+    if (!enabled || savePending || resetPending || saveInFlightRef.current) {
+      return;
+    }
+
+    saveInFlightRef.current = true;
+    setSavePending(true);
+    try {
+      const nextFraming = framingRef.current;
+      const formData = new FormData();
+
+      if (target.kind === "gallery") {
+        formData.set("itemId", target.itemId);
+      }
+      if (target.kind === "modeling") {
+        formData.set("slotId", target.slotId);
+        formData.set("variant", target.variant);
+      }
+      if (target.kind === "powerBanner") {
+        formData.set("bannerKey", target.bannerKey);
+      }
+      if (target.kind === "manufacturingItem") {
+        formData.set("itemKey", target.itemKey);
+      }
+
+      formData.set("focusX", String(nextFraming.focusX));
+      formData.set("focusY", String(nextFraming.focusY));
+      formData.set("zoom", String(nextFraming.zoom));
+
+      const result = await runSaveFramingAction(formData);
+      setSaveState(result);
+    } catch {
+      setSaveState({ ok: false, error: "Could not save framing." });
+    } finally {
+      saveInFlightRef.current = false;
+      setSavePending(false);
+    }
+  }, [enabled, resetPending, runSaveFramingAction, savePending, target]);
+
   const dragRef = useRef<{
     startX: number;
     startY: number;
@@ -216,10 +262,10 @@ export function ImageFramingEditor({
       dragRef.current = {
         startX: e.clientX,
         startY: e.clientY,
-        startFraming: framing,
+        startFraming: framingRef.current,
       };
     },
-    [enabled, imageUrl, framing],
+    [enabled, imageUrl],
   );
 
   const onPointerMove = useCallback(
@@ -234,9 +280,9 @@ export function ImageFramingEditor({
         focusX: d.startFraming.focusX - dx * scale * IMAGE_FRAMING_DRAG_SENSITIVITY,
         focusY: d.startFraming.focusY - dy * scale * IMAGE_FRAMING_DRAG_SENSITIVITY,
       });
-      setFraming(next);
+      updateFraming(next);
     },
-    [],
+    [updateFraming],
   );
 
   const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
@@ -343,16 +389,24 @@ export function ImageFramingEditor({
         compact={isPowerBannerMobileCompact}
         disabled={!enabled || savePending || resetPending}
         onUp={() =>
-          setFraming((f) => mergeFraming(f, { focusY: f.focusY - IMAGE_FRAMING_FOCUS_STEP }))
+          updateFraming((f) =>
+            mergeFraming(f, { focusY: f.focusY - IMAGE_FRAMING_FOCUS_STEP }),
+          )
         }
         onDown={() =>
-          setFraming((f) => mergeFraming(f, { focusY: f.focusY + IMAGE_FRAMING_FOCUS_STEP }))
+          updateFraming((f) =>
+            mergeFraming(f, { focusY: f.focusY + IMAGE_FRAMING_FOCUS_STEP }),
+          )
         }
         onLeft={() =>
-          setFraming((f) => mergeFraming(f, { focusX: f.focusX - IMAGE_FRAMING_FOCUS_STEP }))
+          updateFraming((f) =>
+            mergeFraming(f, { focusX: f.focusX - IMAGE_FRAMING_FOCUS_STEP }),
+          )
         }
         onRight={() =>
-          setFraming((f) => mergeFraming(f, { focusX: f.focusX + IMAGE_FRAMING_FOCUS_STEP }))
+          updateFraming((f) =>
+            mergeFraming(f, { focusX: f.focusX + IMAGE_FRAMING_FOCUS_STEP }),
+          )
         }
       />
 
@@ -361,7 +415,7 @@ export function ImageFramingEditor({
           type="button"
           disabled={!enabled || savePending || resetPending}
           onClick={() =>
-            setFraming((f) =>
+            updateFraming((f) =>
               mergeFraming(f, { zoom: f.zoom + IMAGE_FRAMING_ZOOM_STEP }),
             )
           }
@@ -373,7 +427,7 @@ export function ImageFramingEditor({
           type="button"
           disabled={!enabled || savePending || resetPending}
           onClick={() =>
-            setFraming((f) =>
+            updateFraming((f) =>
               mergeFraming(f, { zoom: f.zoom - IMAGE_FRAMING_ZOOM_STEP }),
             )
           }
@@ -397,33 +451,14 @@ export function ImageFramingEditor({
       ) : null}
 
       <div className={actionsClassName}>
-        <form action={saveAction} className="inline">
-          {target.kind === "gallery" ? (
-            <input type="hidden" name="itemId" value={target.itemId} />
-          ) : null}
-          {target.kind === "modeling" ? (
-            <>
-              <input type="hidden" name="slotId" value={target.slotId} />
-              <input type="hidden" name="variant" value={target.variant} />
-            </>
-          ) : null}
-          {target.kind === "powerBanner" ? (
-            <input type="hidden" name="bannerKey" value={target.bannerKey} />
-          ) : null}
-          {target.kind === "manufacturingItem" ? (
-            <input type="hidden" name="itemKey" value={target.itemKey} />
-          ) : null}
-          <input type="hidden" name="focusX" value={String(framing.focusX)} />
-          <input type="hidden" name="focusY" value={String(framing.focusY)} />
-          <input type="hidden" name="zoom" value={String(framing.zoom)} />
-          <button
-            type="submit"
-            disabled={!enabled || savePending || resetPending}
-            className={primaryActionClassName}
-          >
-            {savePending ? "Saving…" : "Save framing"}
-          </button>
-        </form>
+        <button
+          type="button"
+          onClick={handleSaveFraming}
+          disabled={!enabled || savePending || resetPending}
+          className={primaryActionClassName}
+        >
+          {savePending ? "Saving…" : "Save framing"}
+        </button>
         {serverHasSavedFraming ? (
           <form action={resetAction} className="inline">
             {target.kind === "gallery" ? (
@@ -453,7 +488,7 @@ export function ImageFramingEditor({
           <button
             type="button"
             disabled={resetDisabledLocalOnly}
-            onClick={() => setFraming(clampImageFraming(DEFAULT_IMAGE_FRAMING))}
+            onClick={() => updateFraming(clampImageFraming(DEFAULT_IMAGE_FRAMING))}
             className={secondaryActionClassName}
           >
             Reset framing
