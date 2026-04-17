@@ -66,8 +66,6 @@ export async function updatePowerBannerCopy(
         bannerKey,
         title,
         body: bodyStored,
-        titleMobile: title,
-        bodyMobile: bodyStored,
       },
       update: { title, body: bodyStored },
     });

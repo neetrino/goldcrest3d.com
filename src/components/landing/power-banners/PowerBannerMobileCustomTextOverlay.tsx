@@ -42,8 +42,8 @@ export function PowerBannerMobileCustomTextOverlay({
   const mobileBody = copy.mobileBody.trim();
   const useRichMobileBody = looksLikeHeroBannerRichBody(mobileBody);
   const modelingLines = resolveModelingTitleMobileLines(copy.mobileTitle);
-  const designPlain = resolveDesignSubtitleDisplay(mobileBody);
-  const renderingPlain = resolveRenderingSubtitleDisplay(mobileBody);
+  const designPlain = resolveDesignSubtitleDisplay(mobileBody, "mobile");
+  const renderingPlain = resolveRenderingSubtitleDisplay(mobileBody, "mobile");
 
   const titlePositionStyle = getPowerBannerMobileHeroTextPositionStyle(layout.title);
   const bodyPositionStyle = getPowerBannerMobileHeroTextPositionStyle(layout.body);

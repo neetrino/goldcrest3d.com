@@ -13,10 +13,6 @@ import {
   hasCustomModelingTextLayout,
 } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
-import {
-  resolveModelingSlotBodyForMobile,
-  resolveModelingSlotTitleForMobile,
-} from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotCopyMessages } from "./ModelingSlotCopyMessages";
@@ -69,22 +65,9 @@ export function ModelingSlotCopyEditor({
   const desktopImageUrl = previewRow.displayUrl;
   const mobileImageUrl = previewRow.displayUrlMobile ?? previewRow.displayUrl;
 
-  const titleForMobilePreview = useMemo(
-    () => resolveModelingSlotTitleForMobile({ title: titleDesktop, titleMobile }),
-    [titleDesktop, titleMobile],
-  );
+  const titleForMobilePreview = useMemo(() => titleMobile.trim(), [titleMobile]);
 
-  const bodyForMobilePreview = useMemo(() => {
-    const entry: ModelingSlotCopyEntry = {
-      title: titleDesktop,
-      titleMobile,
-      body: bodyHtml,
-      bodyMobile: bodyMobileHtml,
-      textLayoutDesktop: null,
-      textLayoutMobile: null,
-    };
-    return resolveModelingSlotBodyForMobile(entry);
-  }, [titleDesktop, titleMobile, bodyHtml, bodyMobileHtml]);
+  const bodyForMobilePreview = useMemo(() => bodyMobileHtml.trim(), [bodyMobileHtml]);
 
   const activeLayout = overlayVariant === "desktop" ? layoutDesktop : layoutMobile;
   const setActiveLayout = overlayVariant === "desktop" ? setLayoutDesktop : setLayoutMobile;
@@ -158,8 +141,8 @@ export function ModelingSlotCopyEditor({
       <div className="flex flex-col gap-2 rounded-xl border border-slate-200/90 bg-white p-3">
         <p className="text-sm font-semibold text-slate-900">Mobile</p>
         <p className="text-xs text-slate-500">
-          Optional separate copy for viewports below <span className="font-medium text-slate-600">md</span>
-          . Leave title or description empty to reuse the desktop / tablet version for that part.
+          Separate copy for viewports below <span className="font-medium text-slate-600">md</span>. Empty
+          fields render as empty on mobile (desktop copy is not used as a fallback).
         </p>
 
         <div className="flex flex-col gap-2">
@@ -178,7 +161,7 @@ export function ModelingSlotCopyEditor({
             className={TITLE_TEXTAREA_CLASS}
           />
           <p className="text-xs text-slate-500">
-            Optional shorter or multi-line title for phones. Empty uses the desktop / tablet title.
+            Shorter or multi-line title for phones. Saved independently from the desktop / tablet title.
           </p>
         </div>
 
@@ -196,7 +179,7 @@ export function ModelingSlotCopyEditor({
             onChange={setBodyMobileHtml}
           />
           <p className="text-xs text-slate-500">
-            Optional. Empty uses the desktop / tablet description on small screens.
+            Saved independently from the desktop / tablet description.
           </p>
         </div>
       </div>

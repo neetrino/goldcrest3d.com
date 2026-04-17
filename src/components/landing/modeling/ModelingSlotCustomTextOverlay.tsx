@@ -10,10 +10,6 @@ import {
   MODELING_TEXT_OVERLAY_OUTER_PADDING_CLASS,
   MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS,
 } from "@/lib/modeling-slot-copy/modeling-text-overlay-presentation";
-import {
-  resolveModelingSlotBodyForMobile,
-  resolveModelingSlotTitleForMobile,
-} from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 
 const MODELING_RICH_BODY =
   "[&_p:not(:last-child)]:mb-[0.45em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
@@ -40,9 +36,9 @@ export function getModelingSlotCustomTextOverlayProps(
     layoutDesktop: copy.textLayoutDesktop!,
     layoutMobile: copy.textLayoutMobile!,
     titleDesktop: copy.title,
-    titleMobile: resolveModelingSlotTitleForMobile(copy),
+    titleMobile: copy.titleMobile.trim(),
     bodyDesktopHtml: copy.body,
-    bodyMobileHtml: resolveModelingSlotBodyForMobile(copy),
+    bodyMobileHtml: copy.bodyMobile.trim(),
     textDark,
   };
 }

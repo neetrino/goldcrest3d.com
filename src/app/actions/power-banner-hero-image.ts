@@ -80,8 +80,6 @@ export async function uploadPowerBannerHeroImage(
         body: finalizeHeroBannerBodyHtml(defaults.body),
         r2ObjectKey: newKey,
         r2ObjectKeyMobile: newKey,
-        titleMobile: defaults.title,
-        bodyMobile: finalizeHeroBannerBodyHtml(defaults.body),
       },
       update: {
         r2ObjectKey: newKey,

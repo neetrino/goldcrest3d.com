@@ -62,6 +62,7 @@ export async function updatePowerBannerMobileCopy(
     parsed.data;
   const mobileBodyStored =
     mobileBody.length > 0 ? finalizeHeroBannerBodyHtml(mobileBody) : "";
+  const mobileTitleStored = mobileTitle.trim();
 
   const useVisualLayout = useHeroVisualTextLayout === "1";
   const layoutStored = useVisualLayout
@@ -76,16 +77,16 @@ export async function updatePowerBannerMobileCopy(
         bannerKey,
         title: desktopDefaults.title,
         body: finalizeHeroBannerBodyHtml(desktopDefaults.body),
-        titleMobile: mobileTitle.length > 0 ? mobileTitle : null,
-        bodyMobile: mobileBodyStored.length > 0 ? mobileBodyStored : null,
+        titleMobile: mobileTitleStored,
+        bodyMobile: mobileBodyStored,
         heroTextLayoutMobile:
           layoutStored !== null
             ? (layoutStored as unknown as Prisma.InputJsonValue)
             : Prisma.DbNull,
       },
       update: {
-        titleMobile: mobileTitle.length > 0 ? mobileTitle : null,
-        bodyMobile: mobileBodyStored.length > 0 ? mobileBodyStored : null,
+        titleMobile: mobileTitleStored,
+        bodyMobile: mobileBodyStored,
         heroTextLayoutMobile:
           layoutStored !== null
             ? (layoutStored as unknown as Prisma.InputJsonValue)

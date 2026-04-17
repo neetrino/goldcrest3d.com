@@ -21,8 +21,8 @@ export function DesignHeroSlideCopy({ copy }: DesignHeroSlideCopyProps) {
   const useRichDesktopBody = looksLikeHeroBannerRichBody(desktopBody);
   const useRichMobileBody = looksLikeHeroBannerRichBody(mobileBody);
 
-  const desktopPlain = resolveDesignSubtitleDisplay(desktopBody);
-  const mobilePlain = resolveDesignSubtitleDisplay(mobileBody);
+  const desktopPlain = resolveDesignSubtitleDisplay(desktopBody, "desktop");
+  const mobilePlain = resolveDesignSubtitleDisplay(mobileBody, "mobile");
 
   const clusterClass = copy.heroTextLayoutMobile
     ? "power-banners-section3-text-cluster hidden w-full flex-col items-end gap-7 text-right text-[#121212] md:flex md:translate-y-0 md:items-start md:gap-8 md:text-left"

@@ -2,7 +2,6 @@ import type { CSSProperties, ReactNode } from "react";
 
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { hasCustomModelingTextLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
-import { resolveModelingSlotTitleForMobile } from "@/lib/modeling-slot-copy/resolve-modeling-slot-body-mobile";
 import { framingToCoverImageStyle } from "@/lib/site-media/image-framing";
 
 import { renderModelingCardDescriptionContent } from "./ModelingCardDescriptionContent";
@@ -72,7 +71,8 @@ export function ModelingCard({
   textLayoutDesktop = null,
   textLayoutMobile = null,
 }: ModelingCardProps) {
-  const usesRichDescription = Boolean(descriptionRichHtml?.trim());
+  const usesRichDescription =
+    Boolean(descriptionRichHtml?.trim()) || Boolean(descriptionRichHtmlMobile?.trim());
   const hasLines =
     Boolean(descriptionLines && descriptionLines.length > 0) && !usesRichDescription;
   const hipHopMobileLayout = mobileHipHopTypography && hasLines;
@@ -85,11 +85,7 @@ export function ModelingCard({
     (usesRichDescription ||
       (descriptionLinesMobile != null && descriptionLinesMobile.length > 0));
 
-  const titleMobileResolved = resolveModelingSlotTitleForMobile({
-    title,
-    titleMobile: titleMobile ?? "",
-  });
-  const hasDistinctTitleMobile = Boolean(titleMobile?.trim());
+  const titleMobileDisplay = (titleMobile ?? "").trim();
   const titleSplitMobileClass =
     imagePairBreakpoint === "md" ? "md:hidden" : "sm:hidden";
   const titleSplitDesktopClass =
@@ -137,25 +133,27 @@ export function ModelingCard({
     "[&_p:not(:last-child)]:mb-[0.45em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
 
   const desktopRichHtml = descriptionRichHtml?.trim() ?? "";
-  const mobileRichDistinct = descriptionRichHtmlMobile?.trim() ?? "";
-  const hasDistinctMobileRich = mobileRichDistinct.length > 0;
-  const mobileRichHtml = hasDistinctMobileRich ? mobileRichDistinct : desktopRichHtml;
+  const mobileRichHtmlOnly = descriptionRichHtmlMobile?.trim() ?? "";
 
   let descriptionContent: ReactNode;
   let portraitOverlayDescription: ReactNode | undefined;
 
-  if (usesRichDescription && desktopRichHtml) {
+  const hasAnyRichDescription = desktopRichHtml.length > 0 || mobileRichHtmlOnly.length > 0;
+
+  if (usesRichDescription && hasAnyRichDescription) {
     const richClassName = `modeling-slot-rich-body ${modelingRichBodyLayout} ${descriptionClassName}`;
-    const richDesktopNode = (
-      <HeroBannerBodyRichText body={desktopRichHtml} className={richClassName} />
-    );
-    const richMobileNode = (
-      <HeroBannerBodyRichText body={mobileRichHtml} className={richClassName} />
-    );
-    if (hasDistinctMobileRich && portraitMobileLayout) {
+    const richDesktopNode =
+      desktopRichHtml.length > 0 ? (
+        <HeroBannerBodyRichText body={desktopRichHtml} className={richClassName} />
+      ) : null;
+    const richMobileNode =
+      mobileRichHtmlOnly.length > 0 ? (
+        <HeroBannerBodyRichText body={mobileRichHtmlOnly} className={richClassName} />
+      ) : null;
+    if (portraitMobileLayout) {
       descriptionContent = richDesktopNode;
       portraitOverlayDescription = richMobileNode;
-    } else if (hasDistinctMobileRich && !portraitMobileLayout) {
+    } else if (richDesktopNode || richMobileNode) {
       const mobileVisible =
         imagePairBreakpoint === "md" ? "md:hidden" : "sm:hidden";
       const desktopVisible =
@@ -166,8 +164,6 @@ export function ModelingCard({
           <div className={desktopVisible}>{richDesktopNode}</div>
         </>
       );
-    } else {
-      descriptionContent = richDesktopNode;
     }
   } else {
     descriptionContent = renderModelingCardDescriptionContent({
@@ -259,15 +255,15 @@ export function ModelingCard({
 
   const customTextOverlay =
     usesRichDescription &&
-    desktopRichHtml.trim().length > 0 &&
-    hasCustomModelingTextLayout(textLayoutDesktop, textLayoutMobile)
+    hasCustomModelingTextLayout(textLayoutDesktop, textLayoutMobile) &&
+    (desktopRichHtml.length > 0 || mobileRichHtmlOnly.length > 0)
       ? {
           layoutDesktop: textLayoutDesktop!,
           layoutMobile: textLayoutMobile!,
           titleDesktop: title,
-          titleMobile: titleMobileResolved,
+          titleMobile: titleMobileDisplay,
           bodyDesktopHtml: desktopRichHtml,
-          bodyMobileHtml: mobileRichHtml,
+          bodyMobileHtml: mobileRichHtmlOnly,
           textDark: textDark ?? false,
         }
       : null;
@@ -276,8 +272,7 @@ export function ModelingCard({
     return (
       <ModelingCardFullBleed
         title={title}
-        titleMobileResolved={titleMobileResolved}
-        hasDistinctTitleMobile={hasDistinctTitleMobile}
+        titleMobileDisplay={titleMobileDisplay}
         titleSplitMobileClass={titleSplitMobileClass}
         titleSplitDesktopClass={titleSplitDesktopClass}
         imageSrc={imageSrc}

@@ -1,10 +1,11 @@
-import { POWER_BANNER_DEFAULT_COPY } from "@/lib/power-banner-copy/power-banner-defaults";
+import {
+  POWER_BANNER_DEFAULT_COPY,
+  POWER_BANNER_DEFAULT_MOBILE_COPY,
+} from "@/lib/power-banner-copy/power-banner-defaults";
 
 import {
   DESIGN_SUBTITLE_LINE1,
   DESIGN_SUBTITLE_LINE2,
-  MODELING_TITLE_MOBILE_LINE1,
-  MODELING_TITLE_MOBILE_LINE2,
   RENDERING_SUBTITLE_LINE1,
   RENDERING_SUBTITLE_LINE2,
   RENDERING_SUBTITLE_MOBILE_LINE1,
@@ -17,6 +18,7 @@ function normalizeForCompare(value: string): string {
   return value.trim().replace(/\s+/g, " ");
 }
 
+/** Mobile hero title lines — only persisted `mobileTitle` (no inference from desktop defaults). */
 export function resolveModelingTitleMobileLines(title: string): string[] {
   const trimmed = title.trim();
   if (trimmed.length === 0) {
@@ -27,9 +29,6 @@ export function resolveModelingTitleMobileLines(title: string): string[] {
       .split("\n")
       .map((line) => line.trim())
       .filter(Boolean);
-  }
-  if (trimmed === POWER_BANNER_DEFAULT_COPY.MODELING.title) {
-    return [MODELING_TITLE_MOBILE_LINE1, MODELING_TITLE_MOBILE_LINE2];
   }
   return [trimmed];
 }
@@ -45,56 +44,27 @@ export function resolveModelingTitleDesktop(title: string): string {
     : trimmed;
 }
 
-export function resolveModelingBodyDisplay(body: string): {
-  desktopParagraph: string;
-  mobileLines: string[];
-} {
-  const trimmed = body.trim();
-  if (
-    !trimmed.includes("\n") &&
-    normalizeForCompare(trimmed) ===
-      normalizeForCompare(POWER_BANNER_DEFAULT_COPY.MODELING.body)
-  ) {
-    return {
-      desktopParagraph: trimmed,
-      mobileLines: [
-        "Engineered for casting, printing and",
-        "precise stone setting. Every micron",
-        "accounted for.",
-      ],
-    };
-  }
-  const parts = trimmed
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-  if (parts.length === 0) {
-    return { desktopParagraph: "", mobileLines: [] };
-  }
-  if (parts.length === 1) {
-    return { desktopParagraph: parts[0], mobileLines: [parts[0]] };
-  }
-  return {
-    desktopParagraph: parts.join(" "),
-    mobileLines: parts,
-  };
-}
-
 /**
- * Jewelry Rendering — default copy keeps Figma line splits + nowrap; any custom text preserves
- * one block per line (same structure on mobile and desktop), matching Modeling’s intent.
+ * Jewelry Rendering — line splits for default copy are evaluated against the canonical string for
+ * each viewport (desktop vs mobile), so mobile text never inherits desktop-only layout rules.
  */
-export function resolveRenderingSubtitleDisplay(body: string): {
+export function resolveRenderingSubtitleDisplay(
+  body: string,
+  variant: "desktop" | "mobile",
+): {
   desktopLines: string[];
   mobileLines: string[];
   /** When true, use legacy nowrap rules tuned for default hero copy only. */
   useDefaultLineBreakLayout: boolean;
 } {
   const trimmed = body.trim();
+  const defaultBody =
+    variant === "desktop"
+      ? POWER_BANNER_DEFAULT_COPY.RENDERING.body
+      : POWER_BANNER_DEFAULT_MOBILE_COPY.RENDERING.body;
   if (
     !trimmed.includes("\n") &&
-    normalizeForCompare(trimmed) ===
-      normalizeForCompare(POWER_BANNER_DEFAULT_COPY.RENDERING.body)
+    normalizeForCompare(trimmed) === normalizeForCompare(defaultBody)
   ) {
     return {
       desktopLines: [RENDERING_SUBTITLE_LINE1, RENDERING_SUBTITLE_LINE2],
@@ -122,18 +92,24 @@ export function resolveRenderingSubtitleDisplay(body: string): {
 }
 
 /**
- * Jewelry Design — default copy uses two Figma lines; custom text uses one block per line
- * (no merging extra lines into a single paragraph).
+ * Jewelry Design — default copy uses two Figma lines when body matches the canonical string for
+ * that viewport (desktop vs mobile).
  */
-export function resolveDesignSubtitleDisplay(body: string): {
+export function resolveDesignSubtitleDisplay(
+  body: string,
+  variant: "desktop" | "mobile",
+): {
   lines: string[];
   useDefaultLineBreakLayout: boolean;
 } {
   const trimmed = body.trim();
+  const defaultBody =
+    variant === "desktop"
+      ? POWER_BANNER_DEFAULT_COPY.DESIGN.body
+      : POWER_BANNER_DEFAULT_MOBILE_COPY.DESIGN.body;
   if (
     !trimmed.includes("\n") &&
-    normalizeForCompare(trimmed) ===
-      normalizeForCompare(POWER_BANNER_DEFAULT_COPY.DESIGN.body)
+    normalizeForCompare(trimmed) === normalizeForCompare(defaultBody)
   ) {
     return {
       lines: [DESIGN_SUBTITLE_LINE1, DESIGN_SUBTITLE_LINE2],

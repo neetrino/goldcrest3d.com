@@ -17,8 +17,8 @@ export function RenderingHeroSubtitleLines({
   const useRichDesktop = looksLikeHeroBannerRichBody(desktopTrimmed);
   const useRichMobile = looksLikeHeroBannerRichBody(mobileTrimmed);
 
-  const desktopPlain = resolveRenderingSubtitleDisplay(desktopTrimmed);
-  const mobilePlain = resolveRenderingSubtitleDisplay(mobileTrimmed);
+  const desktopPlain = resolveRenderingSubtitleDisplay(desktopTrimmed, "desktop");
+  const mobilePlain = resolveRenderingSubtitleDisplay(mobileTrimmed, "mobile");
 
   return (
     <div

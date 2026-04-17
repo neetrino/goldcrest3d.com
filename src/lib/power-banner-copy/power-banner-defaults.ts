@@ -19,7 +19,7 @@ export const POWER_BANNER_DEFAULT_COPY: Record<
   },
 };
 
-/** Canonical mobile copy fallback used for initial/mobile defaults. */
+/** Canonical mobile hero copy when no DB row exists (bundled defaults only; not coupled to desktop saves). */
 export const POWER_BANNER_DEFAULT_MOBILE_COPY: Record<
   PowerBannerKey,
   { title: string; body: string }

@@ -75,8 +75,8 @@ export async function updateModelingSlotCopy(
   const bodyStored = finalizeHeroBannerBodyHtml(body);
 
   const bodyMobileStored =
-    bodyMobile.length > 0 ? finalizeHeroBannerBodyHtml(bodyMobile) : null;
-  const titleMobileStored = titleMobile.length > 0 ? titleMobile : null;
+    bodyMobile.length > 0 ? finalizeHeroBannerBodyHtml(bodyMobile) : "";
+  const titleMobileStored = titleMobile;
 
   let textLayoutDesktopParsed: ReturnType<typeof modelingTextOverlayLayoutSchema.parse> | null =
     null;
