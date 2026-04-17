@@ -93,8 +93,14 @@ export function buildDefaultManufacturingPayload(): ManufacturingPayload {
 }
 
 export const MODELING_DEFAULTS: ModelingPayload = {
-  sectionTitle: "Modeling Specialization",
-  cards: undefined,
+  desktop: {
+    sectionTitle: "Modeling Specialization",
+    cards: undefined,
+  },
+  mobile: {
+    sectionTitle: "Modeling Specialization",
+    cards: undefined,
+  },
 };
 
 export function getManagedHomeDefaults(): ManagedHomeBundle {

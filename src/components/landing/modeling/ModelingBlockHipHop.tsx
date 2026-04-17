@@ -1,8 +1,9 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
+import type { ModelingCardFields } from "@/lib/managed-home/managed-home-schemas";
 import { getModelingHipHopCardBackgroundStyle } from "./modeling-hiphop-background.constants";
 import { ModelingCard } from "./ModelingCard";
 
-/** Hip-Hop Jewelry — mobile: 4 տող (unchanged layout); desktop: 3 structured blocks. */
+/** Hip-Hop Jewelry — mobile: 4 lines; desktop: 3 structured blocks. */
 const HIPHOP_DESCRIPTION_LINE_1 =
   "High-mass, fully iced-out structures engineered for";
 const HIPHOP_DESCRIPTION_LINE_2 =
@@ -25,14 +26,14 @@ const HIPHOP_DESCRIPTION_LINES_DESKTOP = [
   "performance.",
 ];
 
+export type ModelingBlockViewport = "mobile" | "desktop";
+
 type ModelingBlockHipHopProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
-  managed?: {
-    title?: string;
-    descriptionLines?: string[];
-    descriptionLinesDesktop?: string[];
-  };
+  managed?: ModelingCardFields;
+  viewport: ModelingBlockViewport;
+  emulateMobileChrome?: boolean;
 };
 
 /** Hip-Hop Jewelry block — Figma background layer on image area. */
@@ -40,18 +41,23 @@ export function ModelingBlockHipHop({
   imageUrlDesktop,
   imageUrlMobile,
   managed,
+  viewport,
+  emulateMobileChrome = false,
 }: ModelingBlockHipHopProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   const title = managed?.title ?? "Hip-Hop Jewelry";
-  const lines = managed?.descriptionLines ?? [...HIPHOP_DESCRIPTION_LINES];
-  const linesDesktop =
-    managed?.descriptionLinesDesktop ?? [...HIPHOP_DESCRIPTION_LINES_DESKTOP];
+  const lines =
+    managed?.descriptionLines != null && managed.descriptionLines.length > 0
+      ? [...managed.descriptionLines]
+      : viewport === "mobile"
+        ? [...HIPHOP_DESCRIPTION_LINES]
+        : [...HIPHOP_DESCRIPTION_LINES_DESKTOP];
   return (
     <ModelingCard
       title={title}
       description=""
       descriptionLines={lines}
-      descriptionLinesDesktop={linesDesktop}
+      descriptionLinesDesktop={viewport === "desktop" ? lines : undefined}
       imageSrc={imageUrlDesktop}
       imageId={LANDING_IMAGE_IDS.MODELING_HIPHOP}
       imageOnLeft={false}
@@ -62,6 +68,8 @@ export function ModelingBlockHipHop({
       }
       imagePairBreakpoint="md"
       mobileHipHopTypography
+      hipHopSplitScope={viewport}
+      emulateMobileChrome={emulateMobileChrome}
     />
   );
 }

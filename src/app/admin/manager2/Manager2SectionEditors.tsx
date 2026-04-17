@@ -63,47 +63,6 @@ export function PhilosophyEditor({
   );
 }
 
-type ModelingEditorProps = {
-  value: ManagedHomeBundle["modeling"];
-  onChange: (v: ManagedHomeBundle["modeling"]) => void;
-  onSave: () => void;
-  pending: boolean;
-};
-
-export function ModelingEditor({
-  value,
-  onChange,
-  onSave,
-  pending,
-}: ModelingEditorProps) {
-  return (
-    <div className="space-y-3">
-      <label className="block text-sm">
-        Section title
-        <input
-          value={value.sectionTitle}
-          onChange={(e) =>
-            onChange({ ...value, sectionTitle: e.target.value })
-          }
-          className="mt-1 w-full rounded border border-slate-200 px-2 py-1 text-sm"
-        />
-      </label>
-      <p className="text-xs text-slate-500">
-        Card copy overrides for Hip-Hop, Bridal, and Portrait — use Media Manager for
-        images. Advanced JSON for all cards can be added via API later.
-      </p>
-      <button
-        type="button"
-        onClick={onSave}
-        disabled={pending}
-        className="rounded-lg bg-[#e2c481] px-4 py-2 text-sm font-semibold text-slate-900 disabled:opacity-60"
-      >
-        {pending ? "Saving…" : "Save modeling"}
-      </button>
-    </div>
-  );
-}
-
 type ManufacturingEditorProps = {
   value: ManagedHomeBundle["manufacturing"];
   onChange: (v: ManagedHomeBundle["manufacturing"]) => void;

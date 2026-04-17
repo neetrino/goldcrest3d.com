@@ -16,12 +16,12 @@ export const MODELING_CARD_MOBILE_WIDTH_PX = MODELING_MOBILE_ASPECT_WIDTH;
 export const MODELING_CARD_MOBILE_HEIGHT_PX = MODELING_MOBILE_ASPECT_HEIGHT;
 
 /**
- * Քարտի արտաքին frame — միայն max-sm.
- * Լայնությունը `w-full` — grid-ի սյունը ամբողջությամբ; բարձրությունը aspect-ից (Figma 360×259)։
- * sm+ — լրիվ լայնություն + 83/43։
+ * Card frame: mobile aspect in narrow containers; wide (container ≥640px) matches desktop 83/43.
+ * Uses the section `@container` (`.modeling-specialization-cq`) so Manager2 mobile preview matches
+ * a real phone even when the browser window is wide — `sm:` alone would wrongly use desktop layout.
  */
 export const MODELING_CARD_FRAME_MOBILE_CLASSES =
-  "mx-auto w-full max-w-full min-h-0 aspect-[360/259] sm:mx-0 sm:h-auto sm:w-full sm:aspect-[83/43]" as const;
+  "mx-auto w-full max-w-full min-h-0 aspect-[360/259] @min-[640px]:mx-0 @min-[640px]:h-auto @min-[640px]:w-full @min-[640px]:aspect-[83/43]" as const;
 
 /** Քարտը լրիվ լցնում է grid-ի սյունը — ավելի մեծ և ավելի մոտ իրար block-ներ։ */
 export function getModelingCardWidthStyle(): Pick<CSSProperties, "width"> {

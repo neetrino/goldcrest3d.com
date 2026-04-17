@@ -15,6 +15,7 @@ import {
   PORTRAIT_MOBILE_TITLE_FULL,
 } from "./modeling-card.typography-layout.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
+import { ModelingPlainText } from "./ModelingPlainText";
 
 export type ModelingCardFullBleedProps = Pick<
   ModelingCardProps,
@@ -41,13 +42,16 @@ export type ModelingCardFullBleedProps = Pick<
   | "titleMarginTopCompensate"
   | "descriptionMarginTop"
   | "descriptionLinesMobile"
+  | "portraitSplitScope"
 > & {
   textColor: string;
   hipHopMobileLayout: boolean;
   bridalMobileLayout: boolean;
   portraitMobileLayout: boolean;
+  portraitSplitScope: "full" | "mobile" | "desktop";
   imgMobileWrapperClass: string;
   imgDesktopWrapperClass: string;
+  emulateMobileChrome?: boolean;
   imageStyle: CSSProperties;
   overlayTextContainerClass: string;
   overlayTranslateClass: string;
@@ -89,8 +93,10 @@ export function ModelingCardFullBleed({
   hipHopMobileLayout,
   bridalMobileLayout,
   portraitMobileLayout,
+  portraitSplitScope,
   imgMobileWrapperClass,
   imgDesktopWrapperClass,
+  emulateMobileChrome = false,
   imageStyle,
   overlayTextContainerClass,
   overlayTranslateClass,
@@ -143,6 +149,24 @@ export function ModelingCardFullBleed({
       transformOrigin: "center bottom",
     };
   }, [hipHopMobileLayout, hipHopZoomCompensation, overlayTextContainerStyle]);
+
+  const overlayPaddingClass = emulateMobileChrome
+    ? "px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))]"
+    : "px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))]";
+
+  const nonIndependentOverlayClass = !independentTitleDescription
+    ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${
+        hipHopMobileLayout
+          ? emulateMobileChrome
+            ? "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] -translate-y-[calc(0.3rem*var(--ms,1))] text-center"
+            : "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] max-sm:translate-y-[calc(-0.3rem*var(--ms,1))] text-center sm:gap-[calc(1.5rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:pb-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(1.6rem*var(--ms,1))]"
+          : bridalMobileLayout
+            ? emulateMobileChrome
+              ? "justify-center !ml-0 !mt-0 translate-y-[calc(5rem*var(--ms,1))] gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] items-start text-left"
+              : "justify-center max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-[calc(5rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(13.5rem*var(--ms,1)),32vw)] sm:-translate-y-[min(calc(12rem*var(--ms,1)),28vh)] sm:items-end sm:text-right"
+            : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`
+      }`
+    : "";
 
   return (
     <article
@@ -202,13 +226,16 @@ export function ModelingCardFullBleed({
         ) : null}
       </div>
       <div
-        className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] max-sm:translate-y-[calc(-0.3rem*var(--ms,1))] text-center sm:gap-[calc(1.5rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:pb-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(1.6rem*var(--ms,1))]" : bridalMobileLayout ? "justify-center max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-[calc(5rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(13.5rem*var(--ms,1)),32vw)] sm:-translate-y-[min(calc(12rem*var(--ms,1)),28vh)] sm:items-end sm:text-right" : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
+        className={`absolute inset-0 z-10 ${overlayPaddingClass} ${textColor} ${nonIndependentOverlayClass}`}
         style={overlayTextStyleResolved}
       >
         {independentTitleDescription ? (
           portraitMobileLayout ? (
             <>
-              <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:hidden">
+              {portraitSplitScope !== "desktop" ? (
+              <div
+                className={`absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] ${emulateMobileChrome ? "" : "sm:hidden"}`}
+              >
                 <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
                   {title === PORTRAIT_MOBILE_TITLE_FULL ? (
                     <>
@@ -216,19 +243,21 @@ export function ModelingCardFullBleed({
                       <span className="block whitespace-nowrap">Jewelry</span>
                     </>
                   ) : (
-                    title
+                    <ModelingPlainText text={title} />
                   )}
                 </h3>
                 <div className={PORTRAIT_MOBILE_OVERLAY_DESC_CLASS}>
                   {descriptionLinesMobile!.map((line, i) => (
                     <span key={`portrait-mobile-${i}`} className="block">
-                      {line}
+                      {line.length === 0 ? "\u00A0" : line}
                     </span>
                   ))}
                 </div>
               </div>
+              ) : null}
+              {portraitSplitScope !== "mobile" ? (
               <div
-                className={`absolute inset-0 hidden sm:block ${desktopOverlayShiftClassName ?? ""}`}
+                className={`absolute inset-0 ${emulateMobileChrome ? "hidden" : "hidden sm:block"} ${desktopOverlayShiftClassName ?? ""}`}
               >
                 <div
                   className={`${textAlignClass}`}
@@ -239,7 +268,9 @@ export function ModelingCardFullBleed({
                     right: textAlign === "left" ? undefined : "8%",
                   }}
                 >
-                  <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>{title}</h3>
+                  <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>
+                    <ModelingPlainText text={title} />
+                  </h3>
                 </div>
                 <div
                   className={`max-w-[calc(407px*var(--ms,1))] ${descriptionBlockAlignClass}`}
@@ -260,6 +291,7 @@ export function ModelingCardFullBleed({
                   </DescriptionTag>
                 </div>
               </div>
+              ) : null}
             </>
           ) : (
             <>
@@ -272,7 +304,9 @@ export function ModelingCardFullBleed({
                   right: textAlign === "left" ? undefined : "8%",
                 }}
               >
-                <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>{title}</h3>
+                <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>
+                  <ModelingPlainText text={title} />
+                </h3>
               </div>
               <div
                 className={`max-w-[calc(407px*var(--ms,1))] ${descriptionBlockAlignClass}`}
@@ -297,16 +331,16 @@ export function ModelingCardFullBleed({
         ) : (
           <>
             <h3
-              className={`${titleClassNameResolved} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center translate-y-[calc(0.5rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+              className={`${titleClassNameResolved} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center translate-y-[calc(0.5rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? (emulateMobileChrome ? "!mr-0 !mt-[calc(0.5rem*var(--ms,1))] !self-start !text-left" : "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]") : ""}`}
               style={{
                 ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                 ...(titleMarginTop != null && { marginTop: titleMarginTop }),
               }}
             >
-              {title}
+              <ModelingPlainText text={title} />
             </h3>
             <DescriptionTag
-              className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:-mt-[calc(0.5rem*var(--ms,1))]" : ""}${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+              className={`${descriptionClassName}${hipHopMobileLayout ? (emulateMobileChrome ? " -mt-[calc(0.5rem*var(--ms,1))]" : " max-sm:-mt-[calc(0.5rem*var(--ms,1))]") : ""}${bridalMobileLayout ? (emulateMobileChrome ? " !-mt-[calc(0.5rem*var(--ms,1))] w-full" : " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]") : ""}`}
               style={
                 titleMarginTopCompensate && titleMarginTop != null
                   ? {

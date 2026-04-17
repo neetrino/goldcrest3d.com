@@ -7,7 +7,6 @@ import { saveManagedHomeSection } from "@/app/actions/managed-home";
 import { PowerBanners } from "@/components/landing/PowerBanners";
 import { SectionFounder } from "@/components/landing/SectionFounder";
 import { SectionManufacturing } from "@/components/landing/SectionManufacturing";
-import { SectionModeling } from "@/components/landing/SectionModeling";
 import { SectionPhilosophy } from "@/components/landing/SectionPhilosophy";
 import { SectionProcess } from "@/components/landing/SectionProcess";
 import { buildManufacturingItemsForDisplay } from "@/lib/managed-home/build-manufacturing-items";
@@ -15,14 +14,15 @@ import { MANAGED_HOME_SECTION_KEYS } from "@/lib/managed-home/managed-home-secti
 import type { ManagedHomeBundle } from "@/lib/managed-home/managed-home-schemas";
 import type { PowerBannerCopyBundle } from "@/lib/power-banner-copy/power-banner-copy.types";
 import type { LandingSiteMedia } from "@/lib/site-media/get-landing-site-media";
+import type { AdminModelingSlotRow } from "@/lib/site-media/get-site-media-admin";
 
 import { Manager2HeroPanel } from "./Manager2HeroPanel";
 import {
   FounderEditor,
   ManufacturingEditor,
-  ModelingEditor,
   PhilosophyEditor,
 } from "./Manager2SectionEditors";
+import { ModelingManager2Editor } from "./ModelingManager2Editor";
 import { ProcessEditor } from "./Manager2ProcessEditor";
 
 const TABS = [
@@ -38,15 +38,21 @@ type Manager2ClientProps = {
   initialManaged: ManagedHomeBundle;
   powerBannerCopy: PowerBannerCopyBundle;
   siteMedia: LandingSiteMedia;
+  modelingAdminSlots: AdminModelingSlotRow[];
 };
 
 export function Manager2Client({
   initialManaged,
   powerBannerCopy,
   siteMedia,
+  modelingAdminSlots,
 }: Manager2ClientProps) {
   const router = useRouter();
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("hero");
+  /** Matches Modeling editor + live preview so you see the copy you are editing. */
+  const [modelingViewport, setModelingViewport] = useState<
+    "desktop" | "mobile"
+  >("desktop");
   const [draft, setDraft] = useState<ManagedHomeBundle>(initialManaged);
   const [pending, startTransition] = useTransition();
   const [msg, setMsg] = useState<string | null>(null);
@@ -137,11 +143,14 @@ export function Manager2Client({
           ) : null}
 
           {tab === "modeling" ? (
-            <ModelingEditor
+            <ModelingManager2Editor
               value={draft.modeling}
               onChange={(next) => setDraft((d) => ({ ...d, modeling: next }))}
               onSave={() => saveSection(MANAGED_HOME_SECTION_KEYS.MODELING)}
               pending={pending}
+              modelingSlots={modelingAdminSlots}
+              viewport={modelingViewport}
+              onViewportChange={setModelingViewport}
             />
           ) : null}
 
@@ -181,7 +190,7 @@ export function Manager2Client({
           ) : null}
         </div>
 
-        <div className="min-w-0 space-y-4">
+        <div className="min-w-0 space-y-4 lg:sticky lg:top-4 lg:z-10 lg:self-start">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
             Live preview (same components as the site)
           </p>
@@ -198,10 +207,10 @@ export function Manager2Client({
               <SectionPhilosophy content={draft.philosophy} />
             ) : null}
             {tab === "modeling" ? (
-              <SectionModeling
-                modeling={siteMedia.modeling}
-                content={draft.modeling}
-              />
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+                Modeling preview and controls are now integrated directly inside each card on the
+                left.
+              </div>
             ) : null}
             {tab === "manufacturing" ? (
               <SectionManufacturing

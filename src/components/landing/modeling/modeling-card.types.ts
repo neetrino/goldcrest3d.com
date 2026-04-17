@@ -118,4 +118,16 @@ export type ModelingCardProps = {
   imageFillClassName?: string;
   /** With `imageSrcMobile`: `sm+` image `className` (e.g. `object-contain`). */
   imageFillClassNameDesktop?: string;
+  /**
+   * When the section renders separate mobile/desktop trees, limit Hip-Hop description markup
+   * to one viewport (avoids `sm`/`md` clashes inside a single card).
+   */
+  hipHopSplitScope?: "full" | "mobile" | "desktop";
+  bridalSplitScope?: "full" | "mobile" | "desktop";
+  portraitSplitScope?: "full" | "mobile" | "desktop";
+  /**
+   * Admin Manager2: browser window can be wide while showing the mobile CMS tree; forces
+   * mobile image layers and overlay breakpoints so preview matches a real phone.
+   */
+  emulateMobileChrome?: boolean;
 };

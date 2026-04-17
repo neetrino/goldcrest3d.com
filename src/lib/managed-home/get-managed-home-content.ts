@@ -11,12 +11,16 @@ import {
 import { MANAGED_HOME_SECTION_KEYS } from "./managed-home-section-keys";
 import {
   type ManagedHomeBundle,
+  type ModelingCardFields,
+  type ModelingCardsPayload,
   founderPayloadSchema,
+  legacyFlatModelingPayloadSchema,
   manufacturingPayloadSchema,
   modelingPayloadSchema,
   philosophyPayloadSchema,
   processPayloadSchema,
 } from "./managed-home-schemas";
+import { MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 
 function mergeManufacturingPayload(
   raw: unknown,
@@ -42,18 +46,172 @@ function mergeManufacturingPayload(
   };
 }
 
+const MODELING_SLOT_LIST = [
+  MODELING_SLOT_KEYS.HIP_HOP,
+  MODELING_SLOT_KEYS.BRIDAL,
+  MODELING_SLOT_KEYS.PORTRAIT,
+  MODELING_SLOT_KEYS.MECHANICAL,
+  MODELING_SLOT_KEYS.HERITAGE,
+  MODELING_SLOT_KEYS.HIGH_JEWELRY,
+] as const;
+
+function pickCardFields(
+  src: ModelingCardFields | undefined,
+): ModelingCardFields | undefined {
+  if (!src) return undefined;
+  const { title, titleLine1, titleLine2, descriptionLines } = src;
+  if (
+    title == null &&
+    titleLine1 == null &&
+    titleLine2 == null &&
+    (descriptionLines == null || descriptionLines.length === 0)
+  ) {
+    return undefined;
+  }
+  return { title, titleLine1, titleLine2, descriptionLines };
+}
+
+function mergeModelingCards(
+  incoming: ModelingCardsPayload | null | undefined,
+  fallback: ModelingCardsPayload | undefined,
+): ModelingCardsPayload | undefined {
+  const inc = incoming ?? undefined;
+  const merged: ModelingCardsPayload = {};
+  let any = false;
+  for (const key of MODELING_SLOT_LIST) {
+    const next = pickCardFields(inc?.[key]) ?? pickCardFields(fallback?.[key]);
+    if (next) {
+      merged[key] = next;
+      any = true;
+    }
+  }
+  return any ? merged : undefined;
+}
+
+function migrateLegacyFlatModeling(
+  raw: unknown,
+): ManagedHomeBundle["modeling"] | null {
+  const legacy = legacyFlatModelingPayloadSchema.safeParse(raw);
+  if (!legacy.success) {
+    return null;
+  }
+  const { sectionTitle, cards } = legacy.data;
+  if (!cards) {
+    return {
+      desktop: { sectionTitle, cards: undefined },
+      mobile: { sectionTitle, cards: undefined },
+    };
+  }
+
+  const desktopCards: ModelingCardsPayload = {};
+  const mobileCards: ModelingCardsPayload = {};
+
+  for (const key of MODELING_SLOT_LIST) {
+    const c = cards[key];
+    if (!c) continue;
+
+    const shared: ModelingCardFields = {
+      title: c.title,
+      titleLine1: c.titleLine1,
+      titleLine2: c.titleLine2,
+    };
+
+    const mobileLines =
+      c.descriptionLinesMobile && c.descriptionLinesMobile.length > 0
+        ? c.descriptionLinesMobile
+        : c.descriptionLines;
+    const desktopLines =
+      c.descriptionLinesDesktop && c.descriptionLinesDesktop.length > 0
+        ? c.descriptionLinesDesktop
+        : c.descriptionLines;
+
+    const hasMeta =
+      shared.title != null ||
+      shared.titleLine1 != null ||
+      shared.titleLine2 != null;
+
+    if (hasMeta || (mobileLines && mobileLines.length > 0)) {
+      mobileCards[key] = {
+        ...shared,
+        ...(mobileLines && mobileLines.length > 0
+          ? { descriptionLines: mobileLines }
+          : {}),
+      };
+    }
+
+    if (hasMeta || (desktopLines && desktopLines.length > 0)) {
+      desktopCards[key] = {
+        ...shared,
+        ...(desktopLines && desktopLines.length > 0
+          ? { descriptionLines: desktopLines }
+          : {}),
+      };
+    }
+  }
+
+  return {
+    desktop: {
+      sectionTitle,
+      cards:
+        Object.keys(desktopCards).length > 0 ? desktopCards : undefined,
+    },
+    mobile: {
+      sectionTitle,
+      cards: Object.keys(mobileCards).length > 0 ? mobileCards : undefined,
+    },
+  };
+}
+
 function mergeModelingPayload(
   raw: unknown,
   defaults: ManagedHomeBundle["modeling"],
 ): ManagedHomeBundle["modeling"] {
   const parsed = modelingPayloadSchema.safeParse(raw);
-  if (!parsed.success) {
-    return defaults;
+  if (parsed.success) {
+    const { desktop, mobile } = parsed.data;
+    return {
+      desktop: {
+        sectionTitle: desktop.sectionTitle.trim()
+          ? desktop.sectionTitle
+          : defaults.desktop.sectionTitle,
+        cards: mergeModelingCards(desktop.cards, defaults.desktop.cards),
+      },
+      mobile: {
+        sectionTitle: mobile.sectionTitle.trim()
+          ? mobile.sectionTitle
+          : defaults.mobile.sectionTitle,
+        cards: mergeModelingCards(mobile.cards, defaults.mobile.cards),
+      },
+    };
   }
-  return {
-    sectionTitle: parsed.data.sectionTitle,
-    cards: parsed.data.cards ?? defaults.cards,
-  };
+
+  const migrated = migrateLegacyFlatModeling(raw);
+  if (migrated) {
+    return {
+      desktop: {
+        sectionTitle: migrated.desktop.sectionTitle,
+        cards: mergeModelingCards(
+          migrated.desktop.cards,
+          defaults.desktop.cards,
+        ),
+      },
+      mobile: {
+        sectionTitle: migrated.mobile.sectionTitle,
+        cards: mergeModelingCards(
+          migrated.mobile.cards,
+          defaults.mobile.cards,
+        ),
+      },
+    };
+  }
+
+  if (raw != null) {
+    const failed = modelingPayloadSchema.safeParse(raw);
+    logger.info(
+      `mergeModelingPayload: invalid modeling JSON in DB, using defaults: ${JSON.stringify(failed.error?.issues ?? [])}`,
+    );
+  }
+  return defaults;
 }
 
 /**

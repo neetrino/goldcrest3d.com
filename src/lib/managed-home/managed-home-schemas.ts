@@ -24,7 +24,48 @@ export const manufacturingPayloadSchema = z.object({
 
 export type ManufacturingPayload = z.infer<typeof manufacturingPayloadSchema>;
 
-const modelingCardSchema = z.object({
+/** Per-viewport card copy (desktop and mobile are stored independently). */
+export const modelingCardSchema = z.object({
+  title: z.string().optional(),
+  /** Primary body lines for this viewport (line breaks preserved in layout). */
+  descriptionLines: z.array(z.string()).optional(),
+  titleLine1: z.string().optional(),
+  titleLine2: z.string().optional(),
+});
+
+export type ModelingCardFields = z.infer<typeof modelingCardSchema>;
+
+/** No `.strict()` — ignore unknown slot keys from older DB rows instead of failing the whole section. */
+const modelingCardsSchema = z.object({
+  [MODELING_SLOT_KEYS.HIP_HOP]: modelingCardSchema.optional(),
+  [MODELING_SLOT_KEYS.BRIDAL]: modelingCardSchema.optional(),
+  [MODELING_SLOT_KEYS.PORTRAIT]: modelingCardSchema.optional(),
+  [MODELING_SLOT_KEYS.MECHANICAL]: modelingCardSchema.optional(),
+  [MODELING_SLOT_KEYS.HERITAGE]: modelingCardSchema.optional(),
+  [MODELING_SLOT_KEYS.HIGH_JEWELRY]: modelingCardSchema.optional(),
+});
+
+export type ModelingCardsPayload = z.infer<typeof modelingCardsSchema>;
+
+export const modelingViewportPayloadSchema = z.object({
+  sectionTitle: z.string(),
+  /** Json `null` from DB must not invalidate the whole modeling payload. */
+  cards: modelingCardsSchema
+    .nullish()
+    .transform((c): ModelingCardsPayload | undefined => c ?? undefined),
+});
+
+export type ModelingViewportPayload = z.infer<typeof modelingViewportPayloadSchema>;
+
+export const modelingPayloadSchema = z.object({
+  desktop: modelingViewportPayloadSchema,
+  mobile: modelingViewportPayloadSchema,
+});
+
+export type ModelingPayload = z.infer<typeof modelingPayloadSchema>;
+
+/** Legacy flat shape (pre split desktop/mobile) — parsed only for migration. */
+const legacyModelingCardSchema = z.object({
   title: z.string().optional(),
   descriptionLines: z.array(z.string()).optional(),
   descriptionLinesDesktop: z.array(z.string()).optional(),
@@ -33,23 +74,19 @@ const modelingCardSchema = z.object({
   titleLine2: z.string().optional(),
 });
 
-const modelingCardsSchema = z
-  .object({
-    [MODELING_SLOT_KEYS.HIP_HOP]: modelingCardSchema.optional(),
-    [MODELING_SLOT_KEYS.BRIDAL]: modelingCardSchema.optional(),
-    [MODELING_SLOT_KEYS.PORTRAIT]: modelingCardSchema.optional(),
-    [MODELING_SLOT_KEYS.MECHANICAL]: modelingCardSchema.optional(),
-    [MODELING_SLOT_KEYS.HERITAGE]: modelingCardSchema.optional(),
-    [MODELING_SLOT_KEYS.HIGH_JEWELRY]: modelingCardSchema.optional(),
-  })
-  .strict();
-
-export const modelingPayloadSchema = z.object({
-  sectionTitle: z.string(),
-  cards: modelingCardsSchema.optional(),
+const legacyModelingCardsSchema = z.object({
+  [MODELING_SLOT_KEYS.HIP_HOP]: legacyModelingCardSchema.optional(),
+  [MODELING_SLOT_KEYS.BRIDAL]: legacyModelingCardSchema.optional(),
+  [MODELING_SLOT_KEYS.PORTRAIT]: legacyModelingCardSchema.optional(),
+  [MODELING_SLOT_KEYS.MECHANICAL]: legacyModelingCardSchema.optional(),
+  [MODELING_SLOT_KEYS.HERITAGE]: legacyModelingCardSchema.optional(),
+  [MODELING_SLOT_KEYS.HIGH_JEWELRY]: legacyModelingCardSchema.optional(),
 });
 
-export type ModelingPayload = z.infer<typeof modelingPayloadSchema>;
+export const legacyFlatModelingPayloadSchema = z.object({
+  sectionTitle: z.string(),
+  cards: legacyModelingCardsSchema.optional(),
+});
 
 export const philosophyPayloadSchema = z.object({
   goldcrest: z.string(),

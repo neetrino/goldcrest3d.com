@@ -1,14 +1,16 @@
 import { getManagedHomeBundle } from "@/lib/managed-home/get-managed-home-content";
 import { getPowerBannerCopyBundle } from "@/lib/power-banner-copy/get-power-banner-copy";
 import { getLandingSiteMedia } from "@/lib/site-media/get-landing-site-media";
+import { getSiteMediaAdminBundle } from "@/lib/site-media/get-site-media-admin";
 
 import { Manager2Client } from "./Manager2Client";
 
 export default async function AdminManager2Page() {
-  const [managedHome, powerBannerCopy, siteMedia] = await Promise.all([
+  const [managedHome, powerBannerCopy, siteMedia, mediaAdmin] = await Promise.all([
     getManagedHomeBundle(),
     getPowerBannerCopyBundle(),
     getLandingSiteMedia(),
+    getSiteMediaAdminBundle(),
   ]);
 
   return (
@@ -30,6 +32,7 @@ export default async function AdminManager2Page() {
         initialManaged={managedHome}
         powerBannerCopy={powerBannerCopy}
         siteMedia={siteMedia}
+        modelingAdminSlots={mediaAdmin.modeling}
       />
     </div>
   );

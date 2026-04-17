@@ -55,19 +55,33 @@ export function ModelingCard({
   mobileHipHopTypography = false,
   mobileBridalTypography = false,
   mobilePortraitTypography = false,
+  hipHopSplitScope = "full",
+  bridalSplitScope = "full",
+  portraitSplitScope = "full",
   imageFillClassName = "object-cover object-center",
   imageFillClassNameDesktop = "object-contain",
+  emulateMobileChrome = false,
 }: ModelingCardProps) {
   const hasLines = Boolean(descriptionLines && descriptionLines.length > 0);
   const hipHopMobileLayout = mobileHipHopTypography && hasLines;
   const bridalMobileLayout =
     mobileBridalTypography && hasLines && fluidTextLayout && descriptionLayout === "row";
   const portraitMobileLayout =
-    mobilePortraitTypography &&
-    hasLines &&
-    independentTitleDescription &&
-    descriptionLinesMobile != null &&
-    descriptionLinesMobile.length > 0;
+    portraitSplitScope === "desktop"
+      ? false
+      : portraitSplitScope === "mobile"
+        ? Boolean(
+            mobilePortraitTypography &&
+              hasLines &&
+              independentTitleDescription &&
+              descriptionLinesMobile != null &&
+              descriptionLinesMobile.length > 0,
+          )
+        : mobilePortraitTypography &&
+          hasLines &&
+          independentTitleDescription &&
+          descriptionLinesMobile != null &&
+          descriptionLinesMobile.length > 0;
   const textColor = textDark ? "text-black" : "text-white";
   const descriptionColor = textDark
     ? descriptionMuted
@@ -78,13 +92,19 @@ export function ModelingCard({
       : "text-white";
   const lineWrapClass = noDescriptionMaxWidth
     ? "leading-[calc(22px*var(--ms,1)*var(--mt,1))]"
-    : "leading-[calc(22px*var(--ms,1)*var(--mt,1))] whitespace-nowrap";
-  const hipHopMobileLineClass =
-    "block whitespace-normal leading-[calc(16px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
-  const hipHopMobileLineSingleLineClass =
-    "block max-sm:whitespace-nowrap leading-[calc(16px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
+    : emulateMobileChrome
+      ? "leading-[calc(22px*var(--ms,1)*var(--mt,1))] whitespace-pre-line"
+      : "leading-[calc(22px*var(--ms,1)*var(--mt,1))] whitespace-nowrap";
+  const hipHopMobileLineClass = emulateMobileChrome
+    ? "block whitespace-normal leading-[calc(16px*var(--ms,1)*var(--mt,1))]"
+    : "block whitespace-normal leading-[calc(16px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
+  const hipHopMobileLineSingleLineClass = emulateMobileChrome
+    ? "block whitespace-nowrap leading-[calc(16px*var(--ms,1)*var(--mt,1))]"
+    : "block max-sm:whitespace-nowrap leading-[calc(16px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
   const bridalRowWrapperClass = bridalMobileLayout
-    ? "flex w-full flex-col items-end gap-2 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-4 sm:gap-y-1"
+    ? emulateMobileChrome
+      ? "flex w-full flex-col items-end gap-2"
+      : "flex w-full flex-col items-end gap-2 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-4 sm:gap-y-1"
     : "flex flex-wrap items-baseline gap-x-4 gap-y-1";
   const bridalRowSpanClass = bridalMobileLayout
     ? "max-sm:!m-0 max-sm:!translate-x-0 max-sm:block max-sm:w-[calc(291px*var(--ms,1))] max-sm:max-w-full max-sm:text-left max-sm:font-sans max-sm:text-[calc(12px*var(--ms,1)*var(--mt,1))] max-sm:font-light max-sm:!leading-[calc(1rem*var(--ms,1)*var(--mt,1))] max-sm:text-[#364153] sm:inline"
@@ -101,6 +121,8 @@ export function ModelingCard({
     firstDescriptionLineMarginRight,
     firstDescriptionLineTranslateX,
     secondDescriptionLineTranslateX,
+    hipHopSplitScope,
+    bridalSplitScope,
     hasLines,
     hipHopMobileLayout,
     bridalMobileLayout,
@@ -110,6 +132,7 @@ export function ModelingCard({
     bridalRowWrapperClass,
     bridalRowSpanClass,
     bridalRowSpanClassDesktop,
+    emulateMobileChrome,
   });
 
   const DescriptionTag = hasLines ? "div" : "p";
@@ -119,13 +142,29 @@ export function ModelingCard({
       : "text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))]";
   const titleClassName = `font-manrope ${titleSizeClass} ${titleBold ? "font-bold" : "font-extrabold"} ${textColor}`;
   const titleClassNameResolved = hipHopMobileLayout
-    ? `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] ${textColor} sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-left sm:tracking-normal ${titleBold ? "sm:font-bold" : "sm:font-extrabold"}`
+    ? hipHopSplitScope === "mobile" || emulateMobileChrome
+      ? `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] ${textColor}`
+      : hipHopSplitScope === "desktop"
+        ? `font-manrope text-[calc(32px*var(--ms,1)*var(--mt,1))] leading-[calc(24px*var(--ms,1)*var(--mt,1))] scale-x-105 origin-left tracking-normal ${titleBold ? "font-bold" : "font-extrabold"} ${textColor}`
+        : `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] ${textColor} sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-left sm:tracking-normal ${titleBold ? "sm:font-bold" : "sm:font-extrabold"}`
     : bridalMobileLayout
-      ? `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-left sm:tracking-normal ${titleBold ? "sm:font-bold" : "sm:font-extrabold"} sm:text-black`
+      ? bridalSplitScope === "mobile" || emulateMobileChrome
+        ? `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black`
+        : bridalSplitScope === "desktop"
+          ? `font-manrope text-[calc(32px*var(--ms,1)*var(--mt,1))] leading-[calc(24px*var(--ms,1)*var(--mt,1))] scale-x-105 origin-left tracking-normal ${titleBold ? "font-bold" : "font-extrabold"} text-black`
+          : `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-left sm:tracking-normal ${titleBold ? "sm:font-bold" : "sm:font-extrabold"} sm:text-black`
       : titleClassName;
   const descriptionClassName = hipHopMobileLayout
-    ? `font-sans w-full text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(16px*var(--ms,1)*var(--mt,1))] text-center sm:max-w-[calc(560px*var(--ms,1))] sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-center ${descriptionColor}`
-    : `font-manrope font-light ${hasLines ? `text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] ${noDescriptionMaxWidth ? "" : "max-w-[calc(560px*var(--ms,1))]"}` : "text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] max-w-[calc(407px*var(--ms,1))]"} ${descriptionColor}`;
+    ? hipHopSplitScope === "mobile" || emulateMobileChrome
+      ? `font-sans w-full text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(16px*var(--ms,1)*var(--mt,1))] text-center ${descriptionColor}`
+      : hipHopSplitScope === "desktop"
+        ? `font-manrope w-full max-w-[calc(560px*var(--ms,1))] text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-center ${descriptionColor}`
+        : `font-sans w-full text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(16px*var(--ms,1)*var(--mt,1))] text-center sm:max-w-[calc(560px*var(--ms,1))] sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-center ${descriptionColor}`
+    : bridalMobileLayout && (bridalSplitScope === "mobile" || emulateMobileChrome)
+      ? `font-sans w-full text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153]`
+      : bridalMobileLayout && bridalSplitScope === "desktop"
+        ? `font-manrope font-light text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] ${noDescriptionMaxWidth ? "" : "max-w-[calc(560px*var(--ms,1))]"} text-black`
+        : `font-manrope font-light ${hasLines ? `text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] ${noDescriptionMaxWidth ? "" : "max-w-[calc(560px*var(--ms,1))]"}` : "text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] max-w-[calc(407px*var(--ms,1))]"} ${descriptionColor}`;
   const descriptionClassNameGradient = `font-manrope font-light text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] ${descriptionColor}`;
   const imageStyle = { objectPosition: imagePosition };
   const imgMobileWrapperClass =
@@ -136,6 +175,12 @@ export function ModelingCard({
     imagePairBreakpoint === "md"
       ? "absolute inset-0 hidden md:block"
       : "absolute inset-0 hidden sm:block";
+  const imgMobileWrapperClassResolved = emulateMobileChrome
+    ? "absolute inset-0 block"
+    : imgMobileWrapperClass;
+  const imgDesktopWrapperClassResolved = emulateMobileChrome
+    ? "absolute inset-0 hidden"
+    : imgDesktopWrapperClass;
   const textAlignClass =
     textAlign === "center"
       ? "text-center"
@@ -213,8 +258,10 @@ export function ModelingCard({
         hipHopMobileLayout={hipHopMobileLayout}
         bridalMobileLayout={bridalMobileLayout}
         portraitMobileLayout={portraitMobileLayout}
-        imgMobileWrapperClass={imgMobileWrapperClass}
-        imgDesktopWrapperClass={imgDesktopWrapperClass}
+        portraitSplitScope={portraitSplitScope}
+        emulateMobileChrome={emulateMobileChrome}
+        imgMobileWrapperClass={imgMobileWrapperClassResolved}
+        imgDesktopWrapperClass={imgDesktopWrapperClassResolved}
         imageStyle={imageStyle}
         overlayTextContainerClass={overlayTextContainerClass}
         overlayTranslateClass={overlayTranslateClass}
