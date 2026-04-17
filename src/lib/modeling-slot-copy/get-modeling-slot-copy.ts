@@ -8,7 +8,6 @@ import type { ModelingSlotKey } from "@/lib/site-media/site-media.registry";
 
 import { defaultModelingSlotCopyBundle } from "./modeling-slot-copy-defaults";
 import type { ModelingSlotCopyBundle } from "./modeling-slot-copy.types";
-import { parseModelingTextOverlayLayout } from "./modeling-text-overlay-layout";
 
 function getModelingSlotCopyDelegate(): {
   findMany: () => Promise<
@@ -18,8 +17,6 @@ function getModelingSlotCopyDelegate(): {
       titleMobile: string | null;
       body: string;
       bodyMobile: string | null;
-      textLayoutDesktop: unknown | null;
-      textLayoutMobile: unknown | null;
     }[]
   >;
 } | null {
@@ -33,8 +30,6 @@ function getModelingSlotCopyDelegate(): {
             titleMobile: string | null;
             body: string;
             bodyMobile: string | null;
-            textLayoutDesktop: unknown | null;
-            textLayoutMobile: unknown | null;
           }[]
         >;
       };
@@ -64,8 +59,6 @@ export async function getModelingSlotCopyBundle(): Promise<ModelingSlotCopyBundl
     titleMobile: string | null;
     body: string;
     bodyMobile: string | null;
-    textLayoutDesktop: unknown | null;
-    textLayoutMobile: unknown | null;
   }[];
   try {
     rows = await withPrismaConnectionRetry(prisma, () => delegate.findMany());
@@ -88,8 +81,6 @@ export async function getModelingSlotCopyBundle(): Promise<ModelingSlotCopyBundl
         titleMobile: row.titleMobile ?? "",
         body: row.body,
         bodyMobile: row.bodyMobile ?? "",
-        textLayoutDesktop: parseModelingTextOverlayLayout(row.textLayoutDesktop),
-        textLayoutMobile: parseModelingTextOverlayLayout(row.textLayoutMobile),
       };
     }
   }

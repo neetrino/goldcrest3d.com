@@ -14,8 +14,6 @@ import {
   PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS,
   PORTRAIT_MOBILE_TITLE_FULL,
 } from "./modeling-card.typography-layout.constants";
-import type { ModelingSlotCustomTextOverlayProps } from "./ModelingSlotCustomTextOverlay";
-import { ModelingSlotCustomTextOverlay } from "./ModelingSlotCustomTextOverlay";
 import type { ModelingCardProps } from "./modeling-card.types";
 
 function ModelingCardTitleLines({ title }: { title: string }) {
@@ -23,10 +21,36 @@ function ModelingCardTitleLines({ title }: { title: string }) {
     return title;
   }
   return title.split(/\r?\n/).map((line, i) => (
-    <span key={`modeling-title-line-${i}`} className="block">
+    <span key={`modeling-title-line-${i}`} className="block whitespace-pre">
       {line}
     </span>
   ));
+}
+
+type TitlePositionModel = {
+  text: string;
+  offsetStyle: CSSProperties | undefined;
+};
+
+function getTitlePositionModel(raw: string): TitlePositionModel {
+  const normalized = raw.replace(/\r\n/g, "\n");
+  const leadingNewlines = (normalized.match(/^\n+/)?.[0].length ?? 0);
+  const withoutLeadingNewlines = normalized.slice(leadingNewlines);
+  const leadingSpaces = (withoutLeadingNewlines.match(/^ +/)?.[0].length ?? 0);
+  const text = withoutLeadingNewlines.slice(leadingSpaces);
+
+  if (leadingNewlines === 0 && leadingSpaces === 0) {
+    return { text: normalized, offsetStyle: undefined };
+  }
+  return {
+    text,
+    // Relative offsets keep Description layout stable while Title moves visually.
+    offsetStyle: {
+      position: "relative",
+      top: `calc(${leadingNewlines} * 0.62em * var(--ms,1))`,
+      left: `calc(${leadingSpaces} * 0.33em * var(--ms,1))`,
+    },
+  };
 }
 
 export type ModelingCardFullBleedProps = Pick<
@@ -80,8 +104,6 @@ export type ModelingCardFullBleedProps = Pick<
   titleSplitDesktopClass: string;
   DescriptionTag: "div" | "p";
   usesRichDescription: boolean;
-  /** When set, replaces the legacy overlay (both viewports use saved layouts from Admin). */
-  customTextOverlay?: ModelingSlotCustomTextOverlayProps | null;
 };
 
 export function ModelingCardFullBleed({
@@ -131,8 +153,12 @@ export function ModelingCardFullBleed({
   titleSplitDesktopClass,
   DescriptionTag,
   usesRichDescription,
-  customTextOverlay = null,
 }: ModelingCardFullBleedProps) {
+  const desktopTitleModel = useMemo(() => getTitlePositionModel(title), [title]);
+  const mobileTitleModel = useMemo(
+    () => getTitlePositionModel(titleMobileDisplay),
+    [titleMobileDisplay],
+  );
   const [hipHopZoomCompensation, setHipHopZoomCompensation] = useState(1);
 
   useEffect(() => {
@@ -231,9 +257,6 @@ export function ModelingCardFullBleed({
           )
         ) : null}
       </div>
-      {customTextOverlay ? (
-        <ModelingSlotCustomTextOverlay {...customTextOverlay} />
-      ) : (
       <div
         className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] max-sm:translate-y-[calc(-0.3rem*var(--ms,1))] text-center sm:gap-[calc(1.5rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:pb-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(1.6rem*var(--ms,1))]" : bridalMobileLayout ? "justify-center max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-[calc(5rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(13.5rem*var(--ms,1)),32vw)] sm:-translate-y-[min(calc(12rem*var(--ms,1)),28vh)] sm:items-end sm:text-right" : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
         style={overlayTextStyleResolved}
@@ -244,7 +267,7 @@ export function ModelingCardFullBleed({
               <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:hidden">
                 <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
                   {usesRichDescription ? (
-                    <ModelingCardTitleLines title={titleMobileDisplay} />
+                    <ModelingCardTitleLines title={mobileTitleModel.text} />
                   ) : titleMobileDisplay === PORTRAIT_MOBILE_TITLE_FULL ? (
                     <>
                       <span className="block whitespace-nowrap">3D Portrait</span>
@@ -284,8 +307,11 @@ export function ModelingCardFullBleed({
                     right: textAlign === "left" ? undefined : "8%",
                   }}
                 >
-                  <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>
-                    <ModelingCardTitleLines title={title} />
+                  <h3
+                    className={`${titleClassName} whitespace-pre ${titleShiftClassName ?? ""}`}
+                    style={desktopTitleModel.offsetStyle}
+                  >
+                    <ModelingCardTitleLines title={desktopTitleModel.text} />
                   </h3>
                 </div>
                 <div
@@ -319,8 +345,11 @@ export function ModelingCardFullBleed({
                   right: textAlign === "left" ? undefined : "8%",
                 }}
               >
-                <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>
-                  <ModelingCardTitleLines title={titleMobileDisplay} />
+                <h3
+                  className={`${titleClassName} whitespace-pre ${titleShiftClassName ?? ""}`}
+                  style={mobileTitleModel.offsetStyle}
+                >
+                  <ModelingCardTitleLines title={mobileTitleModel.text} />
                 </h3>
               </div>
               <div
@@ -332,8 +361,11 @@ export function ModelingCardFullBleed({
                   right: textAlign === "left" ? undefined : "8%",
                 }}
               >
-                <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>
-                  <ModelingCardTitleLines title={title} />
+                <h3
+                  className={`${titleClassName} whitespace-pre ${titleShiftClassName ?? ""}`}
+                  style={desktopTitleModel.offsetStyle}
+                >
+                  <ModelingCardTitleLines title={desktopTitleModel.text} />
                 </h3>
               </div>
               <div
@@ -359,22 +391,24 @@ export function ModelingCardFullBleed({
         ) : (
           <>
             <h3
-              className={`${titleClassNameResolved} ${titleSplitMobileClass} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center translate-y-[calc(0.5rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+              className={`${titleClassNameResolved} whitespace-pre ${titleSplitMobileClass} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center translate-y-[calc(0.5rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
               style={{
                 ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                 ...(titleMarginTop != null && { marginTop: titleMarginTop }),
+                ...(mobileTitleModel.offsetStyle ?? {}),
               }}
             >
-              <ModelingCardTitleLines title={titleMobileDisplay} />
+              <ModelingCardTitleLines title={mobileTitleModel.text} />
             </h3>
             <h3
-              className={`${titleClassNameResolved} ${titleSplitDesktopClass} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center translate-y-[calc(0.5rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+              className={`${titleClassNameResolved} whitespace-pre ${titleSplitDesktopClass} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center translate-y-[calc(0.5rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
               style={{
                 ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                 ...(titleMarginTop != null && { marginTop: titleMarginTop }),
+                ...(desktopTitleModel.offsetStyle ?? {}),
               }}
             >
-              <ModelingCardTitleLines title={title} />
+              <ModelingCardTitleLines title={desktopTitleModel.text} />
             </h3>
             <DescriptionTag
               className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:-mt-[calc(0.5rem*var(--ms,1))]" : ""}${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
@@ -396,7 +430,6 @@ export function ModelingCardFullBleed({
           </>
         )}
       </div>
-      )}
     </article>
   );
 }

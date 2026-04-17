@@ -40,16 +40,6 @@ export function parseModelingTextOverlayLayout(
   return parsed.success ? parsed.data : null;
 }
 
-/**
- * Custom overlay mode applies only when both breakpoints have a saved layout (matches live site).
- */
-export function hasCustomModelingTextLayout(
-  desktop: ModelingTextOverlayLayout | null | undefined,
-  mobile: ModelingTextOverlayLayout | null | undefined,
-): boolean {
-  return desktop != null && mobile != null;
-}
-
 export function clampModelingTextOverlayLayout(
   layout: ModelingTextOverlayLayout,
 ): ModelingTextOverlayLayout {

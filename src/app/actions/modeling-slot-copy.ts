@@ -7,7 +7,6 @@ import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
-import { modelingTextOverlayLayoutSchema } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import { modelingSlotCopyFormSchema } from "@/lib/validations/modelingSlotCopy";
 
 export type ModelingSlotCopyActionResult =
@@ -39,81 +38,49 @@ export async function updateModelingSlotCopy(
 
   const parsed = modelingSlotCopyFormSchema.safeParse({
     slotKey: formData.get("slotKey"),
+    variant: formData.get("variant"),
     title: formData.get("title"),
-    titleMobile: formData.get("titleMobile") ?? "",
     body: formData.get("body"),
-    bodyMobile: formData.get("bodyMobile") ?? "",
-    useCustomTextLayout: formData.get("useCustomTextLayout") ?? "0",
-    textLayoutDesktop: formData.get("textLayoutDesktop") ?? "",
-    textLayoutMobile: formData.get("textLayoutMobile") ?? "",
   });
 
   if (!parsed.success) {
     const first = parsed.error.flatten().fieldErrors;
     const msg =
       first.slotKey?.[0] ??
+      first.variant?.[0] ??
       first.title?.[0] ??
-      first.titleMobile?.[0] ??
       first.body?.[0] ??
-      first.bodyMobile?.[0] ??
-      first.textLayoutDesktop?.[0] ??
-      first.textLayoutMobile?.[0] ??
       "Invalid input.";
     return { ok: false, error: msg };
   }
 
-  const {
-    slotKey,
-    title,
-    titleMobile,
-    body,
-    bodyMobile,
-    useCustomTextLayout,
-    textLayoutDesktop: textLayoutDesktopRaw,
-    textLayoutMobile: textLayoutMobileRaw,
-  } = parsed.data;
+  const { slotKey, variant, title, body } = parsed.data;
   const bodyStored = finalizeHeroBannerBodyHtml(body);
-
-  const bodyMobileStored =
-    bodyMobile.length > 0 ? finalizeHeroBannerBodyHtml(bodyMobile) : "";
-  const titleMobileStored = titleMobile;
-
-  let textLayoutDesktopParsed: ReturnType<typeof modelingTextOverlayLayoutSchema.parse> | null =
-    null;
-  let textLayoutMobileParsed: ReturnType<typeof modelingTextOverlayLayoutSchema.parse> | null =
-    null;
-  if (useCustomTextLayout === "1") {
-    try {
-      textLayoutDesktopParsed = modelingTextOverlayLayoutSchema.parse(
-        JSON.parse(textLayoutDesktopRaw) as unknown,
-      );
-      textLayoutMobileParsed = modelingTextOverlayLayoutSchema.parse(
-        JSON.parse(textLayoutMobileRaw) as unknown,
-      );
-    } catch {
-      return { ok: false, error: "Could not parse text layout. Try again." };
-    }
-  }
 
   try {
     await prisma.modelingSlotCopy.upsert({
       where: { slotKey },
       create: {
         slotKey,
-        title,
-        titleMobile: titleMobileStored,
-        body: bodyStored,
-        bodyMobile: bodyMobileStored,
-        textLayoutDesktop: textLayoutDesktopParsed ?? Prisma.DbNull,
-        textLayoutMobile: textLayoutMobileParsed ?? Prisma.DbNull,
+        title: variant === "desktop" ? title : "",
+        titleMobile: variant === "mobile" ? title : "",
+        body: variant === "desktop" ? bodyStored : "",
+        bodyMobile: variant === "mobile" ? bodyStored : "",
+        textLayoutDesktop: Prisma.DbNull,
+        textLayoutMobile: Prisma.DbNull,
       },
       update: {
-        title,
-        titleMobile: titleMobileStored,
-        body: bodyStored,
-        bodyMobile: bodyMobileStored,
-        textLayoutDesktop: textLayoutDesktopParsed ?? Prisma.DbNull,
-        textLayoutMobile: textLayoutMobileParsed ?? Prisma.DbNull,
+        ...(variant === "desktop"
+          ? {
+              title,
+              body: bodyStored,
+            }
+          : {
+              titleMobile: title,
+              bodyMobile: bodyStored,
+            }),
+        textLayoutDesktop: Prisma.DbNull,
+        textLayoutMobile: Prisma.DbNull,
       },
     } as Parameters<typeof prisma.modelingSlotCopy.upsert>[0]);
   } catch (err) {

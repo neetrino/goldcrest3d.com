@@ -43,8 +43,6 @@ export function ModelingBlockHipHop({
           : getModelingHipHopCardBackgroundStyle(imageUrlMobile, imageFramingMobile)
       }
       imagePairBreakpoint="md"
-      textLayoutDesktop={copy.textLayoutDesktop}
-      textLayoutMobile={copy.textLayoutMobile}
     />
   );
 }

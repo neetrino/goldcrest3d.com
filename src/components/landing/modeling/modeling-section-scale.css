@@ -30,3 +30,13 @@
 .modeling-specialization-card-text-scale {
   --mt: 1.04;
 }
+
+/**
+ * Modeling rich description should stay on one line per manual paragraph break.
+ * Prevent automatic line wrapping so admin preview and live site match.
+ */
+.modeling-slot-rich-body,
+.modeling-slot-rich-body p,
+.modeling-slot-rich-body li {
+  white-space: nowrap;
+}

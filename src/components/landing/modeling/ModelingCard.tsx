@@ -1,7 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
-import { hasCustomModelingTextLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import { framingToCoverImageStyle } from "@/lib/site-media/image-framing";
 
 import { renderModelingCardDescriptionContent } from "./ModelingCardDescriptionContent";
@@ -68,8 +67,6 @@ export function ModelingCard({
   imageFillClassNameDesktop = "object-contain",
   imageFramingDesktop,
   imageFramingMobile,
-  textLayoutDesktop = null,
-  textLayoutMobile = null,
 }: ModelingCardProps) {
   const usesRichDescription =
     Boolean(descriptionRichHtml?.trim()) || Boolean(descriptionRichHtmlMobile?.trim());
@@ -85,7 +82,7 @@ export function ModelingCard({
     (usesRichDescription ||
       (descriptionLinesMobile != null && descriptionLinesMobile.length > 0));
 
-  const titleMobileDisplay = (titleMobile ?? "").trim();
+  const titleMobileDisplay = titleMobile ?? "";
   const titleSplitMobileClass =
     imagePairBreakpoint === "md" ? "md:hidden" : "sm:hidden";
   const titleSplitDesktopClass =
@@ -253,21 +250,6 @@ export function ModelingCard({
       ? "translate-x-[calc(1.5rem*var(--ms,1))] translate-y-[calc(6rem*var(--ms,1))]"
       : "";
 
-  const customTextOverlay =
-    usesRichDescription &&
-    hasCustomModelingTextLayout(textLayoutDesktop, textLayoutMobile) &&
-    (desktopRichHtml.length > 0 || mobileRichHtmlOnly.length > 0)
-      ? {
-          layoutDesktop: textLayoutDesktop!,
-          layoutMobile: textLayoutMobile!,
-          titleDesktop: title,
-          titleMobile: titleMobileDisplay,
-          bodyDesktopHtml: desktopRichHtml,
-          bodyMobileHtml: mobileRichHtmlOnly,
-          textDark: textDark ?? false,
-        }
-      : null;
-
   if (!gradient) {
     return (
       <ModelingCardFullBleed
@@ -317,7 +299,6 @@ export function ModelingCard({
         portraitOverlayDescription={portraitOverlayDescription}
         DescriptionTag={DescriptionTag}
         usesRichDescription={usesRichDescription}
-        customTextOverlay={customTextOverlay}
       />
     );
   }

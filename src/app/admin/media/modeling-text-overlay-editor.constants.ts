@@ -5,7 +5,7 @@ import { MODELING_SPECIALIZATION_CARD_TEXT_MT } from "@/lib/modeling-slot-copy/m
 /**
  * Admin visual editor: lock `--ms` to 1 (below `sm` on the site it is 1; desktop baseline uses 1 in editor).
  * Set `--mt` to the same value as `.modeling-specialization-card-text-scale` so overlay font sizes and
- * layout match `ModelingSlotCustomTextOverlay` on the homepage.
+ * layout match the public-facing overlay rendering.
  */
 export const MODELING_TEXT_OVERLAY_EDITOR_CANVAS_CSS_VARS: CSSProperties = {
   ["--ms" as string]: "1",
@@ -20,7 +20,7 @@ export const MODELING_TEXT_OVERLAY_BODY_FONT_MAX_PX = 72;
 
 /**
  * Keyboard / fine nudge step as a fraction of the overlay coordinate space (0–100%).
- * Matches `ModelingSlotCustomTextOverlay` percentage positioning.
+ * Matches the shared overlay percentage positioning.
  */
 export const MODELING_TEXT_OVERLAY_EDITOR_NUDGE_PCT = 0.25;
 

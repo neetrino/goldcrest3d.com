@@ -17,9 +17,15 @@ import { ImageFramingEditor } from "./ImageFramingEditor";
 
 type ModelingSlotPreviewProps = {
   row: AdminModelingSlotRow;
+  onEditDesktopCopy?: () => void;
+  onEditMobileCopy?: () => void;
 };
 
-export function ModelingSlotPreview({ row }: ModelingSlotPreviewProps) {
+export function ModelingSlotPreview({
+  row,
+  onEditDesktopCopy,
+  onEditMobileCopy,
+}: ModelingSlotPreviewProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-gradient-to-b from-slate-50 to-slate-100/80 shadow-inner">
       <div className="grid grid-cols-1 gap-px bg-slate-200 sm:grid-cols-2">
@@ -28,6 +34,8 @@ export function ModelingSlotPreview({ row }: ModelingSlotPreviewProps) {
           url={row.displayUrl}
           emptyMessage="No desktop image — default asset on site"
           framing={row.desktopFraming}
+          onEdit={onEditDesktopCopy}
+          editLabel={`Edit desktop title and description for ${row.label}`}
         />
         <PreviewPane
           label="Mobile preview"
@@ -39,8 +47,15 @@ export function ModelingSlotPreview({ row }: ModelingSlotPreviewProps) {
           }
           isFallback={!row.displayUrlMobile && Boolean(row.displayUrl)}
           framing={row.displayUrlMobile ? row.mobileFraming : row.desktopFraming}
+          onEdit={onEditMobileCopy}
+          editLabel={`Edit mobile title and description for ${row.label}`}
         />
       </div>
+      {(onEditDesktopCopy || onEditMobileCopy) ? (
+        <div className="border-t border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600">
+          Click Desktop preview to edit desktop copy, or Mobile preview to edit mobile copy
+        </div>
+      ) : null}
       {row.itemId && row.displayUrl ? (
         <section
           aria-label={`${MODELING_DESKTOP_FRAME_POSITION_LABEL} — ${row.label}`}
@@ -90,11 +105,21 @@ type PreviewPaneProps = {
   emptyMessage: string;
   isFallback?: boolean;
   framing: ImageFraming | null;
+  onEdit?: () => void;
+  editLabel?: string;
 };
 
-function PreviewPane({ label, url, emptyMessage, isFallback, framing }: PreviewPaneProps) {
-  return (
-    <div className="bg-gradient-to-b from-slate-50 to-slate-100/80">
+function PreviewPane({
+  label,
+  url,
+  emptyMessage,
+  isFallback,
+  framing,
+  onEdit,
+  editLabel,
+}: PreviewPaneProps) {
+  const content = (
+    <>
       <p className="border-b border-slate-200/80 bg-white/90 px-3 py-1.5 text-[11px] font-medium uppercase tracking-wide text-slate-600">
         {label}
         {isFallback ? (
@@ -119,6 +144,25 @@ function PreviewPane({ label, url, emptyMessage, isFallback, framing }: PreviewP
           </div>
         )}
       </div>
+    </>
+  );
+
+  if (onEdit) {
+    return (
+      <button
+        type="button"
+        onClick={onEdit}
+        aria-label={editLabel}
+        className="group bg-gradient-to-b from-slate-50 to-slate-100/80 text-left transition hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e2c481] focus-visible:ring-inset"
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <div className="bg-gradient-to-b from-slate-50 to-slate-100/80">
+      {content}
     </div>
   );
 }
