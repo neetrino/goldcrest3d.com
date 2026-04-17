@@ -25,20 +25,39 @@ const BRIDAL_DESCRIPTION_LINES_MOBILE = [
 type ModelingBlockBridalProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  managed?: {
+    title?: string;
+    descriptionLines?: string[];
+    descriptionLinesDesktop?: string[];
+    descriptionLinesMobile?: string[];
+  };
 };
 
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
 export function ModelingBlockBridal({
   imageUrlDesktop,
   imageUrlMobile,
+  managed,
 }: ModelingBlockBridalProps) {
   return (
     <ModelingCard
-      title="Bridal & Engagement"
+      title={managed?.title ?? "Bridal & Engagement"}
       description=""
-      descriptionLines={[...BRIDAL_DESCRIPTION_LINES]}
-      descriptionLinesDesktop={[...BRIDAL_DESCRIPTION_LINES_DESKTOP]}
-      descriptionLinesMobile={[...BRIDAL_DESCRIPTION_LINES_MOBILE]}
+      descriptionLines={
+        managed?.descriptionLines?.length
+          ? [...managed.descriptionLines]
+          : [...BRIDAL_DESCRIPTION_LINES]
+      }
+      descriptionLinesDesktop={
+        managed?.descriptionLinesDesktop?.length
+          ? [...managed.descriptionLinesDesktop]
+          : [...BRIDAL_DESCRIPTION_LINES_DESKTOP]
+      }
+      descriptionLinesMobile={
+        managed?.descriptionLinesMobile?.length
+          ? [...managed.descriptionLinesMobile]
+          : [...BRIDAL_DESCRIPTION_LINES_MOBILE]
+      }
       imageSrc={imageUrlDesktop}
       imageSrcMobile={imageUrlMobile}
       imagePairBreakpoint="md"

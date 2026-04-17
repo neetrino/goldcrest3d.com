@@ -2,23 +2,25 @@
 
 import { Fragment } from "react";
 import { LANDING_SECTION_IDS } from "@/constants";
-import { LANDING_IMAGES } from "@/constants/landing-assets";
 import type { PowerBannerCopyBundle } from "@/lib/power-banner-copy/power-banner-copy.types";
+import type { LandingSiteMedia } from "@/lib/site-media/get-landing-site-media";
+import { HERO_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 import { DesignHeroSlide } from "@/components/landing/power-banners/DesignHeroSlide";
 import { ModelingHeroSlide } from "@/components/landing/power-banners/ModelingHeroSlide";
 import { RenderingHeroSlide } from "@/components/landing/power-banners/RenderingHeroSlide";
 
 const HERO_SLIDES = [
-  { id: "modeling" as const, desktopBg: LANDING_IMAGES.heroModeling },
-  { id: "rendering" as const, desktopBg: LANDING_IMAGES.heroRendering },
-  { id: "design" as const, desktopBg: LANDING_IMAGES.heroDesign },
+  { id: "modeling" as const, slot: HERO_SLOT_KEYS.MODELING },
+  { id: "rendering" as const, slot: HERO_SLOT_KEYS.RENDERING },
+  { id: "design" as const, slot: HERO_SLOT_KEYS.DESIGN },
 ];
 
 type PowerBannersProps = {
   powerBannerCopy: PowerBannerCopyBundle;
+  hero: LandingSiteMedia["hero"];
 };
 
-export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
+export function PowerBanners({ powerBannerCopy, hero }: PowerBannersProps) {
   return (
     <section
       id={LANDING_SECTION_IDS.HERO}
@@ -42,17 +44,23 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
             )}
             {slide.id === "modeling" ? (
               <ModelingHeroSlide
-                desktopBgSrc={slide.desktopBg}
+                desktopBgSrc={hero[slide.slot].desktop}
+                mobileBgSrc={hero[slide.slot].mobile}
+                layoutMeta={hero[slide.slot].layoutMeta}
                 copy={powerBannerCopy.MODELING}
               />
             ) : slide.id === "rendering" ? (
               <RenderingHeroSlide
-                desktopBgSrc={slide.desktopBg}
+                desktopBgSrc={hero[slide.slot].desktop}
+                mobileBgSrc={hero[slide.slot].mobile}
+                layoutMeta={hero[slide.slot].layoutMeta}
                 copy={powerBannerCopy.RENDERING}
               />
             ) : (
               <DesignHeroSlide
-                desktopBgSrc={slide.desktopBg}
+                desktopBgSrc={hero[slide.slot].desktop}
+                mobileBgSrc={hero[slide.slot].mobile}
+                layoutMeta={hero[slide.slot].layoutMeta}
                 copy={powerBannerCopy.DESIGN}
               />
             )}

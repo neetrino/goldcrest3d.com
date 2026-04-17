@@ -126,3 +126,10 @@ model PowerBannerCopy {
   body      String   @db.Text
   updatedAt DateTime @updatedAt
 }
+
+/// Homepage section JSON payloads — Admin Manager2 (philosophy, modeling copy, manufacturing, founder, process).
+model ManagedHomeContent {
+  sectionKey String   @id
+  payload    Json
+  updatedAt  DateTime @updatedAt
+}

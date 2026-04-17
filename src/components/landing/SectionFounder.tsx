@@ -1,11 +1,13 @@
+import type { CSSProperties } from "react";
 import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
-import { LANDING_IMAGES } from "@/constants/landing-assets";
+import type { FounderPayload } from "@/lib/managed-home/managed-home-schemas";
+import type { FounderPhotoResolvedMedia } from "@/lib/site-media/get-landing-site-media";
+import { parseImageFrameLayout } from "@/lib/site-media/visual-layout-meta";
 import Image from "next/image";
 
 const FOUNDER_STAT_NUMBER_CLASS_DEFAULT =
   "font-black leading-[32px] text-[#0f172a] text-[24px] md:text-[28px]";
 
-/** Mobile founder bio — Figma widths (px) */
 const FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS = {
   p1: "max-w-[331px] min-[430px]:max-md:max-w-full",
   p2: "max-w-[342px] min-[430px]:max-md:max-w-full",
@@ -16,23 +18,12 @@ const FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS = {
 const FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS =
   "w-full font-sans text-base font-light italic leading-6 tracking-[-0.312px] text-black/80 break-words";
 
-const FOUNDER_BIO_MOBILE_P1 = `With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and stone setting, the studio is built on practical manufacturing knowledge — not theory.`;
-
-const FOUNDER_BIO_MOBILE_P2 = `Direct experience at the bench provides a deep understanding of structural behavior, stone security, tolerances and real-world production limitations.`;
-
-const FOUNDER_BIO_MOBILE_P3 = `Every design decision is informed by how the piece will be cast, set, assembled and worn. Each project is personally reviewed, calibrated and validated before delivery.`;
-
-const FOUNDER_BIO_MOBILE_P4 = `No model leaves the studio without structural verification. Jewelry is approached as a system — where design, engineering and craftsmanship must align with precision․`;
-
-/** Tablet-ում մի քիչ աջ, desktop-ում պահում ենք նախորդ ձախ տեղաշարժը */
 const FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS =
   "md:max-lg:-translate-x-0 lg:-translate-x-24";
 
-/** Outer section shell — baseline unchanged below `xl`; larger insets + footprint on wide desktops */
 const FOUNDER_SECTION_WRAPPER_CLASS =
   "-mt-8 bg-[#f8f7f6] px-4 pt-0 pb-12 md:-mt-12 md:px-6 md:pt-0 md:pb-16 xl:px-10 xl:pb-20 2xl:px-14 2xl:pb-28";
 
-/** Founder գրադարան — lg (1024px) կոմպակտ, xl-ից վեր՝ լայն դեսքտոփ */
 const FOUNDER_GRADIENT_PANEL_CLASS =
   "relative mx-auto flex h-[431.867px] min-h-0 w-full max-w-full shrink-0 flex-col self-stretch overflow-hidden rounded-none bg-[linear-gradient(100deg,#D9D9D9_12.7%,#C69F58_67.88%,#FFDDA0_81.27%,#D9AA54_92.63%)] min-[430px]:max-md:h-[500px] md:mt-[88px] md:h-[560px] md:max-lg:h-auto md:w-full md:max-w-[1440px] md:shrink md:flex-row md:self-auto lg:mt-10 lg:h-[560px] xl:mt-[88px] xl:h-[680px]";
 
@@ -49,55 +40,67 @@ const FOUNDER_DESKTOP_STATS_SECTION_CLASS =
 
 type FounderBioContentDesktopProps = {
   contentTopClassName: string;
+  block1: string;
+  block2: string;
 };
 
-function FounderBioContentDesktop({ contentTopClassName }: FounderBioContentDesktopProps) {
+function FounderBioContentDesktop({
+  contentTopClassName,
+  block1,
+  block2,
+}: FounderBioContentDesktopProps) {
   return (
     <div
       className={`space-y-3 font-light italic leading-[22px] text-black text-[14px] md:max-lg:text-[clamp(13px,1.6vw,14px)] md:max-lg:leading-[clamp(20px,2.3vw,22px)] lg:space-y-2.5 xl:space-y-4 ${contentTopClassName}`}
     >
-      <p className="whitespace-pre-wrap break-words">{`With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and
-stone setting, the studio is built on practical manufacturing knowledge — not theory.
-Direct experience at the bench provides a deep understanding of structural behavior, stone
-security, tolerances and real-world production limitations.`}</p>
-      <p className="mt-8 whitespace-pre-wrap break-words sm:mt-10 lg:mt-5 xl:mt-10">{`Every design decision is informed by how the piece will be cast, set, assembled and worn. Each
-project is personally reviewed, calibrated and validated before delivery.
-No model leaves the studio without structural verification. Jewelry is approached as a system — 
-where design, engineering and craftsmanship must align with precision․`}</p>
+      <p className="whitespace-pre-wrap break-words">{block1}</p>
+      <p className="mt-8 whitespace-pre-wrap break-words sm:mt-10 lg:mt-5 xl:mt-10">
+        {block2}
+      </p>
     </div>
   );
 }
 
 type FounderBioContentMobileProps = {
   contentTopClassName: string;
+  paragraphs: string[];
 };
 
-
-function FounderBioContentMobile({ contentTopClassName }: FounderBioContentMobileProps) {
+function FounderBioContentMobile({
+  contentTopClassName,
+  paragraphs,
+}: FounderBioContentMobileProps) {
+  const [p1, p2, p3, p4] = paragraphs;
+  const widthClasses = [
+    FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p1,
+    FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p2,
+    FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p3,
+    FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p4,
+  ];
   return (
     <div className={contentTopClassName}>
       <div className="space-y-4">
         <p
-          className={`${FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p1} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
+          className={`${widthClasses[0]} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
         >
-          {FOUNDER_BIO_MOBILE_P1}
+          {p1}
         </p>
         <p
-          className={`${FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p2} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
+          className={`${widthClasses[1]} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
         >
-          {FOUNDER_BIO_MOBILE_P2}
+          {p2}
         </p>
       </div>
       <div className="mt-8 space-y-4">
         <p
-          className={`${FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p3} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
+          className={`${widthClasses[2]} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
         >
-          {FOUNDER_BIO_MOBILE_P3}
+          {p3}
         </p>
         <p
-          className={`${FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p4} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
+          className={`${widthClasses[3]} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
         >
-          {FOUNDER_BIO_MOBILE_P4}
+          {p4}
         </p>
       </div>
     </div>
@@ -111,6 +114,7 @@ type FounderBioAndStatsProps = {
   statsFirst?: boolean;
   statNumberClassName?: string;
   useMobileBioTypography?: boolean;
+  content: FounderPayload;
 };
 
 function FounderBioAndStats({
@@ -120,24 +124,30 @@ function FounderBioAndStats({
   statsFirst = false,
   statNumberClassName = FOUNDER_STAT_NUMBER_CLASS_DEFAULT,
   useMobileBioTypography = false,
+  content,
 }: FounderBioAndStatsProps) {
   const statsBlock = (
     <div className={statsSectionClassName}>
-      <div>
-        <p className={statNumberClassName}>16+</p>
-        <p className={statCaptionClassName}>Years Experience</p>
-      </div>
-      <div>
-        <p className={statNumberClassName}>2.5k+</p>
-        <p className={statCaptionClassName}>Projects Delivered</p>
-      </div>
+      {content.stats.map((s) => (
+        <div key={s.label}>
+          <p className={statNumberClassName}>{s.value}</p>
+          <p className={statCaptionClassName}>{s.label}</p>
+        </div>
+      ))}
     </div>
   );
 
   const bioBlock = useMobileBioTypography ? (
-    <FounderBioContentMobile contentTopClassName={contentTopClassName} />
+    <FounderBioContentMobile
+      contentTopClassName={contentTopClassName}
+      paragraphs={content.bioMobileParagraphs}
+    />
   ) : (
-    <FounderBioContentDesktop contentTopClassName={contentTopClassName} />
+    <FounderBioContentDesktop
+      contentTopClassName={contentTopClassName}
+      block1={content.bioDesktopBlock1}
+      block2={content.bioDesktopBlock2}
+    />
   );
 
   if (statsFirst) {
@@ -157,7 +167,20 @@ function FounderBioAndStats({
   );
 }
 
-export function SectionFounder() {
+type SectionFounderProps = {
+  content: FounderPayload;
+  founderPhoto: FounderPhotoResolvedMedia;
+};
+
+export function SectionFounder({ content, founderPhoto }: SectionFounderProps) {
+  const frame = parseImageFrameLayout(founderPhoto.layoutMeta);
+  const founderImageStyle: CSSProperties | undefined = frame
+    ? {
+        transform: `translate(${frame.offsetX}px, ${frame.offsetY}px) scale(${frame.scale})`,
+        transformOrigin: "center center",
+      }
+    : undefined;
+
   return (
     <section
       id={LANDING_SECTION_IDS.FOUNDER}
@@ -169,31 +192,31 @@ export function SectionFounder() {
           id="founder-heading"
           className="mt-8 -translate-y-3 text-center font-sans text-2xl font-medium leading-8 tracking-[0.07px] text-black md:mt-12 md:translate-y-0 md:text-left md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px]"
         >
-          Founder & Lead CAD Engineer
+          {content.sectionHeading}
         </h2>
         <h3 className="-mt-2 mb-3 text-center font-sans text-[30px] font-black leading-[36px] tracking-[0.396px] text-black md:hidden">
-          Davit Sargsyan
+          {content.name}
         </h3>
         <div className={FOUNDER_GRADIENT_PANEL_CLASS}>
           <div className={FOUNDER_DESKTOP_TEXT_COLUMN_CLASS}>
-            <h3 className={FOUNDER_DESKTOP_HEADING_CLASS}>
-              Davit Sargsyan
-            </h3>
+            <h3 className={FOUNDER_DESKTOP_HEADING_CLASS}>{content.name}</h3>
             <FounderBioAndStats
+              content={content}
               statCaptionClassName="font-bold uppercase tracking-[1.4px] text-white text-[12px] md:text-[13px]"
               contentTopClassName={FOUNDER_DESKTOP_BIO_TOP_MARGIN_CLASS}
               statsSectionClassName={FOUNDER_DESKTOP_STATS_SECTION_CLASS}
             />
           </div>
           <div
-            className="relative min-h-0 w-full flex-1 md:aspect-auto md:h-auto md:max-w-[440px] lg:max-w-[493px] md:min-h-0 md:flex-none md:shrink-0"
+            className="relative min-h-0 w-full flex-1 overflow-hidden md:aspect-auto md:h-auto md:max-w-[440px] lg:max-w-[493px] md:min-h-0 md:flex-none md:shrink-0"
             data-landing-image={LANDING_IMAGE_IDS.FOUNDER_PHOTO}
           >
             <Image
-              src={LANDING_IMAGES.founder}
-              alt="Davit Sargsyan"
+              src={founderPhoto.src}
+              alt={content.name}
               fill
               className={`object-cover object-center min-[430px]:max-md:object-contain min-[430px]:max-md:object-bottom ${FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS}`}
+              style={founderImageStyle}
               sizes="(max-width: 768px) 100vw, 493px"
               unoptimized
             />
@@ -201,6 +224,7 @@ export function SectionFounder() {
         </div>
         <div className="mt-6 md:hidden">
           <FounderBioAndStats
+            content={content}
             statsFirst
             useMobileBioTypography
             statNumberClassName="font-black leading-[32px] text-black text-[24px]"

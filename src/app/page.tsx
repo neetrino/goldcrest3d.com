@@ -1,12 +1,14 @@
 import { LandingNav } from "@/components/landing/LandingNav";
 import { LandingSections } from "@/components/landing/LandingSections";
+import { getManagedHomeBundle } from "@/lib/managed-home/get-managed-home-content";
 import { getPowerBannerCopyBundle } from "@/lib/power-banner-copy/get-power-banner-copy";
 import { getLandingSiteMedia } from "@/lib/site-media/get-landing-site-media";
 
 export default async function Home() {
-  const [siteMedia, powerBannerCopy] = await Promise.all([
+  const [siteMedia, powerBannerCopy, managedHome] = await Promise.all([
     getLandingSiteMedia(),
     getPowerBannerCopyBundle(),
+    getManagedHomeBundle(),
   ]);
   return (
     <>
@@ -15,6 +17,7 @@ export default async function Home() {
         <LandingSections
           siteMedia={siteMedia}
           powerBannerCopy={powerBannerCopy}
+          managedHome={managedHome}
         />
       </main>
     </>

@@ -5,17 +5,28 @@ import { DesignHeroSlideCopy } from "./DesignHeroSlideCopy";
 
 type DesignHeroSlideProps = {
   desktopBgSrc: string;
+  mobileBgSrc?: string;
+  layoutMeta?: unknown | null;
   copy: PowerBannerCopyEntry;
 };
 
-export function DesignHeroSlide({ desktopBgSrc, copy }: DesignHeroSlideProps) {
+export function DesignHeroSlide({
+  desktopBgSrc,
+  mobileBgSrc,
+  layoutMeta,
+  copy,
+}: DesignHeroSlideProps) {
   return (
     <div
       className="power-banners-section3-block relative overflow-hidden"
       data-landing-image={LANDING_IMAGE_IDS.HERO_DESIGN}
     >
-      <DesignHeroSlideBackgrounds desktopBgSrc={desktopBgSrc} />
-      <DesignHeroSlideCopy copy={copy} />
+      <DesignHeroSlideBackgrounds
+        desktopBgSrc={desktopBgSrc}
+        mobileBgSrc={mobileBgSrc}
+        layoutMeta={layoutMeta}
+      />
+      <DesignHeroSlideCopy copy={copy} layoutMeta={layoutMeta} />
     </div>
   );
 }

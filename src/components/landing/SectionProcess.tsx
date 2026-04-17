@@ -1,4 +1,5 @@
 import { LANDING_SECTION_IDS } from "@/constants";
+import type { ProcessPayload } from "@/lib/managed-home/managed-home-schemas";
 
 /**
  * Mobile: Inter 24/32, 277px wide, tracking 1.27px.
@@ -17,40 +18,11 @@ const PROCESS_STEP_TITLE_CLASS =
 const PROCESS_STEP_DESC_CLASS =
   "max-w-[331px] font-sans text-sm font-light leading-5 tracking-[-0.15px] text-[#4A5565] md:max-w-none md:font-manrope md:text-[16px] md:font-light md:leading-[1.45] md:tracking-normal md:text-[rgba(24,22,16,0.6)] lg:text-[15px]";
 
-const STEPS: Array<{ num: string; title: string; description: string }> = [
-  {
-    num: "01",
-    title: "Concept Review",
-    description:
-      "Client vision, references and technical requirements are evaluated. Feasibility and structural considerations assessed before quotation.",
-  },
-  {
-    num: "02",
-    title: "Quotation & Prepayment",
-    description:
-      "Project scope defined and pricing confirmed. Modeling begins upon agreed prepayment.",
-  },
-  {
-    num: "03",
-    title: "Progress Review",
-    description:
-      "Half-ready or structurally defined model presented for evaluation. Adjustments discussed and aligned before finalization.",
-  },
-  {
-    num: "04",
-    title: "Final Model Presentation",
-    description:
-      "Completed production-ready model delivered for approval. All structural and dimensional aspects calibrated and verified.",
-  },
-  {
-    num: "05",
-    title: "Final Payment & File Release",
-    description:
-      "Upon final payment, calibrated manufacturing files are delivered for production.",
-  },
-];
+type SectionProcessProps = {
+  content: ProcessPayload;
+};
 
-export function SectionProcess() {
+export function SectionProcess({ content }: SectionProcessProps) {
   return (
     <section
       id={LANDING_SECTION_IDS.PROCESS}
@@ -59,10 +31,10 @@ export function SectionProcess() {
     >
       <div className="mx-auto max-w-[1400px] px-0">
         <h2 id="process-heading" className={PROCESS_HEADING_CLASS}>
-          Our Engineering Process
+          {content.heading}
         </h2>
         <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-6 lg:mt-12">
-          {STEPS.map((step) => (
+          {content.steps.map((step) => (
             <div
               key={step.num}
               className="flex min-w-0 flex-col space-y-4 lg:space-y-3"

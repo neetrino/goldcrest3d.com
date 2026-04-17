@@ -125,6 +125,28 @@ function formatUnreadBadgeLabel(n: number): string {
   return n > INBOX_UNREAD_BADGE_CAP ? "99+" : String(n);
 }
 
+/** Layout / CMS — stacked layers icon */
+function IconNavManager({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width={ADMIN_NAV_ITEM_ICON_SIZE_PX}
+      height={ADMIN_NAV_ITEM_ICON_SIZE_PX}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" />
+      <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" />
+      <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" />
+    </svg>
+  );
+}
+
 const NAV_ITEMS: readonly {
   href: string;
   label: string;
@@ -134,6 +156,7 @@ const NAV_ITEMS: readonly {
   { href: "/admin/leads", label: "Inbox/Leads", Icon: IconNavInbox, showBadge: true },
   { href: "/admin/orders", label: "Orders", Icon: IconNavOrders, showBadge: false },
   { href: "/admin/media", label: "Media Manager", Icon: IconNavMedia, showBadge: false },
+  { href: "/admin/manager2", label: "Admin Manager2", Icon: IconNavManager, showBadge: false },
 ];
 
 type AdminSidebarProps = {

@@ -6,8 +6,13 @@ import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { siteMediaItem } from "@/lib/site-media/site-media-prisma";
 import {
+  FOUNDER_SLOT_KEYS,
+  MANUFACTURING_DETAIL_SLOT_KEYS,
+  ORDERED_HERO_SLOT_KEYS,
   SITE_MEDIA_GROUP_KEYS,
   MODELING_SLOT_KEYS,
+  type HeroSlotKey,
+  type ManufacturingDetailSlotKey,
   type ModelingSlotKey,
   type SiteMediaGroupKey,
 } from "@/lib/site-media/site-media.registry";
@@ -19,6 +24,48 @@ import {
 import { validateSiteMediaImage } from "@/lib/validations/siteMediaImage";
 
 const MODELING_SLOT_SET = new Set<string>(Object.values(MODELING_SLOT_KEYS));
+
+const HERO_SLOT_SET = new Set<string>(ORDERED_HERO_SLOT_KEYS);
+
+const MANUFACTURING_SLOT_SET = new Set<string>(MANUFACTURING_DETAIL_SLOT_KEYS);
+
+function heroSortOrder(slotId: string): number {
+  const i = ORDERED_HERO_SLOT_KEYS.indexOf(slotId as HeroSlotKey);
+  return i >= 0 ? i : 0;
+}
+
+function manufacturingSortOrder(slotId: string): number {
+  const i = MANUFACTURING_DETAIL_SLOT_KEYS.indexOf(
+    slotId as ManufacturingDetailSlotKey,
+  );
+  return i >= 0 ? i : 0;
+}
+
+function sectionKeyForManagedSlot(slotId: string): SiteMediaGroupKey | null {
+  if (HERO_SLOT_SET.has(slotId)) {
+    return SITE_MEDIA_GROUP_KEYS.HERO;
+  }
+  if (slotId === FOUNDER_SLOT_KEYS.PHOTO) {
+    return SITE_MEDIA_GROUP_KEYS.FOUNDER;
+  }
+  if (MANUFACTURING_SLOT_SET.has(slotId)) {
+    return SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE;
+  }
+  return null;
+}
+
+function sortOrderForManagedSlot(slotId: string): number {
+  if (HERO_SLOT_SET.has(slotId)) {
+    return heroSortOrder(slotId);
+  }
+  if (slotId === FOUNDER_SLOT_KEYS.PHOTO) {
+    return 0;
+  }
+  if (MANUFACTURING_SLOT_SET.has(slotId)) {
+    return manufacturingSortOrder(slotId);
+  }
+  return 0;
+}
 
 export type ModelingSlotImageVariant = "desktop" | "mobile";
 
@@ -287,6 +334,218 @@ export async function reorderOrderedGallery(
   } catch (e) {
     logger.error("reorderOrderedGallery", e);
     return { ok: false, error: "Could not save order." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function upsertHeroSlotImage(
+  slotKey: string,
+  variant: ModelingSlotImageVariant,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  if (!HERO_SLOT_SET.has(slotKey)) {
+    return { ok: false, error: "Invalid hero slot." };
+  }
+  if (variant !== "desktop" && variant !== "mobile") {
+    return { ok: false, error: "Invalid variant." };
+  }
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Choose an image file." };
+  }
+  const err = validateSiteMediaImage(file);
+  if (err) return { ok: false, error: err };
+
+  const isDesktop = variant === "desktop";
+  const newKey = isDesktop
+    ? await uploadSiteMediaToR2(file)
+    : await uploadModelingMobileImageToR2(file);
+  if (!newKey) {
+    return {
+      ok: false,
+      error: isDesktop
+        ? "Upload failed. Check R2 configuration."
+        : "Upload failed. The image could not be processed or R2 is misconfigured.",
+    };
+  }
+
+  const typedSlot = slotKey as HeroSlotKey;
+  try {
+    const existing = await siteMediaItem.findUnique({
+      where: { slotId: typedSlot },
+    });
+
+    if (existing) {
+      const oldKey = isDesktop ? existing.r2ObjectKey : existing.r2ObjectKeyMobile;
+      if (oldKey) {
+        await deleteObjectFromR2(oldKey);
+      }
+      await siteMediaItem.update({
+        where: { id: existing.id },
+        data: isDesktop
+          ? { r2ObjectKey: newKey }
+          : { r2ObjectKeyMobile: newKey },
+      });
+    } else {
+      await siteMediaItem.create({
+        data: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.HERO,
+          slotId: typedSlot,
+          sortOrder: heroSortOrder(typedSlot),
+          r2ObjectKey: isDesktop ? newKey : null,
+          r2ObjectKeyMobile: isDesktop ? null : newKey,
+        },
+      });
+    }
+  } catch (e) {
+    logger.error("upsertHeroSlotImage", e);
+    await deleteObjectFromR2(newKey);
+    return { ok: false, error: "Could not save metadata." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function upsertFounderPortraitImage(
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Choose an image file." };
+  }
+  const err = validateSiteMediaImage(file);
+  if (err) return { ok: false, error: err };
+
+  const newKey = await uploadSiteMediaToR2(file);
+  if (!newKey) {
+    return { ok: false, error: "Upload failed. Check R2 configuration." };
+  }
+
+  const slotId = FOUNDER_SLOT_KEYS.PHOTO;
+  try {
+    const existing = await siteMediaItem.findUnique({ where: { slotId } });
+    if (existing?.r2ObjectKey) {
+      await deleteObjectFromR2(existing.r2ObjectKey);
+    }
+    if (existing) {
+      await siteMediaItem.update({
+        where: { id: existing.id },
+        data: { r2ObjectKey: newKey },
+      });
+    } else {
+      await siteMediaItem.create({
+        data: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.FOUNDER,
+          slotId,
+          sortOrder: 0,
+          r2ObjectKey: newKey,
+        },
+      });
+    }
+  } catch (e) {
+    logger.error("upsertFounderPortraitImage", e);
+    await deleteObjectFromR2(newKey);
+    return { ok: false, error: "Could not save metadata." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function upsertManufacturingDetailSlotImage(
+  slotId: string,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  if (!MANUFACTURING_SLOT_SET.has(slotId)) {
+    return { ok: false, error: "Invalid manufacturing slot." };
+  }
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Choose an image file." };
+  }
+  const err = validateSiteMediaImage(file);
+  if (err) return { ok: false, error: err };
+
+  const newKey = await uploadSiteMediaToR2(file);
+  if (!newKey) {
+    return { ok: false, error: "Upload failed. Check R2 configuration." };
+  }
+
+  const typed = slotId as ManufacturingDetailSlotKey;
+  try {
+    const existing = await siteMediaItem.findUnique({ where: { slotId: typed } });
+    if (existing?.r2ObjectKey) {
+      await deleteObjectFromR2(existing.r2ObjectKey);
+    }
+    if (existing) {
+      await siteMediaItem.update({
+        where: { id: existing.id },
+        data: { r2ObjectKey: newKey },
+      });
+    } else {
+      await siteMediaItem.create({
+        data: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE,
+          slotId: typed,
+          sortOrder: manufacturingSortOrder(typed),
+          r2ObjectKey: newKey,
+        },
+      });
+    }
+  } catch (e) {
+    logger.error("upsertManufacturingDetailSlotImage", e);
+    await deleteObjectFromR2(newKey);
+    return { ok: false, error: "Could not save metadata." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function updateSiteMediaLayoutMeta(
+  slotId: string,
+  layoutMeta: Record<string, unknown> | null,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const sectionKey = sectionKeyForManagedSlot(slotId);
+  if (!sectionKey) {
+    return { ok: false, error: "Invalid slot for layout." };
+  }
+
+  try {
+    const existing = await siteMediaItem.findUnique({ where: { slotId } });
+    if (existing) {
+      await siteMediaItem.update({
+        where: { id: existing.id },
+        data: { layoutMeta },
+      });
+    } else {
+      await siteMediaItem.create({
+        data: {
+          sectionKey,
+          slotId,
+          sortOrder: sortOrderForManagedSlot(slotId),
+          layoutMeta,
+        },
+      });
+    }
+  } catch (e) {
+    logger.error("updateSiteMediaLayoutMeta", e);
+    return { ok: false, error: "Could not save layout." };
   }
 
   revalidateSite();

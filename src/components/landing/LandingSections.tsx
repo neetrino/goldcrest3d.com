@@ -1,4 +1,6 @@
 import { LANDING_SECTION_IDS } from "@/constants";
+import type { ManagedHomeBundle } from "@/lib/managed-home/managed-home-schemas";
+import { buildManufacturingItemsForDisplay } from "@/lib/managed-home/build-manufacturing-items";
 import type { PowerBannerCopyBundle } from "@/lib/power-banner-copy/power-banner-copy.types";
 import type { LandingSiteMedia } from "@/lib/site-media/get-landing-site-media";
 import { LandingFooter } from "./LandingFooter";
@@ -14,27 +16,49 @@ import { SectionQuote } from "./SectionQuote";
 type LandingSectionsProps = {
   siteMedia: LandingSiteMedia;
   powerBannerCopy: PowerBannerCopyBundle;
+  managedHome: ManagedHomeBundle;
 };
 
-export function LandingSections({ siteMedia, powerBannerCopy }: LandingSectionsProps) {
+export function LandingSections({
+  siteMedia,
+  powerBannerCopy,
+  managedHome,
+}: LandingSectionsProps) {
+  const manufacturingItems = buildManufacturingItemsForDisplay(
+    managedHome.manufacturing,
+    siteMedia.manufacturing,
+  );
+
   return (
     <>
-      <PowerBanners powerBannerCopy={powerBannerCopy} />
+      <PowerBanners
+        powerBannerCopy={powerBannerCopy}
+        hero={siteMedia.hero}
+      />
 
-      <SectionPhilosophy />
+      <SectionPhilosophy content={managedHome.philosophy} />
 
-      <SectionModeling modeling={siteMedia.modeling} />
+      <SectionModeling
+        modeling={siteMedia.modeling}
+        content={managedHome.modeling}
+      />
 
-      <SectionManufacturing />
+      <SectionManufacturing
+        sectionTitle={managedHome.manufacturing.sectionTitle}
+        items={manufacturingItems}
+      />
 
-      <SectionFounder />
+      <SectionFounder
+        content={managedHome.founder}
+        founderPhoto={siteMedia.founderPhoto}
+      />
 
       <SectionFinishedCreations
         row1={siteMedia.finished.row1}
         row2={siteMedia.finished.row2}
       />
 
-      <SectionProcess />
+      <SectionProcess content={managedHome.process} />
 
       <SectionQuote />
 

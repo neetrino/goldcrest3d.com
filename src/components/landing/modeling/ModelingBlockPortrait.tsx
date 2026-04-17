@@ -21,19 +21,33 @@ const PORTRAIT_DESCRIPTION_LINES_MOBILE = [
 type ModelingBlockPortraitProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  managed?: {
+    title?: string;
+    descriptionLines?: string[];
+    descriptionLinesMobile?: string[];
+  };
 };
 
 export function ModelingBlockPortrait({
   imageUrlDesktop,
   imageUrlMobile,
+  managed,
 }: ModelingBlockPortraitProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
     <ModelingCard
-      title="High Jewelry"
+      title={managed?.title ?? "High Jewelry"}
       description=""
-      descriptionLines={[...PORTRAIT_DESCRIPTION_LINES]}
-      descriptionLinesMobile={[...PORTRAIT_DESCRIPTION_LINES_MOBILE]}
+      descriptionLines={
+        managed?.descriptionLines?.length
+          ? [...managed.descriptionLines]
+          : [...PORTRAIT_DESCRIPTION_LINES]
+      }
+      descriptionLinesMobile={
+        managed?.descriptionLinesMobile?.length
+          ? [...managed.descriptionLinesMobile]
+          : [...PORTRAIT_DESCRIPTION_LINES_MOBILE]
+      }
       imageSrc={imageUrlDesktop}
       imageId={LANDING_IMAGE_IDS.MODELING_PORTRAIT}
       imageOnLeft={false}

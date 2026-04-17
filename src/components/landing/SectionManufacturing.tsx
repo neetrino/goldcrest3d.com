@@ -1,13 +1,15 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import {
   getManufacturingDetailPhotoLayoutClassName,
   MANUFACTURING_SPECIALIZATION_IDS,
-  MANUFACTURING_SPECIALIZATION_ITEMS,
   type ManufacturingSpecializationId,
   type ManufacturingSpecializationItem,
 } from "@/constants/manufacturing-specialization";
+import type { ManufacturingItemResolved } from "@/lib/managed-home/build-manufacturing-items";
+import { parseImageFrameLayout } from "@/lib/site-media/visual-layout-meta";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { MANUFACTURING_IMAGE_OPACITY_CLASS } from "./manufacturing-image.constants";
@@ -90,14 +92,22 @@ function ManufacturingAccordionRow({
   );
 }
 
-export function SectionManufacturing() {
+type SectionManufacturingProps = {
+  sectionTitle: string;
+  items: ManufacturingItemResolved[];
+};
+
+export function SectionManufacturing({
+  sectionTitle,
+  items,
+}: SectionManufacturingProps) {
   const [activeId, setActiveId] = useState<ManufacturingSpecializationId>(
     MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING,
   );
 
   const activeItem = useMemo(
-    () => MANUFACTURING_SPECIALIZATION_ITEMS.find((i) => i.id === activeId),
-    [activeId],
+    () => items.find((i) => i.id === activeId),
+    [activeId, items],
   );
 
   const {
@@ -116,6 +126,23 @@ export function SectionManufacturing() {
     );
   };
 
+  function detailImageLayoutStyle(
+    slotId: ManufacturingSpecializationId | undefined,
+  ): CSSProperties | undefined {
+    if (!slotId) {
+      return undefined;
+    }
+    const row = items.find((i) => i.id === slotId);
+    const frame = parseImageFrameLayout(row?.layoutMeta);
+    if (!frame) {
+      return undefined;
+    }
+    return {
+      transform: `translate(${frame.offsetX}px, ${frame.offsetY}px) scale(${frame.scale})`,
+      transformOrigin: "center center",
+    };
+  }
+
   return (
     <section
       id={LANDING_SECTION_IDS.MANUFACTURING}
@@ -127,17 +154,17 @@ export function SectionManufacturing() {
           id="manufacturing-heading"
           className="manufacturing-intelligence-heading manufacturing-intelligence-heading-desktop hidden text-left font-manrope text-[48px] font-normal leading-[40px] tracking-[-0.9px] text-black lg:block lg:whitespace-nowrap"
         >
-          Manufacturing Intelligence
+          {sectionTitle}
         </h2>
 
         <div className="manufacturing-intelligence-card-shell mt-0 overflow-hidden rounded-none bg-[linear-gradient(-65.02deg,#f8f7f6_0.94%,#c0c6cd_99.4%)] lg:mt-[76px]">
           <div className="grid min-h-0 grid-cols-1 gap-12 py-12 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)] lg:gap-0 lg:py-0 lg:pl-[2.61%] lg:pr-[4.59%]">
             <h2 className="manufacturing-intelligence-heading mx-auto w-[257px] max-w-full text-center font-sans text-[30px] font-medium leading-[36px] tracking-[0.396px] text-black lg:hidden">
-              Manufacturing Intelligence
+              {sectionTitle}
             </h2>
 
             <div className="flex min-w-0 flex-col divide-y divide-black/10 lg:pt-[94px]">
-              {MANUFACTURING_SPECIALIZATION_ITEMS.map((item) => (
+              {items.map((item) => (
                 <div key={item.id} className="flex min-w-0 flex-col">
                   <ManufacturingAccordionRow
                     item={item}
@@ -166,6 +193,7 @@ export function SectionManufacturing() {
                       width={slot0.widthPx}
                       height={slot0.heightPx}
                       sizes="(max-width: 1024px) 100vw, 45vw"
+                      style={detailImageLayoutStyle(slot0.id)}
                       className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
                         slot0.photoLayout,
                       )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
@@ -188,6 +216,7 @@ export function SectionManufacturing() {
                       width={slot1.widthPx}
                       height={slot1.heightPx}
                       sizes="(max-width: 1024px) 100vw, 45vw"
+                      style={detailImageLayoutStyle(slot1.id)}
                       className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
                         slot1.photoLayout,
                       )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${

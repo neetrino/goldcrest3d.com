@@ -19,13 +19,16 @@ import {
   SECTION1_HERO_TEXT_NUDGE_DOWN_PX,
   SECTION1_MODELING_TITLE_NUDGE_UP_PX,
 } from "./power-banners-layout.constants";
+import { HeroTextNudgeWrapper } from "./HeroTextNudgeWrapper";
 
 type ModelingHeroSlideTextStackProps = {
   copy: PowerBannerCopyEntry;
+  layoutMeta?: unknown | null;
 };
 
 export function ModelingHeroSlideTextStack({
   copy,
+  layoutMeta = null,
 }: ModelingHeroSlideTextStackProps) {
   const desktopTitle = resolveModelingTitleDesktop(copy.title);
   const mobileTitleLines = resolveModelingTitleMobileLines(copy.title);
@@ -45,6 +48,7 @@ export function ModelingHeroSlideTextStack({
         } as CSSProperties
       }
     >
+      <HeroTextNudgeWrapper layoutMeta={layoutMeta}>
       <h1
         className="inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance md:max-w-none"
         style={{
@@ -100,6 +104,7 @@ export function ModelingHeroSlideTextStack({
         variant="gold"
         className="mt-6 shrink-0 md:mt-8"
       />
+      </HeroTextNudgeWrapper>
     </div>
   );
 }

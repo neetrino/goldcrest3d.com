@@ -1,6 +1,11 @@
 import { LANDING_SECTION_IDS } from "@/constants";
+import type { PhilosophyPayload } from "@/lib/managed-home/managed-home-schemas";
 
-export function SectionPhilosophy() {
+type SectionPhilosophyProps = {
+  content: PhilosophyPayload;
+};
+
+export function SectionPhilosophy({ content }: SectionPhilosophyProps) {
   return (
     <section
       id={LANDING_SECTION_IDS.PHILOSOPHY}
@@ -13,23 +18,26 @@ export function SectionPhilosophy() {
           className='text-center text-[38px] font-[457] leading-[40px] font-["SF_Compact",-apple-system,BlinkMacSystemFont,sans-serif] md:whitespace-nowrap md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px]'
         >
           <span className="block text-[#e2c481] md:inline">
-            Goldcrest{" "}
+            {content.goldcrest}{" "}
           </span>
           <span className="block text-[#e2c481] md:inline">
-            Engineering{" "}
+            {content.engineering}{" "}
           </span>
-          <span className="block font-[790] text-black md:inline md:font-bold">Philosophy</span>
+          <span className="block font-[790] text-black md:inline md:font-bold">
+            {content.philosophy}
+          </span>
         </h2>
         <blockquote className='mt-[42px] text-center text-[16px] font-[350] leading-[24px] text-[rgba(24,22,16,0.8)] font-["SF_Compact",-apple-system,BlinkMacSystemFont,sans-serif] md:font-manrope md:text-[30px] md:font-light md:leading-[36px]'>
-          &ldquo;We design with manufacturing awareness.
-          <br />
-          We engineer with structural responsibility.
-          <br />
-          We eliminate risks at the digital stage.
-          <br />
+          &ldquo;
+          {content.quoteLines.map((line, i) => (
+            <span key={i}>
+              {line}
+              <br />
+            </span>
+          ))}
           <br />
           <span className="font-[790] text-[#181610] md:font-extrabold">
-            Precision is not optional. It is the standard.
+            {content.emphasis}
           </span>
           &rdquo;
         </blockquote>

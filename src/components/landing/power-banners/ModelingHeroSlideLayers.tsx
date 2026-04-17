@@ -3,43 +3,66 @@ import Image from "next/image";
 import {
   HERO_DESKTOP_IMAGE_SIZES,
   HERO_MOBILE_IMAGE_SIZES,
-  SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX,
   SECTION1_HERO_BG_MOBILE_PATH,
-  SECTION1_HERO_BG_NUDGE_DOWN_PX,
-  SECTION1_HERO_BG_SCALE,
 } from "./power-banners-layout.constants";
+import {
+  resolveHeroMobileBgTransform,
+  resolveModelingHeroDesktopBgTransform,
+  resolveModelingHeroDesktopObjectPosition,
+} from "./resolve-hero-bg-transform";
 
 type ModelingHeroSlideLayersProps = {
   desktopBgSrc: string;
+  mobileBgSrc?: string;
+  layoutMeta?: unknown | null;
 };
 
 export function ModelingHeroSlideLayers({
   desktopBgSrc,
+  mobileBgSrc = SECTION1_HERO_BG_MOBILE_PATH,
+  layoutMeta = null,
 }: ModelingHeroSlideLayersProps) {
+  const desktopTransform = resolveModelingHeroDesktopBgTransform(layoutMeta);
+  const desktopObjectPosition =
+    resolveModelingHeroDesktopObjectPosition(layoutMeta);
+  const mobileTransform = resolveHeroMobileBgTransform(layoutMeta);
+
   return (
     <>
       <div
         className="pointer-events-none absolute inset-0 z-0 overflow-hidden md:hidden"
         aria-hidden
       >
-        <Image
-          src={SECTION1_HERO_BG_MOBILE_PATH}
-          alt=""
-          fill
-          priority
-          unoptimized
-          sizes={HERO_MOBILE_IMAGE_SIZES}
-          className="h-full w-full object-cover object-center"
-        />
+        {mobileTransform ? (
+          <div
+            className="absolute inset-0 h-full w-full"
+            style={mobileTransform as CSSProperties}
+          >
+            <Image
+              src={mobileBgSrc}
+              alt=""
+              fill
+              priority
+              unoptimized
+              sizes={HERO_MOBILE_IMAGE_SIZES}
+              className="h-full w-full object-cover object-center"
+            />
+          </div>
+        ) : (
+          <Image
+            src={mobileBgSrc}
+            alt=""
+            fill
+            priority
+            unoptimized
+            sizes={HERO_MOBILE_IMAGE_SIZES}
+            className="h-full w-full object-cover object-center"
+          />
+        )}
       </div>
       <div
         className="power-banners-section1-bg pointer-events-none absolute inset-0 hidden overflow-hidden md:block"
-        style={
-          {
-            transform: `translateY(-${SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX}px) scale(${SECTION1_HERO_BG_SCALE})`,
-            transformOrigin: "center center",
-          } as CSSProperties
-        }
+        style={desktopTransform as CSSProperties}
         aria-hidden
       >
         <Image
@@ -50,7 +73,7 @@ export function ModelingHeroSlideLayers({
           sizes={HERO_DESKTOP_IMAGE_SIZES}
           className="object-cover"
           style={{
-            objectPosition: `center calc(50% + ${SECTION1_HERO_BG_NUDGE_DOWN_PX}px)`,
+            objectPosition: desktopObjectPosition,
           }}
         />
       </div>
