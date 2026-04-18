@@ -1,5 +1,4 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
 
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
@@ -8,25 +7,29 @@ import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/im
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 
-/** Mobile-only overlay nudge down (`max-sm:translate-y`); paired with `--mechanical-overlay-ty`. */
-const MOBILE_OVERLAY_TRANSLATE_Y_PX = 100;
-
 /** Desktop (md+): nudge first title line up without shifting the rest of the overlay. */
 const TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS = "md:-translate-y-1.5";
 
 const MECHANICAL_RICH_BODY =
-  "[&_p:not(:last-child)]:mb-[0.45em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
+  "[&_p]:mb-0 [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
 
 function MechanicalTitleLines({ title }: { title: string }) {
   const lines = title.split(/\r?\n/);
   return lines.map((line, i) => (
     <span
       key={`mechanical-title-${i}`}
-      className={`block ${i === 0 ? TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS : ""}`}
+      className={`block whitespace-pre ${i === 0 ? TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS : ""}`}
     >
-      {line}
+      {line.length > 0 ? line : "\u00A0"}
     </span>
   ));
+}
+
+function preserveEmptyParagraphLines(html: string): string {
+  return html.replace(
+    /<p([^>]*)>\s*(?:<br\s*\/?>)?\s*<\/p>/gi,
+    "<p$1>&nbsp;</p>",
+  );
 }
 
 type ModelingBlockMechanicalProps = {
@@ -35,6 +38,8 @@ type ModelingBlockMechanicalProps = {
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
   imageFramingMobile?: ImageFraming | null;
+  /** Optional admin preview override: place title/body at top-left. */
+  adminPreviewLeftOrigin?: boolean;
 };
 
 /** Mechanical & Lock Systems block. Full-bleed image with title and description overlay. */
@@ -44,12 +49,13 @@ export function ModelingBlockMechanical({
   imageUrlMobile,
   imageFramingDesktop,
   imageFramingMobile,
+  adminPreviewLeftOrigin = false,
 }: ModelingBlockMechanicalProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
-  const bodyDesktop = copy.body;
-  const bodyMobile = copy.bodyMobile.trim();
+  const bodyDesktop = preserveEmptyParagraphLines(copy.body);
+  const bodyMobile = preserveEmptyParagraphLines(copy.bodyMobile);
   const titleDesktop = copy.title;
-  const resolvedTitleMobile = copy.titleMobile.trim();
+  const resolvedTitleMobile = copy.titleMobile;
   const mechanicalTitleH3Class =
     "z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left";
   return (
@@ -119,12 +125,7 @@ export function ModelingBlockMechanical({
         )}
       </div>
       <div
-        className="absolute inset-0 z-10 flex flex-col items-start justify-start gap-[calc(1rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-black max-sm:-translate-x-[calc(0.375rem*var(--ms,1))] max-sm:translate-y-[calc(var(--mechanical-overlay-ty)*var(--ms,1))] md:gap-[calc(1.25rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] md:pt-[calc(3.25rem*var(--ms,1))]"
-        style={
-          {
-            ["--mechanical-overlay-ty" as string]: `${MOBILE_OVERLAY_TRANSLATE_Y_PX}px`,
-          } as CSSProperties
-        }
+        className="absolute inset-0 z-10 flex flex-col items-start justify-start gap-[calc(0.75rem*var(--ms,1))] px-[calc(0.75rem*var(--ms,1))] py-[calc(0.5rem*var(--ms,1))] text-black md:gap-[calc(1rem*var(--ms,1))] md:px-[calc(1rem*var(--ms,1))] md:py-[calc(0.75rem*var(--ms,1))]"
       >
         <>
           <h3 className={`${mechanicalTitleH3Class} md:hidden`}>
@@ -137,7 +138,7 @@ export function ModelingBlockMechanical({
         <div className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] md:hidden">
           <HeroBannerBodyRichText
             body={bodyMobile}
-            className={`modeling-slot-rich-body ${MECHANICAL_RICH_BODY}`}
+            className={`modeling-slot-rich-body whitespace-pre ${MECHANICAL_RICH_BODY}`}
           />
         </div>
         <div
@@ -146,7 +147,7 @@ export function ModelingBlockMechanical({
         >
           <HeroBannerBodyRichText
             body={bodyDesktop}
-            className={`modeling-slot-rich-body ${MECHANICAL_RICH_BODY}`}
+            className={`modeling-slot-rich-body whitespace-pre ${MECHANICAL_RICH_BODY}`}
           />
         </div>
       </div>

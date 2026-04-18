@@ -32,11 +32,11 @@
 }
 
 /**
- * Modeling rich description should stay on one line per manual paragraph break.
- * Prevent automatic line wrapping so admin preview and live site match.
+ * Modeling rich description should preserve manual spacing and only break where admin inserted
+ * explicit line breaks. This enables space-based horizontal offsets for fine-tuning overlays.
  */
 .modeling-slot-rich-body,
 .modeling-slot-rich-body p,
 .modeling-slot-rich-body li {
-  white-space: nowrap;
+  white-space: pre;
 }

@@ -14,6 +14,7 @@ import { formatR2ObjectDisplayName } from "@/lib/site-media/format-r2-object-lab
 import { ImageUploadControl } from "./ImageUploadControl";
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotFormMessages } from "./ModelingSlotFormMessages";
+import { CanvasMediaStage } from "./CanvasMediaStage";
 import {
   SITE_MEDIA_FORMATS_LABEL,
   SITE_MEDIA_MAX_SIZE_MB,
@@ -109,15 +110,20 @@ export function ModelingSlotVariantUpload({
         <p className="text-xs text-slate-500">
           {SITE_MEDIA_FORMATS_LABEL} · max {SITE_MEDIA_MAX_SIZE_MB} MB
         </p>
-        <ImageUploadControl
-          disabled={isPending}
-          stableDomId={`gc-modeling-upload-${row.slotKey}-${variant}`}
-        />
+        <CanvasMediaStage className="p-2">
+          <ImageUploadControl
+            disabled={isPending}
+            stableDomId={`gc-modeling-upload-${row.slotKey}-${variant}`}
+          />
+        </CanvasMediaStage>
       </div>
 
-      <div className="mt-4">
-        <MediaFormSubmitButton pendingLabel="Uploading…">
-          {hasImage ? `Replace ${VARIANT_LABEL[variant]} image` : `Upload ${VARIANT_LABEL[variant]} image`}
+      <div className="mt-3">
+        <MediaFormSubmitButton
+          pendingLabel={hasImage ? "Replacing…" : "Uploading…"}
+          className="inline-flex min-h-[2.5rem] w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {hasImage ? "Replace image" : "Upload image"}
         </MediaFormSubmitButton>
       </div>
 

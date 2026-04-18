@@ -6,6 +6,7 @@ import {
 } from "@/lib/power-banner-copy/hero-banner-body-constants";
 import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
 import { MANUFACTURING_SPECIALIZATION_ITEM_KEY_SET } from "@/lib/manufacturing-specialization-items/manufacturing-specialization-item-keys";
+import { parseCanvasRichTextDocumentJson } from "@/lib/canvas-rich-text/canvas-rich-text-document";
 
 const MAX_TITLE_LEN = 280;
 
@@ -34,4 +35,16 @@ export const manufacturingSpecializationItemCopyFormSchema = z.object({
         });
       }
     }),
+  bodyDoc: z.string().optional(),
+}).superRefine((data, ctx) => {
+  if (!data.bodyDoc) {
+    return;
+  }
+  if (!parseCanvasRichTextDocumentJson(data.bodyDoc)) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["bodyDoc"],
+      message: "Invalid canvas rich text payload.",
+    });
+  }
 });

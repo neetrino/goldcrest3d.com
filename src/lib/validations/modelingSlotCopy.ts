@@ -7,6 +7,7 @@ import {
 import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
 import { ORDERED_MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 import type { ModelingSlotKey } from "@/lib/site-media/site-media.registry";
+import { parseCanvasRichTextDocumentJson } from "@/lib/canvas-rich-text/canvas-rich-text-document";
 
 const MAX_TITLE_LEN = 280;
 
@@ -20,9 +21,8 @@ function optionalHeroBannerRichBodyField(fieldLabel: string) {
       HERO_BANNER_BODY_MAX_STORAGE_CHARS,
       `${fieldLabel} must be at most ${HERO_BANNER_BODY_MAX_STORAGE_CHARS} characters (including markup).`,
     )
-    .transform((s) => s.trim())
     .superRefine((val, ctx) => {
-      if (val.length === 0) {
+      if (val.trim().length === 0) {
         return;
       }
       const len = getHeroBannerBodyPlainTextLength(val);
@@ -45,4 +45,17 @@ export const modelingSlotCopyFormSchema = z
       .string()
       .max(MAX_TITLE_LEN, `Title must be at most ${MAX_TITLE_LEN} characters`),
     body: optionalHeroBannerRichBodyField("Description"),
+    bodyDoc: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.bodyDoc) {
+      return;
+    }
+    if (!parseCanvasRichTextDocumentJson(data.bodyDoc)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["bodyDoc"],
+        message: "Invalid canvas rich text payload.",
+      });
+    }
   });

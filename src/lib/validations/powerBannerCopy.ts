@@ -8,6 +8,7 @@ import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-b
 import { POWER_BANNER_KEY_SET } from "@/lib/power-banner-copy/power-banner-keys";
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
 import { powerBannerMobileHeroTextLayoutSchema } from "@/lib/power-banner-copy/power-banner-mobile-hero-text-layout";
+import { parseCanvasRichTextDocumentJson } from "@/lib/canvas-rich-text/canvas-rich-text-document";
 
 const MAX_TITLE_LEN = 280;
 
@@ -42,6 +43,18 @@ export const powerBannerCopyFormSchema = z.object({
         });
       }
     }),
+  bodyDoc: z.string().optional(),
+}).superRefine((data, ctx) => {
+  if (!data.bodyDoc) {
+    return;
+  }
+  if (!parseCanvasRichTextDocumentJson(data.bodyDoc)) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["bodyDoc"],
+      message: "Invalid canvas rich text payload.",
+    });
+  }
 });
 
 function optionalHeroBannerRichBodyField(fieldLabel: string) {
@@ -76,10 +89,18 @@ export const powerBannerMobileCopyFormSchema = z
       .max(MAX_TITLE_LEN, `Mobile title must be at most ${MAX_TITLE_LEN} characters`)
       .transform((s) => s.trim()),
     mobileBody: optionalHeroBannerRichBodyField("Mobile description"),
+    mobileBodyDoc: z.string().optional(),
     useHeroVisualTextLayout: z.enum(["0", "1"]).optional(),
     heroTextLayoutMobile: z.string().optional(),
   })
   .superRefine((data, ctx) => {
+    if (data.mobileBodyDoc && !parseCanvasRichTextDocumentJson(data.mobileBodyDoc)) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Invalid mobile canvas rich text payload.",
+        path: ["mobileBodyDoc"],
+      });
+    }
     if (data.useHeroVisualTextLayout !== "1") {
       return;
     }

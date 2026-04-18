@@ -31,7 +31,12 @@ export function computeOverlayAlignment(
   otherLayerEl: HTMLElement,
   rawCenterXPx: number,
   rawCenterYPx: number,
-  options?: { readonly snap?: boolean; readonly thresholdPx?: number },
+  options?: {
+    readonly snap?: boolean;
+    readonly thresholdPx?: number;
+    /** When false, snapping/guides use only frame edges+center (no coupling to other text layer). */
+    readonly includeOtherLayerTargets?: boolean;
+  },
 ): {
   readonly centerXPx: number;
   readonly centerYPx: number;
@@ -41,6 +46,7 @@ export function computeOverlayAlignment(
 } {
   const snap = options?.snap ?? true;
   const thresholdPx = options?.thresholdPx ?? MODELING_TEXT_OVERLAY_ALIGN_THRESHOLD_PX;
+  const includeOtherLayerTargets = options?.includeOtherLayerTargets ?? true;
 
   const frameW = frameRect.width;
   const frameH = frameRect.height;
@@ -75,8 +81,12 @@ export function computeOverlayAlignment(
 
   const oldCenterX = movingBox.left + movingBox.width / 2 - frameRect.left;
   const oldCenterY = movingBox.top + movingBox.height / 2 - frameRect.top;
-  const verticalTargets = collectVerticalTargetsPx(frameW, otherLocal, otherLines, frameRect);
-  const horizontalTargets = collectHorizontalTargetsPx(frameH, otherLocal, otherLines, frameRect);
+  const verticalTargets = includeOtherLayerTargets
+    ? collectVerticalTargetsPx(frameW, otherLocal, otherLines, frameRect)
+    : [0, frameW / 2, frameW];
+  const horizontalTargets = includeOtherLayerTargets
+    ? collectHorizontalTargetsPx(frameH, otherLocal, otherLines, frameRect)
+    : [0, frameH / 2, frameH];
 
   const overflowX = frameW * MODELING_TEXT_OVERLAY_DRAG_OVERFLOW_FRAC;
   const overflowY = frameH * MODELING_TEXT_OVERLAY_DRAG_OVERFLOW_FRAC;

@@ -15,7 +15,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "media:finished-webp": "tsx scripts/finished-creations-r2-to-public-webp.ts",
-    "assets:ensure-finished-webp": "tsx scripts/ensure-finished-webp-from-png.ts"
+    "assets:ensure-finished-webp": "tsx scripts/ensure-finished-webp-from-png.ts",
+    "media:migrate-canvas-rich-text": "tsx scripts/migrate-rich-html-to-canvas.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -24,7 +25,6 @@
     "@prisma/adapter-pg": "^7.5.0",
     "@prisma/client": "^7.5.0",
     "@prisma/client-runtime-utils": "7.5.0",
-    "@tinymce/tinymce-react": "^6.3.0",
     "bcryptjs": "^3.0.3",
     "next": "16.1.6",
     "next-auth": "5.0.0-beta.30",
@@ -37,7 +37,6 @@
     "sanitize-html": "^2.17.2",
     "sharp": "^0.34.5",
     "stripe": "^20.4.1",
-    "tinymce": "^8.4.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

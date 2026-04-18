@@ -17,7 +17,18 @@ type ModelingBlockHighJewelryProps = {
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
   imageFramingMobile?: ImageFraming | null;
+  /** Optional admin preview override: place title/body at top-left. */
+  adminPreviewLeftOrigin?: boolean;
 };
+
+function HighJewelryTitleLines({ title }: { title: string }) {
+  const lines = title.split(/\r?\n/);
+  return lines.map((line, i) => (
+    <span key={`hj-title-${i}`} className="block whitespace-pre">
+      {line.length > 0 ? line : "\u00A0"}
+    </span>
+  ));
+}
 
 /** High Jewelry — object-cover block; mobile vs desktop image anchors preserved. */
 export function ModelingBlockHighJewelry({
@@ -26,16 +37,17 @@ export function ModelingBlockHighJewelry({
   imageUrlMobile,
   imageFramingDesktop,
   imageFramingMobile,
+  adminPreviewLeftOrigin = false,
 }: ModelingBlockHighJewelryProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   const objectClassName =
     imageFramingDesktop
       ? "h-full w-full object-cover"
       : "h-full w-full object-cover max-md:object-right md:object-[center_48%_center]";
-  const titleDesktop = copy.title.split(/\r?\n/).join(" ");
-  const titleLinesMobile = copy.titleMobile.trim().split(/\r?\n/).filter((s) => s.length > 0);
+  const titleDesktop = copy.title;
+  const titleMobile = copy.titleMobile;
   const bodyDesktop = copy.body;
-  const bodyMobile = copy.bodyMobile.trim();
+  const bodyMobile = copy.bodyMobile;
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -99,31 +111,30 @@ export function ModelingBlockHighJewelry({
           </>
         )}
       </div>
-      <div
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-sm:translate-y-[calc(144px*var(--ms,1))]"
-        style={{ marginTop: "-33%" }}
-      >
-        <h3 className="font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
-          <span className="md:hidden">
-            {titleLinesMobile.map((line, i) => (
-              <span key={`hj-m-${i}`} className="block">
-                {line}
+      <div className="absolute inset-0 z-10 px-[calc(0.75rem*var(--ms,1))] py-[calc(0.5rem*var(--ms,1))] text-left text-black md:px-[calc(1rem*var(--ms,1))] md:py-[calc(0.75rem*var(--ms,1))]">
+        <div className="relative h-full w-full">
+          <div className="absolute left-0 top-0 max-w-[calc(560px*var(--ms,1))]">
+            <h3 className="font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
+              <span className="md:hidden">
+                <HighJewelryTitleLines title={titleMobile} />
               </span>
-            ))}
-          </span>
-          <span className="hidden md:inline">{titleDesktop}</span>
-        </h3>
-        <div className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden">
-          <HeroBannerBodyRichText
-            body={bodyMobile}
-            className={`modeling-slot-rich-body ${HIGH_JEWELRY_RICH_BODY}`}
-          />
-        </div>
-        <div className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 md:block">
-          <HeroBannerBodyRichText
-            body={bodyDesktop}
-            className={`modeling-slot-rich-body -translate-x-[calc(1.9rem*var(--ms,1))] text-center ${HIGH_JEWELRY_RICH_BODY}`}
-          />
+              <span className="hidden md:block">
+                <HighJewelryTitleLines title={titleDesktop} />
+              </span>
+            </h3>
+          </div>
+          <div className="absolute left-0 top-0 w-[min(100%,calc(280px*var(--ms,1)))] max-w-full md:hidden">
+            <HeroBannerBodyRichText
+              body={bodyMobile}
+              className={`modeling-slot-rich-body whitespace-pre text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] ${HIGH_JEWELRY_RICH_BODY}`}
+            />
+          </div>
+          <div className="absolute left-0 top-0 hidden max-w-[calc(520px*var(--ms,1))] md:block">
+            <HeroBannerBodyRichText
+              body={bodyDesktop}
+              className={`modeling-slot-rich-body whitespace-pre text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black ${HIGH_JEWELRY_RICH_BODY}`}
+            />
+          </div>
         </div>
       </div>
     </article>

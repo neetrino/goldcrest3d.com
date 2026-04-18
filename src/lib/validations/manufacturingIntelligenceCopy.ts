@@ -5,6 +5,7 @@ import {
   HERO_BANNER_BODY_MAX_STORAGE_CHARS,
 } from "@/lib/power-banner-copy/hero-banner-body-constants";
 import { getHeroBannerBodyPlainTextLength } from "@/lib/power-banner-copy/hero-banner-body-plain-text-length";
+import { parseCanvasRichTextDocumentJson } from "@/lib/canvas-rich-text/canvas-rich-text-document";
 
 const MAX_TITLE_LEN = 280;
 
@@ -30,4 +31,16 @@ export const manufacturingIntelligenceCopyFormSchema = z.object({
         });
       }
     }),
+  bodyDoc: z.string().optional(),
+}).superRefine((data, ctx) => {
+  if (!data.bodyDoc) {
+    return;
+  }
+  if (!parseCanvasRichTextDocumentJson(data.bodyDoc)) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["bodyDoc"],
+      message: "Invalid canvas rich text payload.",
+    });
+  }
 });

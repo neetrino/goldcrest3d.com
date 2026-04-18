@@ -127,24 +127,25 @@ export function ModelingCard({
   const descriptionClassNameGradient = `font-manrope font-light text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] ${descriptionColor}`;
 
   const modelingRichBodyLayout =
-    "[&_p:not(:last-child)]:mb-[0.45em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
+    "[&_p:not(:last-child)]:mb-[0.22em] [&_p:last-child]:mb-0 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5";
 
-  const desktopRichHtml = descriptionRichHtml?.trim() ?? "";
-  const mobileRichHtmlOnly = descriptionRichHtmlMobile?.trim() ?? "";
+  const desktopRichHtml = descriptionRichHtml ?? "";
+  const mobileRichHtmlOnly = descriptionRichHtmlMobile ?? "";
 
   let descriptionContent: ReactNode;
   let portraitOverlayDescription: ReactNode | undefined;
 
-  const hasAnyRichDescription = desktopRichHtml.length > 0 || mobileRichHtmlOnly.length > 0;
+  const hasAnyRichDescription =
+    desktopRichHtml.trim().length > 0 || mobileRichHtmlOnly.trim().length > 0;
 
   if (usesRichDescription && hasAnyRichDescription) {
-    const richClassName = `modeling-slot-rich-body ${modelingRichBodyLayout} ${descriptionClassName}`;
+    const richClassName = `modeling-slot-rich-body whitespace-pre ${modelingRichBodyLayout} ${descriptionClassName}`;
     const richDesktopNode =
-      desktopRichHtml.length > 0 ? (
+      desktopRichHtml.trim().length > 0 ? (
         <HeroBannerBodyRichText body={desktopRichHtml} className={richClassName} />
       ) : null;
     const richMobileNode =
-      mobileRichHtmlOnly.length > 0 ? (
+      mobileRichHtmlOnly.trim().length > 0 ? (
         <HeroBannerBodyRichText body={mobileRichHtmlOnly} className={richClassName} />
       ) : null;
     if (portraitMobileLayout) {

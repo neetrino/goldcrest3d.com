@@ -11,6 +11,10 @@ type ModelingBlockHipHopProps = {
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
   imageFramingMobile?: ImageFraming | null;
+  /** Optional admin preview override: title and description are positioned independently. */
+  independentTitleDescription?: boolean;
+  /** Optional admin preview override: place title/body from top-left as the starting point. */
+  adminPreviewLeftOrigin?: boolean;
 };
 
 /** Hip-Hop Jewelry block — Figma background layer on image area. */
@@ -20,6 +24,8 @@ export function ModelingBlockHipHop({
   imageUrlMobile,
   imageFramingDesktop,
   imageFramingMobile,
+  independentTitleDescription = true,
+  adminPreviewLeftOrigin = false,
 }: ModelingBlockHipHopProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
@@ -43,6 +49,12 @@ export function ModelingBlockHipHop({
           : getModelingHipHopCardBackgroundStyle(imageUrlMobile, imageFramingMobile)
       }
       imagePairBreakpoint="md"
+      independentTitleDescription={independentTitleDescription}
+      titleBlockTop={adminPreviewLeftOrigin ? "-6%" : "2%"}
+      titleBlockLeft={adminPreviewLeftOrigin ? "6%" : "2%"}
+      descriptionBlockTop={adminPreviewLeftOrigin ? "2%" : "10%"}
+      descriptionBlockLeft={adminPreviewLeftOrigin ? "6%" : "2%"}
+      descriptionAlign="left"
     />
   );
 }

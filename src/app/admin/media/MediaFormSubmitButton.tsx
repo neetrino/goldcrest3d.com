@@ -1,7 +1,7 @@
 "use client";
 
 import type { MutableRefObject, ReactNode } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 type MediaFormSubmitButtonProps = {
@@ -35,6 +35,7 @@ export function MediaFormSubmitButton({
   activeSubmitIntentRef,
 }: MediaFormSubmitButtonProps) {
   const { pending } = useFormStatus();
+  const [pressedIntentId, setPressedIntentId] = useState<string | null>(null);
 
   const useIntent =
     activeSubmitIntentRef != null && submitIntentId != null && submitIntentId.length > 0;
@@ -45,12 +46,10 @@ export function MediaFormSubmitButton({
     }
   }, [pending, useIntent, activeSubmitIntentRef]);
 
-  const intent = activeSubmitIntentRef?.current ?? null;
   const isThisButtonPending =
     pending &&
     (!useIntent ||
-      intent === null ||
-      intent === submitIntentId);
+      pressedIntentId === submitIntentId);
 
   return (
     <button
@@ -59,6 +58,7 @@ export function MediaFormSubmitButton({
       onPointerDown={() => {
         if (useIntent) {
           activeSubmitIntentRef.current = submitIntentId;
+          setPressedIntentId(submitIntentId);
         }
       }}
       className={

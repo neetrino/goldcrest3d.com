@@ -9,7 +9,7 @@ import { MODELING_SLOT_LABELS } from "@/lib/site-media/site-media.registry";
 
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotCopyMessages } from "./ModelingSlotCopyMessages";
-import { SiteRichHtmlEditor } from "./SiteRichHtmlEditor";
+import { PowerBannerDescriptionEditor } from "./PowerBannerDescriptionEditor";
 
 const TITLE_TEXTAREA_CLASS =
   "min-h-[3rem] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-slate-200 transition placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80";
@@ -80,11 +80,14 @@ export function ModelingSlotCopyEditor({
         >
           Description
         </span>
-        <SiteRichHtmlEditor
+        <PowerBannerDescriptionEditor
           id={`modeling-slot-body-${slotKey}`}
           ariaLabelledBy={`modeling-slot-body-label-${slotKey}`}
           value={bodyValue}
           onChange={onBodyChange}
+          docFieldName="bodyDoc"
+          editableClassName="whitespace-pre overflow-auto"
+          normalizeInput={false}
         />
       </div>
 

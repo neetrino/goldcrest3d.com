@@ -1,6 +1,5 @@
 "use client";
 
-import type { PointerEvent as ReactPointerEvent } from "react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import type { PowerBannerKey } from "@/lib/power-banner-copy/power-banner-keys";
@@ -47,6 +46,7 @@ export function PowerBannerMobileHeroTextVisualEditor({
   onTitleChange,
   onBodyHtmlChange,
 }: PowerBannerMobileHeroTextVisualEditorProps) {
+  const decoupledTextLayerMove = bannerKey === "MODELING";
   const dialogRef = useRef<HTMLDialogElement>(null);
   const inlineFrameRef = useRef<HTMLDivElement>(null);
   const modalFrameRef = useRef<HTMLDivElement>(null);
@@ -107,6 +107,7 @@ export function PowerBannerMobileHeroTextVisualEditor({
           otherEl,
           rawCenterXPx,
           rawCenterYPx,
+          { includeOtherLayerTargets: !decoupledTextLayerMove },
         );
         updateLayer(layer, { xPct: result.xPct, yPct: result.yPct });
         setAlignmentGuides(result.guides);
@@ -126,7 +127,7 @@ export function PowerBannerMobileHeroTextVisualEditor({
       el.addEventListener("pointerup", onUp);
       el.addEventListener("pointercancel", onUp);
     },
-    [updateLayer],
+    [decoupledTextLayerMove, updateLayer],
   );
 
   const modalCanvasMaxStyle = { maxWidth: POWER_BANNER_MOBILE_HERO_TEXT_EDITOR_FRAME_MAX_WIDTH_PX };
@@ -193,6 +194,7 @@ export function PowerBannerMobileHeroTextVisualEditor({
           otherEl,
           rawCenterXPx,
           rawCenterYPx,
+          { includeOtherLayerTargets: !decoupledTextLayerMove },
         );
         updateLayer(selectedLayer, { xPct: result.xPct, yPct: result.yPct });
         setAlignmentGuides(result.guides);
@@ -215,7 +217,7 @@ export function PowerBannerMobileHeroTextVisualEditor({
         alignmentGuideClearRef.current = null;
       }
     };
-  }, [editorOpen, layout, selectedLayer, updateLayer]);
+  }, [decoupledTextLayerMove, editorOpen, layout, selectedLayer, updateLayer]);
 
   return (
     <div className="flex flex-col gap-3">

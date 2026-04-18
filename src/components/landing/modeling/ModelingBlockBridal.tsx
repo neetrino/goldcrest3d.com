@@ -10,6 +10,10 @@ type ModelingBlockBridalProps = {
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
   imageFramingMobile?: ImageFraming | null;
+  /** Optional admin preview override: title and description are positioned independently. */
+  independentTitleDescription?: boolean;
+  /** Optional admin preview override: place title/body from top-left as the starting point. */
+  adminPreviewLeftOrigin?: boolean;
 };
 
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
@@ -19,6 +23,8 @@ export function ModelingBlockBridal({
   imageUrlMobile,
   imageFramingDesktop,
   imageFramingMobile,
+  independentTitleDescription = true,
+  adminPreviewLeftOrigin = false,
 }: ModelingBlockBridalProps) {
   return (
     <ModelingCard
@@ -32,7 +38,7 @@ export function ModelingBlockBridal({
       imagePairBreakpoint="md"
       imageId={LANDING_IMAGE_IDS.MODELING_BRIDAL}
       imageOnLeft={true}
-      textAlign="right"
+      textAlign="left"
       imagePosition="center 55%"
       imageFillClassName="object-cover object-center"
       imageFillClassNameDesktop="object-contain"
@@ -53,6 +59,12 @@ export function ModelingBlockBridal({
       descriptionLayout="row"
       imageFramingDesktop={imageFramingDesktop}
       imageFramingMobile={imageFramingMobile}
+      independentTitleDescription={independentTitleDescription}
+      titleBlockTop="-72%"
+      titleBlockLeft="-12%"
+      descriptionBlockTop="-65%"
+      descriptionBlockLeft="-12%"
+      descriptionAlign="left"
     />
   );
 }

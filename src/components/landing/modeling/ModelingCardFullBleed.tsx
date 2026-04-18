@@ -47,7 +47,7 @@ function getTitlePositionModel(raw: string): TitlePositionModel {
     // Relative offsets keep Description layout stable while Title moves visually.
     offsetStyle: {
       position: "relative",
-      top: `calc(${leadingNewlines} * 0.62em * var(--ms,1))`,
+      top: `calc(${leadingNewlines} * 0.31em * var(--ms,1))`,
       left: `calc(${leadingSpaces} * 0.33em * var(--ms,1))`,
     },
   };

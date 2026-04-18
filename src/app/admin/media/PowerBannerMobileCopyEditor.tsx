@@ -46,20 +46,6 @@ export function PowerBannerMobileCopyEditor({
     }
   }, [state?.ok, router]);
 
-  useEffect(() => {
-    setMobileBodyHtml(initial.mobileBody);
-    setMobileTitle(initial.mobileTitle);
-  }, [initial.mobileBody, initial.mobileTitle]);
-
-  useEffect(() => {
-    if (initial.heroTextLayoutMobile) {
-      setUseVisualText(true);
-      setTextLayout(initial.heroTextLayoutMobile);
-    } else {
-      setUseVisualText(false);
-    }
-  }, [savedLayoutFingerprint]);
-
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-6">
       <div className="border-b border-slate-200/80 pb-6">
@@ -118,6 +104,7 @@ export function PowerBannerMobileCopyEditor({
             ariaLabelledBy={`power-banner-mobile-body-label-${bannerKey}`}
             value={mobileBodyHtml}
             onChange={setMobileBodyHtml}
+            docFieldName="mobileBodyDoc"
           />
           <p className="text-xs text-slate-500">
             Optional mobile-only rich text. Leave empty if this slide should have no mobile description.

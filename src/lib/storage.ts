@@ -79,7 +79,12 @@ export async function uploadToR2(
  * Returns null if R2_PUBLIC_URL is not set (e.g. bucket not exposed).
  */
 export function getR2PublicUrl(key: string): string | null {
-  if (!R2_PUBLIC_URL || !key) return null;
+  if (!key) return null;
+  // Backward compatibility: some rows may already store absolute URLs.
+  if (/^https?:\/\//i.test(key)) {
+    return key;
+  }
+  if (!R2_PUBLIC_URL) return null;
   const base = R2_PUBLIC_URL.replace(/\/$/, "");
   return `${base}/${key}`;
 }

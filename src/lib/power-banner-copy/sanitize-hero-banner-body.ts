@@ -13,7 +13,7 @@ const HERO_BANNER_BODY_COLOR_STYLE =
  */
 export function sanitizeHeroBannerBodyHtml(dirty: string): string {
   return sanitizeHtml(dirty, {
-    allowedTags: ["p", "br", "strong", "em", "b", "i", "u", "span", "ul", "ol", "li"],
+    allowedTags: ["p", "div", "br", "strong", "em", "b", "i", "u", "span", "ul", "ol", "li"],
     allowedAttributes: {
       span: ["style", "class"],
       p: ["style", "class"],
@@ -31,6 +31,8 @@ export function sanitizeHeroBannerBodyHtml(dirty: string): string {
     transformTags: {
       b: "strong",
       i: "em",
+      // ContentEditable often emits <div> on Enter; keep line breaks by normalizing to <p>.
+      div: "p",
     },
   });
 }
@@ -39,6 +41,6 @@ export function sanitizeHeroBannerBodyHtml(dirty: string): string {
  * Sanitize then fix common TinyMCE layout splits (orphan `<p><strong>word</strong></p>`, `<br>` before emphasis).
  */
 export function finalizeHeroBannerBodyHtml(dirty: string): string {
-  const sanitized = sanitizeHeroBannerBodyHtml(dirty.trim());
+  const sanitized = sanitizeHeroBannerBodyHtml(dirty);
   return normalizeHeroBannerRichLayout(sanitized);
 }

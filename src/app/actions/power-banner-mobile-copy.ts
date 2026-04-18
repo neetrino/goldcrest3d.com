@@ -6,6 +6,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { extractCanvasRichTextHtml } from "@/lib/canvas-rich-text/canvas-rich-text-form";
 import { powerBannerMobileHeroTextLayoutSchema } from "@/lib/power-banner-copy/power-banner-mobile-hero-text-layout";
 import { POWER_BANNER_DEFAULT_COPY } from "@/lib/power-banner-copy/power-banner-defaults";
 import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
@@ -42,7 +43,11 @@ export async function updatePowerBannerMobileCopy(
   const parsed = powerBannerMobileCopyFormSchema.safeParse({
     bannerKey: formData.get("bannerKey"),
     mobileTitle: formData.get("mobileTitle"),
-    mobileBody: formData.get("mobileBody"),
+    mobileBody: extractCanvasRichTextHtml({
+      html: String(formData.get("mobileBody") ?? ""),
+      docJson: (formData.get("mobileBodyDoc") as string | null) ?? "",
+    }),
+    mobileBodyDoc: formData.get("mobileBodyDoc"),
     useHeroVisualTextLayout: formData.get("useHeroVisualTextLayout") ?? "0",
     heroTextLayoutMobile: formData.get("heroTextLayoutMobile") ?? "",
   });
@@ -53,6 +58,7 @@ export async function updatePowerBannerMobileCopy(
       first.bannerKey?.[0] ??
       first.mobileTitle?.[0] ??
       first.mobileBody?.[0] ??
+      first.mobileBodyDoc?.[0] ??
       first.heroTextLayoutMobile?.[0] ??
       "Invalid input.";
     return { ok: false, error: msg };

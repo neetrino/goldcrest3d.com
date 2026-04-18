@@ -25,6 +25,8 @@ type ModelingBlockPortraitProps = {
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
   imageFramingMobile?: ImageFraming | null;
+  /** Optional admin preview override: place title/body from top-left as the starting point. */
+  adminPreviewLeftOrigin?: boolean;
 };
 
 export function ModelingBlockPortrait({
@@ -33,6 +35,7 @@ export function ModelingBlockPortrait({
   imageUrlMobile,
   imageFramingDesktop,
   imageFramingMobile,
+  adminPreviewLeftOrigin = false,
 }: ModelingBlockPortraitProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
@@ -46,7 +49,7 @@ export function ModelingBlockPortrait({
       imageId={LANDING_IMAGE_IDS.MODELING_PORTRAIT}
       imageOnLeft={false}
       textAlign="left"
-      descriptionAlign="right"
+      descriptionAlign={adminPreviewLeftOrigin ? "left" : "left"}
       titleCompact
       imagePosition="center center"
       imageLayerBackground={portraitLayerBackground(
@@ -61,11 +64,11 @@ export function ModelingBlockPortrait({
       imagePairBreakpoint="md"
       textDark
       independentTitleDescription
-      titleBlockTop="34%"
-      titleBlockLeft="7%"
+      titleBlockTop={adminPreviewLeftOrigin ? "-7%" : "-7%"}
+      titleBlockLeft={adminPreviewLeftOrigin ? "-2%" : "-2%"}
       titleShiftClassName="md:translate-x-[calc(2.25rem*var(--ms,1))] lg:translate-x-0"
-      descriptionBlockTop="42%"
-      descriptionBlockLeft="-13%"
+      descriptionBlockTop={adminPreviewLeftOrigin ? "1%" : "1%"}
+      descriptionBlockLeft={adminPreviewLeftOrigin ? "-2%" : "-2%"}
       desktopOverlayShiftClassName="lg:translate-x-[calc(2rem*var(--ms,1))] lg:translate-y-[calc(2.25rem*var(--ms,1))]"
       mobilePortraitTypography
     />

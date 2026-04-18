@@ -26,9 +26,6 @@ importers:
       '@prisma/client-runtime-utils':
         specifier: 7.5.0
         version: 7.5.0
-      '@tinymce/tinymce-react':
-        specifier: ^6.3.0
-        version: 6.3.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(tinymce@8.4.0)
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -65,9 +62,6 @@ importers:
       stripe:
         specifier: ^20.4.1
         version: 20.4.1(@types/node@20.19.37)
-      tinymce:
-        specifier: ^8.4.0
-        version: 8.4.0
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -1528,16 +1522,6 @@ packages:
       '@types/react':
         optional: true
       '@types/react-dom':
-        optional: true
-
-  '@tinymce/tinymce-react@6.3.0':
-    resolution: {integrity: sha512-E++xnn0XzDzpKr40jno2Kj7umfAE6XfINZULEBBeNjTMvbACWzA6CjiR6V8eTDc9yVmdVhIPqVzV4PqD5TZ/4g==}
-    peerDependencies:
-      react: ^19.0.0 || ^18.0.0 || ^17.0.1 || ^16.7.0
-      react-dom: ^19.0.0 || ^18.0.0 || ^17.0.1 || ^16.7.0
-      tinymce: ^8.0.0 || ^7.0.0 || ^6.0.0 || ^5.5.1
-    peerDependenciesMeta:
-      tinymce:
         optional: true
 
   '@tybys/wasm-util@0.10.1':
@@ -3517,9 +3501,6 @@ packages:
     resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
     engines: {node: '>=12.0.0'}
 
-  tinymce@8.4.0:
-    resolution: {integrity: sha512-Q/0/iLycB7hgSkOBoRqfceOz/7Obs9zIo0DwTRuvrReLxb6qdz/1vI7aVJMcW2BAuW80QqZiTyYdVM2amBkqIg==}
-
   tinyrainbow@3.0.3:
     resolution: {integrity: sha512-PSkbLUoxOFRzJYjjxHJt9xro7D+iilgMX/C9lawzVuYiIdcihh9DXmVibBe8lmcFrRi/VzlPjBxbN7rH24q8/Q==}
     engines: {node: '>=14.0.0'}
@@ -5399,14 +5380,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.14
       '@types/react-dom': 19.2.3(@types/react@19.2.14)
-
-  '@tinymce/tinymce-react@6.3.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(tinymce@8.4.0)':
-    dependencies:
-      prop-types: 15.8.1
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
-    optionalDependencies:
-      tinymce: 8.4.0
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
@@ -7621,8 +7594,6 @@ snapshots:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.3)
       picomatch: 4.0.3
-
-  tinymce@8.4.0: {}
 
   tinyrainbow@3.0.3: {}
 

@@ -1,4 +1,7 @@
-import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
+import {
+  canvasRichTextDocumentToHtml,
+  htmlToCanvasRichTextDocument,
+} from "@/lib/canvas-rich-text/canvas-rich-text-document";
 
 type HeroBannerBodyRichTextProps = {
   body: string;
@@ -9,7 +12,7 @@ type HeroBannerBodyRichTextProps = {
  * Renders admin-authored hero description HTML with the same sanitization used when saving.
  */
 export function HeroBannerBodyRichText({ body, className }: HeroBannerBodyRichTextProps) {
-  const html = finalizeHeroBannerBodyHtml(body);
+  const html = canvasRichTextDocumentToHtml(htmlToCanvasRichTextDocument(body));
   return (
     <div className={className} dangerouslySetInnerHTML={{ __html: html }} />
   );

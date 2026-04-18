@@ -152,12 +152,15 @@ function ModelingCopyModal({ row, copy, variant, onClose }: ModelingCopyModalPro
   const previewCopy = useMemo<ModelingSlotCopyEntry>(
     () => ({
       ...copy,
-      title: isDesktopVariant ? titleDraft : titleDraft,
-      titleMobile: isDesktopVariant ? copy.titleMobile : titleDraft,
-      body: isDesktopVariant ? bodyDraft : bodyDraft,
-      bodyMobile: isDesktopVariant ? copy.bodyMobile : bodyDraft,
+      // Keep preview synchronized with the active draft across breakpoints.
+      // Without this, desktop editing can appear correct in a narrow modal (mobile branch)
+      // while saving an empty desktop field, causing missing text on the live desktop page.
+      title: titleDraft,
+      titleMobile: titleDraft,
+      body: bodyDraft,
+      bodyMobile: bodyDraft,
     }),
-    [bodyDraft, copy, isDesktopVariant, titleDraft],
+    [bodyDraft, copy, titleDraft],
   );
 
   return (
@@ -182,7 +185,7 @@ function ModelingCopyModal({ row, copy, variant, onClose }: ModelingCopyModalPro
           </div>
           <div className="mb-5 rounded-xl border border-slate-200 bg-slate-100 p-2">
             <div
-              className="mx-auto w-full modeling-specialization-card-text-scale [&_.modeling-slot-rich-body]:whitespace-nowrap"
+              className="mx-auto w-full modeling-specialization-card-text-scale"
               style={{
               ["--ms" as string]: String(isDesktopVariant ? modelingScale : 1),
               ["--mt" as string]: String(MODELING_SPECIALIZATION_CARD_TEXT_MT),
@@ -246,6 +249,8 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          independentTitleDescription
+          adminPreviewLeftOrigin
         />
       );
     case MODELING_SLOT_KEYS.BRIDAL:
@@ -256,6 +261,8 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          independentTitleDescription
+          adminPreviewLeftOrigin
         />
       );
     case MODELING_SLOT_KEYS.PORTRAIT:
@@ -266,6 +273,7 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          adminPreviewLeftOrigin
         />
       );
     case MODELING_SLOT_KEYS.MECHANICAL:
@@ -276,6 +284,7 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          adminPreviewLeftOrigin
         />
       );
     case MODELING_SLOT_KEYS.HERITAGE:
@@ -286,6 +295,7 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          adminPreviewLeftOrigin
         />
       );
     case MODELING_SLOT_KEYS.HIGH_JEWELRY:
@@ -296,6 +306,7 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          adminPreviewLeftOrigin
         />
       );
     default:
