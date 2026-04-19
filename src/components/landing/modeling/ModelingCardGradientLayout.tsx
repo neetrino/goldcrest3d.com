@@ -4,6 +4,7 @@ import Image from "next/image";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG } from "@/components/landing/landing-media-frame.constants";
 
 import type { ModelingCardProps } from "./modeling-card.types";
+import { renderModelingTitleText } from "./modeling-copy-line";
 
 export type ModelingCardGradientLayoutProps = Pick<
   ModelingCardProps,
@@ -76,7 +77,7 @@ export function ModelingCardGradientLayout({
                 titleBold ? "font-bold" : "font-extrabold"
               }`}
             >
-              {title}
+              {renderModelingTitleText(title)}
             </h3>
             {hasDescriptionContent ? (
               <DescriptionTag className={descriptionClassNameGradient}>
@@ -95,7 +96,7 @@ export function ModelingCardGradientLayout({
                 titleBold ? "font-bold" : "font-extrabold"
               }`}
             >
-              {title}
+              {renderModelingTitleText(title)}
             </h3>
             {hasDescriptionContent ? (
               <DescriptionTag className={descriptionClassNameGradient}>
@@ -132,7 +133,7 @@ export function ModelingCardGradientLayout({
               titleBold ? "font-bold" : "font-extrabold"
             }`}
           >
-            {title}
+            {renderModelingTitleText(title)}
           </h3>
           {hasDescriptionContent ? (
             <DescriptionTag className={descriptionClassNameGradient}>

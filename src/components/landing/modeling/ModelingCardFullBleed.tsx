@@ -12,7 +12,7 @@ import {
   PORTRAIT_MOBILE_TITLE_FULL,
 } from "./modeling-card.typography-layout.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
-import { renderModelingCopyLine } from "./modeling-copy-line";
+import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
 export type ModelingCardFullBleedProps = Pick<
   ModelingCardProps,
@@ -182,7 +182,7 @@ export function ModelingCardFullBleed({
                       <span className="block whitespace-nowrap">Jewelry</span>
                     </>
                   ) : (
-                    <span className="whitespace-pre-wrap">{titleMobile ?? title}</span>
+                    <span className="whitespace-pre-wrap">{renderModelingTitleText(titleMobile ?? title)}</span>
                   )}
                 </h3>
                 <div className={PORTRAIT_MOBILE_OVERLAY_DESC_CLASS}>
@@ -207,7 +207,7 @@ export function ModelingCardFullBleed({
                     }}
                   >
                     <h3 className={`${titleClassName} whitespace-pre-wrap ${titleShiftClassName ?? ""}`}>
-                      {title}
+                      {renderModelingTitleText(title)}
                     </h3>
                   </div>
                 ) : null}
@@ -246,7 +246,7 @@ export function ModelingCardFullBleed({
                   }}
                 >
                   <h3 className={`${titleClassName} whitespace-pre-wrap ${titleShiftClassName ?? ""}`}>
-                    {title}
+                    {renderModelingTitleText(title)}
                   </h3>
                 </div>
               ) : null}
@@ -283,10 +283,10 @@ export function ModelingCardFullBleed({
                 }}
               >
                 {hasMobileTitle ? (
-                  <span className="whitespace-pre-wrap sm:hidden">{titleMobile}</span>
+                  <span className="whitespace-pre-wrap sm:hidden">{renderModelingTitleText(titleMobile ?? "")}</span>
                 ) : null}
                 {hasDesktopTitle ? (
-                  <span className="hidden whitespace-pre-wrap sm:inline">{title}</span>
+                  <span className="hidden whitespace-pre-wrap sm:inline">{renderModelingTitleText(title)}</span>
                 ) : null}
               </h3>
             ) : null}

@@ -4,7 +4,7 @@ import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
-import { renderModelingCopyLine } from "./modeling-copy-line";
+import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
 type ModelingBlockHighJewelryProps = {
   imageUrlDesktop: string;
@@ -80,10 +80,10 @@ export function ModelingBlockHighJewelry({
         {titleDesktop.trim().length > 0 || titleMobile.trim().length > 0 ? (
           <h3 className="h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
             {titleMobile.trim().length > 0 ? (
-              <span className="whitespace-pre-wrap sm:hidden">{titleMobile}</span>
+              <span className="whitespace-pre-wrap sm:hidden">{renderModelingTitleText(titleMobile)}</span>
             ) : null}
             {titleDesktop.trim().length > 0 ? (
-              <span className="hidden whitespace-pre-wrap sm:inline">{titleDesktop}</span>
+              <span className="hidden whitespace-pre-wrap sm:inline">{renderModelingTitleText(titleDesktop)}</span>
             ) : null}
           </h3>
         ) : null}

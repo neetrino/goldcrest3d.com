@@ -19,10 +19,18 @@ function preserveInlineWhitespace(value: string): string {
   });
 }
 
+export function renderModelingTitleText(value: string): string {
+  const normalizedNewLines = value.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const withExpandedTabs = normalizedNewLines.replace(/\t/g, TAB_AS_SPACES);
+  return withExpandedTabs
+    .split("\n")
+    .map((line) => preserveInlineWhitespace(line))
+    .join("\n");
+}
+
 export function renderModelingCopyLine(line: string): string {
   if (line.length === 0) {
     return NON_BREAKING_SPACE;
   }
-  const withExpandedTabs = line.replace(/\t/g, TAB_AS_SPACES);
-  return preserveInlineWhitespace(withExpandedTabs);
+  return renderModelingTitleText(line);
 }

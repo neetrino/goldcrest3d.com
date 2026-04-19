@@ -3,7 +3,7 @@ import Image from "next/image";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
-import { renderModelingCopyLine } from "./modeling-copy-line";
+import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
 /** Mobile-only overlay nudge down (`max-sm:translate-y`); paired with `--mechanical-overlay-ty`. */
 const MOBILE_OVERLAY_TRANSLATE_Y_PX = 100;
@@ -87,12 +87,12 @@ export function ModelingBlockMechanical({
               <span
                 className={`block whitespace-pre-wrap sm:hidden ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}
               >
-                {titleMobile}
+                {renderModelingTitleText(titleMobile)}
               </span>
             ) : null}
             {hasDesktopTitle ? (
               <span className={`hidden whitespace-pre-wrap sm:block ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
-                {titleDesktop}
+                {renderModelingTitleText(titleDesktop)}
               </span>
             ) : null}
           </h3>
