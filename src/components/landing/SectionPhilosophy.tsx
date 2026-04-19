@@ -21,7 +21,7 @@ export function SectionPhilosophy() {
           <span className="block font-[790] text-black md:inline md:font-bold">Philosophy</span>
         </h2>
         <blockquote className='mt-[42px] text-center text-[16px] font-[350] leading-[24px] text-[rgba(24,22,16,0.8)] font-["SF_Compact",-apple-system,BlinkMacSystemFont,sans-serif] md:font-manrope md:text-[30px] md:font-light md:leading-[36px]'>
-          &ldquo;We design with manufacturing awareness.
+          We design with manufacturing awareness.
           <br />
           We engineer with structural responsibility.
           <br />
@@ -31,7 +31,6 @@ export function SectionPhilosophy() {
           <span className="font-[790] text-[#181610] md:font-extrabold">
             Precision is not optional. It is the standard.
           </span>
-          &rdquo;
         </blockquote>
       </div>
     </section>
