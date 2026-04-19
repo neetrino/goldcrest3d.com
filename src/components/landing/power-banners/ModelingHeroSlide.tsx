@@ -9,10 +9,17 @@ import { ModelingHeroSlideTextStack } from "./ModelingHeroSlideTextStack";
 
 type ModelingHeroSlideProps = {
   desktopBgSrc: string;
-  copy: PowerBannerCopyEntry;
+  mobileBgSrc: string;
+  desktopCopy: PowerBannerCopyEntry;
+  mobileCopy: PowerBannerCopyEntry;
 };
 
-export function ModelingHeroSlide({ desktopBgSrc, copy }: ModelingHeroSlideProps) {
+export function ModelingHeroSlide({
+  desktopBgSrc,
+  mobileBgSrc,
+  desktopCopy,
+  mobileCopy,
+}: ModelingHeroSlideProps) {
   return (
     <div
       className="power-banners-section1-block shrink-0"
@@ -26,8 +33,8 @@ export function ModelingHeroSlide({ desktopBgSrc, copy }: ModelingHeroSlideProps
         className="power-banners-section1-image-strip bg-white"
         data-landing-image={LANDING_IMAGE_IDS.HERO_MODELING}
       >
-        <ModelingHeroSlideLayers desktopBgSrc={desktopBgSrc} />
-        <ModelingHeroSlideTextStack copy={copy} />
+        <ModelingHeroSlideLayers desktopBgSrc={desktopBgSrc} mobileBgSrc={mobileBgSrc} />
+        <ModelingHeroSlideTextStack desktopCopy={desktopCopy} mobileCopy={mobileCopy} />
       </div>
       <div className="power-banners-section1-tail shrink-0" aria-hidden />
     </div>

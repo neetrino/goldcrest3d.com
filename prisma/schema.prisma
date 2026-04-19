@@ -121,10 +121,13 @@ model SiteMediaItem {
 
 /// Editable hero (power banner) title + body per landing slide — managed in Admin → Media Manager.
 model PowerBannerCopy {
-  bannerKey String   @id
+  bannerKey String
+  viewport  String
   title     String   @db.Text
   body      String   @db.Text
   updatedAt DateTime @updatedAt
+
+  @@id([bannerKey, viewport])
 }
 
 /// Editable text content for each Modeling Specialization card.

@@ -5,6 +5,14 @@ import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import {
+  POWER_BANNER_KEYS,
+  POWER_BANNER_SLOT_IDS,
+  type PowerBannerKey,
+  type PowerBannerViewport,
+} from "@/lib/power-banner-copy/power-banner-keys";
+import { siteMediaItem } from "@/lib/site-media/site-media-prisma";
+import { SITE_MEDIA_GROUP_KEYS } from "@/lib/site-media/site-media.registry";
 import { powerBannerCopyFormSchema } from "@/lib/validations/powerBannerCopy";
 
 export type PowerBannerCopyActionResult =
@@ -36,21 +44,25 @@ export async function updatePowerBannerCopy(
 
   const parsed = powerBannerCopyFormSchema.safeParse({
     bannerKey: formData.get("bannerKey"),
+    viewport: formData.get("viewport"),
     title: formData.get("title"),
     body: formData.get("body"),
+    imageAlt: formData.get("imageAlt"),
   });
 
   if (!parsed.success) {
     const first = parsed.error.flatten().fieldErrors;
     const msg =
       first.bannerKey?.[0] ??
+      first.viewport?.[0] ??
       first.title?.[0] ??
       first.body?.[0] ??
+      first.imageAlt?.[0] ??
       "Invalid input.";
     return { ok: false, error: msg };
   }
 
-  const { bannerKey, title, body } = parsed.data;
+  const { bannerKey, viewport, title, body, imageAlt } = parsed.data;
   if (title.length === 0) {
     return { ok: false, error: "Title is required." };
   }
@@ -59,14 +71,52 @@ export async function updatePowerBannerCopy(
   }
 
   try {
-    await prisma.powerBannerCopy.upsert({
-      where: { bannerKey },
-      create: {
-        bannerKey,
-        title,
-        body,
-      },
-      update: { title, body },
+    await prisma.$transaction(async (tx) => {
+      const transactionalClient = tx as typeof tx & {
+        powerBannerCopy: typeof prisma.powerBannerCopy;
+        siteMediaItem: typeof siteMediaItem;
+      };
+      await transactionalClient.powerBannerCopy.upsert({
+        where: {
+          bannerKey_viewport: {
+            bannerKey,
+            viewport,
+          },
+        },
+        create: {
+          bannerKey,
+          viewport,
+          title,
+          body,
+        },
+        update: { title, body },
+      });
+
+      const typedKey = bannerKey as PowerBannerKey;
+      const typedViewport = viewport as PowerBannerViewport;
+      const slotId = POWER_BANNER_SLOT_IDS[typedViewport][typedKey];
+      const sortOrder = POWER_BANNER_KEYS.indexOf(bannerKey as PowerBannerKey);
+      const existingHeroMedia = await transactionalClient.siteMediaItem.findUnique({
+        where: { slotId },
+      });
+      if (existingHeroMedia) {
+        await transactionalClient.siteMediaItem.update({
+          where: { id: existingHeroMedia.id },
+          data: {
+            sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
+            alt: imageAlt,
+          },
+        });
+      } else {
+        await transactionalClient.siteMediaItem.create({
+          data: {
+            sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
+            slotId,
+            sortOrder: sortOrder >= 0 ? sortOrder : 0,
+            alt: imageAlt,
+          },
+        });
+      }
     });
   } catch (err) {
     logger.error("updatePowerBannerCopy: failed to upsert", err);

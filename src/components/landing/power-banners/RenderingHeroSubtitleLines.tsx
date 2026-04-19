@@ -1,13 +1,20 @@
 import { LANDING_ELEMENT_IDS } from "@/constants";
-import { resolveRenderingSubtitleDisplay } from "./resolve-power-banner-display";
+import {
+  resolveRenderingSubtitleDesktop,
+  splitMultilineText,
+} from "./resolve-power-banner-display";
 
 type RenderingHeroSubtitleLinesProps = {
-  body: string;
+  desktopBody: string;
+  mobileBody: string;
 };
 
-export function RenderingHeroSubtitleLines({ body }: RenderingHeroSubtitleLinesProps) {
-  const { desktopLine1, desktopLine2, mobileLines } =
-    resolveRenderingSubtitleDisplay(body);
+export function RenderingHeroSubtitleLines({
+  desktopBody,
+  mobileBody,
+}: RenderingHeroSubtitleLinesProps) {
+  const { line1, line2 } = resolveRenderingSubtitleDesktop(desktopBody);
+  const mobileLines = splitMultilineText(mobileBody);
 
   return (
     <p
@@ -22,9 +29,9 @@ export function RenderingHeroSubtitleLines({ body }: RenderingHeroSubtitleLinesP
         ))}
       </span>
       <span className="hidden md:block">
-        <span className="block md:whitespace-nowrap">{desktopLine1}</span>
-        {desktopLine2 ? (
-          <span className="block md:whitespace-nowrap">{desktopLine2}</span>
+        <span className="block md:whitespace-nowrap">{line1}</span>
+        {line2 ? (
+          <span className="block md:whitespace-nowrap">{line2}</span>
         ) : null}
       </span>
     </p>

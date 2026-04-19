@@ -31,6 +31,14 @@ import {
 } from "@/lib/storage";
 import { validateSiteMediaImage } from "@/lib/validations/siteMediaImage";
 import {
+  POWER_BANNER_KEY_SET,
+  POWER_BANNER_KEYS,
+  POWER_BANNER_SLOT_IDS,
+  type PowerBannerKey,
+  type PowerBannerViewport,
+  POWER_BANNER_VIEWPORT_SET,
+} from "@/lib/power-banner-copy/power-banner-keys";
+import {
   manufacturingIntelligenceHeadingFormSchema,
   manufacturingIntelligenceItemFormSchema,
 } from "@/lib/validations/manufacturingIntelligenceItem";
@@ -45,6 +53,7 @@ const MANUFACTURING_SORT_ORDER = new Map<string, number>(
 );
 
 export type ModelingSlotImageVariant = "desktop" | "mobile";
+export type HeroBannerImageVariant = "desktop" | "mobile";
 
 const ORDERED_GROUPS = new Set<SiteMediaGroupKey>([
   SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1,
@@ -52,6 +61,9 @@ const ORDERED_GROUPS = new Set<SiteMediaGroupKey>([
 ]);
 
 const MAX_ORDERED_ITEMS = 12;
+const HERO_BANNER_SORT_ORDER = new Map<string, number>(
+  POWER_BANNER_KEYS.map((key, index) => [key, index]),
+);
 
 export type SiteMediaActionResult =
   | { ok: true }
@@ -251,6 +263,72 @@ export async function upsertManufacturingIntelligenceImage(
     }
   } catch (e) {
     logger.error("upsertManufacturingIntelligenceImage", e);
+    await deleteObjectFromR2(newKey);
+    return { ok: false, error: "Could not save metadata." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function upsertHeroBannerImage(
+  bannerKey: string,
+  viewport: HeroBannerImageVariant,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  if (!POWER_BANNER_KEY_SET.has(bannerKey)) {
+    return { ok: false, error: "Invalid hero banner." };
+  }
+  if (!POWER_BANNER_VIEWPORT_SET.has(viewport)) {
+    return { ok: false, error: "Invalid image viewport." };
+  }
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Choose an image file." };
+  }
+  const err = validateSiteMediaImage(file);
+  if (err) return { ok: false, error: err };
+
+  const newKey = await uploadSiteMediaToR2(file);
+  if (!newKey) {
+    return { ok: false, error: "Upload failed. Check R2 configuration." };
+  }
+
+  const typedKey = bannerKey as PowerBannerKey;
+  const typedViewport = viewport as PowerBannerViewport;
+  const slotId = POWER_BANNER_SLOT_IDS[typedViewport][typedKey];
+
+  try {
+    const existing = await siteMediaItem.findUnique({ where: { slotId } });
+    if (existing) {
+      if (existing.r2ObjectKey) {
+        await deleteObjectFromR2(existing.r2ObjectKey);
+      }
+      await siteMediaItem.update({
+        where: { id: existing.id },
+        data: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
+          r2ObjectKey: newKey,
+          r2ObjectKeyMobile: null,
+        },
+      });
+    } else {
+      await siteMediaItem.create({
+        data: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
+          slotId,
+          sortOrder: HERO_BANNER_SORT_ORDER.get(typedKey) ?? 0,
+          r2ObjectKey: newKey,
+          r2ObjectKeyMobile: null,
+        },
+      });
+    }
+  } catch (e) {
+    logger.error("upsertHeroBannerImage", e);
     await deleteObjectFromR2(newKey);
     return { ok: false, error: "Could not save metadata." };
   }

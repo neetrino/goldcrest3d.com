@@ -1,29 +1,46 @@
 import { Fragment } from "react";
 import { LANDING_SECTION_IDS } from "@/constants";
-import { LANDING_IMAGES } from "@/constants/landing-assets";
 import type { PowerBannerCopyBundle } from "@/lib/power-banner-copy/power-banner-copy.types";
 import { DesignHeroSlide } from "@/components/landing/power-banners/DesignHeroSlide";
 import { ModelingHeroSlide } from "@/components/landing/power-banners/ModelingHeroSlide";
 import { RenderingHeroSlide } from "@/components/landing/power-banners/RenderingHeroSlide";
-
-const HERO_SLIDES = [
-  { id: "modeling" as const, desktopBg: LANDING_IMAGES.heroModeling },
-  { id: "rendering" as const, desktopBg: LANDING_IMAGES.heroRendering },
-  { id: "design" as const, desktopBg: LANDING_IMAGES.heroDesign },
-];
 
 type PowerBannersProps = {
   powerBannerCopy: PowerBannerCopyBundle;
 };
 
 export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
+  const heroSlides = [
+    {
+      id: "modeling" as const,
+      desktopBg: powerBannerCopy.desktop.MODELING.imageSrc,
+      mobileBg: powerBannerCopy.mobile.MODELING.imageSrc,
+      desktopCopy: powerBannerCopy.desktop.MODELING,
+      mobileCopy: powerBannerCopy.mobile.MODELING,
+    },
+    {
+      id: "rendering" as const,
+      desktopBg: powerBannerCopy.desktop.RENDERING.imageSrc,
+      mobileBg: powerBannerCopy.mobile.RENDERING.imageSrc,
+      desktopCopy: powerBannerCopy.desktop.RENDERING,
+      mobileCopy: powerBannerCopy.mobile.RENDERING,
+    },
+    {
+      id: "design" as const,
+      desktopBg: powerBannerCopy.desktop.DESIGN.imageSrc,
+      mobileBg: powerBannerCopy.mobile.DESIGN.imageSrc,
+      desktopCopy: powerBannerCopy.desktop.DESIGN,
+      mobileCopy: powerBannerCopy.mobile.DESIGN,
+    },
+  ] as const;
+
   return (
     <section
       id={LANDING_SECTION_IDS.HERO}
       className="relative w-full bg-white"
       aria-label="Hero"
     >
-      {HERO_SLIDES.map((slide) => (
+      {heroSlides.map((slide) => (
         <Fragment key={slide.id}>
           <div
             className={`relative flex w-full shrink-0 flex-col ${
@@ -41,17 +58,23 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
             {slide.id === "modeling" ? (
               <ModelingHeroSlide
                 desktopBgSrc={slide.desktopBg}
-                copy={powerBannerCopy.MODELING}
+                mobileBgSrc={slide.mobileBg}
+                desktopCopy={slide.desktopCopy}
+                mobileCopy={slide.mobileCopy}
               />
             ) : slide.id === "rendering" ? (
               <RenderingHeroSlide
                 desktopBgSrc={slide.desktopBg}
-                copy={powerBannerCopy.RENDERING}
+                mobileBgSrc={slide.mobileBg}
+                desktopCopy={slide.desktopCopy}
+                mobileCopy={slide.mobileCopy}
               />
             ) : (
               <DesignHeroSlide
                 desktopBgSrc={slide.desktopBg}
-                copy={powerBannerCopy.DESIGN}
+                mobileBgSrc={slide.mobileBg}
+                desktopCopy={slide.desktopCopy}
+                mobileCopy={slide.mobileCopy}
               />
             )}
           </div>

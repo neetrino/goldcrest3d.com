@@ -5,16 +5,17 @@ import {
   HERO_MOBILE_IMAGE_SIZES,
   SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX,
   SECTION2_HERO_BG_IMAGE_NUDGE_UP_PX,
-  SECTION2_HERO_BG_MOBILE_PATH,
   SECTION2_HERO_BG_SCALE,
 } from "./power-banners-layout.constants";
 
 type RenderingHeroSlideBackgroundsProps = {
   desktopBgSrc: string;
+  mobileBgSrc: string;
 };
 
 export function RenderingHeroSlideBackgrounds({
   desktopBgSrc,
+  mobileBgSrc,
 }: RenderingHeroSlideBackgroundsProps) {
   return (
     <>
@@ -23,7 +24,7 @@ export function RenderingHeroSlideBackgrounds({
         aria-hidden
       >
         <Image
-          src={SECTION2_HERO_BG_MOBILE_PATH}
+          src={mobileBgSrc}
           alt=""
           fill
           unoptimized

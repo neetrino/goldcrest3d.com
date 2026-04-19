@@ -2,15 +2,16 @@ import Image from "next/image";
 import {
   HERO_DESKTOP_IMAGE_SIZES,
   HERO_MOBILE_IMAGE_SIZES,
-  SECTION3_HERO_BG_MOBILE_PATH,
 } from "./power-banners-layout.constants";
 
 type DesignHeroSlideBackgroundsProps = {
   desktopBgSrc: string;
+  mobileBgSrc: string;
 };
 
 export function DesignHeroSlideBackgrounds({
   desktopBgSrc,
+  mobileBgSrc,
 }: DesignHeroSlideBackgroundsProps) {
   return (
     <>
@@ -19,7 +20,7 @@ export function DesignHeroSlideBackgrounds({
         aria-hidden
       >
         <Image
-          src={SECTION3_HERO_BG_MOBILE_PATH}
+          src={mobileBgSrc}
           alt=""
           fill
           unoptimized

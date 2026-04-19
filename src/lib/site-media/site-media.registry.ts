@@ -7,6 +7,7 @@ export const SITE_MEDIA_GROUP_KEYS = {
   MANUFACTURING_INTELLIGENCE: "manufacturing_intelligence",
   FINISHED_CREATIONS_ROW1: "finished_creations_row1",
   FINISHED_CREATIONS_ROW2: "finished_creations_row2",
+  HERO_BANNERS: "hero_banners",
 } as const;
 
 export type SiteMediaGroupKey =
@@ -65,6 +66,12 @@ export const SITE_MEDIA_GROUPS: readonly SiteMediaGroupDefinition[] = [
     kind: "ordered_list",
     minItems: 1,
     maxItems: 12,
+  },
+  {
+    key: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
+    label: "Hero Banners",
+    description: "Homepage hero images and text for each slide.",
+    kind: "fixed_slots",
   },
 ];
 

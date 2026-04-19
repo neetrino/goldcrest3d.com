@@ -22,14 +22,16 @@ type MediaManagerTabKey =
   | "manufacturing-intelligence"
   | "finished-row-1"
   | "finished-row-2"
-  | "power-banner-copy";
+  | "power-banner-desktop"
+  | "power-banner-mobile";
 
 const MEDIA_MANAGER_TAB_KEYS: readonly MediaManagerTabKey[] = [
   "modeling",
   "manufacturing-intelligence",
   "finished-row-1",
   "finished-row-2",
-  "power-banner-copy",
+  "power-banner-desktop",
+  "power-banner-mobile",
 ];
 
 function isMediaManagerTabKey(value: string | null): value is MediaManagerTabKey {
@@ -61,7 +63,8 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
       { key: "manufacturing-intelligence" as const, label: "Manufacturing Intelligence" },
       { key: "finished-row-1" as const, label: "Finished Creations — top row" },
       { key: "finished-row-2" as const, label: "Finished Creations — bottom row" },
-      { key: "power-banner-copy" as const, label: "Hero text" },
+      { key: "power-banner-desktop" as const, label: "Hero Banners — Desktop" },
+      { key: "power-banner-mobile" as const, label: "Hero Banners — Mobile" },
     ],
     [],
   );
@@ -131,7 +134,13 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
         />
       ) : null}
 
-      {selectedTab === "power-banner-copy" ? <PowerBannerCopySection bundle={powerBannerCopy} /> : null}
+      {selectedTab === "power-banner-desktop" ? (
+        <PowerBannerCopySection bundle={powerBannerCopy} viewport="desktop" />
+      ) : null}
+
+      {selectedTab === "power-banner-mobile" ? (
+        <PowerBannerCopySection bundle={powerBannerCopy} viewport="mobile" />
+      ) : null}
     </div>
   );
 }
