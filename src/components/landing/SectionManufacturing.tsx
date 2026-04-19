@@ -109,11 +109,7 @@ export function SectionManufacturing() {
   } = useManufacturingDetailLayers({ activeItem });
 
   const handleToggle = (id: ManufacturingSpecializationId) => {
-    setActiveId((prev) =>
-      prev === id
-        ? MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING
-        : id,
-    );
+    setActiveId((prev) => (prev === id ? prev : id));
   };
 
   return (
