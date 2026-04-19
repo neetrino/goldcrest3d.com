@@ -180,7 +180,7 @@ export function ModelingCardFullBleed({
                       <span className="block whitespace-nowrap">Jewelry</span>
                     </>
                   ) : (
-                    (titleMobile ?? title)
+                    <span className="whitespace-pre-wrap">{titleMobile ?? title}</span>
                   )}
                 </h3>
                 <div className={PORTRAIT_MOBILE_OVERLAY_DESC_CLASS}>
@@ -204,7 +204,9 @@ export function ModelingCardFullBleed({
                       right: textAlign === "left" ? undefined : "8%",
                     }}
                   >
-                    <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>{title}</h3>
+                    <h3 className={`${titleClassName} whitespace-pre-wrap ${titleShiftClassName ?? ""}`}>
+                      {title}
+                    </h3>
                   </div>
                 ) : null}
                 {hasDescriptionContent ? (
@@ -241,7 +243,9 @@ export function ModelingCardFullBleed({
                     right: textAlign === "left" ? undefined : "8%",
                   }}
                 >
-                  <h3 className={`${titleClassName} ${titleShiftClassName ?? ""}`}>{title}</h3>
+                  <h3 className={`${titleClassName} whitespace-pre-wrap ${titleShiftClassName ?? ""}`}>
+                    {title}
+                  </h3>
                 </div>
               ) : null}
               {hasDescriptionContent ? (
@@ -270,14 +274,18 @@ export function ModelingCardFullBleed({
           <>
             {hasDesktopTitle || hasMobileTitle ? (
               <h3
-                className={`${titleClassNameResolved} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center max-sm:-translate-y-[calc(3rem*var(--ms,1))] sm:-translate-y-[calc(6rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                className={`${titleClassNameResolved} ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible sm:h-[calc(24px*var(--ms,1)*var(--mt,1))]" : ""} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center max-sm:-translate-y-[calc(3rem*var(--ms,1))] sm:-translate-y-[calc(6rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                 style={{
                   ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                   ...(titleMarginTop != null && { marginTop: titleMarginTop }),
                 }}
               >
-                {hasMobileTitle ? <span className="sm:hidden">{titleMobile}</span> : null}
-                {hasDesktopTitle ? <span className="hidden sm:inline">{title}</span> : null}
+                {hasMobileTitle ? (
+                  <span className="whitespace-pre-wrap sm:hidden">{titleMobile}</span>
+                ) : null}
+                {hasDesktopTitle ? (
+                  <span className="hidden whitespace-pre-wrap sm:inline">{title}</span>
+                ) : null}
               </h3>
             ) : null}
             {hasDescriptionContent ? (

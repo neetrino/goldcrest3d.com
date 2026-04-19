@@ -78,12 +78,12 @@ export function ModelingBlockHighJewelry({
         style={{ marginTop: "-33%" }}
       >
         {titleDesktop.trim().length > 0 || titleMobile.trim().length > 0 ? (
-          <h3 className="font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
+          <h3 className="h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
             {titleMobile.trim().length > 0 ? (
-              <span className="sm:hidden">{titleMobile}</span>
+              <span className="whitespace-pre-wrap sm:hidden">{titleMobile}</span>
             ) : null}
             {titleDesktop.trim().length > 0 ? (
-              <span className="hidden sm:inline">{titleDesktop}</span>
+              <span className="hidden whitespace-pre-wrap sm:inline">{titleDesktop}</span>
             ) : null}
           </h3>
         ) : null}

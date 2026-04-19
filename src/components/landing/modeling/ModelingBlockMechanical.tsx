@@ -32,15 +32,8 @@ export function ModelingBlockMechanical({
   descriptionLinesMobile,
 }: ModelingBlockMechanicalProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
-  const desktopTitleLines = titleDesktop
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-  const mobileTitleLines = titleMobile
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-  const desktopTitleInline = desktopTitleLines.join(" ");
+  const hasDesktopTitle = titleDesktop.trim().length > 0;
+  const hasMobileTitle = titleMobile.trim().length > 0;
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -88,19 +81,18 @@ export function ModelingBlockMechanical({
           } as React.CSSProperties
         }
       >
-        {mobileTitleLines.length > 0 || desktopTitleLines.length > 0 ? (
-          <h3 className={`z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left ${TITLE_MOBILE_NUDGE_DOWN_CLASS}`}>
-            {mobileTitleLines.map((line, index) => (
+        {hasMobileTitle || hasDesktopTitle ? (
+          <h3 className={`z-10 h-[calc(28px*var(--ms,1)*var(--mt,1))] w-[calc(283px*var(--ms,1))] max-w-full shrink-0 overflow-visible text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left ${TITLE_MOBILE_NUDGE_DOWN_CLASS}`}>
+            {hasMobileTitle ? (
               <span
-                key={`mobile-title-${line}-${index}`}
-                className={`block sm:hidden ${index === 0 ? TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS : ""}`}
+                className={`block whitespace-pre-wrap sm:hidden ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}
               >
-                {line}
+                {titleMobile}
               </span>
-            ))}
-            {desktopTitleInline.length > 0 ? (
-              <span className={`hidden whitespace-nowrap sm:block ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
-                {desktopTitleInline}
+            ) : null}
+            {hasDesktopTitle ? (
+              <span className={`hidden whitespace-pre-wrap sm:block ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
+                {titleDesktop}
               </span>
             ) : null}
           </h3>

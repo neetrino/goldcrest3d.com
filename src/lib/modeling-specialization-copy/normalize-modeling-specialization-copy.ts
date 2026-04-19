@@ -15,8 +15,8 @@ export function normalizeModelingSpecializationCopyPayload(
   payload: ModelingSpecializationCopyPayload,
 ): ModelingSpecializationCopyPayload {
   return {
-    titleDesktop: normalizeSingleLineValue(payload.titleDesktop),
-    titleMobile: normalizeSingleLineValue(payload.titleMobile),
+    titleDesktop: normalizeMultilineValue(payload.titleDesktop),
+    titleMobile: normalizeMultilineValue(payload.titleMobile),
     bodyDesktop: normalizeMultilineValue(payload.bodyDesktop),
     bodyMobile: normalizeMultilineValue(payload.bodyMobile),
     desktopLine1Emphasis: normalizeSingleLineValue(payload.desktopLine1Emphasis),

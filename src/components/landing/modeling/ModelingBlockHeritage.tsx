@@ -28,26 +28,20 @@ function HeritageOverlayText({
   descriptionLinesDesktop,
   descriptionLinesMobile,
 }: HeritageOverlayTextProps) {
-  const mobileTitleLines = titleMobile
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
+  const hasMobileTitle = titleMobile.trim().length > 0;
+  const hasDesktopTitle = titleDesktop.trim().length > 0;
   return (
     <div className="absolute inset-0 z-10 flex items-start justify-end px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))]">
       <div className="-translate-x-[calc(0.3rem*var(--ms,1))] -translate-y-[calc(0rem*var(--ms,1))] max-w-[calc(540px*var(--ms,1))] text-right text-black md:-translate-x-[calc(1.5rem*var(--ms,1))] md:mt-[calc(12.7rem*var(--ms,1))] md:-translate-y-[calc(4.15rem*var(--ms,1))]">
-        {titleDesktop.trim().length > 0 || mobileTitleLines.length > 0 ? (
-          <h3 className="mt-[calc(2.25rem*var(--ms,1))] font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(20px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] sm:mt-0 sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-right sm:tracking-normal sm:font-extrabold">
-            {mobileTitleLines.length > 0 ? (
-              <span className="block text-right translate-y-[calc(2.75rem*var(--ms,1))] sm:hidden">
-                {mobileTitleLines.map((line, index) => (
-                  <span key={`mobile-title-${line}-${index}`} className="block">
-                    {line}
-                  </span>
-                ))}
+        {hasDesktopTitle || hasMobileTitle ? (
+          <h3 className="mt-[calc(2.25rem*var(--ms,1))] h-[calc(20px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(20px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] sm:mt-0 sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-right sm:tracking-normal sm:font-extrabold">
+            {hasMobileTitle ? (
+              <span className="block whitespace-pre-wrap text-right translate-y-[calc(2.75rem*var(--ms,1))] sm:hidden">
+                {titleMobile}
               </span>
             ) : null}
-            {titleDesktop.trim().length > 0 ? (
-              <span className="hidden sm:inline">{titleDesktop}</span>
+            {hasDesktopTitle ? (
+              <span className="hidden whitespace-pre-wrap sm:inline">{titleDesktop}</span>
             ) : null}
           </h3>
         ) : null}
