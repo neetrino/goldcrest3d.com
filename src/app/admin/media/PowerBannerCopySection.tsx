@@ -50,7 +50,7 @@ export function PowerBannerCopySection({ bundle, viewport }: PowerBannerCopySect
       <div className="mt-8 flex flex-col gap-8">
         {POWER_BANNER_KEYS.map((key) => (
           <PowerBannerCopyEditor
-            key={`${viewport}-${key}`}
+            key={`${viewport}-${key}-${bundle[viewport][key].imageTransform.zoom}-${bundle[viewport][key].imageTransform.offsetX}-${bundle[viewport][key].imageTransform.offsetY}-${bundle[viewport][key].imageObjectKey ?? "default"}`}
             viewport={viewport}
             bannerKey={key}
             initial={bundle[viewport][key]}

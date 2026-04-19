@@ -17,6 +17,8 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
       mobileBg: powerBannerCopy.mobile.MODELING.imageSrc,
       desktopCopy: powerBannerCopy.desktop.MODELING,
       mobileCopy: powerBannerCopy.mobile.MODELING,
+      desktopTransform: powerBannerCopy.desktop.MODELING.imageTransform,
+      mobileTransform: powerBannerCopy.mobile.MODELING.imageTransform,
     },
     {
       id: "rendering" as const,
@@ -24,6 +26,8 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
       mobileBg: powerBannerCopy.mobile.RENDERING.imageSrc,
       desktopCopy: powerBannerCopy.desktop.RENDERING,
       mobileCopy: powerBannerCopy.mobile.RENDERING,
+      desktopTransform: powerBannerCopy.desktop.RENDERING.imageTransform,
+      mobileTransform: powerBannerCopy.mobile.RENDERING.imageTransform,
     },
     {
       id: "design" as const,
@@ -31,6 +35,8 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
       mobileBg: powerBannerCopy.mobile.DESIGN.imageSrc,
       desktopCopy: powerBannerCopy.desktop.DESIGN,
       mobileCopy: powerBannerCopy.mobile.DESIGN,
+      desktopTransform: powerBannerCopy.desktop.DESIGN.imageTransform,
+      mobileTransform: powerBannerCopy.mobile.DESIGN.imageTransform,
     },
   ] as const;
 
@@ -61,6 +67,8 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
                 mobileBgSrc={slide.mobileBg}
                 desktopCopy={slide.desktopCopy}
                 mobileCopy={slide.mobileCopy}
+                desktopTransform={slide.desktopTransform}
+                mobileTransform={slide.mobileTransform}
               />
             ) : slide.id === "rendering" ? (
               <RenderingHeroSlide
@@ -68,6 +76,8 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
                 mobileBgSrc={slide.mobileBg}
                 desktopCopy={slide.desktopCopy}
                 mobileCopy={slide.mobileCopy}
+                desktopTransform={slide.desktopTransform}
+                mobileTransform={slide.mobileTransform}
               />
             ) : (
               <DesignHeroSlide
@@ -75,6 +85,8 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
                 mobileBgSrc={slide.mobileBg}
                 desktopCopy={slide.desktopCopy}
                 mobileCopy={slide.mobileCopy}
+                desktopTransform={slide.desktopTransform}
+                mobileTransform={slide.mobileTransform}
               />
             )}
           </div>

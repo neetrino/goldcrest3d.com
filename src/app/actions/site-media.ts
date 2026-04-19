@@ -38,11 +38,13 @@ import {
   type PowerBannerViewport,
   POWER_BANNER_VIEWPORT_SET,
 } from "@/lib/power-banner-copy/power-banner-keys";
+import { POWER_BANNER_DEFAULT_TRANSFORMS } from "@/lib/power-banner-copy/power-banner-defaults";
 import {
   manufacturingIntelligenceHeadingFormSchema,
   manufacturingIntelligenceItemFormSchema,
 } from "@/lib/validations/manufacturingIntelligenceItem";
 import { modelingSpecializationCopyFormSchema } from "@/lib/validations/modelingSpecializationCopy";
+import { powerBannerTransformFormSchema } from "@/lib/validations/powerBannerCopy";
 
 const MODELING_SLOT_SET = new Set<string>(Object.values(MODELING_SLOT_KEYS));
 const MANUFACTURING_SLOT_SET = new Set<string>(
@@ -301,6 +303,7 @@ export async function upsertHeroBannerImage(
   const typedKey = bannerKey as PowerBannerKey;
   const typedViewport = viewport as PowerBannerViewport;
   const slotId = POWER_BANNER_SLOT_IDS[typedViewport][typedKey];
+  const defaultTransform = POWER_BANNER_DEFAULT_TRANSFORMS[typedViewport][typedKey];
 
   try {
     const existing = await siteMediaItem.findUnique({ where: { slotId } });
@@ -324,6 +327,7 @@ export async function upsertHeroBannerImage(
           sortOrder: HERO_BANNER_SORT_ORDER.get(typedKey) ?? 0,
           r2ObjectKey: newKey,
           r2ObjectKeyMobile: null,
+          layoutMeta: defaultTransform,
         },
       });
     }
@@ -331,6 +335,76 @@ export async function upsertHeroBannerImage(
     logger.error("upsertHeroBannerImage", e);
     await deleteObjectFromR2(newKey);
     return { ok: false, error: "Could not save metadata." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function updateHeroBannerTransform(
+  _prev: SiteMediaActionResult | null,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsed = powerBannerTransformFormSchema.safeParse({
+    bannerKey: formData.get("bannerKey"),
+    viewport: formData.get("viewport"),
+    imageAlt: formData.get("imageAlt"),
+    zoom: formData.get("zoom"),
+    offsetX: formData.get("offsetX"),
+    offsetY: formData.get("offsetY"),
+  });
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    return {
+      ok: false,
+      error:
+        fieldErrors.bannerKey?.[0] ??
+        fieldErrors.viewport?.[0] ??
+        fieldErrors.imageAlt?.[0] ??
+        fieldErrors.zoom?.[0] ??
+        fieldErrors.offsetX?.[0] ??
+        fieldErrors.offsetY?.[0] ??
+        "Invalid input.",
+    };
+  }
+
+  const typedKey = parsed.data.bannerKey as PowerBannerKey;
+  const typedViewport = parsed.data.viewport as PowerBannerViewport;
+  const slotId = POWER_BANNER_SLOT_IDS[typedViewport][typedKey];
+  const transform = normalizeManufacturingImageTransform({
+    zoom: parsed.data.zoom,
+    offsetX: parsed.data.offsetX,
+    offsetY: parsed.data.offsetY,
+  });
+
+  try {
+    const existing = await siteMediaItem.findUnique({ where: { slotId } });
+    if (existing) {
+      await siteMediaItem.update({
+        where: { id: existing.id },
+        data: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
+          alt: parsed.data.imageAlt,
+          layoutMeta: transform,
+        },
+      });
+    } else {
+      await siteMediaItem.create({
+        data: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
+          slotId,
+          sortOrder: HERO_BANNER_SORT_ORDER.get(typedKey) ?? 0,
+          alt: parsed.data.imageAlt,
+          layoutMeta: transform,
+        },
+      });
+    }
+  } catch (e) {
+    logger.error("updateHeroBannerTransform", e);
+    return { ok: false, error: "Could not save hero banner transform." };
   }
 
   revalidateSite();

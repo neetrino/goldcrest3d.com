@@ -11,6 +11,7 @@ import {
   type PowerBannerKey,
   type PowerBannerViewport,
 } from "@/lib/power-banner-copy/power-banner-keys";
+import { POWER_BANNER_DEFAULT_TRANSFORMS } from "@/lib/power-banner-copy/power-banner-defaults";
 import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
 import { siteMediaItem } from "@/lib/site-media/site-media-prisma";
 import { SITE_MEDIA_GROUP_KEYS } from "@/lib/site-media/site-media.registry";
@@ -94,6 +95,7 @@ export async function updatePowerBannerCopy(
       const typedKey = bannerKey as PowerBannerKey;
       const typedViewport = viewport as PowerBannerViewport;
       const slotId = POWER_BANNER_SLOT_IDS[typedViewport][typedKey];
+      const defaultTransform = POWER_BANNER_DEFAULT_TRANSFORMS[typedViewport][typedKey];
       const sortOrder = POWER_BANNER_KEYS.indexOf(bannerKey as PowerBannerKey);
       const existingHeroMedia = await transactionalClient.siteMediaItem.findUnique({
         where: { slotId },
@@ -111,6 +113,7 @@ export async function updatePowerBannerCopy(
             sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
             slotId,
             sortOrder: sortOrder >= 0 ? sortOrder : 0,
+            layoutMeta: defaultTransform,
           },
         });
       }

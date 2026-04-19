@@ -2,10 +2,17 @@ import type {
   PowerBannerKey,
   PowerBannerViewport,
 } from "./power-banner-keys";
+import { normalizeManufacturingImageTransform } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import {
   SECTION1_HERO_BG_MOBILE_PATH,
+  SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX,
+  SECTION1_HERO_BG_NUDGE_DOWN_PX,
+  SECTION1_HERO_BG_SCALE,
   SECTION2_HERO_BG_MOBILE_PATH,
+  SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX,
+  SECTION2_HERO_BG_IMAGE_NUDGE_UP_PX,
+  SECTION2_HERO_BG_SCALE,
   SECTION3_HERO_BG_MOBILE_PATH,
 } from "@/components/landing/power-banners/power-banners-layout.constants";
 
@@ -75,6 +82,46 @@ export const POWER_BANNER_DEFAULT_MEDIA: Record<
       imageSrc: SECTION3_HERO_BG_MOBILE_PATH,
       imageAlt: "Jewelry Design hero banner",
     },
+  },
+};
+
+export const POWER_BANNER_DEFAULT_TRANSFORMS: Record<
+  PowerBannerViewport,
+  Record<PowerBannerKey, ReturnType<typeof normalizeManufacturingImageTransform>>
+> = {
+  desktop: {
+    MODELING: normalizeManufacturingImageTransform({
+      zoom: SECTION1_HERO_BG_SCALE,
+      offsetX: 0,
+      offsetY: -(SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX - SECTION1_HERO_BG_NUDGE_DOWN_PX),
+    }),
+    RENDERING: normalizeManufacturingImageTransform({
+      zoom: SECTION2_HERO_BG_SCALE,
+      offsetX: -SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX,
+      offsetY: -SECTION2_HERO_BG_IMAGE_NUDGE_UP_PX,
+    }),
+    DESIGN: normalizeManufacturingImageTransform({
+      zoom: 1,
+      offsetX: 0,
+      offsetY: 0,
+    }),
+  },
+  mobile: {
+    MODELING: normalizeManufacturingImageTransform({
+      zoom: 1,
+      offsetX: 0,
+      offsetY: 0,
+    }),
+    RENDERING: normalizeManufacturingImageTransform({
+      zoom: 1,
+      offsetX: 0,
+      offsetY: 0,
+    }),
+    DESIGN: normalizeManufacturingImageTransform({
+      zoom: 1,
+      offsetX: 0,
+      offsetY: 0,
+    }),
   },
 };
 

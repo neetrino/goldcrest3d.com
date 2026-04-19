@@ -5,8 +5,13 @@ import { siteMediaItem } from "@/lib/site-media/site-media-prisma";
 import { SITE_MEDIA_GROUP_KEYS } from "@/lib/site-media/site-media.registry";
 
 import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
+import { parseManufacturingImageTransformFromLayoutMeta } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 
-import { POWER_BANNER_DEFAULT_COPY, POWER_BANNER_DEFAULT_MEDIA } from "./power-banner-defaults";
+import {
+  POWER_BANNER_DEFAULT_COPY,
+  POWER_BANNER_DEFAULT_MEDIA,
+  POWER_BANNER_DEFAULT_TRANSFORMS,
+} from "./power-banner-defaults";
 import {
   POWER_BANNER_KEYS,
   POWER_BANNER_SLOT_IDS,
@@ -22,16 +27,19 @@ function emptyBundle(): PowerBannerCopyBundle {
       ...POWER_BANNER_DEFAULT_COPY.desktop.MODELING,
       ...POWER_BANNER_DEFAULT_MEDIA.desktop.MODELING,
       imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.desktop.MODELING,
     },
     RENDERING: {
       ...POWER_BANNER_DEFAULT_COPY.desktop.RENDERING,
       ...POWER_BANNER_DEFAULT_MEDIA.desktop.RENDERING,
       imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.desktop.RENDERING,
     },
     DESIGN: {
       ...POWER_BANNER_DEFAULT_COPY.desktop.DESIGN,
       ...POWER_BANNER_DEFAULT_MEDIA.desktop.DESIGN,
       imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.desktop.DESIGN,
     },
   };
   const mobile = {
@@ -39,16 +47,19 @@ function emptyBundle(): PowerBannerCopyBundle {
       ...POWER_BANNER_DEFAULT_COPY.mobile.MODELING,
       ...POWER_BANNER_DEFAULT_MEDIA.mobile.MODELING,
       imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.mobile.MODELING,
     },
     RENDERING: {
       ...POWER_BANNER_DEFAULT_COPY.mobile.RENDERING,
       ...POWER_BANNER_DEFAULT_MEDIA.mobile.RENDERING,
       imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.mobile.RENDERING,
     },
     DESIGN: {
       ...POWER_BANNER_DEFAULT_COPY.mobile.DESIGN,
       ...POWER_BANNER_DEFAULT_MEDIA.mobile.DESIGN,
       imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.mobile.DESIGN,
     },
   };
   return { desktop, mobile };
@@ -114,6 +125,7 @@ function applyMediaEntry(
   media: Awaited<ReturnType<typeof siteMediaItem.findMany>>[number],
 ): void {
   const defaults = POWER_BANNER_DEFAULT_MEDIA[viewport][key];
+  const defaultTransform = POWER_BANNER_DEFAULT_TRANSFORMS[viewport][key];
   const imageSrc = media.r2ObjectKey
     ? resolveSiteMediaDisplayUrl(media.r2ObjectKey)
     : null;
@@ -122,5 +134,8 @@ function applyMediaEntry(
     imageSrc: imageSrc ?? media.legacySrc ?? defaults.imageSrc,
     imageAlt: media.alt ?? defaults.imageAlt,
     imageObjectKey: media.r2ObjectKey,
+    imageTransform: media.layoutMeta
+      ? parseManufacturingImageTransformFromLayoutMeta(media.layoutMeta)
+      : defaultTransform,
   };
 }

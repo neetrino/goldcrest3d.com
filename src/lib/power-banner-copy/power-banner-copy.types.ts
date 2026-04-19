@@ -2,6 +2,7 @@ import type {
   PowerBannerKey,
   PowerBannerViewport,
 } from "./power-banner-keys";
+import type { ManufacturingImageTransform } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 
 export type PowerBannerCopyEntry = {
   title: string;
@@ -9,6 +10,7 @@ export type PowerBannerCopyEntry = {
   imageAlt: string;
   imageSrc: string;
   imageObjectKey: string | null;
+  imageTransform: ManufacturingImageTransform;
 };
 
 /** Serializable hero copy for the landing page (merged DB + defaults). */
