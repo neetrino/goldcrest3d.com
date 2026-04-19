@@ -232,29 +232,11 @@ export function FounderSectionEditor({ row, variant }: FounderSectionEditorProps
           </>
         )}
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-slate-700">Years value</span>
-            <input type="text" name="yearsValue" defaultValue={row.stats.yearsValue} disabled={savePending} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80" />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-slate-700">Years caption</span>
-            <input type="text" name="yearsCaption" defaultValue={row.stats.yearsCaption} disabled={savePending} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80" />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-slate-700">Projects value</span>
-            <input type="text" name="projectsValue" defaultValue={row.stats.projectsValue} disabled={savePending} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80" />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-slate-700">Projects caption</span>
-            <input type="text" name="projectsCaption" defaultValue={row.stats.projectsCaption} disabled={savePending} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80" />
-          </label>
-        </div>
-
-        <label className="flex flex-col gap-1.5">
-          <span className="text-sm font-medium text-slate-700">Image alt text</span>
-          <input type="text" name="imageAlt" defaultValue={row.image.alt} disabled={savePending} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80" />
-        </label>
+        <input type="hidden" name="yearsValue" value={row.stats.yearsValue} />
+        <input type="hidden" name="yearsCaption" value={row.stats.yearsCaption} />
+        <input type="hidden" name="projectsValue" value={row.stats.projectsValue} />
+        <input type="hidden" name="projectsCaption" value={row.stats.projectsCaption} />
+        <input type="hidden" name="imageAlt" value={row.image.alt} />
 
         <div className="rounded-lg border border-slate-200 bg-slate-50/70 p-3">
           <p className="text-sm font-medium text-slate-800">Preview (matches live transform)</p>
