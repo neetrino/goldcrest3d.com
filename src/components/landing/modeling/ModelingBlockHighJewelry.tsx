@@ -4,6 +4,7 @@ import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
+import { renderModelingCopyLine } from "./modeling-copy-line";
 
 type ModelingBlockHighJewelryProps = {
   imageUrlDesktop: string;
@@ -88,13 +89,13 @@ export function ModelingBlockHighJewelry({
         ) : null}
         {descriptionLinesMobile.length > 0 ? (
           <p className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden">
-            <span className="block whitespace-nowrap">{mobileLine1}</span>
+            <span className="block whitespace-nowrap">{renderModelingCopyLine(mobileLine1)}</span>
             {mobileRest.map((line, index) => (
               <span
                 key={`mobile-desc-${line}-${index}`}
                 className={index === 0 ? "mt-[calc(0.25rem*var(--ms,1))] block" : "block"}
               >
-                {line}
+                {renderModelingCopyLine(line)}
               </span>
             ))}
           </p>
@@ -103,7 +104,7 @@ export function ModelingBlockHighJewelry({
           <div className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 sm:block">
             {desktopLine1.length > 0 ? (
               <span className="block whitespace-nowrap -translate-x-[calc(1.9rem*var(--ms,1))]">
-                {desktopLine1}{" "}
+                {renderModelingCopyLine(desktopLine1)}{" "}
                 {desktopLine1Emphasis.trim().length > 0 ? (
                   <span className="whitespace-nowrap">{desktopLine1Emphasis}</span>
                 ) : null}
@@ -114,7 +115,7 @@ export function ModelingBlockHighJewelry({
                 key={`desktop-desc-${line}-${index}`}
                 className={index === 0 ? "mt-[calc(0.125rem*var(--ms,1))] block" : "block"}
               >
-                {line}
+                {renderModelingCopyLine(line)}
               </span>
             ))}
           </div>

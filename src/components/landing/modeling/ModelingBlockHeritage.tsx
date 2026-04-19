@@ -4,6 +4,7 @@ import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
 import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
+import { renderModelingCopyLine } from "./modeling-copy-line";
 
 type ModelingBlockHeritageProps = {
   imageUrlDesktop: string;
@@ -52,14 +53,14 @@ function HeritageOverlayText({
         ) : null}
         {descriptionLinesMobile.length > 0 || descriptionLinesDesktop.length > 0 ? (
           <p className="mt-[calc(3.5rem*var(--ms,1))] w-[calc(470px*var(--ms,1))] max-w-full font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:mt-[calc(1rem*var(--ms,1))] sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black">
-            {descriptionLinesMobile.map((line) => (
-              <span key={`mobile-${line}`} className="block whitespace-nowrap sm:hidden">
-                {line}
+            {descriptionLinesMobile.map((line, index) => (
+              <span key={`mobile-${index}`} className="block whitespace-nowrap sm:hidden">
+                {renderModelingCopyLine(line)}
               </span>
             ))}
-            {descriptionLinesDesktop.map((line) => (
-              <span key={`desktop-${line}`} className="hidden whitespace-nowrap sm:block">
-                {line}
+            {descriptionLinesDesktop.map((line, index) => (
+              <span key={`desktop-${index}`} className="hidden whitespace-nowrap sm:block">
+                {renderModelingCopyLine(line)}
               </span>
             ))}
           </p>

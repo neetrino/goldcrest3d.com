@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX } from "./modeling-card.typography-layout.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
+import { renderModelingCopyLine } from "./modeling-copy-line";
 
 export type ModelingCardDescriptionContentParams = Pick<
   ModelingCardProps,
@@ -65,7 +66,7 @@ export function renderModelingCardDescriptionContent(
                   key={`bridal-mobile-${i}`}
                   className={`${bridalRowSpanClass} ${lineWrapClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
                 >
-                  {line}
+                  {renderModelingCopyLine(line)}
                 </span>
               ))}
             </div>
@@ -94,7 +95,7 @@ export function renderModelingCardDescriptionContent(
                         <span className="block">long-term wear.</span>
                       </>
                     ) : (
-                      line
+                      renderModelingCopyLine(line)
                     )}
                   </span>
                 ))}
@@ -132,7 +133,7 @@ export function renderModelingCardDescriptionContent(
                   : undefined
             }
           >
-            {line}
+            {renderModelingCopyLine(line)}
           </span>
         ))}
       </div>
@@ -152,7 +153,7 @@ export function renderModelingCardDescriptionContent(
                 </span>
               ) : (
                 <span key={i} className={hipHopMobileLineClass}>
-                  {line}
+                  {renderModelingCopyLine(line)}
                 </span>
               )
             ))}
@@ -165,7 +166,7 @@ export function renderModelingCardDescriptionContent(
                 key={`hiphop-desktop-${i}`}
                 className={`block text-center ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i > 0 ? "sm:mt-[calc(0.375rem*var(--ms,1))]" : ""}`}
               >
-                {line}
+                {renderModelingCopyLine(line)}
               </span>
             ))}
           </div>
@@ -185,7 +186,7 @@ export function renderModelingCardDescriptionContent(
           : `block ${lineWrapClass}`
       }${hipHopMobileLayout && i >= HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX ? " hidden sm:block" : ""}`}
     >
-      {line}
+      {renderModelingCopyLine(line)}
     </span>
   ));
 }

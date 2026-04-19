@@ -4,12 +4,7 @@ import type {
 } from "./modeling-specialization-copy.types";
 
 function normalizeMultilineValue(value: string): string {
-  return value
-    .replace(/\r\n/g, "\n")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
-    .join("\n");
+  return value.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 }
 
 function normalizeSingleLineValue(value: string): string {
@@ -29,10 +24,11 @@ export function normalizeModelingSpecializationCopyPayload(
 }
 
 export function toCopyLines(value: string): string[] {
-  return value
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
+  const normalized = normalizeMultilineValue(value);
+  if (normalized.length === 0) {
+    return [];
+  }
+  return normalized.split("\n");
 }
 
 export function emptyModelingSpecializationCopyRow(
