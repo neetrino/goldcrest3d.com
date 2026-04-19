@@ -12,6 +12,7 @@ import { ModelingMediaSection } from "./ModelingMediaSection";
 import { ManufacturingIntelligenceSection } from "./ManufacturingIntelligenceSection";
 import { PowerBannerCopySection } from "./PowerBannerCopySection";
 import { FounderSectionEditor } from "./FounderSectionEditor";
+import { EngineeringProcessSection } from "./EngineeringProcessSection";
 
 type MediaManagerClientProps = {
   bundle: AdminSiteMediaBundle;
@@ -24,6 +25,7 @@ type MediaManagerTabKey =
   | "manufacturing-intelligence-mobile"
   | "founder-desktop"
   | "founder-mobile"
+  | "engineering-process"
   | "finished-row-1"
   | "finished-row-2"
   | "power-banner-desktop"
@@ -48,6 +50,7 @@ const MEDIA_MANAGER_TABS: ReadonlyArray<{ key: MediaManagerTabKey; label: string
   },
   { key: "finished-row-1", label: "Finished Creations — top row" },
   { key: "finished-row-2", label: "Finished Creations — bottom row" },
+  { key: "engineering-process", label: "Our Engineering Process" },
 ];
 
 const MEDIA_MANAGER_TAB_KEYS: readonly MediaManagerTabKey[] = MEDIA_MANAGER_TABS.map(
@@ -145,6 +148,10 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
 
       {selectedTab === "founder-mobile" ? (
         <FounderSectionEditor row={bundle.founderMobile} variant="mobile" />
+      ) : null}
+
+      {selectedTab === "engineering-process" ? (
+        <EngineeringProcessSection rows={bundle.engineeringProcess} />
       ) : null}
 
       {selectedTab === "finished-row-2" ? (

@@ -6,6 +6,12 @@ import {
 import { founderSectionCopy } from "@/lib/founder-section/founder-section-copy-prisma";
 import { founderSectionMobileCopy } from "@/lib/founder-section/founder-section-mobile-copy-prisma";
 import type { FounderSectionContent } from "@/lib/founder-section/founder-section.types";
+import {
+  getDefaultEngineeringProcessSteps,
+  mergeEngineeringProcessSteps,
+} from "@/lib/engineering-process/engineering-process.defaults";
+import { engineeringProcessCopy } from "@/lib/engineering-process/engineering-process-copy-prisma";
+import type { EngineeringProcessStep } from "@/lib/engineering-process/engineering-process.types";
 import { buildManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-content";
 import { buildManufacturingIntelligenceMobileContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-mobile-content";
 import type { ManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence.types";
@@ -61,6 +67,7 @@ export type LandingSiteMedia = {
   manufacturingMobile: ManufacturingIntelligenceContent;
   founderDesktop: FounderSectionContent;
   founderMobile: FounderSectionContent;
+  engineeringProcess: EngineeringProcessStep[];
   finished: LandingFinishedMedia;
 };
 
@@ -120,6 +127,7 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       manufacturingMobileCopyRows,
       founderDesktopCopyRows,
       founderMobileCopyRows,
+      engineeringProcessCopyRows,
     ] =
       await Promise.all([
       siteMediaItem.findMany({
@@ -162,6 +170,7 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       manufacturingIntelligenceMobileCopy.findMany(),
       founderSectionCopy.findMany(),
       founderSectionMobileCopy.findMany(),
+      engineeringProcessCopy.findMany(),
     ]);
 
     const modelingBySlot = new Map<
@@ -249,6 +258,13 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       })),
       founderMobileMediaRows,
     );
+    const engineeringProcess = mergeEngineeringProcessSteps(
+      engineeringProcessCopyRows.map((row) => ({
+        stepKey: row.stepKey,
+        title: row.title,
+        description: row.description,
+      })),
+    );
 
     const finished: LandingFinishedMedia = {
       row1: buildFinishedRow(row1Rows, DEFAULT_FINISHED_ROW1),
@@ -261,6 +277,7 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       manufacturingMobile,
       founderDesktop,
       founderMobile,
+      engineeringProcess,
       finished,
     };
   } catch (err) {
@@ -293,12 +310,14 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
   const manufacturingMobile = buildManufacturingIntelligenceMobileContent([], []);
   const founderDesktop = buildFounderDesktopContent([], []);
   const founderMobile = buildFounderMobileContent([], []);
+  const engineeringProcess = getDefaultEngineeringProcessSteps();
   return {
     modeling,
     manufacturingDesktop,
     manufacturingMobile,
     founderDesktop,
     founderMobile,
+    engineeringProcess,
     finished: {
       row1: [...DEFAULT_FINISHED_ROW1],
       row2: [...DEFAULT_FINISHED_ROW2],

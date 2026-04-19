@@ -170,3 +170,11 @@ model FounderSectionMobileCopy {
   value     String   @db.Text
   updatedAt DateTime @updatedAt
 }
+
+/// Editable text content for Our Engineering Process section (shared desktop/mobile).
+model EngineeringProcessCopy {
+  stepKey     String   @id
+  title       String   @db.Text
+  description String   @db.Text
+  updatedAt   DateTime @updatedAt
+}

@@ -8,6 +8,12 @@ import {
 import { founderSectionCopy } from "@/lib/founder-section/founder-section-copy-prisma";
 import { founderSectionMobileCopy } from "@/lib/founder-section/founder-section-mobile-copy-prisma";
 import type { FounderSectionContent } from "@/lib/founder-section/founder-section.types";
+import {
+  getDefaultEngineeringProcessSteps,
+  mergeEngineeringProcessSteps,
+} from "@/lib/engineering-process/engineering-process.defaults";
+import { engineeringProcessCopy } from "@/lib/engineering-process/engineering-process-copy-prisma";
+import type { EngineeringProcessStep } from "@/lib/engineering-process/engineering-process.types";
 import { buildManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-content";
 import {
   buildManufacturingIntelligenceMobileContent,
@@ -78,6 +84,8 @@ export type AdminFounderSectionRow = FounderSectionContent & {
   imageObjectKey: string | null;
 };
 
+export type AdminEngineeringProcessStepRow = EngineeringProcessStep;
+
 export type AdminSiteMediaBundle = {
   groupsMeta: typeof SITE_MEDIA_GROUPS;
   modeling: AdminModelingSlotRow[];
@@ -87,6 +95,7 @@ export type AdminSiteMediaBundle = {
   manufacturingMobile: AdminManufacturingItemRow[];
   founderDesktop: AdminFounderSectionRow;
   founderMobile: AdminFounderSectionRow;
+  engineeringProcess: AdminEngineeringProcessStepRow[];
   finishedRow1: AdminOrderedItemRow[];
   finishedRow2: AdminOrderedItemRow[];
 };
@@ -122,6 +131,7 @@ function emptyAdminBundle(): AdminSiteMediaBundle {
       itemId: null,
       imageObjectKey: null,
     },
+    engineeringProcess: getDefaultEngineeringProcessSteps(),
     finishedRow1: [],
     finishedRow2: [],
   };
@@ -150,6 +160,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
   let manufacturingMobileCopyRows: { key: string; value: string }[];
   let founderCopyRows: { key: string; value: string }[];
   let founderMobileCopyRows: { key: string; value: string }[];
+  let engineeringProcessRows: { stepKey: string; title: string; description: string }[];
   try {
     const [
       siteMediaRows,
@@ -158,6 +169,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       manufacturingMobileRows,
       founderRows,
       founderMobileRows,
+      engineeringRows,
     ] = await Promise.all([
       siteMediaItem.findMany({
         orderBy: [{ sectionKey: "asc" }, { sortOrder: "asc" }],
@@ -167,6 +179,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       manufacturingIntelligenceMobileCopy.findMany(),
       founderSectionCopy.findMany(),
       founderSectionMobileCopy.findMany(),
+      engineeringProcessCopy.findMany(),
     ]);
     rows = siteMediaRows;
     copyRows = modelingCopyRows.map((row) => ({
@@ -194,6 +207,11 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
     founderMobileCopyRows = founderMobileRows.map((row) => ({
       key: row.key,
       value: row.value,
+    }));
+    engineeringProcessRows = engineeringRows.map((row) => ({
+      stepKey: row.stepKey,
+      title: row.title,
+      description: row.description,
     }));
   } catch (err) {
     if (isMigrationPendingError(err)) {
@@ -313,6 +331,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
     itemId: founderMobileMedia?.id ?? null,
     imageObjectKey: founderMobileMedia?.r2ObjectKey ?? null,
   };
+  const engineeringProcess = mergeEngineeringProcessSteps(engineeringProcessRows);
 
   return {
     groupsMeta: SITE_MEDIA_GROUPS,
@@ -323,6 +342,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
     manufacturingMobile,
     founderDesktop,
     founderMobile,
+    engineeringProcess,
     finishedRow1: byGroup(SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1).map(
       mapOrderedRow,
     ),

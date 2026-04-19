@@ -46,7 +46,7 @@ export function LandingSections({
         row2={siteMedia.finished.row2}
       />
 
-      <SectionProcess />
+      <SectionProcess steps={siteMedia.engineeringProcess} />
 
       <SectionQuote />
 

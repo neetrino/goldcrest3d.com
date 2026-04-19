@@ -5,6 +5,7 @@ import { requireAdminSession } from "@/auth";
 import { MANUFACTURING_SPECIALIZATION_ITEMS } from "@/constants/manufacturing-specialization";
 import { prisma } from "@/lib/db";
 import { FOUNDER_SECTION_COPY_KEYS } from "@/lib/founder-section/founder-section-copy.keys";
+import { engineeringProcessCopy } from "@/lib/engineering-process/engineering-process-copy-prisma";
 import {
   getFounderDesktopMediaSlotId,
   getFounderMobileMediaSlotId,
@@ -58,6 +59,7 @@ import {
 import { founderSectionFormSchema } from "@/lib/validations/founderSection";
 import { modelingSpecializationCopyFormSchema } from "@/lib/validations/modelingSpecializationCopy";
 import { powerBannerTransformFormSchema } from "@/lib/validations/powerBannerCopy";
+import { engineeringProcessStepFormSchema } from "@/lib/validations/engineeringProcessStep";
 
 const MODELING_SLOT_SET = new Set<string>(Object.values(MODELING_SLOT_KEYS));
 const MANUFACTURING_SLOT_SET = new Set<string>(
@@ -233,6 +235,52 @@ export async function updateModelingSlotCopy(
   } catch (e) {
     logger.error("updateModelingSlotCopy", e);
     return { ok: false, error: "Could not save text content." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function updateEngineeringProcessStep(
+  _prev: SiteMediaActionResult | null,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsed = engineeringProcessStepFormSchema.safeParse({
+    stepKey: formData.get("stepKey"),
+    title: formData.get("title"),
+    description: formData.get("description"),
+  });
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    return {
+      ok: false,
+      error:
+        fieldErrors.stepKey?.[0] ??
+        fieldErrors.title?.[0] ??
+        fieldErrors.description?.[0] ??
+        "Invalid process step values.",
+    };
+  }
+
+  try {
+    await engineeringProcessCopy.upsert({
+      where: { stepKey: parsed.data.stepKey },
+      create: {
+        stepKey: parsed.data.stepKey,
+        title: parsed.data.title,
+        description: parsed.data.description,
+      },
+      update: {
+        title: parsed.data.title,
+        description: parsed.data.description,
+      },
+    });
+  } catch (error) {
+    logger.error("updateEngineeringProcessStep", error);
+    return { ok: false, error: "Could not save process step content." };
   }
 
   revalidateSite();
