@@ -25,6 +25,7 @@ type ModelingBlockPortraitProps = {
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
   imageFramingMobile?: ImageFraming | null;
+  forceMobileViewport?: boolean;
   /** Optional admin preview override: place title/body from top-left as the starting point. */
   adminPreviewLeftOrigin?: boolean;
 };
@@ -35,6 +36,7 @@ export function ModelingBlockPortrait({
   imageUrlMobile,
   imageFramingDesktop,
   imageFramingMobile,
+  forceMobileViewport = false,
   adminPreviewLeftOrigin = false,
 }: ModelingBlockPortraitProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
@@ -42,9 +44,11 @@ export function ModelingBlockPortrait({
     <ModelingCard
       title={copy.title}
       titleMobile={copy.titleMobile}
+      mobileTitleFontSizePx={copy.mobileTitleFontSizePx}
       description=""
       descriptionRichHtml={copy.body}
       descriptionRichHtmlMobile={copy.bodyMobile}
+      mobileBodyFontSizePx={copy.mobileBodyFontSizePx}
       imageSrc={imageUrlDesktop}
       imageId={LANDING_IMAGE_IDS.MODELING_PORTRAIT}
       imageOnLeft={false}
@@ -62,6 +66,7 @@ export function ModelingBlockPortrait({
           : portraitLayerBackground(imageUrlMobile, imageFramingMobile)
       }
       imagePairBreakpoint="md"
+      forceMobileViewport={forceMobileViewport}
       textDark
       independentTitleDescription
       titleBlockTop={adminPreviewLeftOrigin ? "-7%" : "-7%"}

@@ -10,6 +10,7 @@ type ModelingBlockBridalProps = {
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
   imageFramingMobile?: ImageFraming | null;
+  forceMobileViewport?: boolean;
   /** Optional admin preview override: title and description are positioned independently. */
   independentTitleDescription?: boolean;
   /** Optional admin preview override: place title/body from top-left as the starting point. */
@@ -23,6 +24,7 @@ export function ModelingBlockBridal({
   imageUrlMobile,
   imageFramingDesktop,
   imageFramingMobile,
+  forceMobileViewport = false,
   independentTitleDescription = true,
   adminPreviewLeftOrigin = false,
 }: ModelingBlockBridalProps) {
@@ -30,9 +32,11 @@ export function ModelingBlockBridal({
     <ModelingCard
       title={copy.title}
       titleMobile={copy.titleMobile}
+      mobileTitleFontSizePx={copy.mobileTitleFontSizePx}
       description=""
       descriptionRichHtml={copy.body}
       descriptionRichHtmlMobile={copy.bodyMobile}
+      mobileBodyFontSizePx={copy.mobileBodyFontSizePx}
       imageSrc={imageUrlDesktop}
       imageSrcMobile={imageUrlMobile}
       imagePairBreakpoint="md"
@@ -59,6 +63,7 @@ export function ModelingBlockBridal({
       descriptionLayout="row"
       imageFramingDesktop={imageFramingDesktop}
       imageFramingMobile={imageFramingMobile}
+      forceMobileViewport={forceMobileViewport}
       independentTitleDescription={independentTitleDescription}
       titleBlockTop="-72%"
       titleBlockLeft="-12%"

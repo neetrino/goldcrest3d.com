@@ -78,6 +78,9 @@ export type ModelingCardFullBleedProps = Pick<
   | "titleMarginTopCompensate"
   | "descriptionMarginTop"
   | "descriptionLinesMobile"
+  | "forceMobileViewport"
+  | "mobileTitleFontSizePx"
+  | "mobileBodyFontSizePx"
 > & {
   textColor: string;
   hipHopMobileLayout: boolean;
@@ -130,6 +133,9 @@ export function ModelingCardFullBleed({
   titleMarginTopCompensate,
   descriptionMarginTop,
   descriptionLinesMobile,
+  forceMobileViewport = false,
+  mobileTitleFontSizePx,
+  mobileBodyFontSizePx,
   textColor,
   hipHopMobileLayout,
   bridalMobileLayout,
@@ -200,9 +206,20 @@ export function ModelingCardFullBleed({
     };
   }, [hipHopMobileLayout, hipHopZoomCompensation, overlayTextContainerStyle]);
 
+  const frameClassName = forceMobileViewport
+    ? "mx-auto w-full max-w-full min-h-0 aspect-[360/259]"
+    : MODELING_CARD_FRAME_MOBILE_CLASSES;
   return (
     <article
-      className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
+      className={`relative min-w-0 overflow-hidden ${frameClassName}`}
+      style={{
+        ["--modeling-mobile-title-font-px" as string]: String(
+          mobileTitleFontSizePx ?? 20,
+        ),
+        ["--modeling-mobile-body-font-px" as string]: String(
+          mobileBodyFontSizePx ?? 12,
+        ),
+      }}
     >
       <div className="absolute inset-0" data-landing-image={imageId}>
         {imageLayerBackground && imageLayerBackgroundMobile ? (

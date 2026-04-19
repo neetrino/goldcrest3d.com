@@ -3,6 +3,7 @@ import Image from "next/image";
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
+import { resolveModelingMobileFontSizePx } from "@/lib/modeling-slot-copy/modeling-mobile-typography";
 import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
 import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
@@ -17,6 +18,7 @@ type ModelingBlockHighJewelryProps = {
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
   imageFramingMobile?: ImageFraming | null;
+  forceMobileViewport?: boolean;
   /** Optional admin preview override: place title/body at top-left. */
   adminPreviewLeftOrigin?: boolean;
 };
@@ -37,6 +39,7 @@ export function ModelingBlockHighJewelry({
   imageUrlMobile,
   imageFramingDesktop,
   imageFramingMobile,
+  forceMobileViewport = false,
   adminPreviewLeftOrigin = false,
 }: ModelingBlockHighJewelryProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
@@ -48,9 +51,39 @@ export function ModelingBlockHighJewelry({
   const titleMobile = copy.titleMobile;
   const bodyDesktop = copy.body;
   const bodyMobile = copy.bodyMobile;
+  const mobileTitleFontSizePx = resolveModelingMobileFontSizePx(
+    copy.mobileTitleFontSizePx,
+    18,
+  );
+  const mobileBodyFontSizePx = resolveModelingMobileFontSizePx(
+    copy.mobileBodyFontSizePx,
+    11,
+  );
+  const mobileImageClass = forceMobileViewport ? "absolute inset-0" : "absolute inset-0 md:hidden";
+  const desktopImageClass = forceMobileViewport
+    ? "absolute inset-0 hidden"
+    : "absolute inset-0 hidden md:block";
+  const mobileTitleClass = forceMobileViewport ? "block" : "md:hidden";
+  const desktopTitleClass = forceMobileViewport ? "hidden" : "hidden md:block";
+  const mobileBodyClass = forceMobileViewport
+    ? "absolute left-0 top-[calc(2.1rem*var(--ms,1)*var(--mt,1))] w-[min(100%,calc(280px*var(--ms,1)))] max-w-full"
+    : "absolute left-0 top-[calc(2.1rem*var(--ms,1)*var(--mt,1))] w-[min(100%,calc(280px*var(--ms,1)))] max-w-full md:hidden md:top-0";
+  const desktopBodyClass = forceMobileViewport
+    ? "absolute left-0 top-0 hidden max-w-[calc(520px*var(--ms,1))]"
+    : "absolute left-0 top-0 hidden max-w-[calc(520px*var(--ms,1))] md:block";
+  const titleClassName = forceMobileViewport
+    ? "font-sans text-[calc(var(--modeling-mobile-title-font-px,18)*1px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(var(--modeling-mobile-title-font-px,18)*1.333*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))]"
+    : "font-sans text-[calc(var(--modeling-mobile-title-font-px,18)*1px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(var(--modeling-mobile-title-font-px,18)*1.333*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] md:font-manrope md:text-[calc(32px*var(--ms,1)*var(--mt,1))] md:leading-[calc(24px*var(--ms,1)*var(--mt,1))] md:tracking-normal md:font-bold";
+  const frameClassName = forceMobileViewport
+    ? "relative min-w-0 overflow-hidden mx-auto w-full max-w-full min-h-0 aspect-[360/259]"
+    : `relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`;
   return (
     <article
-      className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
+      className={frameClassName}
+      style={{
+        ["--modeling-mobile-title-font-px" as string]: String(mobileTitleFontSizePx),
+        ["--modeling-mobile-body-font-px" as string]: String(mobileBodyFontSizePx),
+      }}
     >
       <div
         className="absolute inset-0"
@@ -72,7 +105,7 @@ export function ModelingBlockHighJewelry({
           />
         ) : (
           <>
-            <div className="absolute inset-0 md:hidden">
+            <div className={mobileImageClass}>
               <Image
                 src={imageUrlMobile}
                 alt=""
@@ -90,7 +123,7 @@ export function ModelingBlockHighJewelry({
                 sizes="(max-width: 767px) 100vw, 0px"
               />
             </div>
-            <div className="absolute inset-0 hidden md:block">
+            <div className={desktopImageClass}>
               <Image
                 src={imageUrlDesktop}
                 alt=""
@@ -114,22 +147,22 @@ export function ModelingBlockHighJewelry({
       <div className="absolute inset-0 z-10 px-[calc(0.75rem*var(--ms,1))] py-[calc(0.5rem*var(--ms,1))] text-left text-black md:px-[calc(1rem*var(--ms,1))] md:py-[calc(0.75rem*var(--ms,1))]">
         <div className="relative h-full w-full">
           <div className="absolute left-0 top-0 max-w-[calc(560px*var(--ms,1))]">
-            <h3 className="font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
-              <span className="md:hidden">
+            <h3 className={titleClassName}>
+              <span className={mobileTitleClass}>
                 <HighJewelryTitleLines title={titleMobile} />
               </span>
-              <span className="hidden md:block">
+              <span className={desktopTitleClass}>
                 <HighJewelryTitleLines title={titleDesktop} />
               </span>
             </h3>
           </div>
-          <div className="absolute left-0 top-0 w-[min(100%,calc(280px*var(--ms,1)))] max-w-full md:hidden">
+          <div className={mobileBodyClass}>
             <HeroBannerBodyRichText
               body={bodyMobile}
-              className={`modeling-slot-rich-body whitespace-pre text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] ${HIGH_JEWELRY_RICH_BODY}`}
+              className={`modeling-slot-rich-body whitespace-pre text-left font-sans text-[calc(var(--modeling-mobile-body-font-px,11)*1px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(var(--modeling-mobile-body-font-px,11)*1.273*var(--ms,1)*var(--mt,1))] text-[#364153] ${HIGH_JEWELRY_RICH_BODY}`}
             />
           </div>
-          <div className="absolute left-0 top-0 hidden max-w-[calc(520px*var(--ms,1))] md:block">
+          <div className={desktopBodyClass}>
             <HeroBannerBodyRichText
               body={bodyDesktop}
               className={`modeling-slot-rich-body whitespace-pre text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black ${HIGH_JEWELRY_RICH_BODY}`}

@@ -28,7 +28,7 @@
  * Keep in sync with `MODELING_SPECIALIZATION_CARD_TEXT_MT` (modeling-text-overlay-presentation.ts).
  */
 .modeling-specialization-card-text-scale {
-  --mt: 1.04;
+  --mt: 1;
 }
 
 /**

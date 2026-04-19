@@ -7,6 +7,11 @@ import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { extractCanvasRichTextHtml } from "@/lib/canvas-rich-text/canvas-rich-text-form";
+import {
+  clampModelingTextOverlayLayout,
+  DEFAULT_MODELING_TEXT_OVERLAY_LAYOUT_MOBILE,
+  parseModelingTextOverlayLayout,
+} from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 import { finalizeHeroBannerBodyHtml } from "@/lib/power-banner-copy/sanitize-hero-banner-body";
 import { modelingSlotCopyFormSchema } from "@/lib/validations/modelingSlotCopy";
 
@@ -46,6 +51,8 @@ export async function updateModelingSlotCopy(
       docJson: (formData.get("bodyDoc") as string | null) ?? "",
     }),
     bodyDoc: formData.get("bodyDoc"),
+    mobileTitleFontSizePx: formData.get("mobileTitleFontSizePx"),
+    mobileBodyFontSizePx: formData.get("mobileBodyFontSizePx"),
   });
 
   if (!parsed.success) {
@@ -55,13 +62,45 @@ export async function updateModelingSlotCopy(
       first.variant?.[0] ??
       first.title?.[0] ??
       first.body?.[0] ??
+      first.mobileTitleFontSizePx?.[0] ??
+      first.mobileBodyFontSizePx?.[0] ??
       first.bodyDoc?.[0] ??
       "Invalid input.";
     return { ok: false, error: msg };
   }
 
-  const { slotKey, variant, title, body } = parsed.data;
+  const {
+    slotKey,
+    variant,
+    title,
+    body,
+    mobileTitleFontSizePx,
+    mobileBodyFontSizePx,
+  } = parsed.data;
   const bodyStored = finalizeHeroBannerBodyHtml(body);
+  let nextTextLayoutMobile: Prisma.InputJsonValue | Prisma.NullTypes.DbNull = Prisma.DbNull;
+
+  if (variant === "mobile") {
+    const existing = await prisma.modelingSlotCopy.findUnique({
+      where: { slotKey },
+      select: { textLayoutMobile: true },
+    });
+    const baseLayout = clampModelingTextOverlayLayout(
+      parseModelingTextOverlayLayout(existing?.textLayoutMobile) ??
+        DEFAULT_MODELING_TEXT_OVERLAY_LAYOUT_MOBILE,
+    );
+    nextTextLayoutMobile = {
+      ...baseLayout,
+      title: {
+        ...baseLayout.title,
+        fontSizePx: mobileTitleFontSizePx ?? baseLayout.title.fontSizePx,
+      },
+      body: {
+        ...baseLayout.body,
+        fontSizePx: mobileBodyFontSizePx ?? baseLayout.body.fontSizePx,
+      },
+    } as Prisma.InputJsonValue;
+  }
 
   try {
     await prisma.modelingSlotCopy.upsert({
@@ -73,7 +112,7 @@ export async function updateModelingSlotCopy(
         body: variant === "desktop" ? bodyStored : "",
         bodyMobile: variant === "mobile" ? bodyStored : "",
         textLayoutDesktop: Prisma.DbNull,
-        textLayoutMobile: Prisma.DbNull,
+        textLayoutMobile: nextTextLayoutMobile,
       },
       update: {
         ...(variant === "desktop"
@@ -84,9 +123,8 @@ export async function updateModelingSlotCopy(
           : {
               titleMobile: title,
               bodyMobile: bodyStored,
+              textLayoutMobile: nextTextLayoutMobile,
             }),
-        textLayoutDesktop: Prisma.DbNull,
-        textLayoutMobile: Prisma.DbNull,
       },
     } as Parameters<typeof prisma.modelingSlotCopy.upsert>[0]);
   } catch (err) {

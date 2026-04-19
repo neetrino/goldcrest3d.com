@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { HeroBannerBodyRichText } from "@/components/landing/power-banners/HeroBannerBodyRichText";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
+import { resolveModelingMobileFontSizePx } from "@/lib/modeling-slot-copy/modeling-mobile-typography";
 import type { ModelingSlotCopyEntry } from "@/lib/modeling-slot-copy/modeling-slot-copy.types";
 import { framingToCoverImageStyle, type ImageFraming } from "@/lib/site-media/image-framing";
 
@@ -38,6 +39,7 @@ type ModelingBlockMechanicalProps = {
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
   imageFramingMobile?: ImageFraming | null;
+  forceMobileViewport?: boolean;
   /** Optional admin preview override: place title/body at top-left. */
   adminPreviewLeftOrigin?: boolean;
 };
@@ -49,6 +51,7 @@ export function ModelingBlockMechanical({
   imageUrlMobile,
   imageFramingDesktop,
   imageFramingMobile,
+  forceMobileViewport = false,
   adminPreviewLeftOrigin = false,
 }: ModelingBlockMechanicalProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
@@ -56,11 +59,40 @@ export function ModelingBlockMechanical({
   const bodyMobile = preserveEmptyParagraphLines(copy.bodyMobile);
   const titleDesktop = copy.title;
   const resolvedTitleMobile = copy.titleMobile;
+  const mobileTitleFontSizePx = resolveModelingMobileFontSizePx(
+    copy.mobileTitleFontSizePx,
+    20,
+  );
+  const mobileBodyFontSizePx = resolveModelingMobileFontSizePx(
+    copy.mobileBodyFontSizePx,
+    12,
+  );
   const mechanicalTitleH3Class =
-    "z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left";
+    forceMobileViewport
+      ? "z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(var(--modeling-mobile-title-font-px,20)*1px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(var(--modeling-mobile-title-font-px,20)*1.4*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] whitespace-normal"
+      : "z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(var(--modeling-mobile-title-font-px,20)*1px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(var(--modeling-mobile-title-font-px,20)*1.4*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-md:whitespace-normal md:w-full md:max-w-[calc(520px*var(--ms,1))] md:font-manrope md:text-[calc(32px*var(--ms,1)*var(--mt,1))] md:leading-[calc(24px*var(--ms,1)*var(--mt,1))] md:tracking-normal md:scale-x-105 md:origin-left";
+  const mobileImageClass = forceMobileViewport ? "absolute inset-0" : "absolute inset-0 md:hidden";
+  const desktopImageClass = forceMobileViewport
+    ? "absolute inset-0 hidden"
+    : "absolute inset-0 hidden md:block";
+  const mobileTitleClass = forceMobileViewport ? "block" : "md:hidden";
+  const desktopTitleClass = forceMobileViewport ? "hidden" : "hidden md:block";
+  const mobileBodyClass = forceMobileViewport
+    ? "w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(var(--modeling-mobile-body-font-px,12)*1px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(var(--modeling-mobile-body-font-px,12)*1.333*var(--ms,1)*var(--mt,1))]"
+    : "w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(var(--modeling-mobile-body-font-px,12)*1px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(var(--modeling-mobile-body-font-px,12)*1.333*var(--ms,1)*var(--mt,1))] md:hidden";
+  const desktopBodyClass = forceMobileViewport
+    ? "hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))]"
+    : "hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] md:block";
+  const frameClassName = forceMobileViewport
+    ? "relative min-w-0 overflow-hidden mx-auto w-full max-w-full min-h-0 aspect-[360/259]"
+    : `relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`;
   return (
     <article
-      className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
+      className={frameClassName}
+      style={{
+        ["--modeling-mobile-title-font-px" as string]: String(mobileTitleFontSizePx),
+        ["--modeling-mobile-body-font-px" as string]: String(mobileBodyFontSizePx),
+      }}
     >
       <div
         className="absolute inset-0"
@@ -85,7 +117,7 @@ export function ModelingBlockMechanical({
           />
         ) : (
           <>
-            <div className="absolute inset-0 md:hidden">
+            <div className={mobileImageClass}>
               <Image
                 src={imageUrlMobile}
                 alt=""
@@ -103,7 +135,7 @@ export function ModelingBlockMechanical({
                 sizes="(max-width: 767px) 100vw, 0px"
               />
             </div>
-            <div className="absolute inset-0 hidden md:block">
+            <div className={desktopImageClass}>
               <Image
                 src={imageUrlDesktop}
                 alt=""
@@ -128,23 +160,20 @@ export function ModelingBlockMechanical({
         className="absolute inset-0 z-10 flex flex-col items-start justify-start gap-[calc(0.75rem*var(--ms,1))] px-[calc(0.75rem*var(--ms,1))] py-[calc(0.5rem*var(--ms,1))] text-black md:gap-[calc(1rem*var(--ms,1))] md:px-[calc(1rem*var(--ms,1))] md:py-[calc(0.75rem*var(--ms,1))]"
       >
         <>
-          <h3 className={`${mechanicalTitleH3Class} md:hidden`}>
+          <h3 className={`${mechanicalTitleH3Class} ${mobileTitleClass}`}>
             <MechanicalTitleLines title={resolvedTitleMobile} />
           </h3>
-          <h3 className={`${mechanicalTitleH3Class} hidden md:block`}>
+          <h3 className={`${mechanicalTitleH3Class} ${desktopTitleClass}`}>
             <MechanicalTitleLines title={titleDesktop} />
           </h3>
         </>
-        <div className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] md:hidden">
+        <div className={mobileBodyClass}>
           <HeroBannerBodyRichText
             body={bodyMobile}
             className={`modeling-slot-rich-body whitespace-pre ${MECHANICAL_RICH_BODY}`}
           />
         </div>
-        <div
-          className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] md:block"
-          style={{ overflow: "visible" }}
-        >
+        <div className={desktopBodyClass} style={{ overflow: "visible" }}>
           <HeroBannerBodyRichText
             body={bodyDesktop}
             className={`modeling-slot-rich-body whitespace-pre ${MECHANICAL_RICH_BODY}`}

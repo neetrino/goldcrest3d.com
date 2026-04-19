@@ -20,10 +20,19 @@ import {
   ModelingBlockPortrait,
 } from "@/components/landing/modeling";
 import { MODELING_SPECIALIZATION_CARD_TEXT_MT } from "@/lib/modeling-slot-copy/modeling-text-overlay-presentation";
+import {
+  MODELING_TEXT_OVERLAY_EDITOR_DESKTOP_CANVAS_MAX_WIDTH_PX,
+  MODELING_TEXT_OVERLAY_EDITOR_MOBILE_CANVAS_MAX_WIDTH_PX,
+} from "@/app/admin/media/modeling-text-overlay-editor.constants";
+import { getDefaultModelingMobileTypographyForSlot } from "@/lib/modeling-slot-copy/modeling-mobile-typography";
 
 import { ModelingSlotCopyEditor } from "./ModelingSlotCopyEditor";
 import { ModelingSlotPreview } from "./ModelingSlotPreview";
 import { ModelingSlotVariantUpload } from "./ModelingSlotVariantUpload";
+
+const MOBILE_PREVIEW_VIEWPORT_WIDTH_PX = 345;
+const MOBILE_MODAL_MIN_WIDTH_PX = 420;
+const PREVIEW_MODAL_HORIZONTAL_CHROME_PX = 96;
 
 type ModelingSlotFormProps = {
   row: AdminModelingSlotRow;
@@ -104,6 +113,7 @@ export function ModelingMediaSection({
       </section>
       {editingRow && editingCopy && editingTarget ? (
         <ModelingCopyModal
+          key={`${editingRow.slotKey}-${editingTarget.variant}`}
           row={editingRow}
           copy={editingCopy}
           variant={editingTarget.variant}
@@ -123,6 +133,7 @@ type ModelingCopyModalProps = {
 
 function ModelingCopyModal({ row, copy, variant, onClose }: ModelingCopyModalProps) {
   const isDesktopVariant = variant === "desktop";
+  const mobileTypographyDefaults = getDefaultModelingMobileTypographyForSlot(row.slotKey);
   const [viewportWidthPx, setViewportWidthPx] = useState(1920);
   useEffect(() => {
     const updateViewportWidth = () => {
@@ -133,15 +144,27 @@ function ModelingCopyModal({ row, copy, variant, onClose }: ModelingCopyModalPro
     return () => window.removeEventListener("resize", updateViewportWidth);
   }, []);
 
-  const sectionWidthPx = Math.min(1920, Math.max(320, viewportWidthPx - 40));
-  const modelingScale = Math.min(1, Math.max(0.5, sectionWidthPx / 1920));
-  const desktopGridGapPx = 8 * modelingScale;
-  const desktopCardWidthPx = Math.round((sectionWidthPx - desktopGridGapPx) / 2);
-  const mobileCardWidthPx = Math.max(280, Math.round(viewportWidthPx - 24));
-  const previewWidthPx = isDesktopVariant ? desktopCardWidthPx : mobileCardWidthPx;
+  const previewAvailableWidthPx = Math.max(
+    280,
+    Math.round(viewportWidthPx - PREVIEW_MODAL_HORIZONTAL_CHROME_PX),
+  );
+  const desktopCardWidthPx = Math.min(
+    MODELING_TEXT_OVERLAY_EDITOR_DESKTOP_CANVAS_MAX_WIDTH_PX,
+    previewAvailableWidthPx,
+  );
+  const mobileCardWidthPx = Math.min(
+    MODELING_TEXT_OVERLAY_EDITOR_MOBILE_CANVAS_MAX_WIDTH_PX,
+    previewAvailableWidthPx,
+  );
+  const previewWidthPx = isDesktopVariant
+    ? desktopCardWidthPx
+    : Math.max(280, Math.min(MOBILE_PREVIEW_VIEWPORT_WIDTH_PX, mobileCardWidthPx));
   const modalMaxWidthPx = Math.min(
     1200,
-    Math.max(560, previewWidthPx + 48),
+    Math.max(
+      isDesktopVariant ? 560 : MOBILE_MODAL_MIN_WIDTH_PX,
+      previewWidthPx + 48,
+    ),
   );
   const [titleDraft, setTitleDraft] = useState(
     isDesktopVariant ? copy.title : copy.titleMobile,
@@ -149,18 +172,35 @@ function ModelingCopyModal({ row, copy, variant, onClose }: ModelingCopyModalPro
   const [bodyDraft, setBodyDraft] = useState(
     isDesktopVariant ? copy.body : copy.bodyMobile,
   );
+  const [mobileTitleFontSizePxDraft, setMobileTitleFontSizePxDraft] = useState(
+    copy.mobileTitleFontSizePx ?? mobileTypographyDefaults.titleFontSizePx,
+  );
+  const [mobileBodyFontSizePxDraft, setMobileBodyFontSizePxDraft] = useState(
+    copy.mobileBodyFontSizePx ?? mobileTypographyDefaults.bodyFontSizePx,
+  );
   const previewCopy = useMemo<ModelingSlotCopyEntry>(
     () => ({
       ...copy,
-      // Keep preview synchronized with the active draft across breakpoints.
-      // Without this, desktop editing can appear correct in a narrow modal (mobile branch)
-      // while saving an empty desktop field, causing missing text on the live desktop page.
-      title: titleDraft,
-      titleMobile: titleDraft,
-      body: bodyDraft,
-      bodyMobile: bodyDraft,
+      ...(isDesktopVariant
+        ? {
+            title: titleDraft,
+            body: bodyDraft,
+          }
+        : {
+            titleMobile: titleDraft,
+            bodyMobile: bodyDraft,
+          }),
+      mobileTitleFontSizePx: mobileTitleFontSizePxDraft,
+      mobileBodyFontSizePx: mobileBodyFontSizePxDraft,
     }),
-    [bodyDraft, copy, titleDraft],
+    [
+      bodyDraft,
+      copy,
+      isDesktopVariant,
+      mobileBodyFontSizePxDraft,
+      mobileTitleFontSizePxDraft,
+      titleDraft,
+    ],
   );
 
   return (
@@ -187,8 +227,8 @@ function ModelingCopyModal({ row, copy, variant, onClose }: ModelingCopyModalPro
             <div
               className="mx-auto w-full modeling-specialization-card-text-scale"
               style={{
-              ["--ms" as string]: String(isDesktopVariant ? modelingScale : 1),
-              ["--mt" as string]: String(MODELING_SPECIALIZATION_CARD_TEXT_MT),
+                ["--ms" as string]: "1",
+                ["--mt" as string]: String(MODELING_SPECIALIZATION_CARD_TEXT_MT),
                 maxWidth: `${previewWidthPx}px`,
               }}
             >
@@ -197,13 +237,17 @@ function ModelingCopyModal({ row, copy, variant, onClose }: ModelingCopyModalPro
           </div>
 
           <ModelingSlotCopyEditor
-            key={row.slotKey}
+            key={`${row.slotKey}-${variant}`}
             slotKey={row.slotKey}
             variant={variant}
             titleValue={titleDraft}
             bodyValue={bodyDraft}
             onTitleChange={setTitleDraft}
             onBodyChange={setBodyDraft}
+            mobileTitleFontSizePx={mobileTitleFontSizePxDraft}
+            mobileBodyFontSizePx={mobileBodyFontSizePxDraft}
+            onMobileTitleFontSizePxChange={setMobileTitleFontSizePxDraft}
+            onMobileBodyFontSizePxChange={setMobileBodyFontSizePxDraft}
             onCancel={onClose}
             onSaved={onClose}
           />
@@ -221,6 +265,7 @@ type ModelingLiveCardPreviewProps = {
 
 function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreviewProps) {
   const isDesktopVariant = variant === "desktop";
+  const forceMobileViewport = variant === "mobile";
   const imageUrlDesktop = isDesktopVariant
     ? row.displayUrl
     : row.displayUrlMobile ?? row.displayUrl;
@@ -249,6 +294,7 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          forceMobileViewport={forceMobileViewport}
           independentTitleDescription
           adminPreviewLeftOrigin
         />
@@ -261,6 +307,7 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          forceMobileViewport={forceMobileViewport}
           independentTitleDescription
           adminPreviewLeftOrigin
         />
@@ -273,6 +320,7 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          forceMobileViewport={forceMobileViewport}
           adminPreviewLeftOrigin
         />
       );
@@ -284,6 +332,7 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          forceMobileViewport={forceMobileViewport}
           adminPreviewLeftOrigin
         />
       );
@@ -295,6 +344,7 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          forceMobileViewport={forceMobileViewport}
           adminPreviewLeftOrigin
         />
       );
@@ -306,6 +356,7 @@ function ModelingLiveCardPreview({ row, copy, variant }: ModelingLiveCardPreview
           imageUrlMobile={mobileImageUrl}
           imageFramingDesktop={imageFramingDesktop}
           imageFramingMobile={imageFramingMobile}
+          forceMobileViewport={forceMobileViewport}
           adminPreviewLeftOrigin
         />
       );

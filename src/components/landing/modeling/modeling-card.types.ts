@@ -10,6 +10,8 @@ export type ModelingCardProps = {
    * `imagePairBreakpoint`; when omitted or empty, `title` is used on all viewports.
    */
   titleMobile?: string;
+  /** Optional mobile title font size override (px) for below `md`. */
+  mobileTitleFontSizePx?: number | null;
   /**
    * Admin-managed HTML (Media Manager). When set, `descriptionLines*` are ignored and the body is
    * rendered with the same sanitizer as hero banners.
@@ -20,6 +22,8 @@ export type ModelingCardProps = {
    * card's `imagePairBreakpoint`; when omitted or empty, `descriptionRichHtml` is used on all viewports.
    */
   descriptionRichHtmlMobile?: string;
+  /** Optional mobile description font size override (px) for below `md`. */
+  mobileBodyFontSizePx?: number | null;
   /** Single paragraph; ignored when descriptionLines or descriptionRichHtml is set. */
   description: string;
   /** When set, description is rendered as one block per line (e.g. Hip-Hop). */
@@ -128,6 +132,10 @@ export type ModelingCardProps = {
    * 3D Portrait block only: below `sm`, `descriptionLinesMobile` copy; `sm+` keeps absolute title/description + `descriptionLines`.
    */
   mobilePortraitTypography?: boolean;
+  /**
+   * Admin preview only: forces mobile title/description rendering regardless of browser viewport.
+   */
+  forceMobileViewport?: boolean;
   /**
    * Optional `next/image` fill layer classes.
    * Default: `object-contain`.

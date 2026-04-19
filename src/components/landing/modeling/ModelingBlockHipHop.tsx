@@ -11,6 +11,7 @@ type ModelingBlockHipHopProps = {
   imageUrlMobile: string;
   imageFramingDesktop?: ImageFraming | null;
   imageFramingMobile?: ImageFraming | null;
+  forceMobileViewport?: boolean;
   /** Optional admin preview override: title and description are positioned independently. */
   independentTitleDescription?: boolean;
   /** Optional admin preview override: place title/body from top-left as the starting point. */
@@ -24,6 +25,7 @@ export function ModelingBlockHipHop({
   imageUrlMobile,
   imageFramingDesktop,
   imageFramingMobile,
+  forceMobileViewport = false,
   independentTitleDescription = true,
   adminPreviewLeftOrigin = false,
 }: ModelingBlockHipHopProps) {
@@ -32,9 +34,11 @@ export function ModelingBlockHipHop({
     <ModelingCard
       title={copy.title}
       titleMobile={copy.titleMobile}
+      mobileTitleFontSizePx={copy.mobileTitleFontSizePx}
       description=""
       descriptionRichHtml={copy.body}
       descriptionRichHtmlMobile={copy.bodyMobile}
+      mobileBodyFontSizePx={copy.mobileBodyFontSizePx}
       imageSrc={imageUrlDesktop}
       imageId={LANDING_IMAGE_IDS.MODELING_HIPHOP}
       imageOnLeft={false}
@@ -49,6 +53,7 @@ export function ModelingBlockHipHop({
           : getModelingHipHopCardBackgroundStyle(imageUrlMobile, imageFramingMobile)
       }
       imagePairBreakpoint="md"
+      forceMobileViewport={forceMobileViewport}
       independentTitleDescription={independentTitleDescription}
       titleBlockTop={adminPreviewLeftOrigin ? "-6%" : "2%"}
       titleBlockLeft={adminPreviewLeftOrigin ? "6%" : "2%"}

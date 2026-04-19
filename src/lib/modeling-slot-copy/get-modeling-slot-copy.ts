@@ -5,6 +5,7 @@ import { withPrismaConnectionRetry } from "@/lib/db/prisma-transient-retry";
 import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
 import { ORDERED_MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 import type { ModelingSlotKey } from "@/lib/site-media/site-media.registry";
+import { parseModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modeling-text-overlay-layout";
 
 import { defaultModelingSlotCopyBundle } from "./modeling-slot-copy-defaults";
 import type { ModelingSlotCopyBundle } from "./modeling-slot-copy.types";
@@ -17,6 +18,7 @@ function getModelingSlotCopyDelegate(): {
       titleMobile: string | null;
       body: string;
       bodyMobile: string | null;
+      textLayoutMobile: unknown | null;
     }[]
   >;
 } | null {
@@ -30,6 +32,7 @@ function getModelingSlotCopyDelegate(): {
             titleMobile: string | null;
             body: string;
             bodyMobile: string | null;
+            textLayoutMobile: unknown | null;
           }[]
         >;
       };
@@ -59,6 +62,7 @@ export async function getModelingSlotCopyBundle(): Promise<ModelingSlotCopyBundl
     titleMobile: string | null;
     body: string;
     bodyMobile: string | null;
+    textLayoutMobile: unknown | null;
   }[];
   try {
     rows = await withPrismaConnectionRetry(prisma, () => delegate.findMany());
@@ -76,11 +80,14 @@ export async function getModelingSlotCopyBundle(): Promise<ModelingSlotCopyBundl
   for (const key of ORDERED_MODELING_SLOT_KEYS) {
     const row = byKey.get(key);
     if (row) {
+      const mobileLayout = parseModelingTextOverlayLayout(row.textLayoutMobile);
       out[key as ModelingSlotKey] = {
         title: row.title,
         titleMobile: row.titleMobile ?? "",
         body: row.body,
         bodyMobile: row.bodyMobile ?? "",
+        mobileTitleFontSizePx: mobileLayout?.title.fontSizePx ?? null,
+        mobileBodyFontSizePx: mobileLayout?.body.fontSizePx ?? null,
       };
     }
   }

@@ -10,8 +10,26 @@ import type { ModelingSlotKey } from "@/lib/site-media/site-media.registry";
 import { parseCanvasRichTextDocumentJson } from "@/lib/canvas-rich-text/canvas-rich-text-document";
 
 const MAX_TITLE_LEN = 280;
+const MODELING_MOBILE_FONT_MIN_PX = 8;
+const MODELING_MOBILE_FONT_MAX_PX = 120;
 
 const ORDERED_SLOT_KEY_SET = new Set<string>(ORDERED_MODELING_SLOT_KEYS);
+
+function optionalMobileFontSizeField() {
+  return z.preprocess(
+    (value) => {
+      if (value == null || value === "") {
+        return undefined;
+      }
+      return value;
+    },
+    z.coerce
+      .number()
+      .min(MODELING_MOBILE_FONT_MIN_PX)
+      .max(MODELING_MOBILE_FONT_MAX_PX)
+      .optional(),
+  );
+}
 
 /** Allows empty stored copy; when non-empty, enforces hero sanitizer size limits (plain + storage). */
 function optionalHeroBannerRichBodyField(fieldLabel: string) {
@@ -46,6 +64,8 @@ export const modelingSlotCopyFormSchema = z
       .max(MAX_TITLE_LEN, `Title must be at most ${MAX_TITLE_LEN} characters`),
     body: optionalHeroBannerRichBodyField("Description"),
     bodyDoc: z.string().optional(),
+    mobileTitleFontSizePx: optionalMobileFontSizeField(),
+    mobileBodyFontSizePx: optionalMobileFontSizeField(),
   })
   .superRefine((data, ctx) => {
     if (!data.bodyDoc) {
@@ -56,6 +76,16 @@ export const modelingSlotCopyFormSchema = z
         code: "custom",
         path: ["bodyDoc"],
         message: "Invalid canvas rich text payload.",
+      });
+    }
+    if (
+      data.variant === "mobile" &&
+      (data.mobileTitleFontSizePx == null || data.mobileBodyFontSizePx == null)
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["mobileTitleFontSizePx"],
+        message: "Mobile title and description font sizes are required.",
       });
     }
   });

@@ -12,7 +12,7 @@ import type { ModelingTextOverlayLayout } from "@/lib/modeling-slot-copy/modelin
  * Card overlay typography scale — must match `.modeling-specialization-card-text-scale { --mt }`
  * in `src/components/landing/modeling/modeling-section-scale.css`.
  */
-export const MODELING_SPECIALIZATION_CARD_TEXT_MT = 1.04 as const;
+export const MODELING_SPECIALIZATION_CARD_TEXT_MT = 1 as const;
 
 export const MODELING_TEXT_OVERLAY_TEXT_WHITESPACE_CLASS = "whitespace-pre overflow-visible";
 

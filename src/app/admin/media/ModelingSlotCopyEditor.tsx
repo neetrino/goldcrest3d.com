@@ -10,6 +10,12 @@ import { MODELING_SLOT_LABELS } from "@/lib/site-media/site-media.registry";
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotCopyMessages } from "./ModelingSlotCopyMessages";
 import { PowerBannerDescriptionEditor } from "./PowerBannerDescriptionEditor";
+import {
+  MODELING_TEXT_OVERLAY_BODY_FONT_MAX_PX,
+  MODELING_TEXT_OVERLAY_BODY_FONT_MIN_PX,
+  MODELING_TEXT_OVERLAY_TITLE_FONT_MAX_PX,
+  MODELING_TEXT_OVERLAY_TITLE_FONT_MIN_PX,
+} from "./modeling-text-overlay-editor.constants";
 
 const TITLE_TEXTAREA_CLASS =
   "min-h-[3rem] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-slate-200 transition placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80";
@@ -19,8 +25,12 @@ type ModelingSlotCopyEditorProps = {
   variant: "desktop" | "mobile";
   titleValue: string;
   bodyValue: string;
+  mobileTitleFontSizePx: number;
+  mobileBodyFontSizePx: number;
   onTitleChange: (next: string) => void;
   onBodyChange: (next: string) => void;
+  onMobileTitleFontSizePxChange: (next: number) => void;
+  onMobileBodyFontSizePxChange: (next: number) => void;
   onCancel: () => void;
   onSaved: () => void;
 };
@@ -30,8 +40,12 @@ export function ModelingSlotCopyEditor({
   variant,
   titleValue,
   bodyValue,
+  mobileTitleFontSizePx,
+  mobileBodyFontSizePx,
   onTitleChange,
   onBodyChange,
+  onMobileTitleFontSizePxChange,
+  onMobileBodyFontSizePxChange,
   onCancel,
   onSaved,
 }: ModelingSlotCopyEditorProps) {
@@ -56,6 +70,20 @@ export function ModelingSlotCopyEditor({
       <input type="hidden" name="slotKey" value={slotKey} />
       <input type="hidden" name="variant" value={variant} />
       <input type="hidden" name="body" value={bodyValue} />
+      {variant === "mobile" ? (
+        <>
+          <input
+            type="hidden"
+            name="mobileTitleFontSizePx"
+            value={String(mobileTitleFontSizePx)}
+          />
+          <input
+            type="hidden"
+            name="mobileBodyFontSizePx"
+            value={String(mobileBodyFontSizePx)}
+          />
+        </>
+      ) : null}
       <div className="flex flex-col gap-2">
         <label
           htmlFor={`modeling-slot-title-${slotKey}`}
@@ -90,6 +118,41 @@ export function ModelingSlotCopyEditor({
           normalizeInput={false}
         />
       </div>
+
+      {variant === "mobile" ? (
+        <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-3">
+          <p className="text-sm font-semibold text-slate-800">Mobile typography</p>
+          <p className="mt-1 text-xs text-slate-500">
+            Adjust only mobile title and description size for this card.
+          </p>
+
+          <label className="mt-3 block text-xs font-medium text-slate-700" htmlFor="modeling-mobile-title-size">
+            Mobile title size: {mobileTitleFontSizePx}px
+          </label>
+          <input
+            id="modeling-mobile-title-size"
+            type="range"
+            min={MODELING_TEXT_OVERLAY_TITLE_FONT_MIN_PX}
+            max={MODELING_TEXT_OVERLAY_TITLE_FONT_MAX_PX}
+            value={mobileTitleFontSizePx}
+            onChange={(e) => onMobileTitleFontSizePxChange(Number(e.target.value))}
+            className="mt-1 w-full accent-slate-900"
+          />
+
+          <label className="mt-3 block text-xs font-medium text-slate-700" htmlFor="modeling-mobile-body-size">
+            Mobile description size: {mobileBodyFontSizePx}px
+          </label>
+          <input
+            id="modeling-mobile-body-size"
+            type="range"
+            min={MODELING_TEXT_OVERLAY_BODY_FONT_MIN_PX}
+            max={MODELING_TEXT_OVERLAY_BODY_FONT_MAX_PX}
+            value={mobileBodyFontSizePx}
+            onChange={(e) => onMobileBodyFontSizePxChange(Number(e.target.value))}
+            className="mt-1 w-full accent-slate-900"
+          />
+        </div>
+      ) : null}
 
       <ModelingSlotCopyMessages state={state} />
 
