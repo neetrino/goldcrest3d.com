@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import Image from "next/image";
 
@@ -107,48 +106,8 @@ export function ModelingCardFullBleed({
   hasDescriptionContent,
   DescriptionTag,
 }: ModelingCardFullBleedProps) {
-  const [hipHopZoomCompensation, setHipHopZoomCompensation] = useState(1);
   const hasDesktopTitle = title.trim().length > 0;
   const hasMobileTitle = (titleMobile ?? "").trim().length > 0;
-
-  useEffect(() => {
-    if (!hipHopMobileLayout || typeof window === "undefined") {
-      return;
-    }
-
-    const baselineDevicePixelRatio = window.devicePixelRatio || 1;
-
-    const updateCompensation = () => {
-      const currentDevicePixelRatio = window.devicePixelRatio || baselineDevicePixelRatio;
-      const compensation = baselineDevicePixelRatio / currentDevicePixelRatio;
-      setHipHopZoomCompensation(Math.max(1, compensation));
-    };
-
-    updateCompensation();
-    window.addEventListener("resize", updateCompensation);
-    window.visualViewport?.addEventListener("resize", updateCompensation);
-
-    return () => {
-      window.removeEventListener("resize", updateCompensation);
-      window.visualViewport?.removeEventListener("resize", updateCompensation);
-    };
-  }, [hipHopMobileLayout]);
-
-  const overlayTextStyleResolved = useMemo<CSSProperties | undefined>(() => {
-    if (!hipHopMobileLayout) {
-      return overlayTextContainerStyle;
-    }
-
-    const existingTransform = overlayTextContainerStyle?.transform;
-
-    return {
-      ...overlayTextContainerStyle,
-      transform: existingTransform
-        ? `${existingTransform} scale(${hipHopZoomCompensation})`
-        : `scale(${hipHopZoomCompensation})`,
-      transformOrigin: "center bottom",
-    };
-  }, [hipHopMobileLayout, hipHopZoomCompensation, overlayTextContainerStyle]);
 
   return (
     <article
@@ -209,7 +168,7 @@ export function ModelingCardFullBleed({
       </div>
       <div
         className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] max-sm:translate-y-[calc(-0.3rem*var(--ms,1))] text-center sm:gap-[calc(1.5rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:pb-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(1.6rem*var(--ms,1))]" : bridalMobileLayout ? "justify-center max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-y-[calc(5rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(7.5rem*var(--ms,1)),16vw)] sm:-translate-y-[min(calc(7rem*var(--ms,1)),18vh)] sm:items-start sm:text-left" : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
-        style={overlayTextStyleResolved}
+        style={overlayTextContainerStyle}
       >
         {independentTitleDescription ? (
           portraitMobileLayout ? (
