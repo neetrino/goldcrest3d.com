@@ -71,52 +71,39 @@ export async function updatePowerBannerCopy(
   }
 
   try {
-    await prisma.$transaction(async (tx) => {
-      const transactionalClient = tx as typeof tx & {
-        powerBannerCopy: typeof prisma.powerBannerCopy;
-        siteMediaItem: typeof siteMediaItem;
-      };
-      await transactionalClient.powerBannerCopy.upsert({
-        where: {
-          bannerKey_viewport: {
-            bannerKey,
-            viewport,
-          },
-        },
-        create: {
+    await prisma.powerBannerCopy.upsert({
+      where: {
+        bannerKey_viewport: {
           bannerKey,
           viewport,
-          title,
-          body,
         },
-        update: { title, body },
-      });
+      },
+      create: {
+        bannerKey,
+        viewport,
+        title,
+        body,
+      },
+      update: { title, body },
+    });
 
-      const typedKey = bannerKey as PowerBannerKey;
-      const typedViewport = viewport as PowerBannerViewport;
-      const slotId = POWER_BANNER_SLOT_IDS[typedViewport][typedKey];
-      const defaultTransform = POWER_BANNER_DEFAULT_TRANSFORMS[typedViewport][typedKey];
-      const sortOrder = POWER_BANNER_KEYS.indexOf(bannerKey as PowerBannerKey);
-      const existingHeroMedia = await transactionalClient.siteMediaItem.findUnique({
-        where: { slotId },
-      });
-      if (existingHeroMedia) {
-        await transactionalClient.siteMediaItem.update({
-          where: { id: existingHeroMedia.id },
-          data: {
-            sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
-          },
-        });
-      } else {
-        await transactionalClient.siteMediaItem.create({
-          data: {
-            sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
-            slotId,
-            sortOrder: sortOrder >= 0 ? sortOrder : 0,
-            layoutMeta: defaultTransform,
-          },
-        });
-      }
+    const typedKey = bannerKey as PowerBannerKey;
+    const typedViewport = viewport as PowerBannerViewport;
+    const slotId = POWER_BANNER_SLOT_IDS[typedViewport][typedKey];
+    const defaultTransform = POWER_BANNER_DEFAULT_TRANSFORMS[typedViewport][typedKey];
+    const sortOrder = POWER_BANNER_KEYS.indexOf(bannerKey as PowerBannerKey);
+
+    await siteMediaItem.upsert({
+      where: { slotId },
+      create: {
+        sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
+        slotId,
+        sortOrder: sortOrder >= 0 ? sortOrder : 0,
+        layoutMeta: defaultTransform,
+      },
+      update: {
+        sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
+      },
     });
   } catch (err) {
     logger.error("updatePowerBannerCopy: failed to upsert", err);
