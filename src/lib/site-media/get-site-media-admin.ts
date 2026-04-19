@@ -1,6 +1,11 @@
 import { logger } from "@/lib/logger";
 import { buildManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-content";
+import {
+  buildManufacturingIntelligenceMobileContent,
+  getManufacturingMobileMediaSlotId,
+} from "@/lib/manufacturing-intelligence/manufacturing-intelligence-mobile-content";
 import { manufacturingIntelligenceCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy-prisma";
+import { manufacturingIntelligenceMobileCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-mobile-copy-prisma";
 import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
 import {
   emptyModelingSpecializationCopyRow,
@@ -65,6 +70,7 @@ export type AdminSiteMediaBundle = {
   manufacturingHeadingDesktop: string;
   manufacturingHeadingMobile: string;
   manufacturing: AdminManufacturingItemRow[];
+  manufacturingMobile: AdminManufacturingItemRow[];
   finishedRow1: AdminOrderedItemRow[];
   finishedRow2: AdminOrderedItemRow[];
 };
@@ -89,6 +95,7 @@ function emptyAdminBundle(): AdminSiteMediaBundle {
     manufacturingHeadingDesktop: "Manufacturing Intelligence",
     manufacturingHeadingMobile: "Manufacturing Intelligence",
     manufacturing: [],
+    manufacturingMobile: [],
     finishedRow1: [],
     finishedRow2: [],
   };
@@ -114,13 +121,15 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
   let rows: SiteMediaItemRow[];
   let copyRows: ModelingSpecializationCopyRow[];
   let manufacturingCopyRows: { key: string; value: string }[];
+  let manufacturingMobileCopyRows: { key: string; value: string }[];
   try {
-    const [siteMediaRows, modelingCopyRows, manufacturingRows] = await Promise.all([
+    const [siteMediaRows, modelingCopyRows, manufacturingRows, manufacturingMobileRows] = await Promise.all([
       siteMediaItem.findMany({
         orderBy: [{ sectionKey: "asc" }, { sortOrder: "asc" }],
       }),
       modelingSpecializationCopy.findMany(),
       manufacturingIntelligenceCopy.findMany(),
+      manufacturingIntelligenceMobileCopy.findMany(),
     ]);
     rows = siteMediaRows;
     copyRows = modelingCopyRows.map((row) => ({
@@ -134,6 +143,10 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       }),
     }));
     manufacturingCopyRows = manufacturingRows.map((row) => ({
+      key: row.key,
+      value: row.value,
+    }));
+    manufacturingMobileCopyRows = manufacturingMobileRows.map((row) => ({
       key: row.key,
       value: row.value,
     }));
@@ -203,6 +216,34 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       offsetY: item.transform.offsetY,
     };
   });
+  const manufacturingMobileContent = buildManufacturingIntelligenceMobileContent(
+    manufacturingMobileCopyRows,
+    rows,
+  );
+  const manufacturingMobileMediaById = new Map(
+    byGroup(SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE_MOBILE).map((row) => [
+      row.slotId,
+      row,
+    ]),
+  );
+  const manufacturingMobile: AdminManufacturingItemRow[] = manufacturingMobileContent.items.map(
+    (item) => {
+      const mediaRow = manufacturingMobileMediaById.get(getManufacturingMobileMediaSlotId(item.id));
+      return {
+        id: item.id,
+        label: item.title,
+        itemId: mediaRow?.id ?? null,
+        imageObjectKey: mediaRow?.r2ObjectKey ?? null,
+        displayUrl: item.imageSrc,
+        title: item.title,
+        description: item.description,
+        imageAlt: item.imageAlt,
+        zoom: item.transform.zoom,
+        offsetX: item.transform.offsetX,
+        offsetY: item.transform.offsetY,
+      };
+    },
+  );
 
   return {
     groupsMeta: SITE_MEDIA_GROUPS,
@@ -210,6 +251,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
     manufacturingHeadingDesktop: manufacturingContent.headingDesktop,
     manufacturingHeadingMobile: manufacturingContent.headingMobile,
     manufacturing,
+    manufacturingMobile,
     finishedRow1: byGroup(SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1).map(
       mapOrderedRow,
     ),

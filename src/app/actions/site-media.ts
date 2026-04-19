@@ -9,14 +9,20 @@ import {
   normalizeManufacturingImageTransform,
 } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 import { manufacturingIntelligenceCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy-prisma";
+import { manufacturingIntelligenceMobileCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-mobile-copy-prisma";
 import {
   getManufacturingItemDescriptionKey,
   getManufacturingItemTitleKey,
   MANUFACTURING_SECTION_COPY_KEYS,
 } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy.keys";
+import {
+  getManufacturingMobileItemDescriptionKey,
+  getManufacturingMobileItemTitleKey,
+} from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-mobile-copy.keys";
 import { logger } from "@/lib/logger";
 import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
 import { normalizeModelingSpecializationCopyPayload } from "@/lib/modeling-specialization-copy/normalize-modeling-specialization-copy";
+import { getManufacturingMobileMediaSlotId } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-mobile-content";
 import { siteMediaItem } from "@/lib/site-media/site-media-prisma";
 import {
   SITE_MEDIA_GROUP_KEYS,
@@ -51,6 +57,9 @@ const MANUFACTURING_SLOT_SET = new Set<string>(
   MANUFACTURING_SPECIALIZATION_ITEMS.map((item) => item.id),
 );
 const MANUFACTURING_SORT_ORDER = new Map<string, number>(
+  MANUFACTURING_SPECIALIZATION_ITEMS.map((item, index) => [item.id, index]),
+);
+const MANUFACTURING_MOBILE_SORT_ORDER = new Map<string, number>(
   MANUFACTURING_SPECIALIZATION_ITEMS.map((item, index) => [item.id, index]),
 );
 
@@ -265,6 +274,62 @@ export async function upsertManufacturingIntelligenceImage(
     }
   } catch (e) {
     logger.error("upsertManufacturingIntelligenceImage", e);
+    await deleteObjectFromR2(newKey);
+    return { ok: false, error: "Could not save metadata." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function upsertManufacturingIntelligenceMobileImage(
+  itemId: string,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+  if (!MANUFACTURING_SLOT_SET.has(itemId)) {
+    return { ok: false, error: "Invalid manufacturing item." };
+  }
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Choose an image file." };
+  }
+  const err = validateSiteMediaImage(file);
+  if (err) return { ok: false, error: err };
+
+  const newKey = await uploadSiteMediaToR2(file);
+  if (!newKey) {
+    return { ok: false, error: "Upload failed. Check R2 configuration." };
+  }
+
+  const slotId = getManufacturingMobileMediaSlotId(itemId);
+  try {
+    const existing = await siteMediaItem.findUnique({ where: { slotId } });
+    if (existing) {
+      if (existing.r2ObjectKey) {
+        await deleteObjectFromR2(existing.r2ObjectKey);
+      }
+      await siteMediaItem.update({
+        where: { id: existing.id },
+        data: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE_MOBILE,
+          r2ObjectKey: newKey,
+        },
+      });
+    } else {
+      await siteMediaItem.create({
+        data: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE_MOBILE,
+          slotId,
+          sortOrder: MANUFACTURING_MOBILE_SORT_ORDER.get(itemId) ?? 0,
+          r2ObjectKey: newKey,
+          layoutMeta: DEFAULT_MANUFACTURING_IMAGE_TRANSFORM,
+        },
+      });
+    }
+  } catch (e) {
+    logger.error("upsertManufacturingIntelligenceMobileImage", e);
     await deleteObjectFromR2(newKey);
     return { ok: false, error: "Could not save metadata." };
   }
@@ -542,6 +607,97 @@ export async function updateManufacturingIntelligenceItem(
   } catch (e) {
     logger.error("updateManufacturingIntelligenceItem", e);
     return { ok: false, error: "Could not save manufacturing content." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function updateManufacturingIntelligenceMobileItem(
+  _prev: SiteMediaActionResult | null,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsed = manufacturingIntelligenceItemFormSchema.safeParse({
+    itemId: formData.get("itemId"),
+    title: formData.get("title"),
+    description: formData.get("description"),
+    imageAlt: formData.get("imageAlt"),
+    zoom: formData.get("zoom"),
+    offsetX: formData.get("offsetX"),
+    offsetY: formData.get("offsetY"),
+  });
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    return {
+      ok: false,
+      error:
+        fieldErrors.itemId?.[0] ??
+        fieldErrors.title?.[0] ??
+        fieldErrors.description?.[0] ??
+        fieldErrors.imageAlt?.[0] ??
+        fieldErrors.zoom?.[0] ??
+        fieldErrors.offsetX?.[0] ??
+        fieldErrors.offsetY?.[0] ??
+        "Invalid input.",
+    };
+  }
+
+  const { itemId, title, description, imageAlt } = parsed.data;
+  const transform = normalizeManufacturingImageTransform({
+    zoom: parsed.data.zoom,
+    offsetX: parsed.data.offsetX,
+    offsetY: parsed.data.offsetY,
+  });
+  const slotId = getManufacturingMobileMediaSlotId(itemId);
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      const transactionalClient = tx as typeof tx & {
+        siteMediaItem: typeof siteMediaItem;
+        manufacturingIntelligenceMobileCopy: {
+          upsert: (args: object) => Promise<unknown>;
+        };
+      };
+      await transactionalClient.manufacturingIntelligenceMobileCopy.upsert({
+        where: { key: getManufacturingMobileItemTitleKey(itemId) },
+        create: { key: getManufacturingMobileItemTitleKey(itemId), value: title },
+        update: { value: title },
+      });
+      await transactionalClient.manufacturingIntelligenceMobileCopy.upsert({
+        where: { key: getManufacturingMobileItemDescriptionKey(itemId) },
+        create: { key: getManufacturingMobileItemDescriptionKey(itemId), value: description },
+        update: { value: description },
+      });
+      const existing = await transactionalClient.siteMediaItem.findUnique({
+        where: { slotId },
+      });
+      if (existing) {
+        await transactionalClient.siteMediaItem.update({
+          where: { id: existing.id },
+          data: {
+            sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE_MOBILE,
+            alt: imageAlt,
+            layoutMeta: transform,
+          },
+        });
+      } else {
+        await transactionalClient.siteMediaItem.create({
+          data: {
+            sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE_MOBILE,
+            slotId,
+            sortOrder: MANUFACTURING_MOBILE_SORT_ORDER.get(itemId) ?? 0,
+            alt: imageAlt,
+            layoutMeta: transform,
+          },
+        });
+      }
+    });
+  } catch (e) {
+    logger.error("updateManufacturingIntelligenceMobileItem", e);
+    return { ok: false, error: "Could not save manufacturing mobile content." };
   }
 
   revalidateSite();

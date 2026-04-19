@@ -20,6 +20,7 @@ type MediaManagerClientProps = {
 type MediaManagerTabKey =
   | "modeling"
   | "manufacturing-intelligence"
+  | "manufacturing-intelligence-mobile"
   | "finished-row-1"
   | "finished-row-2"
   | "power-banner-desktop"
@@ -28,6 +29,7 @@ type MediaManagerTabKey =
 const MEDIA_MANAGER_TAB_KEYS: readonly MediaManagerTabKey[] = [
   "modeling",
   "manufacturing-intelligence",
+  "manufacturing-intelligence-mobile",
   "finished-row-1",
   "finished-row-2",
   "power-banner-desktop",
@@ -61,6 +63,10 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
     () => [
       { key: "modeling" as const, label: "Modeling Specialization" },
       { key: "manufacturing-intelligence" as const, label: "Manufacturing Intelligence" },
+      {
+        key: "manufacturing-intelligence-mobile" as const,
+        label: "Manufacturing Intelligence — Mobile",
+      },
       { key: "finished-row-1" as const, label: "Finished Creations — top row" },
       { key: "finished-row-2" as const, label: "Finished Creations — bottom row" },
       { key: "power-banner-desktop" as const, label: "Hero Banners — Desktop" },
@@ -110,6 +116,10 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
 
       {selectedTab === "manufacturing-intelligence" ? (
         <ManufacturingIntelligenceSection rows={bundle.manufacturing} />
+      ) : null}
+
+      {selectedTab === "manufacturing-intelligence-mobile" ? (
+        <ManufacturingIntelligenceSection rows={bundle.manufacturingMobile} variant="mobile" />
       ) : null}
 
       {selectedTab === "finished-row-1" ? (

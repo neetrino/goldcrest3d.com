@@ -14,9 +14,14 @@ import { SectionQuote } from "./SectionQuote";
 type LandingSectionsProps = {
   siteMedia: LandingSiteMedia;
   powerBannerCopy: PowerBannerCopyBundle;
+  initialIsMobileViewport: boolean;
 };
 
-export function LandingSections({ siteMedia, powerBannerCopy }: LandingSectionsProps) {
+export function LandingSections({
+  siteMedia,
+  powerBannerCopy,
+  initialIsMobileViewport,
+}: LandingSectionsProps) {
   return (
     <>
       <PowerBanners powerBannerCopy={powerBannerCopy} />
@@ -25,7 +30,11 @@ export function LandingSections({ siteMedia, powerBannerCopy }: LandingSectionsP
 
       <SectionModeling modeling={siteMedia.modeling} />
 
-      <SectionManufacturing manufacturing={siteMedia.manufacturing} />
+      <SectionManufacturing
+        desktopContent={siteMedia.manufacturingDesktop}
+        mobileContent={siteMedia.manufacturingMobile}
+        initialIsMobileViewport={initialIsMobileViewport}
+      />
 
       <SectionFounder />
 

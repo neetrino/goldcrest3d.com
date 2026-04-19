@@ -5,6 +5,7 @@
 export const SITE_MEDIA_GROUP_KEYS = {
   MODELING_SPECIALIZATION: "modeling_specialization",
   MANUFACTURING_INTELLIGENCE: "manufacturing_intelligence",
+  MANUFACTURING_INTELLIGENCE_MOBILE: "manufacturing_intelligence_mobile",
   FINISHED_CREATIONS_ROW1: "finished_creations_row1",
   FINISHED_CREATIONS_ROW2: "finished_creations_row2",
   HERO_BANNERS: "hero_banners",
@@ -47,6 +48,12 @@ export const SITE_MEDIA_GROUPS: readonly SiteMediaGroupDefinition[] = [
   {
     key: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE,
     label: "Manufacturing Intelligence",
+    description: "",
+    kind: "fixed_slots",
+  },
+  {
+    key: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE_MOBILE,
+    label: "Manufacturing Intelligence — Mobile",
     description: "",
     kind: "fixed_slots",
   },

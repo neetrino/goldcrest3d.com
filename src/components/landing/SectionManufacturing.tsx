@@ -12,7 +12,7 @@ import type {
   ManufacturingIntelligenceItemContent,
 } from "@/lib/manufacturing-intelligence/manufacturing-intelligence.types";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MANUFACTURING_IMAGE_OPACITY_CLASS } from "./manufacturing-image.constants";
 import { useManufacturingDetailLayers } from "./useManufacturingDetailLayers";
 
@@ -94,10 +94,33 @@ function ManufacturingAccordionRow({
 }
 
 type SectionManufacturingProps = {
-  manufacturing: ManufacturingIntelligenceContent;
+  desktopContent: ManufacturingIntelligenceContent;
+  mobileContent: ManufacturingIntelligenceContent;
+  initialIsMobileViewport: boolean;
 };
 
-export function SectionManufacturing({ manufacturing }: SectionManufacturingProps) {
+const MOBILE_BREAKPOINT_MEDIA_QUERY = "(max-width: 1023px)";
+
+export function SectionManufacturing({
+  desktopContent,
+  mobileContent,
+  initialIsMobileViewport,
+}: SectionManufacturingProps) {
+  const [isMobileViewport, setIsMobileViewport] = useState(initialIsMobileViewport);
+  const manufacturing = isMobileViewport ? mobileContent : desktopContent;
+
+  useEffect(() => {
+    const mediaQueryList = window.matchMedia(MOBILE_BREAKPOINT_MEDIA_QUERY);
+    const syncViewport = () => {
+      setIsMobileViewport(mediaQueryList.matches);
+    };
+    syncViewport();
+    mediaQueryList.addEventListener("change", syncViewport);
+    return () => {
+      mediaQueryList.removeEventListener("change", syncViewport);
+    };
+  }, []);
+
   const [activeId, setActiveId] = useState<ManufacturingSpecializationId>(
     MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING,
   );

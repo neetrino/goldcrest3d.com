@@ -8,7 +8,9 @@ import {
 } from "@/constants/manufacturing-specialization";
 import {
   updateManufacturingIntelligenceItem,
+  updateManufacturingIntelligenceMobileItem,
   upsertManufacturingIntelligenceImage,
+  upsertManufacturingIntelligenceMobileImage,
   type SiteMediaActionResult,
 } from "@/app/actions/site-media";
 import type { AdminManufacturingItemRow } from "@/lib/site-media/get-site-media-admin";
@@ -68,9 +70,34 @@ function toInitialTransform(row: AdminManufacturingItemRow): TransformState {
 
 type ManufacturingItemEditorProps = {
   row: AdminManufacturingItemRow;
+  variant: ManufacturingSectionVariant;
 };
 
-function ManufacturingItemEditor({ row }: ManufacturingItemEditorProps) {
+type ManufacturingSectionVariant = "desktop" | "mobile";
+
+const SECTION_META: Record<
+  ManufacturingSectionVariant,
+  {
+    badge: string;
+    title: string;
+    description: string;
+  }
+> = {
+  desktop: {
+    badge: "Desktop manufacturing",
+    title: "Manufacturing Intelligence",
+    description:
+      "Edit desktop accordion text and detail images. Preview uses the same transform logic as the live section.",
+  },
+  mobile: {
+    badge: "Mobile manufacturing",
+    title: "Manufacturing Intelligence — Mobile",
+    description:
+      "Edit mobile-only Manufacturing Intelligence copy and images. Saved values render only on mobile devices.",
+  },
+};
+
+function ManufacturingItemEditor({ row, variant }: ManufacturingItemEditorProps) {
   const router = useRouter();
   const [transform, setTransform] = useState<TransformState>(toInitialTransform(row));
   const draggingRef = useRef<{
@@ -84,13 +111,15 @@ function ManufacturingItemEditor({ row }: ManufacturingItemEditorProps) {
   const [saveState, saveAction, savePending] = useActionState<
     SiteMediaActionResult | null,
     FormData
-  >(updateManufacturingIntelligenceItem, null);
+  >(variant === "mobile" ? updateManufacturingIntelligenceMobileItem : updateManufacturingIntelligenceItem, null);
   const [uploadState, uploadAction, uploadPending] = useActionState(
     async (
       _prev: SiteMediaActionResult | null,
       formData: FormData,
     ): Promise<SiteMediaActionResult | null> => {
-      return upsertManufacturingIntelligenceImage(row.id, formData);
+      return variant === "mobile"
+        ? upsertManufacturingIntelligenceMobileImage(row.id, formData)
+        : upsertManufacturingIntelligenceImage(row.id, formData);
     },
     null,
   );
@@ -187,7 +216,7 @@ function ManufacturingItemEditor({ row }: ManufacturingItemEditorProps) {
         <div className="mt-3">
           <ImageUploadControl
             disabled={uploadPending}
-            stableDomId={`gc-manufacturing-upload-${row.id}`}
+            stableDomId={`gc-manufacturing-${variant}-upload-${row.id}`}
           />
         </div>
         <div className="mt-4">
@@ -350,24 +379,27 @@ function ManufacturingItemEditor({ row }: ManufacturingItemEditorProps) {
 
 type ManufacturingIntelligenceSectionProps = {
   rows: AdminManufacturingItemRow[];
+  variant?: ManufacturingSectionVariant;
 };
 
-export function ManufacturingIntelligenceSection({ rows }: ManufacturingIntelligenceSectionProps) {
+export function ManufacturingIntelligenceSection({
+  rows,
+  variant = "desktop",
+}: ManufacturingIntelligenceSectionProps) {
+  const meta = SECTION_META[variant];
   return (
     <section className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white to-slate-50/90 p-6 shadow-sm sm:p-8">
       <div className="border-b border-slate-200/80 pb-6">
-        <h2 className="text-xl font-semibold tracking-tight text-slate-900">
-          Manufacturing Intelligence
-        </h2>
+        <p className="text-xs font-semibold uppercase tracking-wider text-[#e2c481]">{meta.badge}</p>
+        <h2 className="mt-2 text-xl font-semibold tracking-tight text-slate-900">{meta.title}</h2>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
-          Edit accordion text and detail images. Preview uses the same transform logic as the live
-          section, so saved zoom and position render consistently on the homepage.
+          {meta.description}
         </p>
       </div>
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         {rows.map((row) => (
-          <ManufacturingItemEditor key={row.id} row={row} />
+          <ManufacturingItemEditor key={`${variant}-${row.id}`} row={row} variant={variant} />
         ))}
       </div>
     </section>

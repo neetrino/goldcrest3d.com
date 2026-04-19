@@ -149,3 +149,10 @@ model ManufacturingIntelligenceCopy {
   value     String   @db.Text
   updatedAt DateTime @updatedAt
 }
+
+/// Editable text content for Manufacturing Intelligence mobile section (key-value).
+model ManufacturingIntelligenceMobileCopy {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
