@@ -4,6 +4,15 @@ import { HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX } from "./modeling-card.typograph
 import type { ModelingCardProps } from "./modeling-card.types";
 import { renderModelingCopyLine } from "./modeling-copy-line";
 
+const HIPHOP_MOBILE_FORCE_SINGLE_LINE_TEXTS = new Set<string>([
+  "High-mass, fully iced-out structures engineered for",
+  "structural durability and controlled weight distribution.",
+]);
+const HIPHOP_MOBILE_SHIFT_LEFT_LINES = new Set<string>([
+  "High-mass, fully iced-out structures engineered for",
+  "structural durability and controlled weight distribution.",
+]);
+
 export type ModelingCardDescriptionContentParams = Pick<
   ModelingCardProps,
   | "description"
@@ -145,18 +154,21 @@ export function renderModelingCardDescriptionContent(
       <>
         {descriptionLines.length > 0 ? (
           <div className="sm:hidden">
-            {descriptionLines.map((line, i) => (
-              line.includes(" structural") ? (
-                <span key={i} className={hipHopMobileLineClass}>
-                  {line.split(" structural")[0]}
-                  <span className="block">structural{line.split(" structural")[1] ?? ""}</span>
-                </span>
-              ) : (
-                <span key={i} className={hipHopMobileLineClass}>
+            {descriptionLines.map((line, i) => {
+              const forceSingleLineOnMobile =
+                HIPHOP_MOBILE_FORCE_SINGLE_LINE_TEXTS.has(line.trim());
+              const shiftLeftOnMobile = HIPHOP_MOBILE_SHIFT_LEFT_LINES.has(
+                line.trim(),
+              );
+              return (
+                <span
+                  key={i}
+                  className={`${hipHopMobileLineClass} ${forceSingleLineOnMobile ? "max-sm:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-sm:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
+                >
                   {renderModelingCopyLine(line)}
                 </span>
-              )
-            ))}
+              );
+            })}
           </div>
         ) : null}
         {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (

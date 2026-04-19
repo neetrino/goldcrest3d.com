@@ -107,6 +107,8 @@ export function ModelingCardFullBleed({
 }: ModelingCardFullBleedProps) {
   const hasDesktopTitle = title.trim().length > 0;
   const hasMobileTitle = (titleMobile ?? "").trim().length > 0;
+  const hasHipHopMobileMultilineTitle =
+    hipHopMobileLayout && (titleMobile ?? "").includes("\n");
 
   return (
     <article
@@ -274,7 +276,7 @@ export function ModelingCardFullBleed({
           <>
             {hasDesktopTitle || hasMobileTitle ? (
               <h3
-                className={`${titleClassNameResolved} ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible sm:h-[calc(24px*var(--ms,1)*var(--mt,1))]" : ""} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center max-sm:-translate-y-[calc(3rem*var(--ms,1))] sm:-translate-y-[calc(6rem*var(--ms,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                className={`${titleClassNameResolved} ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible sm:h-[calc(24px*var(--ms,1)*var(--mt,1))]" : ""} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center max-sm:-translate-y-[calc(3rem*var(--ms,1))] sm:-translate-y-[calc(6rem*var(--ms,1))]" : ""} ${hasHipHopMobileMultilineTitle ? "max-sm:leading-[calc(1.22rem*var(--ms,1)*var(--mt,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                 style={{
                   ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                   ...(titleMarginTop != null && { marginTop: titleMarginTop }),
@@ -290,7 +292,7 @@ export function ModelingCardFullBleed({
             ) : null}
             {hasDescriptionContent ? (
               <DescriptionTag
-                className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:absolute max-sm:bottom-[calc(0.75rem*var(--ms,1))] max-sm:left-[calc(1rem*var(--ms,1))] max-sm:right-[calc(1rem*var(--ms,1))] max-sm:mt-0 max-sm:-translate-x-[calc(1.25rem*var(--ms,1))] sm:absolute sm:bottom-[calc(4rem*var(--ms,1))] sm:left-1/2 sm:mt-0 sm:w-[min(100%,calc(560px*var(--ms,1)))] sm:-translate-x-1/2" : ""}${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:mt-[calc(1rem*var(--ms,1))] max-sm:w-[min(100%,calc(280px*var(--ms,1)))] max-sm:max-w-full sm:absolute sm:bottom-[calc(4rem*var(--ms,1))] sm:left-1/2 sm:mt-0 sm:w-[min(100%,calc(560px*var(--ms,1)))] sm:-translate-x-1/2" : ""}${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                 style={
                   titleMarginTopCompensate && titleMarginTop != null
                     ? {

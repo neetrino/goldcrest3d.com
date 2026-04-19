@@ -1,3 +1,28 @@
+const NON_BREAKING_SPACE = "\u00A0";
+const TAB_AS_SPACES = "    ";
+
+function preserveInlineWhitespace(value: string): string {
+  return value.replace(/ +/g, (spaces, offset) => {
+    const runLength = spaces.length;
+    const runStart = offset;
+    const runEnd = runStart + runLength;
+    const isAtStart = runStart === 0;
+    const isAtEnd = runEnd === value.length;
+
+    if (runLength === 1 && !isAtStart && !isAtEnd) {
+      return " ";
+    }
+    if (isAtStart || isAtEnd) {
+      return NON_BREAKING_SPACE.repeat(runLength);
+    }
+    return ` ${NON_BREAKING_SPACE.repeat(runLength - 1)}`;
+  });
+}
+
 export function renderModelingCopyLine(line: string): string {
-  return line.length === 0 ? "\u00A0" : line;
+  if (line.length === 0) {
+    return NON_BREAKING_SPACE;
+  }
+  const withExpandedTabs = line.replace(/\t/g, TAB_AS_SPACES);
+  return preserveInlineWhitespace(withExpandedTabs);
 }
