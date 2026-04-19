@@ -55,69 +55,52 @@ export function renderModelingCardDescriptionContent(
   }
 
   if (descriptionLayout === "row") {
-    if (
-      bridalMobileLayout &&
-      descriptionLinesMobile != null &&
-      descriptionLinesMobile.length > 0
-    ) {
+    if (bridalMobileLayout) {
       return (
         <>
-          <div className="flex w-full flex-col items-start gap-0.5 sm:hidden">
-            {descriptionLinesMobile.map((line, i) => (
-              <span
-                key={`bridal-mobile-${i}`}
-                className={`${bridalRowSpanClass} ${lineWrapClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
-              >
-                {line}
-              </span>
-            ))}
-          </div>
-          {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
-            <div className="hidden w-full min-w-0 flex-col items-start sm:flex">
-              <div className="flex w-fit max-w-full flex-col items-start gap-0.5 text-left">
-                {descriptionLinesDesktop.map((line, i) => (
-                  <span
-                    key={`bridal-desktop-stack-${i}`}
-                    id={i === 0 ? firstDescriptionLineId : undefined}
-                    className="block font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black"
-                  >
-                    {line}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="hidden flex-wrap items-baseline gap-x-4 gap-y-1 sm:flex">
-              {descriptionLines.map((line, i) => (
+          {descriptionLinesMobile != null && descriptionLinesMobile.length > 0 ? (
+            <div className="flex w-full flex-col items-start gap-0.5 sm:hidden">
+              {descriptionLinesMobile.map((line, i) => (
                 <span
-                  key={`bridal-desktop-${i}`}
-                  id={i === 0 ? firstDescriptionLineId : undefined}
-                  className={`${bridalRowSpanClassDesktop} ${i === 0 ? `${lineWrapClass} whitespace-nowrap` : lineWrapClass}`}
-                  style={
-                    i === 0
-                      ? {
-                          ...(firstDescriptionLineMarginRight != null && {
-                            marginRight: firstDescriptionLineMarginRight,
-                          }),
-                          ...(firstDescriptionLineTranslateX != null && {
-                            transform: `translateX(${firstDescriptionLineTranslateX})`,
-                          }),
-                        }
-                      : i === 1
-                        ? {
-                            marginLeft: "auto",
-                            ...(secondDescriptionLineTranslateX != null && {
-                              transform: `translateX(${secondDescriptionLineTranslateX})`,
-                            }),
-                          }
-                        : undefined
-                  }
+                  key={`bridal-mobile-${i}`}
+                  className={`${bridalRowSpanClass} ${lineWrapClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
                 >
                   {line}
                 </span>
               ))}
             </div>
-          )}
+          ) : null}
+          {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
+            <div className="hidden w-full min-w-0 flex-col items-start sm:flex sm:-translate-x-[calc(-0.1rem*var(--ms,1))]">
+              <div className="flex w-fit max-w-full flex-col items-start gap-0.5 text-left">
+                {descriptionLinesDesktop.map((line, i) => (
+                  <span
+                    key={`bridal-desktop-stack-${i}`}
+                    id={i === 0 ? firstDescriptionLineId : undefined}
+                    className={`block font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black ${
+                      line.trim() === "Secure prong architecture developed for long-term wear."
+                        ? "mt-[calc(0.875rem*var(--ms,1))]"
+                        : ""
+                    }`}
+                  >
+                    {line.includes(" settings built for durability,") ? (
+                      <>
+                        {line.split(" settings built for durability,")[0]}
+                        <span className="block">settings built for durability,</span>
+                      </>
+                    ) : line.includes(" long-term wear.") ? (
+                      <>
+                        {line.split(" long-term wear.")[0]}
+                        <span className="block">long-term wear.</span>
+                      </>
+                    ) : (
+                      line
+                    )}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </>
       );
     }

@@ -40,17 +40,17 @@ export function ModelingBlockBridal({
       textDark
       noDescriptionMaxWidth
       fluidTextLayout
-      textBlockAlign="end"
+      textBlockAlign="start"
       titleAlignSelf="start"
-      titleMarginTop="calc(3.4rem * var(--ms, 1))"
+      titleMarginTop="0"
       titleMarginTopCompensate
-      descriptionMarginTop="8%"
+      descriptionMarginTop="0"
       firstDescriptionLineId="bridal-description-first-line"
       firstDescriptionLineMarginRight="40%"
       firstDescriptionLineTranslateX="-6%"
       secondDescriptionLineTranslateX="-56%"
-      textBlockMarginLeft="12%"
-      textBlockMarginTop="22%"
+      textBlockMarginLeft="0"
+      textBlockMarginTop="0"
       descriptionLayout="row"
       mobileBridalTypography
     />

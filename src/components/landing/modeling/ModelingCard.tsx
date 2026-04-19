@@ -72,9 +72,7 @@ export function ModelingCard({
   const portraitMobileLayout =
     mobilePortraitTypography &&
     hasLines &&
-    independentTitleDescription &&
-    descriptionLinesMobile != null &&
-    descriptionLinesMobile.length > 0;
+    independentTitleDescription;
   const textColor = textDark ? "text-black" : "text-white";
   const descriptionColor = textDark
     ? descriptionMuted

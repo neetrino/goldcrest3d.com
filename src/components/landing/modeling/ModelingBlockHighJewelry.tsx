@@ -82,9 +82,7 @@ export function ModelingBlockHighJewelry({
               <span className="sm:hidden">{titleMobile}</span>
             ) : null}
             {titleDesktop.trim().length > 0 ? (
-              <span className={titleMobile.trim().length > 0 ? "hidden sm:inline" : "inline"}>
-                {titleDesktop}
-              </span>
+              <span className="hidden sm:inline">{titleDesktop}</span>
             ) : null}
           </h3>
         ) : null}

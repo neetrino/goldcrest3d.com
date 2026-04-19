@@ -46,9 +46,7 @@ function HeritageOverlayText({
               </span>
             ) : null}
             {titleDesktop.trim().length > 0 ? (
-              <span className={mobileTitleLines.length > 0 ? "hidden sm:inline" : "inline"}>
-                {titleDesktop}
-              </span>
+              <span className="hidden sm:inline">{titleDesktop}</span>
             ) : null}
           </h3>
         ) : null}

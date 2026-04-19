@@ -37,8 +37,6 @@ export function ModelingBlockMechanical({
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
-  const resolvedMobileTitleLines =
-    mobileTitleLines.length > 0 ? mobileTitleLines : desktopTitleLines;
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -86,9 +84,9 @@ export function ModelingBlockMechanical({
           } as React.CSSProperties
         }
       >
-        {resolvedMobileTitleLines.length > 0 || desktopTitleLines.length > 0 ? (
+        {mobileTitleLines.length > 0 || desktopTitleLines.length > 0 ? (
           <h3 className="z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left">
-            {resolvedMobileTitleLines.map((line, index) => (
+            {mobileTitleLines.map((line, index) => (
               <span
                 key={`mobile-title-${line}-${index}`}
                 className={`block sm:hidden ${index === 0 ? TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS : ""}`}
