@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 
 import type { PowerBannerCopyBundle } from "@/lib/power-banner-copy/power-banner-copy.types";
 import type { AdminSiteMediaBundle } from "@/lib/site-media/get-site-media-admin";
@@ -8,6 +9,7 @@ import { SITE_MEDIA_GROUP_KEYS } from "@/lib/site-media/site-media.registry";
 
 import { OrderedGallerySection } from "./OrderedGallerySection";
 import { ModelingMediaSection } from "./ModelingMediaSection";
+import { ManufacturingIntelligenceSection } from "./ManufacturingIntelligenceSection";
 import { PowerBannerCopySection } from "./PowerBannerCopySection";
 
 type MediaManagerClientProps = {
@@ -17,19 +19,46 @@ type MediaManagerClientProps = {
 
 type MediaManagerTabKey =
   | "modeling"
+  | "manufacturing-intelligence"
   | "finished-row-1"
   | "finished-row-2"
   | "power-banner-copy";
 
+const MEDIA_MANAGER_TAB_KEYS: readonly MediaManagerTabKey[] = [
+  "modeling",
+  "manufacturing-intelligence",
+  "finished-row-1",
+  "finished-row-2",
+  "power-banner-copy",
+];
+
+function isMediaManagerTabKey(value: string | null): value is MediaManagerTabKey {
+  if (!value) return false;
+  return MEDIA_MANAGER_TAB_KEYS.includes(value as MediaManagerTabKey);
+}
+
 export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClientProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const modelingMeta = bundle.groupsMeta.find(
     (g) => g.key === SITE_MEDIA_GROUP_KEYS.MODELING_SPECIALIZATION,
   );
-  const [activeTab, setActiveTab] = useState<MediaManagerTabKey>("modeling");
+  const tabFromUrl = searchParams.get("section");
+  const selectedTab: MediaManagerTabKey = isMediaManagerTabKey(tabFromUrl)
+    ? tabFromUrl
+    : "modeling";
+
+  const handleTabChange = (tab: MediaManagerTabKey) => {
+    const next = new URLSearchParams(searchParams.toString());
+    next.set("section", tab);
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+  };
 
   const tabs = useMemo(
     () => [
       { key: "modeling" as const, label: "Modeling Specialization" },
+      { key: "manufacturing-intelligence" as const, label: "Manufacturing Intelligence" },
       { key: "finished-row-1" as const, label: "Finished Creations — top row" },
       { key: "finished-row-2" as const, label: "Finished Creations — bottom row" },
       { key: "power-banner-copy" as const, label: "Hero text" },
@@ -45,14 +74,14 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           {tabs.map((tab) => {
-            const isActive = tab.key === activeTab;
+            const isActive = tab.key === selectedTab;
             return (
               <button
                 key={tab.key}
                 type="button"
-                onClick={() => setActiveTab(tab.key)}
+                onClick={() => handleTabChange(tab.key)}
                 className={`rounded-lg border px-3 py-2 text-sm font-medium transition ${
-                  isActive
+                  tab.key === selectedTab
                     ? "border-slate-900 bg-slate-900 text-white"
                     : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
                 }`}
@@ -65,7 +94,7 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
         </div>
       </section>
 
-      {activeTab === "modeling" ? (
+      {selectedTab === "modeling" ? (
         <ModelingMediaSection
           title={modelingMeta?.label ?? "Modeling Specialization"}
           description={
@@ -76,7 +105,11 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
         />
       ) : null}
 
-      {activeTab === "finished-row-1" ? (
+      {selectedTab === "manufacturing-intelligence" ? (
+        <ManufacturingIntelligenceSection rows={bundle.manufacturing} />
+      ) : null}
+
+      {selectedTab === "finished-row-1" ? (
         <OrderedGallerySection
           title="Finished Creations — top row"
           description="Large carousel images on the homepage. Order is the slide sequence visitors see."
@@ -87,7 +120,7 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
         />
       ) : null}
 
-      {activeTab === "finished-row-2" ? (
+      {selectedTab === "finished-row-2" ? (
         <OrderedGallerySection
           title="Finished Creations — bottom row"
           description="Smaller images paired with the top row by slide index."
@@ -98,7 +131,7 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
         />
       ) : null}
 
-      {activeTab === "power-banner-copy" ? <PowerBannerCopySection bundle={powerBannerCopy} /> : null}
+      {selectedTab === "power-banner-copy" ? <PowerBannerCopySection bundle={powerBannerCopy} /> : null}
     </div>
   );
 }

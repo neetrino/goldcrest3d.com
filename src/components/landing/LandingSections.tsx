@@ -25,7 +25,7 @@ export function LandingSections({ siteMedia, powerBannerCopy }: LandingSectionsP
 
       <SectionModeling modeling={siteMedia.modeling} />
 
-      <SectionManufacturing />
+      <SectionManufacturing manufacturing={siteMedia.manufacturing} />
 
       <SectionFounder />
 

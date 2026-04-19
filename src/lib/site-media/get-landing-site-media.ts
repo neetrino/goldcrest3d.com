@@ -1,4 +1,7 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
+import { buildManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-content";
+import type { ManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence.types";
+import { manufacturingIntelligenceCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy-prisma";
 import { logger } from "@/lib/logger";
 import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
 import {
@@ -45,6 +48,7 @@ export type LandingFinishedMedia = {
 
 export type LandingSiteMedia = {
   modeling: LandingModelingMedia;
+  manufacturing: ManufacturingIntelligenceContent;
   finished: LandingFinishedMedia;
 };
 
@@ -91,10 +95,23 @@ function buildFinishedRow(
  */
 export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
   try {
-    const [modelingRows, row1Rows, row2Rows, modelingCopyRows] = await Promise.all([
+    const [
+      modelingRows,
+      manufacturingMediaRows,
+      row1Rows,
+      row2Rows,
+      modelingCopyRows,
+      manufacturingCopyRows,
+    ] =
+      await Promise.all([
       siteMediaItem.findMany({
         where: {
           sectionKey: SITE_MEDIA_GROUP_KEYS.MODELING_SPECIALIZATION,
+        },
+      }),
+      siteMediaItem.findMany({
+        where: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE,
         },
       }),
       siteMediaItem.findMany({
@@ -108,6 +125,7 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
         },
       }),
       modelingSpecializationCopy.findMany(),
+      manufacturingIntelligenceCopy.findMany(),
     ]);
 
     const modelingBySlot = new Map<
@@ -167,13 +185,20 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
         desktopLine1Emphasis: copy.desktopLine1Emphasis,
       };
     }
+    const manufacturing = buildManufacturingIntelligenceContent(
+      manufacturingCopyRows.map((row) => ({
+        key: row.key,
+        value: row.value,
+      })),
+      manufacturingMediaRows,
+    );
 
     const finished: LandingFinishedMedia = {
       row1: buildFinishedRow(row1Rows, DEFAULT_FINISHED_ROW1),
       row2: buildFinishedRow(row2Rows, DEFAULT_FINISHED_ROW2),
     };
 
-    return { modeling, finished };
+    return { modeling, manufacturing, finished };
   } catch (err) {
     if (isMigrationPendingError(err)) {
       logger.info("getLandingSiteMedia: migration pending, static fallback");
@@ -200,8 +225,10 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
       desktopLine1Emphasis: copy.desktopLine1Emphasis,
     };
   }
+  const manufacturing = buildManufacturingIntelligenceContent([], []);
   return {
     modeling,
+    manufacturing,
     finished: {
       row1: [...DEFAULT_FINISHED_ROW1],
       row2: [...DEFAULT_FINISHED_ROW2],

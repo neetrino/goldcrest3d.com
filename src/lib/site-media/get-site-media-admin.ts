@@ -1,4 +1,6 @@
 import { logger } from "@/lib/logger";
+import { buildManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-content";
+import { manufacturingIntelligenceCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy-prisma";
 import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
 import {
   emptyModelingSpecializationCopyRow,
@@ -43,9 +45,26 @@ export type AdminOrderedItemRow = {
   altText: string;
 };
 
+export type AdminManufacturingItemRow = {
+  id: string;
+  label: string;
+  itemId: string | null;
+  imageObjectKey: string | null;
+  displayUrl: string | null;
+  title: string;
+  description: string;
+  imageAlt: string;
+  zoom: number;
+  offsetX: number;
+  offsetY: number;
+};
+
 export type AdminSiteMediaBundle = {
   groupsMeta: typeof SITE_MEDIA_GROUPS;
   modeling: AdminModelingSlotRow[];
+  manufacturingHeadingDesktop: string;
+  manufacturingHeadingMobile: string;
+  manufacturing: AdminManufacturingItemRow[];
   finishedRow1: AdminOrderedItemRow[];
   finishedRow2: AdminOrderedItemRow[];
 };
@@ -67,6 +86,9 @@ function emptyAdminBundle(): AdminSiteMediaBundle {
   return {
     groupsMeta: SITE_MEDIA_GROUPS,
     modeling,
+    manufacturingHeadingDesktop: "Manufacturing Intelligence",
+    manufacturingHeadingMobile: "Manufacturing Intelligence",
+    manufacturing: [],
     finishedRow1: [],
     finishedRow2: [],
   };
@@ -91,12 +113,14 @@ function mapOrderedRow(r: SiteMediaItemRow): AdminOrderedItemRow {
 export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
   let rows: SiteMediaItemRow[];
   let copyRows: ModelingSpecializationCopyRow[];
+  let manufacturingCopyRows: { key: string; value: string }[];
   try {
-    const [siteMediaRows, modelingCopyRows] = await Promise.all([
+    const [siteMediaRows, modelingCopyRows, manufacturingRows] = await Promise.all([
       siteMediaItem.findMany({
         orderBy: [{ sectionKey: "asc" }, { sortOrder: "asc" }],
       }),
       modelingSpecializationCopy.findMany(),
+      manufacturingIntelligenceCopy.findMany(),
     ]);
     rows = siteMediaRows;
     copyRows = modelingCopyRows.map((row) => ({
@@ -108,6 +132,10 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
         bodyMobile: row.bodyMobile ?? "",
         desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
       }),
+    }));
+    manufacturingCopyRows = manufacturingRows.map((row) => ({
+      key: row.key,
+      value: row.value,
     }));
   } catch (err) {
     if (isMigrationPendingError(err)) {
@@ -152,10 +180,36 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       };
     },
   );
+  const manufacturingContent = buildManufacturingIntelligenceContent(manufacturingCopyRows, rows);
+  const manufacturingMediaById = new Map(
+    byGroup(SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE).map((row) => [
+      row.slotId,
+      row,
+    ]),
+  );
+  const manufacturing: AdminManufacturingItemRow[] = manufacturingContent.items.map((item) => {
+    const mediaRow = manufacturingMediaById.get(item.id);
+    return {
+      id: item.id,
+      label: item.title,
+      itemId: mediaRow?.id ?? null,
+      imageObjectKey: mediaRow?.r2ObjectKey ?? null,
+      displayUrl: item.imageSrc,
+      title: item.title,
+      description: item.description,
+      imageAlt: item.imageAlt,
+      zoom: item.transform.zoom,
+      offsetX: item.transform.offsetX,
+      offsetY: item.transform.offsetY,
+    };
+  });
 
   return {
     groupsMeta: SITE_MEDIA_GROUPS,
     modeling,
+    manufacturingHeadingDesktop: manufacturingContent.headingDesktop,
+    manufacturingHeadingMobile: manufacturingContent.headingMobile,
+    manufacturing,
     finishedRow1: byGroup(SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1).map(
       mapOrderedRow,
     ),

@@ -139,3 +139,10 @@ model ModelingSpecializationCopy {
   desktopLine1Emphasis  String?  @db.Text
   updatedAt             DateTime @updatedAt
 }
+
+/// Editable text content for Manufacturing Intelligence section (key-value).
+model ManufacturingIntelligenceCopy {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}

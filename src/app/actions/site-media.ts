@@ -2,7 +2,18 @@
 
 import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/auth";
+import { MANUFACTURING_SPECIALIZATION_ITEMS } from "@/constants/manufacturing-specialization";
 import { prisma } from "@/lib/db";
+import {
+  DEFAULT_MANUFACTURING_IMAGE_TRANSFORM,
+  normalizeManufacturingImageTransform,
+} from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
+import { manufacturingIntelligenceCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy-prisma";
+import {
+  getManufacturingItemDescriptionKey,
+  getManufacturingItemTitleKey,
+  MANUFACTURING_SECTION_COPY_KEYS,
+} from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy.keys";
 import { logger } from "@/lib/logger";
 import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
 import { normalizeModelingSpecializationCopyPayload } from "@/lib/modeling-specialization-copy/normalize-modeling-specialization-copy";
@@ -19,9 +30,19 @@ import {
   uploadSiteMediaToR2,
 } from "@/lib/storage";
 import { validateSiteMediaImage } from "@/lib/validations/siteMediaImage";
+import {
+  manufacturingIntelligenceHeadingFormSchema,
+  manufacturingIntelligenceItemFormSchema,
+} from "@/lib/validations/manufacturingIntelligenceItem";
 import { modelingSpecializationCopyFormSchema } from "@/lib/validations/modelingSpecializationCopy";
 
 const MODELING_SLOT_SET = new Set<string>(Object.values(MODELING_SLOT_KEYS));
+const MANUFACTURING_SLOT_SET = new Set<string>(
+  MANUFACTURING_SPECIALIZATION_ITEMS.map((item) => item.id),
+);
+const MANUFACTURING_SORT_ORDER = new Map<string, number>(
+  MANUFACTURING_SPECIALIZATION_ITEMS.map((item, index) => [item.id, index]),
+);
 
 export type ModelingSlotImageVariant = "desktop" | "mobile";
 
@@ -177,6 +198,198 @@ export async function updateModelingSlotCopy(
   } catch (e) {
     logger.error("updateModelingSlotCopy", e);
     return { ok: false, error: "Could not save text content." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function upsertManufacturingIntelligenceImage(
+  itemId: string,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+  if (!MANUFACTURING_SLOT_SET.has(itemId)) {
+    return { ok: false, error: "Invalid manufacturing item." };
+  }
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Choose an image file." };
+  }
+  const err = validateSiteMediaImage(file);
+  if (err) return { ok: false, error: err };
+
+  const newKey = await uploadSiteMediaToR2(file);
+  if (!newKey) {
+    return { ok: false, error: "Upload failed. Check R2 configuration." };
+  }
+
+  try {
+    const existing = await siteMediaItem.findUnique({ where: { slotId: itemId } });
+    if (existing) {
+      if (existing.r2ObjectKey) {
+        await deleteObjectFromR2(existing.r2ObjectKey);
+      }
+      await siteMediaItem.update({
+        where: { id: existing.id },
+        data: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE,
+          r2ObjectKey: newKey,
+        },
+      });
+    } else {
+      await siteMediaItem.create({
+        data: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE,
+          slotId: itemId,
+          sortOrder: MANUFACTURING_SORT_ORDER.get(itemId) ?? 0,
+          r2ObjectKey: newKey,
+          layoutMeta: DEFAULT_MANUFACTURING_IMAGE_TRANSFORM,
+        },
+      });
+    }
+  } catch (e) {
+    logger.error("upsertManufacturingIntelligenceImage", e);
+    await deleteObjectFromR2(newKey);
+    return { ok: false, error: "Could not save metadata." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function updateManufacturingIntelligenceHeadings(
+  _prev: SiteMediaActionResult | null,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+  const parsed = manufacturingIntelligenceHeadingFormSchema.safeParse({
+    desktopHeading: formData.get("desktopHeading"),
+    mobileHeading: formData.get("mobileHeading"),
+    desktopHeadingKey: formData.get("desktopHeadingKey"),
+    mobileHeadingKey: formData.get("mobileHeadingKey"),
+  });
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    return {
+      ok: false,
+      error:
+        fieldErrors.desktopHeading?.[0] ??
+        fieldErrors.mobileHeading?.[0] ??
+        "Invalid heading values.",
+    };
+  }
+  try {
+    await manufacturingIntelligenceCopy.upsert({
+      where: { key: MANUFACTURING_SECTION_COPY_KEYS.HEADING_DESKTOP },
+      create: {
+        key: MANUFACTURING_SECTION_COPY_KEYS.HEADING_DESKTOP,
+        value: parsed.data.desktopHeading,
+      },
+      update: { value: parsed.data.desktopHeading },
+    });
+    await manufacturingIntelligenceCopy.upsert({
+      where: { key: MANUFACTURING_SECTION_COPY_KEYS.HEADING_MOBILE },
+      create: {
+        key: MANUFACTURING_SECTION_COPY_KEYS.HEADING_MOBILE,
+        value: parsed.data.mobileHeading,
+      },
+      update: { value: parsed.data.mobileHeading },
+    });
+  } catch (e) {
+    logger.error("updateManufacturingIntelligenceHeadings", e);
+    return { ok: false, error: "Could not save headings." };
+  }
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function updateManufacturingIntelligenceItem(
+  _prev: SiteMediaActionResult | null,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsed = manufacturingIntelligenceItemFormSchema.safeParse({
+    itemId: formData.get("itemId"),
+    title: formData.get("title"),
+    description: formData.get("description"),
+    imageAlt: formData.get("imageAlt"),
+    zoom: formData.get("zoom"),
+    offsetX: formData.get("offsetX"),
+    offsetY: formData.get("offsetY"),
+  });
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    return {
+      ok: false,
+      error:
+        fieldErrors.itemId?.[0] ??
+        fieldErrors.title?.[0] ??
+        fieldErrors.description?.[0] ??
+        fieldErrors.imageAlt?.[0] ??
+        fieldErrors.zoom?.[0] ??
+        fieldErrors.offsetX?.[0] ??
+        fieldErrors.offsetY?.[0] ??
+        "Invalid input.",
+    };
+  }
+
+  const { itemId, title, description, imageAlt } = parsed.data;
+  const transform = normalizeManufacturingImageTransform({
+    zoom: parsed.data.zoom,
+    offsetX: parsed.data.offsetX,
+    offsetY: parsed.data.offsetY,
+  });
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      const transactionalClient = tx as typeof tx & {
+        siteMediaItem: typeof siteMediaItem;
+        manufacturingIntelligenceCopy: {
+          upsert: (args: object) => Promise<unknown>;
+        };
+      };
+      await transactionalClient.manufacturingIntelligenceCopy.upsert({
+        where: { key: getManufacturingItemTitleKey(itemId) },
+        create: { key: getManufacturingItemTitleKey(itemId), value: title },
+        update: { value: title },
+      });
+      await transactionalClient.manufacturingIntelligenceCopy.upsert({
+        where: { key: getManufacturingItemDescriptionKey(itemId) },
+        create: { key: getManufacturingItemDescriptionKey(itemId), value: description },
+        update: { value: description },
+      });
+      const existing = await transactionalClient.siteMediaItem.findUnique({
+        where: { slotId: itemId },
+      });
+      if (existing) {
+        await transactionalClient.siteMediaItem.update({
+          where: { id: existing.id },
+          data: {
+            sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE,
+            alt: imageAlt,
+            layoutMeta: transform,
+          },
+        });
+      } else {
+        await transactionalClient.siteMediaItem.create({
+          data: {
+            sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE,
+            slotId: itemId,
+            sortOrder: MANUFACTURING_SORT_ORDER.get(itemId) ?? 0,
+            alt: imageAlt,
+            layoutMeta: transform,
+          },
+        });
+      }
+    });
+  } catch (e) {
+    logger.error("updateManufacturingIntelligenceItem", e);
+    return { ok: false, error: "Could not save manufacturing content." };
   }
 
   revalidateSite();
