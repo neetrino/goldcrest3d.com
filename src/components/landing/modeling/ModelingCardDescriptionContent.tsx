@@ -178,7 +178,21 @@ export function renderModelingCardDescriptionContent(
                 key={`hiphop-desktop-${i}`}
                 className={`block text-center ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i > 0 ? "sm:mt-[calc(0.375rem*var(--ms,1))]" : ""}`}
               >
-                {renderModelingCopyLine(line)}
+                {line.includes(" performance.")
+                  ? (
+                      <>
+                        {line.split(" performance.")[0]}
+                        <span className="block">performance.</span>
+                      </>
+                    )
+                  : line.includes(" performance․")
+                    ? (
+                        <>
+                          {line.split(" performance․")[0]}
+                          <span className="block">performance․</span>
+                        </>
+                      )
+                    : renderModelingCopyLine(line)}
               </span>
             ))}
           </div>
