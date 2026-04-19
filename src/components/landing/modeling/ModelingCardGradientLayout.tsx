@@ -21,6 +21,7 @@ export type ModelingCardGradientLayoutProps = Pick<
   textAlignClass: string;
   descriptionContent: ReactNode;
   descriptionClassNameGradient: string;
+  hasDescriptionContent: boolean;
   DescriptionTag: "div" | "p";
 };
 
@@ -38,6 +39,7 @@ export function ModelingCardGradientLayout({
   textAlignClass,
   descriptionContent,
   descriptionClassNameGradient,
+  hasDescriptionContent,
   DescriptionTag,
 }: ModelingCardGradientLayoutProps) {
   return (
@@ -76,9 +78,11 @@ export function ModelingCardGradientLayout({
             >
               {title}
             </h3>
-            <DescriptionTag className={descriptionClassNameGradient}>
-              {descriptionContent}
-            </DescriptionTag>
+            {hasDescriptionContent ? (
+              <DescriptionTag className={descriptionClassNameGradient}>
+                {descriptionContent}
+              </DescriptionTag>
+            ) : null}
           </div>
         </>
       ) : hasImage ? (
@@ -93,9 +97,11 @@ export function ModelingCardGradientLayout({
             >
               {title}
             </h3>
-            <DescriptionTag className={descriptionClassNameGradient}>
-              {descriptionContent}
-            </DescriptionTag>
+            {hasDescriptionContent ? (
+              <DescriptionTag className={descriptionClassNameGradient}>
+                {descriptionContent}
+              </DescriptionTag>
+            ) : null}
           </div>
           <div
             className="relative h-[calc(240px*var(--ms,1))] shrink-0 overflow-hidden md:h-full md:min-h-0 md:w-1/2"
@@ -128,9 +134,11 @@ export function ModelingCardGradientLayout({
           >
             {title}
           </h3>
-          <DescriptionTag className={descriptionClassNameGradient}>
-            {descriptionContent}
-          </DescriptionTag>
+          {hasDescriptionContent ? (
+            <DescriptionTag className={descriptionClassNameGradient}>
+              {descriptionContent}
+            </DescriptionTag>
+          ) : null}
         </div>
       )}
     </article>

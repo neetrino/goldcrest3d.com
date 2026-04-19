@@ -23,7 +23,7 @@ export function ModelingSlotFormMessages({ state }: ModelingSlotFormMessagesProp
         className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-900"
         role="status"
       >
-        Saved — the homepage now uses this image.
+        Saved — the homepage now uses the latest content.
       </p>
     );
   }

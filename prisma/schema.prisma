@@ -126,3 +126,16 @@ model PowerBannerCopy {
   body      String   @db.Text
   updatedAt DateTime @updatedAt
 }
+
+/// Editable text content for each Modeling Specialization card.
+/// Stores desktop/mobile title and body separately. Bodies are newline-separated lines.
+model ModelingSpecializationCopy {
+  slotKey               String   @id
+  titleDesktop          String?  @db.Text
+  titleMobile           String?  @db.Text
+  bodyDesktop           String?  @db.Text
+  bodyMobile            String?  @db.Text
+  /// Optional emphasized fragment for slots that require highlighted wording.
+  desktopLine1Emphasis  String?  @db.Text
+  updatedAt             DateTime @updatedAt
+}

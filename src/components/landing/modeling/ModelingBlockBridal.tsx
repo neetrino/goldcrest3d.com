@@ -2,43 +2,32 @@ import { LANDING_IMAGE_IDS } from "@/constants";
 
 import { ModelingCard } from "./ModelingCard";
 
-/** Desktop / `sm+`: stacked lines (controlled breaks); fallback row layout uses `BRIDAL_DESCRIPTION_LINES`. */
-const BRIDAL_DESCRIPTION_LINES_DESKTOP = [
-  "Engineered engagement and bridal",
-  "settings built for durability, comfort and",
-  "precise stone alignment. Secure prong",
-  "architecture developed for long-term wear.",
-] as const;
-
-/** Fallback when `descriptionLinesDesktop` omitted: two logical rows (row layout + transforms). */
-const BRIDAL_DESCRIPTION_LINES = [
-  "Engineered engagement and bridal settings built for durability, comfort and precise stone alignment.",
-  "Secure prong architecture developed for long-term wear.",
-] as const;
-
-/** Mobile only: first paragraph split into two lines (third desktop line hidden below `sm`). */
-const BRIDAL_DESCRIPTION_LINES_MOBILE = [
-  "Engineered engagement and bridal settings built for",
-  "durability, comfort and precise stone alignment.",
-] as const;
-
 type ModelingBlockBridalProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  titleDesktop: string;
+  titleMobile: string;
+  descriptionLinesDesktop: string[];
+  descriptionLinesMobile: string[];
 };
 
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
 export function ModelingBlockBridal({
   imageUrlDesktop,
   imageUrlMobile,
+  titleDesktop,
+  titleMobile,
+  descriptionLinesDesktop,
+  descriptionLinesMobile,
 }: ModelingBlockBridalProps) {
   return (
     <ModelingCard
-      title="Bridal & Engagement"
+      title={titleDesktop}
+      titleMobile={titleMobile}
       description=""
-      descriptionLines={[...BRIDAL_DESCRIPTION_LINES]}
-      descriptionLinesDesktop={[...BRIDAL_DESCRIPTION_LINES_DESKTOP]}
-      descriptionLinesMobile={[...BRIDAL_DESCRIPTION_LINES_MOBILE]}
+      descriptionLines={[...descriptionLinesDesktop]}
+      descriptionLinesDesktop={[...descriptionLinesDesktop]}
+      descriptionLinesMobile={[...descriptionLinesMobile]}
       imageSrc={imageUrlDesktop}
       imageSrcMobile={imageUrlMobile}
       imagePairBreakpoint="md"

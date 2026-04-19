@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
+import { normalizeModelingSpecializationCopyPayload } from "@/lib/modeling-specialization-copy/normalize-modeling-specialization-copy";
 import { siteMediaItem } from "@/lib/site-media/site-media-prisma";
 import {
   SITE_MEDIA_GROUP_KEYS,
@@ -17,6 +19,7 @@ import {
   uploadSiteMediaToR2,
 } from "@/lib/storage";
 import { validateSiteMediaImage } from "@/lib/validations/siteMediaImage";
+import { modelingSpecializationCopyFormSchema } from "@/lib/validations/modelingSpecializationCopy";
 
 const MODELING_SLOT_SET = new Set<string>(Object.values(MODELING_SLOT_KEYS));
 
@@ -112,6 +115,68 @@ export async function upsertModelingSlotImage(
     logger.error("upsertModelingSlotImage", e);
     await deleteObjectFromR2(newKey);
     return { ok: false, error: "Could not save metadata." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function updateModelingSlotCopy(
+  _prev: SiteMediaActionResult | null,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsed = modelingSpecializationCopyFormSchema.safeParse({
+    slotKey: formData.get("slotKey"),
+    titleDesktop: formData.get("titleDesktop"),
+    titleMobile: formData.get("titleMobile"),
+    bodyDesktop: formData.get("bodyDesktop"),
+    bodyMobile: formData.get("bodyMobile"),
+    desktopLine1Emphasis: formData.get("desktopLine1Emphasis"),
+  });
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    return {
+      ok: false,
+      error:
+        fieldErrors.slotKey?.[0] ??
+        fieldErrors.titleDesktop?.[0] ??
+        fieldErrors.titleMobile?.[0] ??
+        fieldErrors.bodyDesktop?.[0] ??
+        fieldErrors.bodyMobile?.[0] ??
+        fieldErrors.desktopLine1Emphasis?.[0] ??
+        "Invalid input.",
+    };
+  }
+
+  const payload = normalizeModelingSpecializationCopyPayload({
+    titleDesktop: parsed.data.titleDesktop,
+    titleMobile: parsed.data.titleMobile,
+    bodyDesktop: parsed.data.bodyDesktop,
+    bodyMobile: parsed.data.bodyMobile,
+    desktopLine1Emphasis: parsed.data.desktopLine1Emphasis,
+  });
+
+  try {
+    await modelingSpecializationCopy.upsert({
+      where: { slotKey: parsed.data.slotKey },
+      create: {
+        slotKey: parsed.data.slotKey,
+        ...payload,
+      },
+      update: {
+        titleDesktop: payload.titleDesktop,
+        titleMobile: payload.titleMobile,
+        bodyDesktop: payload.bodyDesktop,
+        bodyMobile: payload.bodyMobile,
+        desktopLine1Emphasis: payload.desktopLine1Emphasis,
+      },
+    });
+  } catch (e) {
+    logger.error("updateModelingSlotCopy", e);
+    return { ok: false, error: "Could not save text content." };
   }
 
   revalidateSite();

@@ -1,4 +1,5 @@
 import { LANDING_SECTION_IDS } from "@/constants";
+import { toCopyLines } from "@/lib/modeling-specialization-copy/normalize-modeling-specialization-copy";
 import type { LandingModelingMedia } from "@/lib/site-media/get-landing-site-media";
 import { MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 import {
@@ -37,26 +38,77 @@ export function SectionModeling({ modeling }: SectionModelingProps) {
           <ModelingBlockHipHop
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIP_HOP].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.HIP_HOP].mobile}
+            titleDesktop={modeling[MODELING_SLOT_KEYS.HIP_HOP].titleDesktop}
+            titleMobile={modeling[MODELING_SLOT_KEYS.HIP_HOP].titleMobile}
+            descriptionLinesDesktop={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.HIP_HOP].bodyDesktop,
+            )}
+            descriptionLinesMobile={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.HIP_HOP].bodyMobile,
+            )}
           />
           <ModelingBlockBridal
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.BRIDAL].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.BRIDAL].mobile}
+            titleDesktop={modeling[MODELING_SLOT_KEYS.BRIDAL].titleDesktop}
+            titleMobile={modeling[MODELING_SLOT_KEYS.BRIDAL].titleMobile}
+            descriptionLinesDesktop={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.BRIDAL].bodyDesktop,
+            )}
+            descriptionLinesMobile={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.BRIDAL].bodyMobile,
+            )}
           />
           <ModelingBlockPortrait
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.PORTRAIT].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.PORTRAIT].mobile}
+            titleDesktop={modeling[MODELING_SLOT_KEYS.PORTRAIT].titleDesktop}
+            titleMobile={modeling[MODELING_SLOT_KEYS.PORTRAIT].titleMobile}
+            descriptionLinesDesktop={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyDesktop,
+            )}
+            descriptionLinesMobile={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyMobile,
+            )}
           />
           <ModelingBlockMechanical
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.MECHANICAL].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.MECHANICAL].mobile}
+            titleDesktop={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleDesktop}
+            titleMobile={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleMobile}
+            descriptionLinesDesktop={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyDesktop,
+            )}
+            descriptionLinesMobile={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyMobile,
+            )}
           />
           <ModelingBlockHeritage
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HERITAGE].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.HERITAGE].mobile}
+            titleDesktop={modeling[MODELING_SLOT_KEYS.HERITAGE].titleDesktop}
+            titleMobile={modeling[MODELING_SLOT_KEYS.HERITAGE].titleMobile}
+            descriptionLinesDesktop={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.HERITAGE].bodyDesktop,
+            )}
+            descriptionLinesMobile={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.HERITAGE].bodyMobile,
+            )}
           />
           <ModelingBlockHighJewelry
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].mobile}
+            titleDesktop={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].titleDesktop}
+            titleMobile={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].titleMobile}
+            descriptionLinesDesktop={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].bodyDesktop,
+            )}
+            descriptionLinesMobile={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].bodyMobile,
+            )}
+            desktopLine1Emphasis={
+              modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].desktopLine1Emphasis
+            }
           />
           </div>
         </div>

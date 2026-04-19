@@ -3,6 +3,8 @@ import type { CSSProperties } from "react";
 /** Props for one Modeling Specialization card. Լրիվ սյուն, aspect 83/43, սուր անկյուններ. */
 export type ModelingCardProps = {
   title: string;
+  /** Optional mobile-only title; desktop keeps `title`. */
+  titleMobile?: string;
   /** Single paragraph; ignored when descriptionLines is set. */
   description: string;
   /** When set, description is rendered as one block per line (e.g. Hip-Hop). */

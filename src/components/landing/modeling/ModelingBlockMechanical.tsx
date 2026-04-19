@@ -7,42 +7,38 @@ import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
 /** Mobile-only overlay nudge down (`max-sm:translate-y`); paired with `--mechanical-overlay-ty`. */
 const MOBILE_OVERLAY_TRANSLATE_Y_PX = 100;
 
-const TITLE_LINE1 = "Mechanical &";
-const TITLE_LINE2 = "Lock Systems";
-
 /** Desktop (md+): nudge first title line up without shifting the rest of the overlay. */
 const TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS = "md:-translate-y-1.5";
-
-/** Mobile only: Inter 12/300, width 283px; explicit line breaks. */
-const DESCRIPTION_MOBILE_LINES = [
-  "Tolerance-calibrated clasps, hinges and",
-  "multi-part articulated structures",
-  "engineered for controlled movement.",
-] as const;
-
-/** Desktop line breaks â€” match design baseline (left-aligned block, ragged right). */
-const DESCRIPTION_LINES = [
-  "Tolerance-calibrated clasps, hinges and",
-  "multi-part articulated",
-  "structures engineered for controlled",
-  "movement and secure locking",
-  "performance. Functional systems",
-  "developed for durability, precision",
-  "alignment and long-term",
-  "mechanical reliability.",
-] as const;
 
 type ModelingBlockMechanicalProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  titleDesktop: string;
+  titleMobile: string;
+  descriptionLinesDesktop: string[];
+  descriptionLinesMobile: string[];
 };
 
 /** Mechanical & Lock Systems block. Full-bleed image with title and description overlay. */
 export function ModelingBlockMechanical({
   imageUrlDesktop,
   imageUrlMobile,
+  titleDesktop,
+  titleMobile,
+  descriptionLinesDesktop,
+  descriptionLinesMobile,
 }: ModelingBlockMechanicalProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
+  const desktopTitleLines = titleDesktop
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+  const mobileTitleLines = titleMobile
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+  const resolvedMobileTitleLines =
+    mobileTitleLines.length > 0 ? mobileTitleLines : desktopTitleLines;
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -90,29 +86,47 @@ export function ModelingBlockMechanical({
           } as React.CSSProperties
         }
       >
-        <h3 className="z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left">
-          <span className={`block ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
-            {TITLE_LINE1}
-          </span>
-          <span className="block">{TITLE_LINE2}</span>
-        </h3>
-        <p className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] sm:hidden">
-          {DESCRIPTION_MOBILE_LINES.map((line, i) => (
-            <span key={i} className="block">
-              {line}
-            </span>
-          ))}
-        </p>
-        <div
-          className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:block"
-          style={{ overflow: "visible" }}
-        >
-          {DESCRIPTION_LINES.map((line, i) => (
+        {resolvedMobileTitleLines.length > 0 || desktopTitleLines.length > 0 ? (
+          <h3 className="z-10 w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left">
+            {resolvedMobileTitleLines.map((line, index) => (
+              <span
+                key={`mobile-title-${line}-${index}`}
+                className={`block sm:hidden ${index === 0 ? TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS : ""}`}
+              >
+                {line}
+              </span>
+            ))}
+            {desktopTitleLines.map((line, index) => (
+              <span
+                key={`desktop-title-${line}-${index}`}
+                className={`hidden sm:block ${index === 0 ? TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS : ""}`}
+              >
+                {line}
+              </span>
+            ))}
+          </h3>
+        ) : null}
+        {descriptionLinesMobile.length > 0 ? (
+          <p className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] sm:hidden">
+            {descriptionLinesMobile.map((line, i) => (
+              <span key={i} className="block">
+                {line}
+              </span>
+            ))}
+          </p>
+        ) : null}
+        {descriptionLinesDesktop.length > 0 ? (
+          <div
+            className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:block"
+            style={{ overflow: "visible" }}
+          >
+            {descriptionLinesDesktop.map((line, i) => (
             <span key={i} className="block whitespace-nowrap">
               {line}
             </span>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : null}
       </div>
     </article>
   );

@@ -1,4 +1,10 @@
 import { logger } from "@/lib/logger";
+import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
+import {
+  emptyModelingSpecializationCopyRow,
+  normalizeModelingSpecializationCopyPayload,
+} from "@/lib/modeling-specialization-copy/normalize-modeling-specialization-copy";
+import type { ModelingSpecializationCopyRow } from "@/lib/modeling-specialization-copy/modeling-specialization-copy.types";
 
 import { resolveSiteMediaDisplayUrl } from "./resolve-display-url";
 import { isMigrationPendingError } from "./is-migration-pending-error";
@@ -21,6 +27,11 @@ export type AdminModelingSlotRow = {
   displayUrl: string | null;
   displayUrlMobile: string | null;
   altText: string;
+  titleDesktop: string;
+  titleMobile: string;
+  bodyDesktop: string;
+  bodyMobile: string;
+  desktopLine1Emphasis: string;
 };
 
 export type AdminOrderedItemRow = {
@@ -42,6 +53,7 @@ export type AdminSiteMediaBundle = {
 function emptyAdminBundle(): AdminSiteMediaBundle {
   const modeling: AdminModelingSlotRow[] = ORDERED_MODELING_SLOT_KEYS.map(
     (slotKey) => ({
+      ...emptyModelingSpecializationCopyRow(slotKey),
       slotKey,
       label: MODELING_SLOT_LABELS[slotKey],
       itemId: null,
@@ -78,10 +90,25 @@ function mapOrderedRow(r: SiteMediaItemRow): AdminOrderedItemRow {
  */
 export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
   let rows: SiteMediaItemRow[];
+  let copyRows: ModelingSpecializationCopyRow[];
   try {
-    rows = await siteMediaItem.findMany({
-      orderBy: [{ sectionKey: "asc" }, { sortOrder: "asc" }],
-    });
+    const [siteMediaRows, modelingCopyRows] = await Promise.all([
+      siteMediaItem.findMany({
+        orderBy: [{ sectionKey: "asc" }, { sortOrder: "asc" }],
+      }),
+      modelingSpecializationCopy.findMany(),
+    ]);
+    rows = siteMediaRows;
+    copyRows = modelingCopyRows.map((row) => ({
+      slotKey: row.slotKey as ModelingSlotKey,
+      ...normalizeModelingSpecializationCopyPayload({
+        titleDesktop: row.titleDesktop ?? "",
+        titleMobile: row.titleMobile ?? "",
+        bodyDesktop: row.bodyDesktop ?? "",
+        bodyMobile: row.bodyMobile ?? "",
+        desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
+      }),
+    }));
   } catch (err) {
     if (isMigrationPendingError(err)) {
       logger.info("getSiteMediaAdminBundle: migration pending, empty bundle");
@@ -93,6 +120,9 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
 
   const byGroup = (key: SiteMediaGroupKey) =>
     rows.filter((r) => r.sectionKey === key);
+  const copyBySlot = new Map<ModelingSlotKey, ModelingSpecializationCopyRow>(
+    copyRows.map((row) => [row.slotKey, row]),
+  );
 
   const modelingMap = new Map(
     byGroup(SITE_MEDIA_GROUP_KEYS.MODELING_SPECIALIZATION).map((r) => [
@@ -104,7 +134,9 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
   const modeling: AdminModelingSlotRow[] = ORDERED_MODELING_SLOT_KEYS.map(
     (slotKey) => {
       const row = modelingMap.get(slotKey);
+      const copy = copyBySlot.get(slotKey) ?? emptyModelingSpecializationCopyRow(slotKey);
       return {
+        ...copy,
         slotKey,
         label: MODELING_SLOT_LABELS[slotKey],
         itemId: row?.id ?? null,

@@ -1,5 +1,11 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { logger } from "@/lib/logger";
+import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
+import {
+  emptyModelingSpecializationCopyRow,
+  normalizeModelingSpecializationCopyPayload,
+} from "@/lib/modeling-specialization-copy/normalize-modeling-specialization-copy";
+import type { ModelingSpecializationCopyRow } from "@/lib/modeling-specialization-copy/modeling-specialization-copy.types";
 
 import { isMigrationPendingError } from "./is-migration-pending-error";
 import {
@@ -23,6 +29,11 @@ import {
 export type ModelingSlotResolvedMedia = {
   desktop: string;
   mobile: string;
+  titleDesktop: string;
+  titleMobile: string;
+  bodyDesktop: string;
+  bodyMobile: string;
+  desktopLine1Emphasis: string;
 };
 
 export type LandingModelingMedia = Record<ModelingSlotKey, ModelingSlotResolvedMedia>;
@@ -80,7 +91,7 @@ function buildFinishedRow(
  */
 export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
   try {
-    const [modelingRows, row1Rows, row2Rows] = await Promise.all([
+    const [modelingRows, row1Rows, row2Rows, modelingCopyRows] = await Promise.all([
       siteMediaItem.findMany({
         where: {
           sectionKey: SITE_MEDIA_GROUP_KEYS.MODELING_SPECIALIZATION,
@@ -96,6 +107,7 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
           sectionKey: SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW2,
         },
       }),
+      modelingSpecializationCopy.findMany(),
     ]);
 
     const modelingBySlot = new Map<
@@ -112,19 +124,48 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
     );
 
     const modeling = {} as LandingModelingMedia;
+    const copyBySlot = new Map<ModelingSlotKey, ModelingSpecializationCopyRow>(
+      modelingCopyRows.map((row) => [
+        row.slotKey as ModelingSlotKey,
+        {
+          slotKey: row.slotKey as ModelingSlotKey,
+          ...normalizeModelingSpecializationCopyPayload({
+            titleDesktop: row.titleDesktop ?? "",
+            titleMobile: row.titleMobile ?? "",
+            bodyDesktop: row.bodyDesktop ?? "",
+            bodyMobile: row.bodyMobile ?? "",
+            desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
+          }),
+        },
+      ]),
+    );
     for (const slot of ORDERED_MODELING_SLOT_KEYS) {
       const row = modelingBySlot.get(slot);
+      const copy = copyBySlot.get(slot) ?? emptyModelingSpecializationCopyRow(slot);
       if (!row) {
         modeling[slot] = {
           desktop: mergeModelingUrl(slot, undefined),
           mobile: mergeModelingUrl(slot, undefined),
+          titleDesktop: copy.titleDesktop,
+          titleMobile: copy.titleMobile,
+          bodyDesktop: copy.bodyDesktop,
+          bodyMobile: copy.bodyMobile,
+          desktopLine1Emphasis: copy.desktopLine1Emphasis,
         };
         continue;
       }
       const desktopUrl = mergeModelingUrl(slot, row.desktop);
       const mobileKey = row.mobile ?? row.desktop;
       const mobileUrl = mergeModelingUrl(slot, mobileKey);
-      modeling[slot] = { desktop: desktopUrl, mobile: mobileUrl };
+      modeling[slot] = {
+        desktop: desktopUrl,
+        mobile: mobileUrl,
+        titleDesktop: copy.titleDesktop,
+        titleMobile: copy.titleMobile,
+        bodyDesktop: copy.bodyDesktop,
+        bodyMobile: copy.bodyMobile,
+        desktopLine1Emphasis: copy.desktopLine1Emphasis,
+      };
     }
 
     const finished: LandingFinishedMedia = {
@@ -148,7 +189,16 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
   const modeling = {} as LandingModelingMedia;
   for (const slot of ORDERED_MODELING_SLOT_KEYS) {
     const url = DEFAULT_MODELING_IMAGE_URL[slot];
-    modeling[slot] = { desktop: url, mobile: url };
+    const copy = emptyModelingSpecializationCopyRow(slot);
+    modeling[slot] = {
+      desktop: url,
+      mobile: url,
+      titleDesktop: copy.titleDesktop,
+      titleMobile: copy.titleMobile,
+      bodyDesktop: copy.bodyDesktop,
+      bodyMobile: copy.bodyMobile,
+      desktopLine1Emphasis: copy.desktopLine1Emphasis,
+    };
   }
   return {
     modeling,

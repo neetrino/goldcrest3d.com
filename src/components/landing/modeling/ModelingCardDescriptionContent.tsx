@@ -156,37 +156,37 @@ export function renderModelingCardDescriptionContent(
     );
   }
 
-  if (
-    hipHopMobileLayout &&
-    descriptionLinesDesktop != null &&
-    descriptionLinesDesktop.length > 0
-  ) {
+  if (hipHopMobileLayout) {
     return (
       <>
-        <div className="sm:hidden">
-          {descriptionLines.map((line, i) => (
-            <span
-              key={i}
-              className={`${
-                i < HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX
-                  ? hipHopMobileLineSingleLineClass
-                  : hipHopMobileLineClass
-              }${i >= HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX ? " hidden sm:block" : ""}`}
-            >
-              {line}
-            </span>
-          ))}
-        </div>
-        <div className="hidden min-w-0 flex-col items-center sm:flex sm:gap-0">
-          {descriptionLinesDesktop.map((line, i) => (
-            <span
-              key={`hiphop-desktop-${i}`}
-              className={`block text-center ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i > 0 ? "sm:mt-[calc(0.375rem*var(--ms,1))]" : ""}`}
-            >
-              {line}
-            </span>
-          ))}
-        </div>
+        {descriptionLines.length > 0 ? (
+          <div className="sm:hidden">
+            {descriptionLines.map((line, i) => (
+              line.includes(" structural") ? (
+                <span key={i} className={hipHopMobileLineClass}>
+                  {line.split(" structural")[0]}
+                  <span className="block">structural{line.split(" structural")[1] ?? ""}</span>
+                </span>
+              ) : (
+                <span key={i} className={hipHopMobileLineClass}>
+                  {line}
+                </span>
+              )
+            ))}
+          </div>
+        ) : null}
+        {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
+          <div className="hidden min-w-0 flex-col items-center sm:flex sm:gap-0">
+            {descriptionLinesDesktop.map((line, i) => (
+              <span
+                key={`hiphop-desktop-${i}`}
+                className={`block text-center ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i > 0 ? "sm:mt-[calc(0.375rem*var(--ms,1))]" : ""}`}
+              >
+                {line}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </>
     );
   }
