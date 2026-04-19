@@ -1,5 +1,3 @@
-"use client";
-
 import { Fragment } from "react";
 import { LANDING_SECTION_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
