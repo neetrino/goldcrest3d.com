@@ -29,17 +29,32 @@ type MediaManagerTabKey =
   | "power-banner-desktop"
   | "power-banner-mobile";
 
-const MEDIA_MANAGER_TAB_KEYS: readonly MediaManagerTabKey[] = [
-  "modeling",
-  "manufacturing-intelligence",
-  "manufacturing-intelligence-mobile",
-  "founder-desktop",
-  "founder-mobile",
-  "finished-row-1",
-  "finished-row-2",
-  "power-banner-desktop",
-  "power-banner-mobile",
+const MEDIA_MANAGER_TABS: ReadonlyArray<{ key: MediaManagerTabKey; label: string }> = [
+  { key: "power-banner-desktop", label: "Hero Banners — Desktop" },
+  { key: "power-banner-mobile", label: "Hero Banners — Mobile" },
+  { key: "modeling", label: "Modeling Specialization" },
+  { key: "manufacturing-intelligence", label: "Manufacturing Intelligence" },
+  {
+    key: "manufacturing-intelligence-mobile",
+    label: "Manufacturing Intelligence — Mobile",
+  },
+  {
+    key: "founder-desktop",
+    label: "Founder & Lead CAD Engineer (Desktop)",
+  },
+  {
+    key: "founder-mobile",
+    label: "Founder & Lead CAD Engineer Mobile",
+  },
+  { key: "finished-row-1", label: "Finished Creations — top row" },
+  { key: "finished-row-2", label: "Finished Creations — bottom row" },
 ];
+
+const MEDIA_MANAGER_TAB_KEYS: readonly MediaManagerTabKey[] = MEDIA_MANAGER_TABS.map(
+  (tab) => tab.key,
+);
+
+const DEFAULT_MEDIA_MANAGER_TAB: MediaManagerTabKey = MEDIA_MANAGER_TABS[0].key;
 
 function isMediaManagerTabKey(value: string | null): value is MediaManagerTabKey {
   if (!value) return false;
@@ -56,7 +71,7 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
   const tabFromUrl = searchParams.get("section");
   const selectedTab: MediaManagerTabKey = isMediaManagerTabKey(tabFromUrl)
     ? tabFromUrl
-    : "modeling";
+    : DEFAULT_MEDIA_MANAGER_TAB;
 
   const handleTabChange = (tab: MediaManagerTabKey) => {
     const next = new URLSearchParams(searchParams.toString());
@@ -64,29 +79,7 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
     router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   };
 
-  const tabs = useMemo(
-    () => [
-      { key: "modeling" as const, label: "Modeling Specialization" },
-      { key: "manufacturing-intelligence" as const, label: "Manufacturing Intelligence" },
-      {
-        key: "manufacturing-intelligence-mobile" as const,
-        label: "Manufacturing Intelligence — Mobile",
-      },
-      {
-        key: "founder-desktop" as const,
-        label: "Founder & Lead CAD Engineer (Desktop)",
-      },
-      {
-        key: "founder-mobile" as const,
-        label: "Founder & Lead CAD Engineer Mobile",
-      },
-      { key: "finished-row-1" as const, label: "Finished Creations — top row" },
-      { key: "finished-row-2" as const, label: "Finished Creations — bottom row" },
-      { key: "power-banner-desktop" as const, label: "Hero Banners — Desktop" },
-      { key: "power-banner-mobile" as const, label: "Hero Banners — Mobile" },
-    ],
-    [],
-  );
+  const tabs = useMemo(() => MEDIA_MANAGER_TABS, []);
 
   return (
     <div className="space-y-10">
