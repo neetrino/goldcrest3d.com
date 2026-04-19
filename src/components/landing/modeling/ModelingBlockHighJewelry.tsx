@@ -27,8 +27,45 @@ export function ModelingBlockHighJewelry({
   desktopLine1Emphasis,
 }: ModelingBlockHighJewelryProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
-  const desktopLine1 = descriptionLinesDesktop[0] ?? "";
-  const desktopRest = descriptionLinesDesktop.slice(1);
+  const normalizedDesktopLines = descriptionLinesDesktop.reduce<string[]>(
+    (acc, rawLine) => {
+      const line = rawLine.trim();
+      const previousLine = acc[acc.length - 1] ?? "";
+      const previousLineTrimmed = previousLine.trim();
+      const shouldMovePreciseDigitalToPrevious =
+        /^precise\s+digital\s+reconstruction\b/i.test(line) &&
+        /\bthrough$/i.test(previousLineTrimmed);
+      const shouldJoinWithPrevious =
+        /^digital\b/i.test(line) && /\bprecise$/i.test(previousLineTrimmed);
+
+      if (shouldMovePreciseDigitalToPrevious) {
+        acc[acc.length - 1] = `${previousLine} precise digital`;
+        const trimmedCurrentLine = line.replace(/^precise\s+digital\s+/i, "");
+        if (trimmedCurrentLine.length > 0) {
+          acc.push(trimmedCurrentLine);
+        }
+        return acc;
+      }
+
+      if (shouldJoinWithPrevious) {
+        acc[acc.length - 1] = `${previousLine} digital`;
+        const trimmedCurrentLine = line.replace(/^digital\s+/i, "");
+        if (trimmedCurrentLine.length > 0) {
+          acc.push(trimmedCurrentLine);
+        }
+        return acc;
+      }
+
+      acc.push(rawLine);
+      return acc;
+    },
+    [],
+  );
+  const desktopLinesNoBreakPreciseDigital = normalizedDesktopLines.map((line) =>
+    line.replace(/\bprecise digital\b/gi, "precise\u00A0digital"),
+  );
+  const desktopLine1 = desktopLinesNoBreakPreciseDigital[0] ?? "";
+  const desktopRest = desktopLinesNoBreakPreciseDigital.slice(1);
   const mobileLine1 = descriptionLinesMobile[0] ?? "";
   const mobileRest = descriptionLinesMobile.slice(1);
   const objectClassName =
@@ -113,7 +150,11 @@ export function ModelingBlockHighJewelry({
             {desktopRest.map((line, index) => (
               <span
                 key={`desktop-desc-${line}-${index}`}
-                className={index === 0 ? "mt-[calc(0.125rem*var(--ms,1))] block" : "block"}
+                className={
+                  index === 0
+                    ? "mt-[calc(0.125rem*var(--ms,1))] block whitespace-nowrap"
+                    : "block"
+                }
               >
                 {renderModelingCopyLine(line)}
               </span>
