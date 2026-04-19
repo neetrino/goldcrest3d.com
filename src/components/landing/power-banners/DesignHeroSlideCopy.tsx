@@ -4,7 +4,6 @@ import {
 } from "@/components/landing/GetAQuoteButton";
 import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-copy.types";
 import {
-  resolveDesignSubtitleDisplay,
   splitMultilineText,
 } from "./resolve-power-banner-display";
 import { SECTION3_TEXT_COLUMN_TOP_MD_CLASS } from "./power-banners-layout.constants";
@@ -18,8 +17,8 @@ export function DesignHeroSlideCopy({
   desktopCopy,
   mobileCopy,
 }: DesignHeroSlideCopyProps) {
-  const desktopSubtitle = resolveDesignSubtitleDisplay(desktopCopy.body);
-  const mobileSubtitle = resolveDesignSubtitleDisplay(mobileCopy.body);
+  const desktopSubtitleLines = splitMultilineText(desktopCopy.body);
+  const mobileSubtitleLines = splitMultilineText(mobileCopy.body);
   const mobileTitle = splitMultilineText(mobileCopy.title).join(" ");
 
   return (
@@ -34,12 +33,18 @@ export function DesignHeroSlideCopy({
         <div className="flex w-full flex-col items-end gap-0.5 md:items-start md:gap-1">
           <p className="hero-primary-subtitle-typography-design max-w-[433px] self-end text-right max-md:-translate-y-5 md:max-w-[433px] md:-translate-y-4 md:self-start md:text-left">
             <span className="md:hidden">
-              <span className="block">{mobileSubtitle.line1}</span>
-              {mobileSubtitle.line2 ? <span className="block">{mobileSubtitle.line2}</span> : null}
+              {mobileSubtitleLines.map((line, i) => (
+                <span key={i} className="block">
+                  {line}
+                </span>
+              ))}
             </span>
             <span className="hidden md:block">
-              <span className="block">{desktopSubtitle.line1}</span>
-              {desktopSubtitle.line2 ? <span className="block">{desktopSubtitle.line2}</span> : null}
+              {desktopSubtitleLines.map((line, i) => (
+                <span key={i} className="block md:whitespace-nowrap">
+                  {line}
+                </span>
+              ))}
             </span>
           </p>
           <GetAQuoteButton
