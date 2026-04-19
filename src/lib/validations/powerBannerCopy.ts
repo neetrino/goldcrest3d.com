@@ -7,7 +7,6 @@ import {
 
 const MAX_TITLE_LEN = 280;
 const MAX_BODY_LEN = 4000;
-const MAX_IMAGE_ALT_LEN = 280;
 
 export const powerBannerCopyFormSchema = z.object({
   bannerKey: z
@@ -23,9 +22,5 @@ export const powerBannerCopyFormSchema = z.object({
   body: z
     .string()
     .max(MAX_BODY_LEN, `Description must be at most ${MAX_BODY_LEN} characters`)
-    .transform((s) => s.trim()),
-  imageAlt: z
-    .string()
-    .max(MAX_IMAGE_ALT_LEN, `Image alt must be at most ${MAX_IMAGE_ALT_LEN} characters`)
     .transform((s) => s.trim()),
 });

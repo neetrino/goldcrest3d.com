@@ -143,24 +143,6 @@ export function PowerBannerCopyEditor({
           </p>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label
-            htmlFor={`power-banner-image-alt-${bannerKey}`}
-            className="text-sm font-medium text-slate-800"
-          >
-            Image alt text
-          </label>
-          <input
-            id={`power-banner-image-alt-${bannerKey}`}
-            name="imageAlt"
-            type="text"
-            required
-            disabled={savePending}
-            defaultValue={initial.imageAlt}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-slate-200 transition placeholder:text-slate-400 focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
-          />
-        </div>
-
         <PowerBannerCopyMessages state={state} />
 
         <MediaFormSubmitButton pendingLabel="Saving…">Save banner text</MediaFormSubmitButton>

@@ -11,6 +11,7 @@ import {
   type PowerBannerKey,
   type PowerBannerViewport,
 } from "@/lib/power-banner-copy/power-banner-keys";
+import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
 import { siteMediaItem } from "@/lib/site-media/site-media-prisma";
 import { SITE_MEDIA_GROUP_KEYS } from "@/lib/site-media/site-media.registry";
 import { powerBannerCopyFormSchema } from "@/lib/validations/powerBannerCopy";
@@ -47,7 +48,6 @@ export async function updatePowerBannerCopy(
     viewport: formData.get("viewport"),
     title: formData.get("title"),
     body: formData.get("body"),
-    imageAlt: formData.get("imageAlt"),
   });
 
   if (!parsed.success) {
@@ -57,12 +57,11 @@ export async function updatePowerBannerCopy(
       first.viewport?.[0] ??
       first.title?.[0] ??
       first.body?.[0] ??
-      first.imageAlt?.[0] ??
       "Invalid input.";
     return { ok: false, error: msg };
   }
 
-  const { bannerKey, viewport, title, body, imageAlt } = parsed.data;
+  const { bannerKey, viewport, title, body } = parsed.data;
   if (title.length === 0) {
     return { ok: false, error: "Title is required." };
   }
@@ -104,7 +103,6 @@ export async function updatePowerBannerCopy(
           where: { id: existingHeroMedia.id },
           data: {
             sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
-            alt: imageAlt,
           },
         });
       } else {
@@ -113,13 +111,18 @@ export async function updatePowerBannerCopy(
             sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS,
             slotId,
             sortOrder: sortOrder >= 0 ? sortOrder : 0,
-            alt: imageAlt,
           },
         });
       }
     });
   } catch (err) {
     logger.error("updatePowerBannerCopy: failed to upsert", err);
+    if (isMigrationPendingError(err)) {
+      return {
+        ok: false,
+        error: "Database schema is outdated. Run Prisma migrations and try again.",
+      };
+    }
     return {
       ok: false,
       error: "Could not save. Try again or check the database connection.",

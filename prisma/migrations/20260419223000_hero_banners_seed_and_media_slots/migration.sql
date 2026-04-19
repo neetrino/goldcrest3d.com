@@ -23,32 +23,40 @@ ON CONFLICT ("bannerKey") DO NOTHING;
 
 -- Register hero banner media slots in SiteMediaItem (fallback to legacy local images until replaced in admin).
 INSERT INTO "SiteMediaItem" (
+  "id",
   "sectionKey",
   "slotId",
   "sortOrder",
   "legacySrc",
-  "alt"
+  "alt",
+  "updatedAt"
 )
 VALUES
   (
+    'site_media_hero_modeling_desktop',
     'hero_banners',
     'hero_modeling',
     0,
     '/images/modeling/hero-production-ready-jewelry-cad.png',
-    '3D Production-Ready Modeling hero banner'
+    '3D Production-Ready Modeling hero banner',
+    NOW()
   ),
   (
+    'site_media_hero_rendering_desktop',
     'hero_banners',
     'hero_rendering',
     1,
     '/images/rendering/hero-jewelry-rendering.png',
-    'Jewelry Rendering hero banner'
+    'Jewelry Rendering hero banner',
+    NOW()
   ),
   (
+    'site_media_hero_design_desktop',
     'hero_banners',
     'hero_design',
     2,
     '/images/design/hero-jewelry-design-brief.png',
-    'Jewelry Design hero banner'
+    'Jewelry Design hero banner',
+    NOW()
   )
 ON CONFLICT ("slotId") DO NOTHING;
