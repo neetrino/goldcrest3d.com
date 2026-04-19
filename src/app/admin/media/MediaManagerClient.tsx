@@ -11,6 +11,7 @@ import { OrderedGallerySection } from "./OrderedGallerySection";
 import { ModelingMediaSection } from "./ModelingMediaSection";
 import { ManufacturingIntelligenceSection } from "./ManufacturingIntelligenceSection";
 import { PowerBannerCopySection } from "./PowerBannerCopySection";
+import { FounderSectionEditor } from "./FounderSectionEditor";
 
 type MediaManagerClientProps = {
   bundle: AdminSiteMediaBundle;
@@ -21,6 +22,8 @@ type MediaManagerTabKey =
   | "modeling"
   | "manufacturing-intelligence"
   | "manufacturing-intelligence-mobile"
+  | "founder-desktop"
+  | "founder-mobile"
   | "finished-row-1"
   | "finished-row-2"
   | "power-banner-desktop"
@@ -30,6 +33,8 @@ const MEDIA_MANAGER_TAB_KEYS: readonly MediaManagerTabKey[] = [
   "modeling",
   "manufacturing-intelligence",
   "manufacturing-intelligence-mobile",
+  "founder-desktop",
+  "founder-mobile",
   "finished-row-1",
   "finished-row-2",
   "power-banner-desktop",
@@ -66,6 +71,14 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
       {
         key: "manufacturing-intelligence-mobile" as const,
         label: "Manufacturing Intelligence — Mobile",
+      },
+      {
+        key: "founder-desktop" as const,
+        label: "Founder & Lead CAD Engineer (Desktop)",
+      },
+      {
+        key: "founder-mobile" as const,
+        label: "Founder & Lead CAD Engineer Mobile",
       },
       { key: "finished-row-1" as const, label: "Finished Creations — top row" },
       { key: "finished-row-2" as const, label: "Finished Creations — bottom row" },
@@ -131,6 +144,14 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
           rowContextLabel="Top row"
           recommendedSize="670 × 370 px"
         />
+      ) : null}
+
+      {selectedTab === "founder-desktop" ? (
+        <FounderSectionEditor row={bundle.founderDesktop} variant="desktop" />
+      ) : null}
+
+      {selectedTab === "founder-mobile" ? (
+        <FounderSectionEditor row={bundle.founderMobile} variant="mobile" />
       ) : null}
 
       {selectedTab === "finished-row-2" ? (

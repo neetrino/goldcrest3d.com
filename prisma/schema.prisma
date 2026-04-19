@@ -156,3 +156,17 @@ model ManufacturingIntelligenceMobileCopy {
   value     String   @db.Text
   updatedAt DateTime @updatedAt
 }
+
+/// Editable text content for Founder & Lead CAD Engineer desktop section.
+model FounderSectionCopy {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+/// Editable text content for Founder & Lead CAD Engineer mobile section.
+model FounderSectionMobileCopy {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}

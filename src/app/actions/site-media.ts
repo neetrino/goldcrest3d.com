@@ -4,6 +4,12 @@ import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/auth";
 import { MANUFACTURING_SPECIALIZATION_ITEMS } from "@/constants/manufacturing-specialization";
 import { prisma } from "@/lib/db";
+import { FOUNDER_SECTION_COPY_KEYS } from "@/lib/founder-section/founder-section-copy.keys";
+import {
+  getFounderDesktopMediaSlotId,
+  getFounderMobileMediaSlotId,
+} from "@/lib/founder-section/founder-section-content";
+import { FOUNDER_SECTION_MOBILE_COPY_KEYS } from "@/lib/founder-section/founder-section-mobile-copy.keys";
 import {
   DEFAULT_MANUFACTURING_IMAGE_TRANSFORM,
   normalizeManufacturingImageTransform,
@@ -49,6 +55,7 @@ import {
   manufacturingIntelligenceHeadingFormSchema,
   manufacturingIntelligenceItemFormSchema,
 } from "@/lib/validations/manufacturingIntelligenceItem";
+import { founderSectionFormSchema } from "@/lib/validations/founderSection";
 import { modelingSpecializationCopyFormSchema } from "@/lib/validations/modelingSpecializationCopy";
 import { powerBannerTransformFormSchema } from "@/lib/validations/powerBannerCopy";
 
@@ -65,6 +72,7 @@ const MANUFACTURING_MOBILE_SORT_ORDER = new Map<string, number>(
 
 export type ModelingSlotImageVariant = "desktop" | "mobile";
 export type HeroBannerImageVariant = "desktop" | "mobile";
+export type FounderSectionVariant = "desktop" | "mobile";
 
 const ORDERED_GROUPS = new Set<SiteMediaGroupKey>([
   SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1,
@@ -75,6 +83,10 @@ const MAX_ORDERED_ITEMS = 12;
 const HERO_BANNER_SORT_ORDER = new Map<string, number>(
   POWER_BANNER_KEYS.map((key, index) => [key, index]),
 );
+const FOUNDER_SORT_ORDER = {
+  desktop: 0,
+  mobile: 0,
+} as const;
 
 export type SiteMediaActionResult =
   | { ok: true }
@@ -698,6 +710,219 @@ export async function updateManufacturingIntelligenceMobileItem(
   } catch (e) {
     logger.error("updateManufacturingIntelligenceMobileItem", e);
     return { ok: false, error: "Could not save manufacturing mobile content." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+function getFounderVariantConfig(variant: FounderSectionVariant): {
+  sectionKey: SiteMediaGroupKey;
+  slotId: string;
+  sortOrder: number;
+  keys: {
+    HEADING: string;
+    NAME: string;
+    BIO_P1: string;
+    BIO_P2: string;
+    BIO_P3?: string;
+    BIO_P4?: string;
+    STAT_YEARS_VALUE: string;
+    STAT_YEARS_CAPTION: string;
+    STAT_PROJECTS_VALUE: string;
+    STAT_PROJECTS_CAPTION: string;
+    IMAGE_ALT: string;
+  };
+} {
+  if (variant === "mobile") {
+    return {
+      sectionKey: SITE_MEDIA_GROUP_KEYS.FOUNDER_MOBILE,
+      slotId: getFounderMobileMediaSlotId(),
+      sortOrder: FOUNDER_SORT_ORDER.mobile,
+      keys: FOUNDER_SECTION_MOBILE_COPY_KEYS,
+    };
+  }
+  return {
+    sectionKey: SITE_MEDIA_GROUP_KEYS.FOUNDER_DESKTOP,
+    slotId: getFounderDesktopMediaSlotId(),
+    sortOrder: FOUNDER_SORT_ORDER.desktop,
+    keys: FOUNDER_SECTION_COPY_KEYS,
+  };
+}
+
+export async function upsertFounderSectionImage(
+  variant: FounderSectionVariant,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+  if (variant !== "desktop" && variant !== "mobile") {
+    return { ok: false, error: "Invalid founder variant." };
+  }
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "Choose an image file." };
+  }
+  const err = validateSiteMediaImage(file);
+  if (err) return { ok: false, error: err };
+
+  const newKey = await uploadSiteMediaToR2(file);
+  if (!newKey) {
+    return { ok: false, error: "Upload failed. Check R2 configuration." };
+  }
+  const config = getFounderVariantConfig(variant);
+  try {
+    const existing = await siteMediaItem.findUnique({ where: { slotId: config.slotId } });
+    if (existing?.r2ObjectKey) {
+      await deleteObjectFromR2(existing.r2ObjectKey);
+    }
+    if (existing) {
+      await siteMediaItem.update({
+        where: { id: existing.id },
+        data: { sectionKey: config.sectionKey, r2ObjectKey: newKey },
+      });
+    } else {
+      await siteMediaItem.create({
+        data: {
+          sectionKey: config.sectionKey,
+          slotId: config.slotId,
+          sortOrder: config.sortOrder,
+          r2ObjectKey: newKey,
+          layoutMeta: DEFAULT_MANUFACTURING_IMAGE_TRANSFORM,
+        },
+      });
+    }
+  } catch (error) {
+    logger.error("upsertFounderSectionImage", error);
+    await deleteObjectFromR2(newKey);
+    return { ok: false, error: "Could not save metadata." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function updateFounderSectionContent(
+  variant: FounderSectionVariant,
+  _prev: SiteMediaActionResult | null,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+  if (variant !== "desktop" && variant !== "mobile") {
+    return { ok: false, error: "Invalid founder variant." };
+  }
+
+  const parsed = founderSectionFormSchema.safeParse({
+    heading: formData.get("heading"),
+    name: formData.get("name"),
+    bioP1: formData.get("bioP1"),
+    bioP2: formData.get("bioP2"),
+    bioP3: formData.get("bioP3"),
+    bioP4: formData.get("bioP4"),
+    yearsValue: formData.get("yearsValue"),
+    yearsCaption: formData.get("yearsCaption"),
+    projectsValue: formData.get("projectsValue"),
+    projectsCaption: formData.get("projectsCaption"),
+    imageAlt: formData.get("imageAlt"),
+    zoom: formData.get("zoom"),
+    offsetX: formData.get("offsetX"),
+    offsetY: formData.get("offsetY"),
+  });
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    return {
+      ok: false,
+      error:
+        fieldErrors.heading?.[0] ??
+        fieldErrors.name?.[0] ??
+        fieldErrors.bioP1?.[0] ??
+        fieldErrors.bioP2?.[0] ??
+        fieldErrors.bioP3?.[0] ??
+        fieldErrors.bioP4?.[0] ??
+        fieldErrors.yearsValue?.[0] ??
+        fieldErrors.yearsCaption?.[0] ??
+        fieldErrors.projectsValue?.[0] ??
+        fieldErrors.projectsCaption?.[0] ??
+        fieldErrors.imageAlt?.[0] ??
+        fieldErrors.zoom?.[0] ??
+        fieldErrors.offsetX?.[0] ??
+        fieldErrors.offsetY?.[0] ??
+        "Invalid founder section values.",
+    };
+  }
+
+  const data = parsed.data;
+  const config = getFounderVariantConfig(variant);
+  const transform = normalizeManufacturingImageTransform({
+    zoom: data.zoom,
+    offsetX: data.offsetX,
+    offsetY: data.offsetY,
+  });
+
+  const copyEntries: Array<{ key: string; value: string }> = [
+    { key: config.keys.HEADING, value: data.heading },
+    { key: config.keys.NAME, value: data.name },
+    { key: config.keys.BIO_P1, value: data.bioP1 },
+    { key: config.keys.BIO_P2, value: data.bioP2 },
+    { key: config.keys.STAT_YEARS_VALUE, value: data.yearsValue },
+    { key: config.keys.STAT_YEARS_CAPTION, value: data.yearsCaption },
+    { key: config.keys.STAT_PROJECTS_VALUE, value: data.projectsValue },
+    { key: config.keys.STAT_PROJECTS_CAPTION, value: data.projectsCaption },
+    { key: config.keys.IMAGE_ALT, value: data.imageAlt },
+  ];
+  if (config.keys.BIO_P3) copyEntries.push({ key: config.keys.BIO_P3, value: data.bioP3 });
+  if (config.keys.BIO_P4) copyEntries.push({ key: config.keys.BIO_P4, value: data.bioP4 });
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      const transactionalClient = tx as typeof tx & {
+        siteMediaItem: typeof siteMediaItem;
+        founderSectionCopy: { upsert: (args: object) => Promise<unknown> };
+        founderSectionMobileCopy: { upsert: (args: object) => Promise<unknown> };
+      };
+      for (const entry of copyEntries) {
+        if (variant === "mobile") {
+          await transactionalClient.founderSectionMobileCopy.upsert({
+            where: { key: entry.key },
+            create: { key: entry.key, value: entry.value },
+            update: { value: entry.value },
+          });
+        } else {
+          await transactionalClient.founderSectionCopy.upsert({
+            where: { key: entry.key },
+            create: { key: entry.key, value: entry.value },
+            update: { value: entry.value },
+          });
+        }
+      }
+      const existing = await transactionalClient.siteMediaItem.findUnique({
+        where: { slotId: config.slotId },
+      });
+      if (existing) {
+        await transactionalClient.siteMediaItem.update({
+          where: { id: existing.id },
+          data: {
+            sectionKey: config.sectionKey,
+            alt: data.imageAlt,
+            layoutMeta: transform,
+          },
+        });
+      } else {
+        await transactionalClient.siteMediaItem.create({
+          data: {
+            sectionKey: config.sectionKey,
+            slotId: config.slotId,
+            sortOrder: config.sortOrder,
+            alt: data.imageAlt,
+            layoutMeta: transform,
+          },
+        });
+      }
+    });
+  } catch (error) {
+    logger.error("updateFounderSectionContent", error);
+    return { ok: false, error: "Could not save founder section content." };
   }
 
   revalidateSite();

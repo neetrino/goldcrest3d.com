@@ -1,5 +1,6 @@
 import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
-import { LANDING_IMAGES } from "@/constants/landing-assets";
+import { getManufacturingImageTransformCssValue } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
+import type { FounderSectionContent } from "@/lib/founder-section/founder-section.types";
 import Image from "next/image";
 
 const FOUNDER_STAT_NUMBER_CLASS_DEFAULT =
@@ -15,14 +16,6 @@ const FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS = {
 
 const FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS =
   "w-full font-sans text-base font-light italic leading-6 tracking-[-0.312px] text-black/80 break-words";
-
-const FOUNDER_BIO_MOBILE_P1 = `With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and stone setting, the studio is built on practical manufacturing knowledge — not theory.`;
-
-const FOUNDER_BIO_MOBILE_P2 = `Direct experience at the bench provides a deep understanding of structural behavior, stone security, tolerances and real-world production limitations.`;
-
-const FOUNDER_BIO_MOBILE_P3 = `Every design decision is informed by how the piece will be cast, set, assembled and worn. Each project is personally reviewed, calibrated and validated before delivery.`;
-
-const FOUNDER_BIO_MOBILE_P4 = `No model leaves the studio without structural verification. Jewelry is approached as a system — where design, engineering and craftsmanship must align with precision․`;
 
 /** Tablet-ում մի քիչ աջ, desktop-ում պահում ենք նախորդ ձախ տեղաշարժը */
 const FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS =
@@ -49,55 +42,65 @@ const FOUNDER_DESKTOP_STATS_SECTION_CLASS =
 
 type FounderBioContentDesktopProps = {
   contentTopClassName: string;
+  bioP1: string;
+  bioP2: string;
 };
 
-function FounderBioContentDesktop({ contentTopClassName }: FounderBioContentDesktopProps) {
+function FounderBioContentDesktop({
+  contentTopClassName,
+  bioP1,
+  bioP2,
+}: FounderBioContentDesktopProps) {
   return (
     <div
       className={`space-y-3 font-light italic leading-[22px] text-black text-[14px] md:max-lg:text-[clamp(13px,1.6vw,14px)] md:max-lg:leading-[clamp(20px,2.3vw,22px)] lg:space-y-2.5 xl:space-y-4 ${contentTopClassName}`}
     >
-      <p className="whitespace-pre-wrap break-words">{`With over 16 years of experience in jewelry craftsmanship, including professional goldsmithing and
-stone setting, the studio is built on practical manufacturing knowledge — not theory.
-Direct experience at the bench provides a deep understanding of structural behavior, stone
-security, tolerances and real-world production limitations.`}</p>
-      <p className="mt-8 whitespace-pre-wrap break-words sm:mt-10 lg:mt-5 xl:mt-10">{`Every design decision is informed by how the piece will be cast, set, assembled and worn. Each
-project is personally reviewed, calibrated and validated before delivery.
-No model leaves the studio without structural verification. Jewelry is approached as a system — 
-where design, engineering and craftsmanship must align with precision․`}</p>
+      <p className="whitespace-pre-wrap break-words">{bioP1}</p>
+      <p className="mt-8 whitespace-pre-wrap break-words sm:mt-10 lg:mt-5 xl:mt-10">{bioP2}</p>
     </div>
   );
 }
 
 type FounderBioContentMobileProps = {
   contentTopClassName: string;
+  bioP1: string;
+  bioP2: string;
+  bioP3: string;
+  bioP4: string;
 };
 
 
-function FounderBioContentMobile({ contentTopClassName }: FounderBioContentMobileProps) {
+function FounderBioContentMobile({
+  contentTopClassName,
+  bioP1,
+  bioP2,
+  bioP3,
+  bioP4,
+}: FounderBioContentMobileProps) {
   return (
     <div className={contentTopClassName}>
       <div className="space-y-4">
         <p
           className={`${FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p1} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
         >
-          {FOUNDER_BIO_MOBILE_P1}
+          {bioP1}
         </p>
         <p
           className={`${FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p2} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
         >
-          {FOUNDER_BIO_MOBILE_P2}
+          {bioP2}
         </p>
       </div>
       <div className="mt-8 space-y-4">
         <p
           className={`${FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p3} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
         >
-          {FOUNDER_BIO_MOBILE_P3}
+          {bioP3}
         </p>
         <p
           className={`${FOUNDER_MOBILE_BIO_MAX_WIDTH_CLASS.p4} ${FOUNDER_MOBILE_BIO_PARAGRAPH_CLASS}`}
         >
-          {FOUNDER_BIO_MOBILE_P4}
+          {bioP4}
         </p>
       </div>
     </div>
@@ -105,6 +108,7 @@ function FounderBioContentMobile({ contentTopClassName }: FounderBioContentMobil
 }
 
 type FounderBioAndStatsProps = {
+  content: FounderSectionContent;
   statCaptionClassName: string;
   contentTopClassName: string;
   statsSectionClassName: string;
@@ -114,6 +118,7 @@ type FounderBioAndStatsProps = {
 };
 
 function FounderBioAndStats({
+  content,
   statCaptionClassName,
   contentTopClassName,
   statsSectionClassName,
@@ -124,20 +129,30 @@ function FounderBioAndStats({
   const statsBlock = (
     <div className={statsSectionClassName}>
       <div>
-        <p className={statNumberClassName}>16+</p>
-        <p className={statCaptionClassName}>Years Experience</p>
+        <p className={statNumberClassName}>{content.stats.yearsValue}</p>
+        <p className={statCaptionClassName}>{content.stats.yearsCaption}</p>
       </div>
       <div>
-        <p className={statNumberClassName}>2.5k+</p>
-        <p className={statCaptionClassName}>Projects Delivered</p>
+        <p className={statNumberClassName}>{content.stats.projectsValue}</p>
+        <p className={statCaptionClassName}>{content.stats.projectsCaption}</p>
       </div>
     </div>
   );
 
   const bioBlock = useMobileBioTypography ? (
-    <FounderBioContentMobile contentTopClassName={contentTopClassName} />
+    <FounderBioContentMobile
+      contentTopClassName={contentTopClassName}
+      bioP1={content.bioParagraphs[0]}
+      bioP2={content.bioParagraphs[1]}
+      bioP3={content.bioParagraphs[2]}
+      bioP4={content.bioParagraphs[3]}
+    />
   ) : (
-    <FounderBioContentDesktop contentTopClassName={contentTopClassName} />
+    <FounderBioContentDesktop
+      contentTopClassName={contentTopClassName}
+      bioP1={content.bioParagraphs[0]}
+      bioP2={content.bioParagraphs[1]}
+    />
   );
 
   if (statsFirst) {
@@ -157,7 +172,12 @@ function FounderBioAndStats({
   );
 }
 
-export function SectionFounder() {
+type SectionFounderProps = {
+  desktopContent: FounderSectionContent;
+  mobileContent: FounderSectionContent;
+};
+
+export function SectionFounder({ desktopContent, mobileContent }: SectionFounderProps) {
   return (
     <section
       id={LANDING_SECTION_IDS.FOUNDER}
@@ -167,19 +187,25 @@ export function SectionFounder() {
       <div className="mx-auto max-w-[1440px]">
         <h2
           id="founder-heading"
-          className="mt-8 -translate-y-3 text-center font-sans text-2xl font-medium leading-8 tracking-[0.07px] text-black md:mt-12 md:translate-y-0 md:text-left md:font-manrope md:text-[48px] md:font-normal md:leading-[40px] md:tracking-[-0.9px]"
+          className="mt-8 text-center text-black md:mt-12 md:text-left"
         >
-          Founder & Lead CAD Engineer
+          <span className="-translate-y-3 font-sans text-2xl font-medium leading-8 tracking-[0.07px] md:hidden">
+            {mobileContent.heading}
+          </span>
+          <span className="hidden font-manrope text-[48px] font-normal leading-[40px] tracking-[-0.9px] md:inline">
+            {desktopContent.heading}
+          </span>
         </h2>
         <h3 className="-mt-2 mb-3 text-center font-sans text-[30px] font-black leading-[36px] tracking-[0.396px] text-black md:hidden">
-          Davit Sargsyan
+          {mobileContent.name}
         </h3>
         <div className={FOUNDER_GRADIENT_PANEL_CLASS}>
           <div className={FOUNDER_DESKTOP_TEXT_COLUMN_CLASS}>
             <h3 className={FOUNDER_DESKTOP_HEADING_CLASS}>
-              Davit Sargsyan
+              {desktopContent.name}
             </h3>
             <FounderBioAndStats
+              content={desktopContent}
               statCaptionClassName="font-bold uppercase tracking-[1.4px] text-white text-[12px] md:text-[13px]"
               contentTopClassName={FOUNDER_DESKTOP_BIO_TOP_MARGIN_CLASS}
               statsSectionClassName={FOUNDER_DESKTOP_STATS_SECTION_CLASS}
@@ -189,18 +215,37 @@ export function SectionFounder() {
             className="relative min-h-0 w-full flex-1 md:aspect-auto md:h-auto md:max-w-[440px] lg:max-w-[493px] md:min-h-0 md:flex-none md:shrink-0"
             data-landing-image={LANDING_IMAGE_IDS.FOUNDER_PHOTO}
           >
-            <Image
-              src={LANDING_IMAGES.founder}
-              alt="Davit Sargsyan"
-              fill
-              className={`object-cover object-center min-[430px]:max-md:object-contain min-[430px]:max-md:object-bottom ${FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS}`}
-              sizes="(max-width: 768px) 100vw, 493px"
-              unoptimized
-            />
+            <div
+              className="absolute inset-0 md:hidden"
+              style={{ transform: getManufacturingImageTransformCssValue(mobileContent.image.transform) }}
+            >
+              <Image
+                src={mobileContent.image.src}
+                alt={mobileContent.image.alt}
+                fill
+                className="object-cover object-center min-[430px]:max-md:object-contain min-[430px]:max-md:object-bottom"
+                sizes="(max-width: 768px) 100vw, 493px"
+                unoptimized
+              />
+            </div>
+            <div
+              className="absolute inset-0 hidden md:block"
+              style={{ transform: getManufacturingImageTransformCssValue(desktopContent.image.transform) }}
+            >
+              <Image
+                src={desktopContent.image.src}
+                alt={desktopContent.image.alt}
+                fill
+                className={`object-cover object-center ${FOUNDER_PHOTO_DESKTOP_NUDGE_LEFT_CLASS}`}
+                sizes="(max-width: 768px) 100vw, 493px"
+                unoptimized
+              />
+            </div>
           </div>
         </div>
         <div className="mt-6 md:hidden">
           <FounderBioAndStats
+            content={mobileContent}
             statsFirst
             useMobileBioTypography
             statNumberClassName="font-black leading-[32px] text-black text-[24px]"

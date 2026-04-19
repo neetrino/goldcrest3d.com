@@ -1,4 +1,11 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
+import {
+  buildFounderDesktopContent,
+  buildFounderMobileContent,
+} from "@/lib/founder-section/founder-section-content";
+import { founderSectionCopy } from "@/lib/founder-section/founder-section-copy-prisma";
+import { founderSectionMobileCopy } from "@/lib/founder-section/founder-section-mobile-copy-prisma";
+import type { FounderSectionContent } from "@/lib/founder-section/founder-section.types";
 import { buildManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-content";
 import { buildManufacturingIntelligenceMobileContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-mobile-content";
 import type { ManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence.types";
@@ -52,6 +59,8 @@ export type LandingSiteMedia = {
   modeling: LandingModelingMedia;
   manufacturingDesktop: ManufacturingIntelligenceContent;
   manufacturingMobile: ManufacturingIntelligenceContent;
+  founderDesktop: FounderSectionContent;
+  founderMobile: FounderSectionContent;
   finished: LandingFinishedMedia;
 };
 
@@ -102,11 +111,15 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       modelingRows,
       manufacturingMediaRows,
       manufacturingMobileMediaRows,
+      founderDesktopMediaRows,
+      founderMobileMediaRows,
       row1Rows,
       row2Rows,
       modelingCopyRows,
       manufacturingCopyRows,
       manufacturingMobileCopyRows,
+      founderDesktopCopyRows,
+      founderMobileCopyRows,
     ] =
       await Promise.all([
       siteMediaItem.findMany({
@@ -126,6 +139,16 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       }),
       siteMediaItem.findMany({
         where: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.FOUNDER_DESKTOP,
+        },
+      }),
+      siteMediaItem.findMany({
+        where: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.FOUNDER_MOBILE,
+        },
+      }),
+      siteMediaItem.findMany({
+        where: {
           sectionKey: SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1,
         },
       }),
@@ -137,6 +160,8 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       modelingSpecializationCopy.findMany(),
       manufacturingIntelligenceCopy.findMany(),
       manufacturingIntelligenceMobileCopy.findMany(),
+      founderSectionCopy.findMany(),
+      founderSectionMobileCopy.findMany(),
     ]);
 
     const modelingBySlot = new Map<
@@ -210,13 +235,34 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       })),
       manufacturingMobileMediaRows,
     );
+    const founderDesktop = buildFounderDesktopContent(
+      founderDesktopCopyRows.map((row) => ({
+        key: row.key,
+        value: row.value,
+      })),
+      founderDesktopMediaRows,
+    );
+    const founderMobile = buildFounderMobileContent(
+      founderMobileCopyRows.map((row) => ({
+        key: row.key,
+        value: row.value,
+      })),
+      founderMobileMediaRows,
+    );
 
     const finished: LandingFinishedMedia = {
       row1: buildFinishedRow(row1Rows, DEFAULT_FINISHED_ROW1),
       row2: buildFinishedRow(row2Rows, DEFAULT_FINISHED_ROW2),
     };
 
-    return { modeling, manufacturingDesktop, manufacturingMobile, finished };
+    return {
+      modeling,
+      manufacturingDesktop,
+      manufacturingMobile,
+      founderDesktop,
+      founderMobile,
+      finished,
+    };
   } catch (err) {
     if (isMigrationPendingError(err)) {
       logger.info("getLandingSiteMedia: migration pending, static fallback");
@@ -245,10 +291,14 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
   }
   const manufacturingDesktop = buildManufacturingIntelligenceContent([], []);
   const manufacturingMobile = buildManufacturingIntelligenceMobileContent([], []);
+  const founderDesktop = buildFounderDesktopContent([], []);
+  const founderMobile = buildFounderMobileContent([], []);
   return {
     modeling,
     manufacturingDesktop,
     manufacturingMobile,
+    founderDesktop,
+    founderMobile,
     finished: {
       row1: [...DEFAULT_FINISHED_ROW1],
       row2: [...DEFAULT_FINISHED_ROW2],

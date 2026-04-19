@@ -1,4 +1,13 @@
 import { logger } from "@/lib/logger";
+import {
+  buildFounderDesktopContent,
+  buildFounderMobileContent,
+  getFounderDesktopMediaSlotId,
+  getFounderMobileMediaSlotId,
+} from "@/lib/founder-section/founder-section-content";
+import { founderSectionCopy } from "@/lib/founder-section/founder-section-copy-prisma";
+import { founderSectionMobileCopy } from "@/lib/founder-section/founder-section-mobile-copy-prisma";
+import type { FounderSectionContent } from "@/lib/founder-section/founder-section.types";
 import { buildManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-content";
 import {
   buildManufacturingIntelligenceMobileContent,
@@ -64,6 +73,11 @@ export type AdminManufacturingItemRow = {
   offsetY: number;
 };
 
+export type AdminFounderSectionRow = FounderSectionContent & {
+  itemId: string | null;
+  imageObjectKey: string | null;
+};
+
 export type AdminSiteMediaBundle = {
   groupsMeta: typeof SITE_MEDIA_GROUPS;
   modeling: AdminModelingSlotRow[];
@@ -71,6 +85,8 @@ export type AdminSiteMediaBundle = {
   manufacturingHeadingMobile: string;
   manufacturing: AdminManufacturingItemRow[];
   manufacturingMobile: AdminManufacturingItemRow[];
+  founderDesktop: AdminFounderSectionRow;
+  founderMobile: AdminFounderSectionRow;
   finishedRow1: AdminOrderedItemRow[];
   finishedRow2: AdminOrderedItemRow[];
 };
@@ -96,6 +112,16 @@ function emptyAdminBundle(): AdminSiteMediaBundle {
     manufacturingHeadingMobile: "Manufacturing Intelligence",
     manufacturing: [],
     manufacturingMobile: [],
+    founderDesktop: {
+      ...buildFounderDesktopContent([], []),
+      itemId: null,
+      imageObjectKey: null,
+    },
+    founderMobile: {
+      ...buildFounderMobileContent([], []),
+      itemId: null,
+      imageObjectKey: null,
+    },
     finishedRow1: [],
     finishedRow2: [],
   };
@@ -122,14 +148,25 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
   let copyRows: ModelingSpecializationCopyRow[];
   let manufacturingCopyRows: { key: string; value: string }[];
   let manufacturingMobileCopyRows: { key: string; value: string }[];
+  let founderCopyRows: { key: string; value: string }[];
+  let founderMobileCopyRows: { key: string; value: string }[];
   try {
-    const [siteMediaRows, modelingCopyRows, manufacturingRows, manufacturingMobileRows] = await Promise.all([
+    const [
+      siteMediaRows,
+      modelingCopyRows,
+      manufacturingRows,
+      manufacturingMobileRows,
+      founderRows,
+      founderMobileRows,
+    ] = await Promise.all([
       siteMediaItem.findMany({
         orderBy: [{ sectionKey: "asc" }, { sortOrder: "asc" }],
       }),
       modelingSpecializationCopy.findMany(),
       manufacturingIntelligenceCopy.findMany(),
       manufacturingIntelligenceMobileCopy.findMany(),
+      founderSectionCopy.findMany(),
+      founderSectionMobileCopy.findMany(),
     ]);
     rows = siteMediaRows;
     copyRows = modelingCopyRows.map((row) => ({
@@ -147,6 +184,14 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       value: row.value,
     }));
     manufacturingMobileCopyRows = manufacturingMobileRows.map((row) => ({
+      key: row.key,
+      value: row.value,
+    }));
+    founderCopyRows = founderRows.map((row) => ({
+      key: row.key,
+      value: row.value,
+    }));
+    founderMobileCopyRows = founderMobileRows.map((row) => ({
       key: row.key,
       value: row.value,
     }));
@@ -244,6 +289,30 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       };
     },
   );
+  const founderDesktopContent = buildFounderDesktopContent(
+    founderCopyRows,
+    byGroup(SITE_MEDIA_GROUP_KEYS.FOUNDER_DESKTOP),
+  );
+  const founderDesktopMedia = byGroup(SITE_MEDIA_GROUP_KEYS.FOUNDER_DESKTOP).find(
+    (row) => row.slotId === getFounderDesktopMediaSlotId(),
+  );
+  const founderDesktop: AdminFounderSectionRow = {
+    ...founderDesktopContent,
+    itemId: founderDesktopMedia?.id ?? null,
+    imageObjectKey: founderDesktopMedia?.r2ObjectKey ?? null,
+  };
+  const founderMobileContent = buildFounderMobileContent(
+    founderMobileCopyRows,
+    byGroup(SITE_MEDIA_GROUP_KEYS.FOUNDER_MOBILE),
+  );
+  const founderMobileMedia = byGroup(SITE_MEDIA_GROUP_KEYS.FOUNDER_MOBILE).find(
+    (row) => row.slotId === getFounderMobileMediaSlotId(),
+  );
+  const founderMobile: AdminFounderSectionRow = {
+    ...founderMobileContent,
+    itemId: founderMobileMedia?.id ?? null,
+    imageObjectKey: founderMobileMedia?.r2ObjectKey ?? null,
+  };
 
   return {
     groupsMeta: SITE_MEDIA_GROUPS,
@@ -252,6 +321,8 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
     manufacturingHeadingMobile: manufacturingContent.headingMobile,
     manufacturing,
     manufacturingMobile,
+    founderDesktop,
+    founderMobile,
     finishedRow1: byGroup(SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1).map(
       mapOrderedRow,
     ),

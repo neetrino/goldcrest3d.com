@@ -36,7 +36,10 @@ export function LandingSections({
         initialIsMobileViewport={initialIsMobileViewport}
       />
 
-      <SectionFounder />
+      <SectionFounder
+        desktopContent={siteMedia.founderDesktop}
+        mobileContent={siteMedia.founderMobile}
+      />
 
       <SectionFinishedCreations
         row1={siteMedia.finished.row1}
