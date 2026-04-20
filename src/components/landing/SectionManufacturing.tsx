@@ -6,13 +6,17 @@ import {
   type ManufacturingSpecializationId,
   getManufacturingDetailPhotoLayoutClassName,
 } from "@/constants/manufacturing-specialization";
-import { getManufacturingImageTransformCssValue } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
+import {
+  MANUFACTURING_TRANSFORM_BASE_FRAME_HEIGHT_PX,
+  MANUFACTURING_TRANSFORM_BASE_FRAME_WIDTH_PX,
+  getManufacturingImageTransformCssValue,
+} from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 import type {
   ManufacturingIntelligenceContent,
   ManufacturingIntelligenceItemContent,
 } from "@/lib/manufacturing-intelligence/manufacturing-intelligence.types";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { MANUFACTURING_IMAGE_OPACITY_CLASS } from "./manufacturing-image.constants";
 import { useManufacturingDetailLayers } from "./useManufacturingDetailLayers";
 
@@ -106,6 +110,11 @@ export function SectionManufacturing({
   mobileContent,
   initialIsMobileViewport,
 }: SectionManufacturingProps) {
+  const imageFrameRef = useRef<HTMLDivElement | null>(null);
+  const [frameSize, setFrameSize] = useState({
+    frameWidthPx: MANUFACTURING_TRANSFORM_BASE_FRAME_WIDTH_PX,
+    frameHeightPx: MANUFACTURING_TRANSFORM_BASE_FRAME_HEIGHT_PX,
+  });
   const [isMobileViewport, setIsMobileViewport] = useState(initialIsMobileViewport);
   const manufacturing = isMobileViewport ? mobileContent : desktopContent;
 
@@ -144,6 +153,24 @@ export function SectionManufacturing({
     setActiveId((prev) => (prev === id ? prev : id));
   };
 
+  useLayoutEffect(() => {
+    const frame = imageFrameRef.current;
+    if (!frame) return;
+    const syncFrameSize = () => {
+      const nextWidth = frame.clientWidth;
+      const nextHeight = frame.clientHeight;
+      if (nextWidth <= 0 || nextHeight <= 0) return;
+      setFrameSize({
+        frameWidthPx: nextWidth,
+        frameHeightPx: nextHeight,
+      });
+    };
+    syncFrameSize();
+    const observer = new ResizeObserver(syncFrameSize);
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       id={LANDING_SECTION_IDS.MANUFACTURING}
@@ -178,6 +205,7 @@ export function SectionManufacturing({
 
             <div className="manufacturing-intelligence-image-column relative min-h-[280px] w-full lg:min-h-0">
               <div
+                ref={imageFrameRef}
                 className="manufacturing-intelligence-image-frame relative mx-auto aspect-[750/625] w-full overflow-hidden lg:ml-auto lg:mr-0"
                 data-landing-image={LANDING_IMAGE_IDS.MANUFACTURING_MAIN}
               >
@@ -187,7 +215,14 @@ export function SectionManufacturing({
                       elevatedSlot === 0 ? "z-[2]" : "z-[1]"
                     }`}
                   >
-                    <div style={{ transform: getManufacturingImageTransformCssValue(slot0.transform) }}>
+                    <div
+                      style={{
+                        transform: getManufacturingImageTransformCssValue(
+                          slot0.transform,
+                          frameSize,
+                        ),
+                      }}
+                    >
                       <Image
                         key="mfg-detail-slot-0"
                         src={slot0.src}
@@ -211,7 +246,14 @@ export function SectionManufacturing({
                       elevatedSlot === 1 ? "z-[2]" : "z-[1]"
                     }`}
                   >
-                    <div style={{ transform: getManufacturingImageTransformCssValue(slot1.transform) }}>
+                    <div
+                      style={{
+                        transform: getManufacturingImageTransformCssValue(
+                          slot1.transform,
+                          frameSize,
+                        ),
+                      }}
+                    >
                       <Image
                         key="mfg-detail-slot-1"
                         src={slot1.src}

@@ -14,12 +14,16 @@ import {
   type SiteMediaActionResult,
 } from "@/app/actions/site-media";
 import type { AdminManufacturingItemRow } from "@/lib/site-media/get-site-media-admin";
-import { getManufacturingImageTransformCssValue } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
+import {
+  MANUFACTURING_TRANSFORM_BASE_FRAME_HEIGHT_PX,
+  MANUFACTURING_TRANSFORM_BASE_FRAME_WIDTH_PX,
+  getManufacturingImageTransformCssValue,
+} from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 import { formatR2ObjectDisplayName } from "@/lib/site-media/format-r2-object-label";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { PointerEventHandler } from "react";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { ImageUploadControl } from "./ImageUploadControl";
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
@@ -98,8 +102,18 @@ const SECTION_META: Record<
 };
 
 function ManufacturingItemEditor({ row, variant }: ManufacturingItemEditorProps) {
+  const transformResetKey = `${variant}:${row.id}:${row.zoom}:${row.offsetX}:${row.offsetY}`;
+  return <ManufacturingItemEditorContent key={transformResetKey} row={row} variant={variant} />;
+}
+
+function ManufacturingItemEditorContent({ row, variant }: ManufacturingItemEditorProps) {
   const router = useRouter();
+  const previewFrameRef = useRef<HTMLDivElement | null>(null);
   const [transform, setTransform] = useState<TransformState>(toInitialTransform(row));
+  const [frameSize, setFrameSize] = useState({
+    frameWidthPx: MANUFACTURING_TRANSFORM_BASE_FRAME_WIDTH_PX,
+    frameHeightPx: MANUFACTURING_TRANSFORM_BASE_FRAME_HEIGHT_PX,
+  });
   const draggingRef = useRef<{
     pointerId: number;
     startX: number;
@@ -131,13 +145,27 @@ function ManufacturingItemEditor({ row, variant }: ManufacturingItemEditorProps)
   }, [router, saveState?.ok, uploadState?.ok]);
 
   useEffect(() => {
-    setTransform(toInitialTransform(row));
-  }, [row.id, row.zoom, row.offsetX, row.offsetY]);
-
-  useEffect(() => {
     return () => {
       draggingRef.current = null;
     };
+  }, []);
+
+  useLayoutEffect(() => {
+    const frame = previewFrameRef.current;
+    if (!frame) return;
+    const syncFrameSize = () => {
+      const nextWidth = frame.clientWidth;
+      const nextHeight = frame.clientHeight;
+      if (nextWidth <= 0 || nextHeight <= 0) return;
+      setFrameSize({
+        frameWidthPx: nextWidth,
+        frameHeightPx: nextHeight,
+      });
+    };
+    syncFrameSize();
+    const observer = new ResizeObserver(syncFrameSize);
+    observer.observe(frame);
+    return () => observer.disconnect();
   }, []);
 
   const layoutMeta = MANUFACTURING_LAYOUT_BY_ID.get(row.id as ManufacturingSpecializationId);
@@ -274,6 +302,7 @@ function ManufacturingItemEditor({ row, variant }: ManufacturingItemEditorProps)
             Drag image to reposition. Use slider/buttons for fine control.
           </p>
           <div
+            ref={previewFrameRef}
             className="manufacturing-intelligence-image-frame relative mx-auto mt-3 aspect-[750/625] w-full max-w-[420px] touch-none overflow-hidden rounded-md bg-white"
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
@@ -282,7 +311,11 @@ function ManufacturingItemEditor({ row, variant }: ManufacturingItemEditorProps)
           >
             {row.displayUrl ? (
               <div className="absolute inset-0 flex items-center justify-center lg:justify-start">
-                <div style={{ transform: getManufacturingImageTransformCssValue(transform) }}>
+                <div
+                  style={{
+                    transform: getManufacturingImageTransformCssValue(transform, frameSize),
+                  }}
+                >
                   <Image
                     src={row.displayUrl}
                     alt={row.imageAlt}

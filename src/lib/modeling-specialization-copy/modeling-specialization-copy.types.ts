@@ -6,6 +6,10 @@ export type ModelingSpecializationCopyRow = {
   titleMobile: string;
   bodyDesktop: string;
   bodyMobile: string;
+  titleDesktopOffsetY: number;
+  titleMobileOffsetY: number;
+  bodyDesktopOffsetY: number;
+  bodyMobileOffsetY: number;
   desktopLine1Emphasis: string;
 };
 
@@ -14,5 +18,9 @@ export type ModelingSpecializationCopyPayload = {
   titleMobile: string;
   bodyDesktop: string;
   bodyMobile: string;
+  titleDesktopOffsetY: number;
+  titleMobileOffsetY: number;
+  bodyDesktopOffsetY: number;
+  bodyMobileOffsetY: number;
   desktopLine1Emphasis: string;
 };

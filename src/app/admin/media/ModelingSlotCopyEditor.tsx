@@ -13,13 +13,77 @@ import { MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotFormMessages } from "./ModelingSlotFormMessages";
 
+const MIN_OFFSET_Y = -300;
+const MAX_OFFSET_Y = 300;
+const NUDGE_STEP_Y = 4;
+
 type ModelingSlotCopyEditorProps = {
   row: AdminModelingSlotRow;
 };
 
+type OffsetFieldKey =
+  | "titleDesktopOffsetY"
+  | "titleMobileOffsetY"
+  | "bodyDesktopOffsetY"
+  | "bodyMobileOffsetY";
+
+type EditorDraft = {
+  titleDesktop: string;
+  titleMobile: string;
+  bodyDesktop: string;
+  bodyMobile: string;
+  desktopLine1Emphasis: string;
+  titleDesktopOffsetY: number;
+  titleMobileOffsetY: number;
+  bodyDesktopOffsetY: number;
+  bodyMobileOffsetY: number;
+};
+
+function toInitialDraft(row: AdminModelingSlotRow): EditorDraft {
+  return {
+    titleDesktop: row.titleDesktop,
+    titleMobile: row.titleMobile,
+    bodyDesktop: row.bodyDesktop,
+    bodyMobile: row.bodyMobile,
+    desktopLine1Emphasis: row.desktopLine1Emphasis,
+    titleDesktopOffsetY: row.titleDesktopOffsetY,
+    titleMobileOffsetY: row.titleMobileOffsetY,
+    bodyDesktopOffsetY: row.bodyDesktopOffsetY,
+    bodyMobileOffsetY: row.bodyMobileOffsetY,
+  };
+}
+
+function clampOffset(value: number): number {
+  return Math.min(MAX_OFFSET_Y, Math.max(MIN_OFFSET_Y, Math.round(value)));
+}
+
+function offsetLabel(key: OffsetFieldKey): string {
+  if (key === "titleDesktopOffsetY") return "Desktop title";
+  if (key === "titleMobileOffsetY") return "Mobile title";
+  if (key === "bodyDesktopOffsetY") return "Desktop description";
+  return "Mobile description";
+}
+
 export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
+  const draftResetKey = [
+    row.slotKey,
+    row.titleDesktop,
+    row.titleMobile,
+    row.bodyDesktop,
+    row.bodyMobile,
+    row.desktopLine1Emphasis,
+    row.titleDesktopOffsetY,
+    row.titleMobileOffsetY,
+    row.bodyDesktopOffsetY,
+    row.bodyMobileOffsetY,
+  ].join("|");
+  return <ModelingSlotCopyEditorContent key={draftResetKey} row={row} />;
+}
+
+function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [draft, setDraft] = useState<EditorDraft>(() => toInitialDraft(row));
   const [state, formAction, isPending] = useActionState<
     SiteMediaActionResult | null,
     FormData
@@ -27,12 +91,18 @@ export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
 
   useEffect(() => {
     if (state?.ok) {
-      setIsModalOpen(false);
       router.refresh();
     }
   }, [router, state?.ok]);
+  const isDialogVisible = isModalOpen && !state?.ok;
 
   const showEmphasisField = row.slotKey === MODELING_SLOT_KEYS.HIGH_JEWELRY;
+  const nudgeOffset = (field: OffsetFieldKey, delta: number) => {
+    setDraft((prev) => ({
+      ...prev,
+      [field]: clampOffset(prev[field] + delta),
+    }));
+  };
 
   return (
     <form
@@ -41,6 +111,10 @@ export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
       aria-label={`Edit text content for ${row.label}`}
     >
       <input type="hidden" name="slotKey" value={row.slotKey} />
+      <input type="hidden" name="titleDesktopOffsetY" value={draft.titleDesktopOffsetY} />
+      <input type="hidden" name="titleMobileOffsetY" value={draft.titleMobileOffsetY} />
+      <input type="hidden" name="bodyDesktopOffsetY" value={draft.bodyDesktopOffsetY} />
+      <input type="hidden" name="bodyMobileOffsetY" value={draft.bodyMobileOffsetY} />
       <div className="rounded-lg border border-slate-200 bg-slate-50/70">
         <button
           type="button"
@@ -57,7 +131,7 @@ export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
         </button>
       </div>
 
-      {isModalOpen ? (
+      {isDialogVisible ? (
         <div
           className="fixed inset-0 z-50 flex min-h-screen w-screen items-center justify-center bg-slate-900/70 p-3 sm:p-6"
           role="dialog"
@@ -91,20 +165,60 @@ export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
                   <textarea
                     name="titleDesktop"
                     rows={3}
-                    defaultValue={row.titleDesktop}
+                    value={draft.titleDesktop}
+                    onChange={(event) =>
+                      setDraft((prev) => ({ ...prev, titleDesktop: event.target.value }))
+                    }
                     disabled={isPending}
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
                   />
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => nudgeOffset("titleDesktopOffsetY", -NUDGE_STEP_Y)}
+                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Up
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => nudgeOffset("titleDesktopOffsetY", NUDGE_STEP_Y)}
+                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Down
+                    </button>
+                    <span className="text-xs text-slate-500">{draft.titleDesktopOffsetY}px</span>
+                  </div>
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className="text-sm font-medium text-slate-700">Mobile title</span>
                   <textarea
                     name="titleMobile"
                     rows={3}
-                    defaultValue={row.titleMobile}
+                    value={draft.titleMobile}
+                    onChange={(event) =>
+                      setDraft((prev) => ({ ...prev, titleMobile: event.target.value }))
+                    }
                     disabled={isPending}
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
                   />
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => nudgeOffset("titleMobileOffsetY", -NUDGE_STEP_Y)}
+                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Up
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => nudgeOffset("titleMobileOffsetY", NUDGE_STEP_Y)}
+                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Down
+                    </button>
+                    <span className="text-xs text-slate-500">{draft.titleMobileOffsetY}px</span>
+                  </div>
                 </label>
               </div>
 
@@ -114,20 +228,60 @@ export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
                   <textarea
                     name="bodyDesktop"
                     rows={10}
-                    defaultValue={row.bodyDesktop}
+                    value={draft.bodyDesktop}
+                    onChange={(event) =>
+                      setDraft((prev) => ({ ...prev, bodyDesktop: event.target.value }))
+                    }
                     disabled={isPending}
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
                   />
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => nudgeOffset("bodyDesktopOffsetY", -NUDGE_STEP_Y)}
+                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Up
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => nudgeOffset("bodyDesktopOffsetY", NUDGE_STEP_Y)}
+                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Down
+                    </button>
+                    <span className="text-xs text-slate-500">{draft.bodyDesktopOffsetY}px</span>
+                  </div>
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className="text-sm font-medium text-slate-700">Mobile description</span>
                   <textarea
                     name="bodyMobile"
                     rows={10}
-                    defaultValue={row.bodyMobile}
+                    value={draft.bodyMobile}
+                    onChange={(event) =>
+                      setDraft((prev) => ({ ...prev, bodyMobile: event.target.value }))
+                    }
                     disabled={isPending}
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
                   />
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => nudgeOffset("bodyMobileOffsetY", -NUDGE_STEP_Y)}
+                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Up
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => nudgeOffset("bodyMobileOffsetY", NUDGE_STEP_Y)}
+                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Down
+                    </button>
+                    <span className="text-xs text-slate-500">{draft.bodyMobileOffsetY}px</span>
+                  </div>
                 </label>
               </div>
 
@@ -139,7 +293,13 @@ export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
                   <input
                     type="text"
                     name="desktopLine1Emphasis"
-                    defaultValue={row.desktopLine1Emphasis}
+                    value={draft.desktopLine1Emphasis}
+                    onChange={(event) =>
+                      setDraft((prev) => ({
+                        ...prev,
+                        desktopLine1Emphasis: event.target.value,
+                      }))
+                    }
                     disabled={isPending}
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
                   />
@@ -147,6 +307,80 @@ export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
               ) : (
                 <input type="hidden" name="desktopLine1Emphasis" value="" />
               )}
+
+              <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+                <p className="text-sm font-semibold text-slate-900">Live position preview</p>
+                <p className="mt-1 text-xs text-slate-500">
+                  Up/Down moves text by {NUDGE_STEP_Y}px per click. Preview updates instantly.
+                </p>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-lg border border-slate-200 bg-white p-3">
+                    <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                      Desktop preview
+                    </p>
+                    <div className="relative mt-2 min-h-[180px] overflow-hidden rounded-md border border-slate-100 bg-slate-50 p-3">
+                      <h4
+                        className="whitespace-pre-wrap text-base font-semibold text-slate-900 transition-transform duration-150"
+                        style={{
+                          transform: `translateY(${draft.titleDesktopOffsetY}px)`,
+                        }}
+                      >
+                        {draft.titleDesktop || "Desktop title"}
+                      </h4>
+                      <p
+                        className="mt-2 whitespace-pre-wrap text-sm text-slate-700 transition-transform duration-150"
+                        style={{
+                          transform: `translateY(${draft.bodyDesktopOffsetY}px)`,
+                        }}
+                      >
+                        {draft.bodyDesktop || "Desktop description"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="rounded-lg border border-slate-200 bg-white p-3">
+                    <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                      Mobile preview
+                    </p>
+                    <div className="relative mt-2 min-h-[180px] overflow-hidden rounded-md border border-slate-100 bg-slate-50 p-3">
+                      <h4
+                        className="whitespace-pre-wrap text-base font-semibold text-slate-900 transition-transform duration-150"
+                        style={{
+                          transform: `translateY(${draft.titleMobileOffsetY}px)`,
+                        }}
+                      >
+                        {draft.titleMobile || "Mobile title"}
+                      </h4>
+                      <p
+                        className="mt-2 whitespace-pre-wrap text-sm text-slate-700 transition-transform duration-150"
+                        style={{
+                          transform: `translateY(${draft.bodyMobileOffsetY}px)`,
+                        }}
+                      >
+                        {draft.bodyMobile || "Mobile description"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {(
+                    [
+                      "titleDesktopOffsetY",
+                      "titleMobileOffsetY",
+                      "bodyDesktopOffsetY",
+                      "bodyMobileOffsetY",
+                    ] as OffsetFieldKey[]
+                  ).map((field) => (
+                    <button
+                      key={field}
+                      type="button"
+                      onClick={() => setDraft((prev) => ({ ...prev, [field]: 0 }))}
+                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Reset {offsetLabel(field)}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               <div className="mt-6 flex items-center justify-end gap-3">
                 <button

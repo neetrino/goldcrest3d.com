@@ -57,7 +57,6 @@ export function renderModelingCardDescriptionContent(
     hipHopMobileLineSingleLineClass,
     bridalRowWrapperClass,
     bridalRowSpanClass,
-    bridalRowSpanClassDesktop,
   } = p;
 
   if (!hasLines || !descriptionLines) {

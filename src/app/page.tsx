@@ -8,10 +8,15 @@ function isMobileUserAgent(userAgent: string): boolean {
   return /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(userAgent);
 }
 
+function isAndroidUserAgent(userAgent: string): boolean {
+  return /Android/i.test(userAgent);
+}
+
 export default async function Home() {
   const headersList = await headers();
   const userAgent = headersList.get("user-agent") ?? "";
   const initialIsMobileViewport = isMobileUserAgent(userAgent);
+  const isAndroidViewport = isAndroidUserAgent(userAgent);
   const [siteMedia, powerBannerCopy] = await Promise.all([
     getLandingSiteMedia(),
     getPowerBannerCopyBundle(),
@@ -23,6 +28,7 @@ export default async function Home() {
         siteMedia={siteMedia}
         powerBannerCopy={powerBannerCopy}
         initialIsMobileViewport={initialIsMobileViewport}
+        isAndroidViewport={isAndroidViewport}
       />
     </>
   );

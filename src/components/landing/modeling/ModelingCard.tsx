@@ -37,10 +37,14 @@ export function ModelingCard({
   titleAlignSelf,
   titleMarginRight,
   titleMarginTop,
+  titleOffsetYDesktop = 0,
+  titleOffsetYMobile = 0,
   titleMarginTopCompensate,
   textBlockMarginLeft,
   textBlockMarginTop,
   descriptionMarginTop,
+  descriptionOffsetYDesktop = 0,
+  descriptionOffsetYMobile = 0,
   firstDescriptionLineId,
   firstDescriptionLineMarginRight,
   firstDescriptionLineTranslateX,
@@ -212,8 +216,12 @@ export function ModelingCard({
         titleAlignSelf={titleAlignSelf}
         titleMarginRight={titleMarginRight}
         titleMarginTop={titleMarginTop}
+        titleOffsetYDesktop={titleOffsetYDesktop}
+        titleOffsetYMobile={titleOffsetYMobile}
         titleMarginTopCompensate={titleMarginTopCompensate}
         descriptionMarginTop={descriptionMarginTop}
+        descriptionOffsetYDesktop={descriptionOffsetYDesktop}
+        descriptionOffsetYMobile={descriptionOffsetYMobile}
         descriptionLinesMobile={descriptionLinesMobile}
         textColor={textColor}
         hipHopMobileLayout={hipHopMobileLayout}
@@ -253,6 +261,10 @@ export function ModelingCard({
       imageLayerBackground={imageLayerBackground}
       imageFillClassName={imageFillClassName}
       titleBold={titleBold}
+      titleOffsetYDesktop={titleOffsetYDesktop}
+      titleOffsetYMobile={titleOffsetYMobile}
+      descriptionOffsetYDesktop={descriptionOffsetYDesktop}
+      descriptionOffsetYMobile={descriptionOffsetYMobile}
       gradientFrameStyle={gradientFrameStyle}
       hasImage={hasImage}
       imageStyle={imageStyle}

@@ -16,7 +16,6 @@ import {
   normalizeManufacturingImageTransform,
 } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 import { manufacturingIntelligenceCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy-prisma";
-import { manufacturingIntelligenceMobileCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-mobile-copy-prisma";
 import {
   getManufacturingItemDescriptionKey,
   getManufacturingItemTitleKey,
@@ -192,6 +191,10 @@ export async function updateModelingSlotCopy(
     titleMobile: formData.get("titleMobile"),
     bodyDesktop: formData.get("bodyDesktop"),
     bodyMobile: formData.get("bodyMobile"),
+    titleDesktopOffsetY: formData.get("titleDesktopOffsetY"),
+    titleMobileOffsetY: formData.get("titleMobileOffsetY"),
+    bodyDesktopOffsetY: formData.get("bodyDesktopOffsetY"),
+    bodyMobileOffsetY: formData.get("bodyMobileOffsetY"),
     desktopLine1Emphasis: formData.get("desktopLine1Emphasis"),
   });
   if (!parsed.success) {
@@ -204,6 +207,10 @@ export async function updateModelingSlotCopy(
         fieldErrors.titleMobile?.[0] ??
         fieldErrors.bodyDesktop?.[0] ??
         fieldErrors.bodyMobile?.[0] ??
+        fieldErrors.titleDesktopOffsetY?.[0] ??
+        fieldErrors.titleMobileOffsetY?.[0] ??
+        fieldErrors.bodyDesktopOffsetY?.[0] ??
+        fieldErrors.bodyMobileOffsetY?.[0] ??
         fieldErrors.desktopLine1Emphasis?.[0] ??
         "Invalid input.",
     };
@@ -214,6 +221,10 @@ export async function updateModelingSlotCopy(
     titleMobile: parsed.data.titleMobile,
     bodyDesktop: parsed.data.bodyDesktop,
     bodyMobile: parsed.data.bodyMobile,
+    titleDesktopOffsetY: parsed.data.titleDesktopOffsetY,
+    titleMobileOffsetY: parsed.data.titleMobileOffsetY,
+    bodyDesktopOffsetY: parsed.data.bodyDesktopOffsetY,
+    bodyMobileOffsetY: parsed.data.bodyMobileOffsetY,
     desktopLine1Emphasis: parsed.data.desktopLine1Emphasis,
   });
 
@@ -229,6 +240,10 @@ export async function updateModelingSlotCopy(
         titleMobile: payload.titleMobile,
         bodyDesktop: payload.bodyDesktop,
         bodyMobile: payload.bodyMobile,
+        titleDesktopOffsetY: payload.titleDesktopOffsetY,
+        titleMobileOffsetY: payload.titleMobileOffsetY,
+        bodyDesktopOffsetY: payload.bodyDesktopOffsetY,
+        bodyMobileOffsetY: payload.bodyMobileOffsetY,
         desktopLine1Emphasis: payload.desktopLine1Emphasis,
       },
     });

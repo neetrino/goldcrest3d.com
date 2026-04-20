@@ -11,22 +11,34 @@ type ModelingBlockHeritageProps = {
   imageUrlMobile: string;
   titleDesktop: string;
   titleMobile: string;
+  titleDesktopOffsetY: number;
+  titleMobileOffsetY: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  bodyDesktopOffsetY: number;
+  bodyMobileOffsetY: number;
 };
 
 type HeritageOverlayTextProps = {
   titleDesktop: string;
   titleMobile: string;
+  titleDesktopOffsetY: number;
+  titleMobileOffsetY: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  bodyDesktopOffsetY: number;
+  bodyMobileOffsetY: number;
 };
 
 function HeritageOverlayText({
   titleDesktop,
   titleMobile,
+  titleDesktopOffsetY,
+  titleMobileOffsetY,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  bodyDesktopOffsetY,
+  bodyMobileOffsetY,
 }: HeritageOverlayTextProps) {
   const hasMobileTitle = titleMobile.trim().length > 0;
   const hasDesktopTitle = titleDesktop.trim().length > 0;
@@ -36,28 +48,48 @@ function HeritageOverlayText({
         {hasDesktopTitle || hasMobileTitle ? (
           <h3 className="mt-[calc(2.25rem*var(--ms,1))] h-[calc(20px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(20px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] sm:mt-0 sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-right sm:tracking-normal sm:font-extrabold">
             {hasMobileTitle ? (
-              <span className="block whitespace-pre-wrap text-right translate-y-[calc(2.75rem*var(--ms,1))] sm:hidden">
-                {renderModelingTitleText(titleMobile)}
+              <span
+                className="block sm:hidden"
+                style={{ transform: `translateY(calc(${titleMobileOffsetY}px * var(--ms,1)))` }}
+              >
+                <span className="block whitespace-pre-wrap text-right translate-y-[calc(2.75rem*var(--ms,1))] sm:hidden">
+                  {renderModelingTitleText(titleMobile)}
+                </span>
               </span>
             ) : null}
             {hasDesktopTitle ? (
-              <span className="hidden whitespace-pre-wrap sm:inline">{renderModelingTitleText(titleDesktop)}</span>
+              <span
+                className="hidden sm:inline-block"
+                style={{ transform: `translateY(calc(${titleDesktopOffsetY}px * var(--ms,1)))` }}
+              >
+                <span className="hidden whitespace-pre-wrap sm:inline-block">
+                  {renderModelingTitleText(titleDesktop)}
+                </span>
+              </span>
             ) : null}
           </h3>
         ) : null}
         {descriptionLinesMobile.length > 0 || descriptionLinesDesktop.length > 0 ? (
-          <p className="mt-[calc(3.5rem*var(--ms,1))] w-[calc(470px*var(--ms,1))] max-w-full font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:mt-[calc(1rem*var(--ms,1))] sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black">
-            {descriptionLinesMobile.map((line, index) => (
-              <span key={`mobile-${index}`} className="block whitespace-nowrap sm:hidden">
-                {renderModelingCopyLine(line)}
-              </span>
-            ))}
-            {descriptionLinesDesktop.map((line, index) => (
-              <span key={`desktop-${index}`} className="hidden whitespace-nowrap sm:block">
-                {renderModelingCopyLine(line)}
-              </span>
-            ))}
-          </p>
+          <div>
+            <div style={{ transform: `translateY(calc(${bodyMobileOffsetY}px * var(--ms,1)))` }}>
+              <p className="mt-[calc(3.5rem*var(--ms,1))] w-[calc(470px*var(--ms,1))] max-w-full font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden">
+                {descriptionLinesMobile.map((line, index) => (
+                  <span key={`mobile-${index}`} className="block whitespace-nowrap">
+                    {renderModelingCopyLine(line)}
+                  </span>
+                ))}
+              </p>
+            </div>
+            <div style={{ transform: `translateY(calc(${bodyDesktopOffsetY}px * var(--ms,1)))` }}>
+              <p className="mt-[calc(1rem*var(--ms,1))] hidden w-[calc(470px*var(--ms,1))] max-w-full font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black sm:block">
+                {descriptionLinesDesktop.map((line, index) => (
+                  <span key={`desktop-${index}`} className="block whitespace-nowrap">
+                    {renderModelingCopyLine(line)}
+                  </span>
+                ))}
+              </p>
+            </div>
+          </div>
         ) : null}
       </div>
     </div>
@@ -70,8 +102,12 @@ export function ModelingBlockHeritage({
   imageUrlMobile,
   titleDesktop,
   titleMobile,
+  titleDesktopOffsetY,
+  titleMobileOffsetY,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  bodyDesktopOffsetY,
+  bodyMobileOffsetY,
 }: ModelingBlockHeritageProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
@@ -117,8 +153,12 @@ export function ModelingBlockHeritage({
       <HeritageOverlayText
         titleDesktop={titleDesktop}
         titleMobile={titleMobile}
+        titleDesktopOffsetY={titleDesktopOffsetY}
+        titleMobileOffsetY={titleMobileOffsetY}
         descriptionLinesDesktop={descriptionLinesDesktop}
         descriptionLinesMobile={descriptionLinesMobile}
+        bodyDesktopOffsetY={bodyDesktopOffsetY}
+        bodyMobileOffsetY={bodyMobileOffsetY}
       />
     </article>
   );

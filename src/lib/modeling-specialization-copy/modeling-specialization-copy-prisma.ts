@@ -6,6 +6,10 @@ type ModelingSpecializationCopyDbRow = {
   titleMobile: string | null;
   bodyDesktop: string | null;
   bodyMobile: string | null;
+  titleDesktopOffsetY: number | null;
+  titleMobileOffsetY: number | null;
+  bodyDesktopOffsetY: number | null;
+  bodyMobileOffsetY: number | null;
   desktopLine1Emphasis: string | null;
   updatedAt: Date;
 };

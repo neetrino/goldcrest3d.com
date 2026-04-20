@@ -11,6 +11,10 @@ function normalizeSingleLineValue(value: string): string {
   return value.trim();
 }
 
+function clampOffset(value: number): number {
+  return Math.min(300, Math.max(-300, Math.round(value)));
+}
+
 export function normalizeModelingSpecializationCopyPayload(
   payload: ModelingSpecializationCopyPayload,
 ): ModelingSpecializationCopyPayload {
@@ -19,6 +23,10 @@ export function normalizeModelingSpecializationCopyPayload(
     titleMobile: normalizeMultilineValue(payload.titleMobile),
     bodyDesktop: normalizeMultilineValue(payload.bodyDesktop),
     bodyMobile: normalizeMultilineValue(payload.bodyMobile),
+    titleDesktopOffsetY: clampOffset(payload.titleDesktopOffsetY),
+    titleMobileOffsetY: clampOffset(payload.titleMobileOffsetY),
+    bodyDesktopOffsetY: clampOffset(payload.bodyDesktopOffsetY),
+    bodyMobileOffsetY: clampOffset(payload.bodyMobileOffsetY),
     desktopLine1Emphasis: normalizeSingleLineValue(payload.desktopLine1Emphasis),
   };
 }
@@ -40,6 +48,10 @@ export function emptyModelingSpecializationCopyRow(
     titleMobile: "",
     bodyDesktop: "",
     bodyMobile: "",
+    titleDesktopOffsetY: 0,
+    titleMobileOffsetY: 0,
+    bodyDesktopOffsetY: 0,
+    bodyMobileOffsetY: 0,
     desktopLine1Emphasis: "",
   };
 }

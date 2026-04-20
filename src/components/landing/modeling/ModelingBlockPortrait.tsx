@@ -10,8 +10,12 @@ type ModelingBlockPortraitProps = {
   imageUrlMobile: string;
   titleDesktop: string;
   titleMobile: string;
+  titleDesktopOffsetY: number;
+  titleMobileOffsetY: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  bodyDesktopOffsetY: number;
+  bodyMobileOffsetY: number;
 };
 
 export function ModelingBlockPortrait({
@@ -19,17 +23,25 @@ export function ModelingBlockPortrait({
   imageUrlMobile,
   titleDesktop,
   titleMobile,
+  titleDesktopOffsetY,
+  titleMobileOffsetY,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  bodyDesktopOffsetY,
+  bodyMobileOffsetY,
 }: ModelingBlockPortraitProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
     <ModelingCard
       title={titleDesktop}
       titleMobile={titleMobile}
+      titleOffsetYDesktop={titleDesktopOffsetY}
+      titleOffsetYMobile={titleMobileOffsetY}
       description=""
       descriptionLines={[...descriptionLinesDesktop]}
       descriptionLinesMobile={[...descriptionLinesMobile]}
+      descriptionOffsetYDesktop={bodyDesktopOffsetY}
+      descriptionOffsetYMobile={bodyMobileOffsetY}
       imageSrc={imageUrlDesktop}
       imageId={LANDING_IMAGE_IDS.MODELING_PORTRAIT}
       imageOnLeft={false}

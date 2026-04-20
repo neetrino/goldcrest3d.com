@@ -4,6 +4,11 @@ export type ManufacturingImageTransform = {
   offsetY: number;
 };
 
+export type ManufacturingImageFrameSize = {
+  frameWidthPx?: number;
+  frameHeightPx?: number;
+};
+
 type NumericRange = {
   min: number;
   max: number;
@@ -11,6 +16,8 @@ type NumericRange = {
 
 const ZOOM_RANGE: NumericRange = { min: 0.5, max: 2.5 };
 const OFFSET_RANGE: NumericRange = { min: -400, max: 400 };
+export const MANUFACTURING_TRANSFORM_BASE_FRAME_WIDTH_PX = 420;
+export const MANUFACTURING_TRANSFORM_BASE_FRAME_HEIGHT_PX = 350;
 
 export const DEFAULT_MANUFACTURING_IMAGE_TRANSFORM: ManufacturingImageTransform = {
   zoom: 1,
@@ -58,7 +65,25 @@ export function parseManufacturingImageTransformFromLayoutMeta(
 
 export function getManufacturingImageTransformCssValue(
   transform: ManufacturingImageTransform,
+  frameSize?: ManufacturingImageFrameSize,
 ): string {
   const normalized = normalizeManufacturingImageTransform(transform);
-  return `translate3d(${normalized.offsetX}px, ${normalized.offsetY}px, 0) scale(${normalized.zoom})`;
+  const widthRatio = resolveAxisRatio(
+    frameSize?.frameWidthPx,
+    MANUFACTURING_TRANSFORM_BASE_FRAME_WIDTH_PX,
+  );
+  const heightRatio = resolveAxisRatio(
+    frameSize?.frameHeightPx,
+    MANUFACTURING_TRANSFORM_BASE_FRAME_HEIGHT_PX,
+  );
+  const relativeOffsetX = normalized.offsetX * widthRatio;
+  const relativeOffsetY = normalized.offsetY * heightRatio;
+  return `translate3d(${relativeOffsetX}px, ${relativeOffsetY}px, 0) scale(${normalized.zoom})`;
+}
+
+function resolveAxisRatio(currentAxisPx: number | undefined, baselineAxisPx: number): number {
+  if (!currentAxisPx || !Number.isFinite(currentAxisPx) || currentAxisPx <= 0) {
+    return 1;
+  }
+  return currentAxisPx / baselineAxisPx;
 }

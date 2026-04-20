@@ -32,8 +32,6 @@ const DESKTOP_ROW2_VISIBLE_SLOTS_FALLBACK = 3;
 
 /** Desktop carousel: one timing curve for both rows (GPU-friendly transform). */
 const DESKTOP_CAROUSEL_TRANSITION_MS = 420;
-/** Mobile gallery strips use `gap-1` (4px) — same as previous grid spacing. */
-const MOBILE_FINISHED_GALLERY_GAP_PX = 4;
 const FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS = 5000;
 const MOBILE_CAROUSEL_TRANSITION_MS = 560;
 const MOBILE_CAROUSEL_TRANSITION_EASING = "cubic-bezier(0.22,1,0.36,1)";

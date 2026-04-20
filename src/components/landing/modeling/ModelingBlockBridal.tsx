@@ -7,8 +7,12 @@ type ModelingBlockBridalProps = {
   imageUrlMobile: string;
   titleDesktop: string;
   titleMobile: string;
+  titleDesktopOffsetY: number;
+  titleMobileOffsetY: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  bodyDesktopOffsetY: number;
+  bodyMobileOffsetY: number;
 };
 
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
@@ -17,17 +21,25 @@ export function ModelingBlockBridal({
   imageUrlMobile,
   titleDesktop,
   titleMobile,
+  titleDesktopOffsetY,
+  titleMobileOffsetY,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  bodyDesktopOffsetY,
+  bodyMobileOffsetY,
 }: ModelingBlockBridalProps) {
   return (
     <ModelingCard
       title={titleDesktop}
       titleMobile={titleMobile}
+      titleOffsetYDesktop={titleDesktopOffsetY}
+      titleOffsetYMobile={titleMobileOffsetY}
       description=""
       descriptionLines={[...descriptionLinesDesktop]}
       descriptionLinesDesktop={[...descriptionLinesDesktop]}
       descriptionLinesMobile={[...descriptionLinesMobile]}
+      descriptionOffsetYDesktop={bodyDesktopOffsetY}
+      descriptionOffsetYMobile={bodyMobileOffsetY}
       imageSrc={imageUrlDesktop}
       imageSrcMobile={imageUrlMobile}
       imagePairBreakpoint="md"

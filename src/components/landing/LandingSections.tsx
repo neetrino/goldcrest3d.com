@@ -15,12 +15,14 @@ type LandingSectionsProps = {
   siteMedia: LandingSiteMedia;
   powerBannerCopy: PowerBannerCopyBundle;
   initialIsMobileViewport: boolean;
+  isAndroidViewport: boolean;
 };
 
 export function LandingSections({
   siteMedia,
   powerBannerCopy,
   initialIsMobileViewport,
+  isAndroidViewport,
 }: LandingSectionsProps) {
   return (
     <>
@@ -28,7 +30,10 @@ export function LandingSections({
 
       <SectionPhilosophy />
 
-      <SectionModeling modeling={siteMedia.modeling} />
+      <SectionModeling
+        modeling={siteMedia.modeling}
+        isAndroidViewport={isAndroidViewport}
+      />
 
       <SectionManufacturing
         desktopContent={siteMedia.manufacturingDesktop}

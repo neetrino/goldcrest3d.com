@@ -138,6 +138,10 @@ model ModelingSpecializationCopy {
   titleMobile           String?  @db.Text
   bodyDesktop           String?  @db.Text
   bodyMobile            String?  @db.Text
+  titleDesktopOffsetY   Int      @default(0)
+  titleMobileOffsetY    Int      @default(0)
+  bodyDesktopOffsetY    Int      @default(0)
+  bodyMobileOffsetY     Int      @default(0)
   /// Optional emphasized fragment for slots that require highlighted wording.
   desktopLine1Emphasis  String?  @db.Text
   updatedAt             DateTime @updatedAt
