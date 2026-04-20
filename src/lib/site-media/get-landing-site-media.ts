@@ -51,6 +51,10 @@ export type ModelingSlotResolvedMedia = {
   titleMobile: string;
   bodyDesktop: string;
   bodyMobile: string;
+  titleDesktopOffsetY: number;
+  titleMobileOffsetY: number;
+  bodyDesktopOffsetY: number;
+  bodyMobileOffsetY: number;
   desktopLine1Emphasis: string;
 };
 
@@ -197,6 +201,10 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
             titleMobile: row.titleMobile ?? "",
             bodyDesktop: row.bodyDesktop ?? "",
             bodyMobile: row.bodyMobile ?? "",
+            titleDesktopOffsetY: row.titleDesktopOffsetY ?? 0,
+            titleMobileOffsetY: row.titleMobileOffsetY ?? 0,
+            bodyDesktopOffsetY: row.bodyDesktopOffsetY ?? 0,
+            bodyMobileOffsetY: row.bodyMobileOffsetY ?? 0,
             desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
           }),
         },
@@ -213,6 +221,10 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
           titleMobile: copy.titleMobile,
           bodyDesktop: copy.bodyDesktop,
           bodyMobile: copy.bodyMobile,
+          titleDesktopOffsetY: copy.titleDesktopOffsetY,
+          titleMobileOffsetY: copy.titleMobileOffsetY,
+          bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
+          bodyMobileOffsetY: copy.bodyMobileOffsetY,
           desktopLine1Emphasis: copy.desktopLine1Emphasis,
         };
         continue;
@@ -227,6 +239,10 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
         titleMobile: copy.titleMobile,
         bodyDesktop: copy.bodyDesktop,
         bodyMobile: copy.bodyMobile,
+        titleDesktopOffsetY: copy.titleDesktopOffsetY,
+        titleMobileOffsetY: copy.titleMobileOffsetY,
+        bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
+        bodyMobileOffsetY: copy.bodyMobileOffsetY,
         desktopLine1Emphasis: copy.desktopLine1Emphasis,
       };
     }
@@ -303,6 +319,10 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
       titleMobile: copy.titleMobile,
       bodyDesktop: copy.bodyDesktop,
       bodyMobile: copy.bodyMobile,
+      titleDesktopOffsetY: copy.titleDesktopOffsetY,
+      titleMobileOffsetY: copy.titleMobileOffsetY,
+      bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
+      bodyMobileOffsetY: copy.bodyMobileOffsetY,
       desktopLine1Emphasis: copy.desktopLine1Emphasis,
     };
   }

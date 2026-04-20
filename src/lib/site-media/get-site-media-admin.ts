@@ -53,6 +53,10 @@ export type AdminModelingSlotRow = {
   titleMobile: string;
   bodyDesktop: string;
   bodyMobile: string;
+  titleDesktopOffsetY: number;
+  titleMobileOffsetY: number;
+  bodyDesktopOffsetY: number;
+  bodyMobileOffsetY: number;
   desktopLine1Emphasis: string;
 };
 
@@ -189,6 +193,10 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
         titleMobile: row.titleMobile ?? "",
         bodyDesktop: row.bodyDesktop ?? "",
         bodyMobile: row.bodyMobile ?? "",
+          titleDesktopOffsetY: row.titleDesktopOffsetY ?? 0,
+          titleMobileOffsetY: row.titleMobileOffsetY ?? 0,
+          bodyDesktopOffsetY: row.bodyDesktopOffsetY ?? 0,
+          bodyMobileOffsetY: row.bodyMobileOffsetY ?? 0,
         desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
       }),
     }));

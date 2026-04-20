@@ -22,8 +22,12 @@ type ModelingBlockMechanicalProps = {
   imageUrlMobile: string;
   titleDesktop: string;
   titleMobile: string;
+  titleDesktopOffsetY: number;
+  titleMobileOffsetY: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  bodyDesktopOffsetY: number;
+  bodyMobileOffsetY: number;
   isAndroidViewport: boolean;
 };
 
@@ -33,8 +37,12 @@ export function ModelingBlockMechanical({
   imageUrlMobile,
   titleDesktop,
   titleMobile,
+  titleDesktopOffsetY,
+  titleMobileOffsetY,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  bodyDesktopOffsetY,
+  bodyMobileOffsetY,
   isAndroidViewport,
 }: ModelingBlockMechanicalProps) {
   const [isAndroidClient, setIsAndroidClient] = useState(isAndroidViewport);
@@ -104,23 +112,34 @@ export function ModelingBlockMechanical({
         }
       >
         {hasMobileTitle || hasDesktopTitle ? (
-          <h3 className={`z-10 h-[calc(28px*var(--ms,1)*var(--mt,1))] w-[calc(283px*var(--ms,1))] max-w-full shrink-0 overflow-visible text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left ${TITLE_MOBILE_NUDGE_DOWN_CLASS}`}>
-            {hasMobileTitle ? (
-              <span
-                className={`block whitespace-pre-wrap sm:hidden ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}
-              >
-                {renderModelingTitleText(titleMobile)}
-              </span>
-            ) : null}
-            {hasDesktopTitle ? (
-              <span className={`hidden whitespace-pre-wrap sm:block ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
-                {renderModelingTitleText(titleDesktop)}
-              </span>
-            ) : null}
-          </h3>
+          <div className="w-full">
+            <h3 className={`z-10 h-[calc(28px*var(--ms,1)*var(--mt,1))] w-[calc(283px*var(--ms,1))] max-w-full shrink-0 overflow-visible text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left ${TITLE_MOBILE_NUDGE_DOWN_CLASS}`}>
+              {hasMobileTitle ? (
+                <span
+                  className={`block whitespace-pre-wrap sm:hidden ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}
+                  style={{ transform: `translateY(calc(${titleMobileOffsetY}px * var(--ms,1)))` }}
+                >
+                  {renderModelingTitleText(titleMobile)}
+                </span>
+              ) : null}
+              {hasDesktopTitle ? (
+                <span
+                  className="hidden sm:block"
+                  style={{ transform: `translateY(calc(${titleDesktopOffsetY}px * var(--ms,1)))` }}
+                >
+                  <span className={`block whitespace-pre-wrap ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
+                    {renderModelingTitleText(titleDesktop)}
+                  </span>
+                </span>
+              ) : null}
+            </h3>
+          </div>
         ) : null}
         {descriptionLinesMobile.length > 0 ? (
-          <p className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] sm:hidden">
+          <p
+            className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] sm:hidden"
+            style={{ transform: `translateY(calc(${bodyMobileOffsetY}px * var(--ms,1)))` }}
+          >
             {descriptionLinesMobile.map((line, i) => (
               <span key={i} className="block">
                 {renderModelingCopyLine(line)}
@@ -129,15 +148,17 @@ export function ModelingBlockMechanical({
           </p>
         ) : null}
         {descriptionLinesDesktop.length > 0 ? (
-          <div
-            className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:block lg:-translate-y-[calc(1rem*var(--ms,1))]"
-            style={{ overflow: "visible" }}
-          >
-            {descriptionLinesDesktop.map((line, i) => (
-            <span key={i} className="block whitespace-nowrap">
-              {renderModelingCopyLine(line)}
-            </span>
-            ))}
+          <div style={{ transform: `translateY(calc(${bodyDesktopOffsetY}px * var(--ms,1)))` }}>
+            <div
+              className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:block lg:-translate-y-[calc(1rem*var(--ms,1))]"
+              style={{ overflow: "visible" }}
+            >
+              {descriptionLinesDesktop.map((line, i) => (
+                <span key={i} className="block whitespace-nowrap">
+                  {renderModelingCopyLine(line)}
+                </span>
+              ))}
+            </div>
           </div>
         ) : null}
       </div>

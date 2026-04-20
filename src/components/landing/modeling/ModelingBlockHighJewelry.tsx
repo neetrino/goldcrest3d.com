@@ -11,8 +11,12 @@ type ModelingBlockHighJewelryProps = {
   imageUrlMobile: string;
   titleDesktop: string;
   titleMobile: string;
+  titleDesktopOffsetY: number;
+  titleMobileOffsetY: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  bodyDesktopOffsetY: number;
+  bodyMobileOffsetY: number;
   desktopLine1Emphasis: string;
 };
 
@@ -22,8 +26,12 @@ export function ModelingBlockHighJewelry({
   imageUrlMobile,
   titleDesktop,
   titleMobile,
+  titleDesktopOffsetY,
+  titleMobileOffsetY,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  bodyDesktopOffsetY,
+  bodyMobileOffsetY,
   desktopLine1Emphasis,
 }: ModelingBlockHighJewelryProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
@@ -117,15 +125,28 @@ export function ModelingBlockHighJewelry({
         {titleDesktop.trim().length > 0 || titleMobile.trim().length > 0 ? (
           <h3 className="h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
             {titleMobile.trim().length > 0 ? (
-              <span className="whitespace-pre-wrap sm:hidden">{renderModelingTitleText(titleMobile)}</span>
+              <span
+                className="inline-block whitespace-pre-wrap sm:hidden"
+                style={{ transform: `translateY(calc(${titleMobileOffsetY}px * var(--ms,1)))` }}
+              >
+                {renderModelingTitleText(titleMobile)}
+              </span>
             ) : null}
             {titleDesktop.trim().length > 0 ? (
-              <span className="hidden whitespace-pre-wrap sm:inline">{renderModelingTitleText(titleDesktop)}</span>
+              <span
+                className="hidden whitespace-pre-wrap sm:inline-block"
+                style={{ transform: `translateY(calc(${titleDesktopOffsetY}px * var(--ms,1)))` }}
+              >
+                {renderModelingTitleText(titleDesktop)}
+              </span>
             ) : null}
           </h3>
         ) : null}
         {descriptionLinesMobile.length > 0 ? (
-          <p className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden">
+          <p
+            className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden"
+            style={{ transform: `translateY(calc(${bodyMobileOffsetY}px * var(--ms,1)))` }}
+          >
             <span className="block whitespace-nowrap">{renderModelingCopyLine(mobileLine1)}</span>
             {mobileRest.map((line, index) => (
               <span
@@ -138,7 +159,10 @@ export function ModelingBlockHighJewelry({
           </p>
         ) : null}
         {descriptionLinesDesktop.length > 0 ? (
-          <div className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 sm:block">
+          <div
+            className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 sm:block"
+            style={{ transform: `translateY(calc(${bodyDesktopOffsetY}px * var(--ms,1)))` }}
+          >
             {desktopLine1.length > 0 ? (
               <span className="block whitespace-nowrap -translate-x-[calc(1.9rem*var(--ms,1))]">
                 {renderModelingCopyLine(desktopLine1)}{" "}

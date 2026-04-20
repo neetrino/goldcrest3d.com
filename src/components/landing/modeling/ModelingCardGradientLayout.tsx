@@ -15,6 +15,10 @@ export type ModelingCardGradientLayoutProps = Pick<
   | "imageLayerBackground"
   | "imageFillClassName"
   | "titleBold"
+  | "titleOffsetYDesktop"
+  | "titleOffsetYMobile"
+  | "descriptionOffsetYDesktop"
+  | "descriptionOffsetYMobile"
 > & {
   gradientFrameStyle: CSSProperties;
   hasImage: boolean;
@@ -34,6 +38,8 @@ export function ModelingCardGradientLayout({
   imageLayerBackground,
   imageFillClassName = "object-cover object-center",
   titleBold = false,
+  titleOffsetYDesktop = 0,
+  descriptionOffsetYDesktop = 0,
   gradientFrameStyle,
   hasImage,
   imageStyle,
@@ -43,6 +49,8 @@ export function ModelingCardGradientLayout({
   hasDescriptionContent,
   DescriptionTag,
 }: ModelingCardGradientLayoutProps) {
+  const titleTransform = `translateY(calc(${titleOffsetYDesktop}px * var(--ms,1)))`;
+  const descriptionTransform = `translateY(calc(${descriptionOffsetYDesktop}px * var(--ms,1)))`;
   return (
     <article
       className="flex min-h-[calc(320px*var(--ms,1))] min-w-0 w-full flex-col overflow-hidden max-md:min-h-[calc(400px*var(--ms,1))] md:min-h-0 md:flex-row md:items-stretch md:aspect-[83/43]"
@@ -76,11 +84,15 @@ export function ModelingCardGradientLayout({
               className={`font-manrope whitespace-pre-wrap text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible" : ""} ${
                 titleBold ? "font-bold" : "font-extrabold"
               }`}
+              style={{ transform: titleTransform }}
             >
               {renderModelingTitleText(title)}
             </h3>
             {hasDescriptionContent ? (
-              <DescriptionTag className={descriptionClassNameGradient}>
+              <DescriptionTag
+                className={descriptionClassNameGradient}
+                style={{ transform: descriptionTransform }}
+              >
                 {descriptionContent}
               </DescriptionTag>
             ) : null}
@@ -95,11 +107,15 @@ export function ModelingCardGradientLayout({
               className={`font-manrope whitespace-pre-wrap text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible" : ""} ${
                 titleBold ? "font-bold" : "font-extrabold"
               }`}
+              style={{ transform: titleTransform }}
             >
               {renderModelingTitleText(title)}
             </h3>
             {hasDescriptionContent ? (
-              <DescriptionTag className={descriptionClassNameGradient}>
+              <DescriptionTag
+                className={descriptionClassNameGradient}
+                style={{ transform: descriptionTransform }}
+              >
                 {descriptionContent}
               </DescriptionTag>
             ) : null}
@@ -132,11 +148,15 @@ export function ModelingCardGradientLayout({
             className={`font-manrope whitespace-pre-wrap text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible" : ""} ${
               titleBold ? "font-bold" : "font-extrabold"
             }`}
+            style={{ transform: titleTransform }}
           >
             {renderModelingTitleText(title)}
           </h3>
           {hasDescriptionContent ? (
-            <DescriptionTag className={descriptionClassNameGradient}>
+            <DescriptionTag
+              className={descriptionClassNameGradient}
+              style={{ transform: descriptionTransform }}
+            >
               {descriptionContent}
             </DescriptionTag>
           ) : null}
