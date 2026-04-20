@@ -222,16 +222,19 @@ export function PowerBannerCopyEditor({
             onPointerCancel={onPointerUp}
           >
             <div className="absolute inset-0 flex items-center justify-center lg:justify-start">
-              <div style={{ transform: getManufacturingImageTransformCssValue(transform) }}>
-                <Image
-                  src={imageSrc}
-                  alt={initial.imageAlt}
-                  width={980}
-                  height={653}
-                  sizes="420px"
-                  className="relative max-h-full"
-                />
-              </div>
+              <Image
+                src={imageSrc}
+                alt={initial.imageAlt}
+                width={980}
+                height={653}
+                sizes="420px"
+                className="relative h-auto max-h-full w-auto max-w-none transition-transform duration-150"
+                style={{
+                  transform: getManufacturingImageTransformCssValue(transform),
+                  transformOrigin: "center center",
+                  willChange: "transform",
+                }}
+              />
             </div>
           </div>
         </div>
