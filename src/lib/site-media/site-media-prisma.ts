@@ -23,6 +23,7 @@ type SiteMediaItemDelegate = {
   findUnique: (args: object) => Promise<SiteMediaItemRow | null>;
   count: (args: object) => Promise<number>;
   create: (args: object) => Promise<SiteMediaItemRow>;
+  upsert: (args: object) => Promise<SiteMediaItemRow>;
   update: (args: object) => Promise<SiteMediaItemRow>;
   delete: (args: object) => Promise<SiteMediaItemRow>;
 };
