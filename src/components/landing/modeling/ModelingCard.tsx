@@ -9,6 +9,7 @@ export type { ModelingCardProps } from "./modeling-card.types";
 
 export function ModelingCard({
   title,
+  titleMobile,
   description,
   descriptionLines,
   descriptionLinesDesktop,
@@ -58,16 +59,20 @@ export function ModelingCard({
   imageFillClassName = "object-cover object-center",
   imageFillClassNameDesktop = "object-contain",
 }: ModelingCardProps) {
-  const hasLines = Boolean(descriptionLines && descriptionLines.length > 0);
-  const hipHopMobileLayout = mobileHipHopTypography && hasLines;
+  const hasNonEmptyLines = (lines: string[] | undefined): boolean =>
+    Boolean(lines?.some((line) => line.trim().length > 0));
+  const hasLines =
+    hasNonEmptyLines(descriptionLines) ||
+    hasNonEmptyLines(descriptionLinesDesktop) ||
+    hasNonEmptyLines(descriptionLinesMobile);
+  const hasDescriptionContent = hasLines || description.trim().length > 0;
+  const hipHopMobileLayout = mobileHipHopTypography;
   const bridalMobileLayout =
     mobileBridalTypography && hasLines && fluidTextLayout && descriptionLayout === "row";
   const portraitMobileLayout =
     mobilePortraitTypography &&
     hasLines &&
-    independentTitleDescription &&
-    descriptionLinesMobile != null &&
-    descriptionLinesMobile.length > 0;
+    independentTitleDescription;
   const textColor = textDark ? "text-black" : "text-white";
   const descriptionColor = textDark
     ? descriptionMuted
@@ -187,6 +192,7 @@ export function ModelingCard({
     return (
       <ModelingCardFullBleed
         title={title}
+        titleMobile={titleMobile}
         imageSrc={imageSrc}
         imageId={imageId}
         imageSrcMobile={imageSrcMobile}
@@ -225,6 +231,7 @@ export function ModelingCard({
         titleClassNameResolved={titleClassNameResolved}
         descriptionClassName={descriptionClassName}
         descriptionContent={descriptionContent}
+        hasDescriptionContent={hasDescriptionContent}
         DescriptionTag={DescriptionTag}
       />
     );
@@ -252,6 +259,7 @@ export function ModelingCard({
       textAlignClass={textAlignClass}
       descriptionContent={descriptionContent}
       descriptionClassNameGradient={descriptionClassNameGradient}
+      hasDescriptionContent={hasDescriptionContent}
       DescriptionTag={DescriptionTag}
     />
   );

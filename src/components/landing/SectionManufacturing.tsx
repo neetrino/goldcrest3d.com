@@ -2,14 +2,17 @@
 
 import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import {
-  getManufacturingDetailPhotoLayoutClassName,
   MANUFACTURING_SPECIALIZATION_IDS,
-  MANUFACTURING_SPECIALIZATION_ITEMS,
   type ManufacturingSpecializationId,
-  type ManufacturingSpecializationItem,
+  getManufacturingDetailPhotoLayoutClassName,
 } from "@/constants/manufacturing-specialization";
+import { getManufacturingImageTransformCssValue } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
+import type {
+  ManufacturingIntelligenceContent,
+  ManufacturingIntelligenceItemContent,
+} from "@/lib/manufacturing-intelligence/manufacturing-intelligence.types";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MANUFACTURING_IMAGE_OPACITY_CLASS } from "./manufacturing-image.constants";
 import { useManufacturingDetailLayers } from "./useManufacturingDetailLayers";
 
@@ -18,7 +21,7 @@ const MANUFACTURING_ACCORDION_CHEVRON_WIDTH_PX = 24;
 const MANUFACTURING_ACCORDION_CHEVRON_HEIGHT_PX = 14;
 
 type ManufacturingAccordionRowProps = {
-  item: ManufacturingSpecializationItem;
+  item: ManufacturingIntelligenceItemContent;
   isActive: boolean;
   onToggle: () => void;
 };
@@ -90,14 +93,43 @@ function ManufacturingAccordionRow({
   );
 }
 
-export function SectionManufacturing() {
+type SectionManufacturingProps = {
+  desktopContent: ManufacturingIntelligenceContent;
+  mobileContent: ManufacturingIntelligenceContent;
+  initialIsMobileViewport: boolean;
+};
+
+const MOBILE_BREAKPOINT_MEDIA_QUERY = "(max-width: 1023px)";
+
+export function SectionManufacturing({
+  desktopContent,
+  mobileContent,
+  initialIsMobileViewport,
+}: SectionManufacturingProps) {
+  const [isMobileViewport, setIsMobileViewport] = useState(initialIsMobileViewport);
+  const manufacturing = isMobileViewport ? mobileContent : desktopContent;
+
+  useEffect(() => {
+    const mediaQueryList = window.matchMedia(MOBILE_BREAKPOINT_MEDIA_QUERY);
+    const syncViewport = () => {
+      setIsMobileViewport(mediaQueryList.matches);
+    };
+    syncViewport();
+    mediaQueryList.addEventListener("change", syncViewport);
+    return () => {
+      mediaQueryList.removeEventListener("change", syncViewport);
+    };
+  }, []);
+
   const [activeId, setActiveId] = useState<ManufacturingSpecializationId>(
     MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING,
   );
 
   const activeItem = useMemo(
-    () => MANUFACTURING_SPECIALIZATION_ITEMS.find((i) => i.id === activeId),
-    [activeId],
+    () =>
+      manufacturing.items.find((item) => item.id === activeId) ??
+      manufacturing.items[0],
+    [activeId, manufacturing.items],
   );
 
   const {
@@ -109,11 +141,7 @@ export function SectionManufacturing() {
   } = useManufacturingDetailLayers({ activeItem });
 
   const handleToggle = (id: ManufacturingSpecializationId) => {
-    setActiveId((prev) =>
-      prev === id
-        ? MANUFACTURING_SPECIALIZATION_IDS.WALL_THICKNESS_ENGINEERING
-        : id,
-    );
+    setActiveId((prev) => (prev === id ? prev : id));
   };
 
   return (
@@ -127,17 +155,17 @@ export function SectionManufacturing() {
           id="manufacturing-heading"
           className="manufacturing-intelligence-heading manufacturing-intelligence-heading-desktop hidden text-left font-manrope text-[48px] font-normal leading-[40px] tracking-[-0.9px] text-black lg:block lg:whitespace-nowrap"
         >
-          Manufacturing Intelligence
+          {manufacturing.headingDesktop}
         </h2>
 
         <div className="manufacturing-intelligence-card-shell mt-0 overflow-hidden rounded-none bg-[linear-gradient(-65.02deg,#f8f7f6_0.94%,#c0c6cd_99.4%)] lg:mt-[76px]">
           <div className="grid min-h-0 grid-cols-1 gap-12 py-12 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)] lg:gap-0 lg:py-0 lg:pl-[2.61%] lg:pr-[4.59%]">
             <h2 className="manufacturing-intelligence-heading mx-auto w-[257px] max-w-full text-center font-sans text-[30px] font-medium leading-[36px] tracking-[0.396px] text-black lg:hidden">
-              Manufacturing Intelligence
+              {manufacturing.headingMobile}
             </h2>
 
-            <div className="flex min-w-0 flex-col divide-y divide-black/10 lg:pt-[94px]">
-              {MANUFACTURING_SPECIALIZATION_ITEMS.map((item) => (
+            <div className="flex min-w-0 flex-col divide-y divide-black/10 lg:pt-[50px]">
+              {manufacturing.items.map((item) => (
                 <div key={item.id} className="flex min-w-0 flex-col">
                   <ManufacturingAccordionRow
                     item={item}
@@ -159,20 +187,22 @@ export function SectionManufacturing() {
                       elevatedSlot === 0 ? "z-[2]" : "z-[1]"
                     }`}
                   >
-                    <Image
-                      key="mfg-detail-slot-0"
-                      src={slot0.src}
-                      alt={slot0.alt}
-                      width={slot0.widthPx}
-                      height={slot0.heightPx}
-                      sizes="(max-width: 1024px) 100vw, 45vw"
-                      className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
-                        slot0.photoLayout,
-                      )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
-                        slot0Visible ? "opacity-100" : "opacity-0"
-                      }`}
-                      aria-hidden={!slot0Visible}
-                    />
+                    <div style={{ transform: getManufacturingImageTransformCssValue(slot0.transform) }}>
+                      <Image
+                        key="mfg-detail-slot-0"
+                        src={slot0.src}
+                        alt={slot0.alt}
+                        width={slot0.widthPx}
+                        height={slot0.heightPx}
+                        sizes="(max-width: 1024px) 100vw, 45vw"
+                        className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
+                          slot0.photoLayout,
+                        )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
+                          slot0Visible ? "opacity-100" : "opacity-0"
+                        }`}
+                        aria-hidden={!slot0Visible}
+                      />
+                    </div>
                   </div>
                 ) : null}
                 {slot1 ? (
@@ -181,20 +211,22 @@ export function SectionManufacturing() {
                       elevatedSlot === 1 ? "z-[2]" : "z-[1]"
                     }`}
                   >
-                    <Image
-                      key="mfg-detail-slot-1"
-                      src={slot1.src}
-                      alt={slot1.alt}
-                      width={slot1.widthPx}
-                      height={slot1.heightPx}
-                      sizes="(max-width: 1024px) 100vw, 45vw"
-                      className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
-                        slot1.photoLayout,
-                      )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
-                        slot1Visible ? "opacity-100" : "opacity-0"
-                      }`}
-                      aria-hidden={!slot1Visible}
-                    />
+                    <div style={{ transform: getManufacturingImageTransformCssValue(slot1.transform) }}>
+                      <Image
+                        key="mfg-detail-slot-1"
+                        src={slot1.src}
+                        alt={slot1.alt}
+                        width={slot1.widthPx}
+                        height={slot1.heightPx}
+                        sizes="(max-width: 1024px) 100vw, 45vw"
+                        className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
+                          slot1.photoLayout,
+                        )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
+                          slot1Visible ? "opacity-100" : "opacity-0"
+                        }`}
+                        aria-hidden={!slot1Visible}
+                      />
+                    </div>
                   </div>
                 ) : null}
               </div>

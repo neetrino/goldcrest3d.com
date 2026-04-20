@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { LANDING_IMAGE_IDS } from "@/constants";
+import type { ManufacturingImageTransform } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-copy.types";
 import {
   SECTION2_TEXT_CLUSTER_NUDGE_MD_PX,
@@ -10,10 +11,21 @@ import { RenderingHeroSlideCopy } from "./RenderingHeroSlideCopy";
 
 type RenderingHeroSlideProps = {
   desktopBgSrc: string;
-  copy: PowerBannerCopyEntry;
+  mobileBgSrc: string;
+  desktopCopy: PowerBannerCopyEntry;
+  mobileCopy: PowerBannerCopyEntry;
+  desktopTransform: ManufacturingImageTransform;
+  mobileTransform: ManufacturingImageTransform;
 };
 
-export function RenderingHeroSlide({ desktopBgSrc, copy }: RenderingHeroSlideProps) {
+export function RenderingHeroSlide({
+  desktopBgSrc,
+  mobileBgSrc,
+  desktopCopy,
+  mobileCopy,
+  desktopTransform,
+  mobileTransform,
+}: RenderingHeroSlideProps) {
   return (
     <div
       className="power-banners-section2-block relative overflow-hidden"
@@ -25,8 +37,13 @@ export function RenderingHeroSlide({ desktopBgSrc, copy }: RenderingHeroSlidePro
         } as CSSProperties
       }
     >
-      <RenderingHeroSlideBackgrounds desktopBgSrc={desktopBgSrc} />
-      <RenderingHeroSlideCopy copy={copy} />
+      <RenderingHeroSlideBackgrounds
+        desktopBgSrc={desktopBgSrc}
+        mobileBgSrc={mobileBgSrc}
+        desktopTransform={desktopTransform}
+        mobileTransform={mobileTransform}
+      />
+      <RenderingHeroSlideCopy desktopCopy={desktopCopy} mobileCopy={mobileCopy} />
     </div>
   );
 }

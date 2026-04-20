@@ -1,27 +1,85 @@
 import { logger } from "@/lib/logger";
 import { prisma } from "@/lib/db";
+import { resolveSiteMediaDisplayUrl } from "@/lib/site-media/resolve-display-url";
+import { siteMediaItem } from "@/lib/site-media/site-media-prisma";
+import { SITE_MEDIA_GROUP_KEYS } from "@/lib/site-media/site-media.registry";
 
 import { isMigrationPendingError } from "@/lib/site-media/is-migration-pending-error";
+import { parseManufacturingImageTransformFromLayoutMeta } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 
-import { POWER_BANNER_DEFAULT_COPY } from "./power-banner-defaults";
-import { POWER_BANNER_KEYS } from "./power-banner-keys";
+import {
+  POWER_BANNER_DEFAULT_COPY,
+  POWER_BANNER_DEFAULT_MEDIA,
+  POWER_BANNER_DEFAULT_TRANSFORMS,
+} from "./power-banner-defaults";
+import {
+  POWER_BANNER_KEYS,
+  POWER_BANNER_SLOT_IDS,
+  POWER_BANNER_VIEWPORTS,
+  type PowerBannerKey,
+  type PowerBannerViewport,
+} from "./power-banner-keys";
 import type { PowerBannerCopyBundle } from "./power-banner-copy.types";
 
 function emptyBundle(): PowerBannerCopyBundle {
-  return {
-    MODELING: { ...POWER_BANNER_DEFAULT_COPY.MODELING },
-    RENDERING: { ...POWER_BANNER_DEFAULT_COPY.RENDERING },
-    DESIGN: { ...POWER_BANNER_DEFAULT_COPY.DESIGN },
+  const desktop = {
+    MODELING: {
+      ...POWER_BANNER_DEFAULT_COPY.desktop.MODELING,
+      ...POWER_BANNER_DEFAULT_MEDIA.desktop.MODELING,
+      imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.desktop.MODELING,
+    },
+    RENDERING: {
+      ...POWER_BANNER_DEFAULT_COPY.desktop.RENDERING,
+      ...POWER_BANNER_DEFAULT_MEDIA.desktop.RENDERING,
+      imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.desktop.RENDERING,
+    },
+    DESIGN: {
+      ...POWER_BANNER_DEFAULT_COPY.desktop.DESIGN,
+      ...POWER_BANNER_DEFAULT_MEDIA.desktop.DESIGN,
+      imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.desktop.DESIGN,
+    },
   };
+  const mobile = {
+    MODELING: {
+      ...POWER_BANNER_DEFAULT_COPY.mobile.MODELING,
+      ...POWER_BANNER_DEFAULT_MEDIA.mobile.MODELING,
+      imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.mobile.MODELING,
+    },
+    RENDERING: {
+      ...POWER_BANNER_DEFAULT_COPY.mobile.RENDERING,
+      ...POWER_BANNER_DEFAULT_MEDIA.mobile.RENDERING,
+      imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.mobile.RENDERING,
+    },
+    DESIGN: {
+      ...POWER_BANNER_DEFAULT_COPY.mobile.DESIGN,
+      ...POWER_BANNER_DEFAULT_MEDIA.mobile.DESIGN,
+      imageObjectKey: null,
+      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.mobile.DESIGN,
+    },
+  };
+  return { desktop, mobile };
 }
 
 /**
  * Loads persisted hero copy and merges with defaults for any missing banner row.
  */
 export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle> {
-  let rows: { bannerKey: string; title: string; body: string }[];
+  let rows: { bannerKey: string; viewport: string; title: string; body: string }[];
+  let mediaRows: Awaited<ReturnType<typeof siteMediaItem.findMany>>;
   try {
-    rows = await prisma.powerBannerCopy.findMany();
+    const [copyRows, heroMediaRows] = await Promise.all([
+      prisma.powerBannerCopy.findMany(),
+      siteMediaItem.findMany({
+        where: { sectionKey: SITE_MEDIA_GROUP_KEYS.HERO_BANNERS },
+      }),
+    ]);
+    rows = copyRows;
+    mediaRows = heroMediaRows;
   } catch (err) {
     if (isMigrationPendingError(err)) {
       logger.info("getPowerBannerCopyBundle: migration pending, using defaults");
@@ -31,13 +89,53 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
     return emptyBundle();
   }
 
-  const byKey = new Map(rows.map((r) => [r.bannerKey, r]));
   const out = emptyBundle();
-  for (const key of POWER_BANNER_KEYS) {
-    const row = byKey.get(key);
-    if (row) {
-      out[key] = { title: row.title, body: row.body };
+  const copyByViewportAndKey = new Map<string, { title: string; body: string }>();
+  for (const row of rows) {
+    const mapKey = `${row.viewport}:${row.bannerKey}`;
+    copyByViewportAndKey.set(mapKey, { title: row.title, body: row.body });
+  }
+
+  for (const viewport of POWER_BANNER_VIEWPORTS) {
+    for (const key of POWER_BANNER_KEYS) {
+      const copyMapKey = `${viewport}:${key}`;
+      const row = copyByViewportAndKey.get(copyMapKey);
+      if (row) {
+        out[viewport][key] = {
+          ...out[viewport][key],
+          title: row.title,
+          body: row.body,
+        };
+      }
+
+      const slotId = POWER_BANNER_SLOT_IDS[viewport][key];
+      const media = mediaRows.find((item) => item.slotId === slotId);
+      if (media) {
+        applyMediaEntry(out, viewport, key, media);
+      }
     }
   }
   return out;
+}
+
+function applyMediaEntry(
+  out: PowerBannerCopyBundle,
+  viewport: PowerBannerViewport,
+  key: PowerBannerKey,
+  media: Awaited<ReturnType<typeof siteMediaItem.findMany>>[number],
+): void {
+  const defaults = POWER_BANNER_DEFAULT_MEDIA[viewport][key];
+  const defaultTransform = POWER_BANNER_DEFAULT_TRANSFORMS[viewport][key];
+  const imageSrc = media.r2ObjectKey
+    ? resolveSiteMediaDisplayUrl(media.r2ObjectKey)
+    : null;
+  out[viewport][key] = {
+    ...out[viewport][key],
+    imageSrc: imageSrc ?? media.legacySrc ?? defaults.imageSrc,
+    imageAlt: media.alt ?? defaults.imageAlt,
+    imageObjectKey: media.r2ObjectKey,
+    imageTransform: media.layoutMeta
+      ? parseManufacturingImageTransformFromLayoutMeta(media.layoutMeta)
+      : defaultTransform,
+  };
 }

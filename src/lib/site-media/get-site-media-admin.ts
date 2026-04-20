@@ -1,4 +1,32 @@
 import { logger } from "@/lib/logger";
+import {
+  buildFounderDesktopContent,
+  buildFounderMobileContent,
+  getFounderDesktopMediaSlotId,
+  getFounderMobileMediaSlotId,
+} from "@/lib/founder-section/founder-section-content";
+import { founderSectionCopy } from "@/lib/founder-section/founder-section-copy-prisma";
+import { founderSectionMobileCopy } from "@/lib/founder-section/founder-section-mobile-copy-prisma";
+import type { FounderSectionContent } from "@/lib/founder-section/founder-section.types";
+import {
+  getDefaultEngineeringProcessSteps,
+  mergeEngineeringProcessSteps,
+} from "@/lib/engineering-process/engineering-process.defaults";
+import { engineeringProcessCopy } from "@/lib/engineering-process/engineering-process-copy-prisma";
+import type { EngineeringProcessStep } from "@/lib/engineering-process/engineering-process.types";
+import { buildManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-content";
+import {
+  buildManufacturingIntelligenceMobileContent,
+  getManufacturingMobileMediaSlotId,
+} from "@/lib/manufacturing-intelligence/manufacturing-intelligence-mobile-content";
+import { manufacturingIntelligenceCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy-prisma";
+import { manufacturingIntelligenceMobileCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-mobile-copy-prisma";
+import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
+import {
+  emptyModelingSpecializationCopyRow,
+  normalizeModelingSpecializationCopyPayload,
+} from "@/lib/modeling-specialization-copy/normalize-modeling-specialization-copy";
+import type { ModelingSpecializationCopyRow } from "@/lib/modeling-specialization-copy/modeling-specialization-copy.types";
 
 import { resolveSiteMediaDisplayUrl } from "./resolve-display-url";
 import { isMigrationPendingError } from "./is-migration-pending-error";
@@ -21,6 +49,11 @@ export type AdminModelingSlotRow = {
   displayUrl: string | null;
   displayUrlMobile: string | null;
   altText: string;
+  titleDesktop: string;
+  titleMobile: string;
+  bodyDesktop: string;
+  bodyMobile: string;
+  desktopLine1Emphasis: string;
 };
 
 export type AdminOrderedItemRow = {
@@ -32,9 +65,37 @@ export type AdminOrderedItemRow = {
   altText: string;
 };
 
+export type AdminManufacturingItemRow = {
+  id: string;
+  label: string;
+  itemId: string | null;
+  imageObjectKey: string | null;
+  displayUrl: string | null;
+  title: string;
+  description: string;
+  imageAlt: string;
+  zoom: number;
+  offsetX: number;
+  offsetY: number;
+};
+
+export type AdminFounderSectionRow = FounderSectionContent & {
+  itemId: string | null;
+  imageObjectKey: string | null;
+};
+
+export type AdminEngineeringProcessStepRow = EngineeringProcessStep;
+
 export type AdminSiteMediaBundle = {
   groupsMeta: typeof SITE_MEDIA_GROUPS;
   modeling: AdminModelingSlotRow[];
+  manufacturingHeadingDesktop: string;
+  manufacturingHeadingMobile: string;
+  manufacturing: AdminManufacturingItemRow[];
+  manufacturingMobile: AdminManufacturingItemRow[];
+  founderDesktop: AdminFounderSectionRow;
+  founderMobile: AdminFounderSectionRow;
+  engineeringProcess: AdminEngineeringProcessStepRow[];
   finishedRow1: AdminOrderedItemRow[];
   finishedRow2: AdminOrderedItemRow[];
 };
@@ -42,6 +103,7 @@ export type AdminSiteMediaBundle = {
 function emptyAdminBundle(): AdminSiteMediaBundle {
   const modeling: AdminModelingSlotRow[] = ORDERED_MODELING_SLOT_KEYS.map(
     (slotKey) => ({
+      ...emptyModelingSpecializationCopyRow(slotKey),
       slotKey,
       label: MODELING_SLOT_LABELS[slotKey],
       itemId: null,
@@ -55,6 +117,21 @@ function emptyAdminBundle(): AdminSiteMediaBundle {
   return {
     groupsMeta: SITE_MEDIA_GROUPS,
     modeling,
+    manufacturingHeadingDesktop: "Manufacturing Intelligence",
+    manufacturingHeadingMobile: "Manufacturing Intelligence",
+    manufacturing: [],
+    manufacturingMobile: [],
+    founderDesktop: {
+      ...buildFounderDesktopContent([], []),
+      itemId: null,
+      imageObjectKey: null,
+    },
+    founderMobile: {
+      ...buildFounderMobileContent([], []),
+      itemId: null,
+      imageObjectKey: null,
+    },
+    engineeringProcess: getDefaultEngineeringProcessSteps(),
     finishedRow1: [],
     finishedRow2: [],
   };
@@ -78,10 +155,64 @@ function mapOrderedRow(r: SiteMediaItemRow): AdminOrderedItemRow {
  */
 export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
   let rows: SiteMediaItemRow[];
+  let copyRows: ModelingSpecializationCopyRow[];
+  let manufacturingCopyRows: { key: string; value: string }[];
+  let manufacturingMobileCopyRows: { key: string; value: string }[];
+  let founderCopyRows: { key: string; value: string }[];
+  let founderMobileCopyRows: { key: string; value: string }[];
+  let engineeringProcessRows: { stepKey: string; title: string; description: string }[];
   try {
-    rows = await siteMediaItem.findMany({
-      orderBy: [{ sectionKey: "asc" }, { sortOrder: "asc" }],
-    });
+    const [
+      siteMediaRows,
+      modelingCopyRows,
+      manufacturingRows,
+      manufacturingMobileRows,
+      founderRows,
+      founderMobileRows,
+      engineeringRows,
+    ] = await Promise.all([
+      siteMediaItem.findMany({
+        orderBy: [{ sectionKey: "asc" }, { sortOrder: "asc" }],
+      }),
+      modelingSpecializationCopy.findMany(),
+      manufacturingIntelligenceCopy.findMany(),
+      manufacturingIntelligenceMobileCopy.findMany(),
+      founderSectionCopy.findMany(),
+      founderSectionMobileCopy.findMany(),
+      engineeringProcessCopy.findMany(),
+    ]);
+    rows = siteMediaRows;
+    copyRows = modelingCopyRows.map((row) => ({
+      slotKey: row.slotKey as ModelingSlotKey,
+      ...normalizeModelingSpecializationCopyPayload({
+        titleDesktop: row.titleDesktop ?? "",
+        titleMobile: row.titleMobile ?? "",
+        bodyDesktop: row.bodyDesktop ?? "",
+        bodyMobile: row.bodyMobile ?? "",
+        desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
+      }),
+    }));
+    manufacturingCopyRows = manufacturingRows.map((row) => ({
+      key: row.key,
+      value: row.value,
+    }));
+    manufacturingMobileCopyRows = manufacturingMobileRows.map((row) => ({
+      key: row.key,
+      value: row.value,
+    }));
+    founderCopyRows = founderRows.map((row) => ({
+      key: row.key,
+      value: row.value,
+    }));
+    founderMobileCopyRows = founderMobileRows.map((row) => ({
+      key: row.key,
+      value: row.value,
+    }));
+    engineeringProcessRows = engineeringRows.map((row) => ({
+      stepKey: row.stepKey,
+      title: row.title,
+      description: row.description,
+    }));
   } catch (err) {
     if (isMigrationPendingError(err)) {
       logger.info("getSiteMediaAdminBundle: migration pending, empty bundle");
@@ -93,6 +224,9 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
 
   const byGroup = (key: SiteMediaGroupKey) =>
     rows.filter((r) => r.sectionKey === key);
+  const copyBySlot = new Map<ModelingSlotKey, ModelingSpecializationCopyRow>(
+    copyRows.map((row) => [row.slotKey, row]),
+  );
 
   const modelingMap = new Map(
     byGroup(SITE_MEDIA_GROUP_KEYS.MODELING_SPECIALIZATION).map((r) => [
@@ -104,7 +238,9 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
   const modeling: AdminModelingSlotRow[] = ORDERED_MODELING_SLOT_KEYS.map(
     (slotKey) => {
       const row = modelingMap.get(slotKey);
+      const copy = copyBySlot.get(slotKey) ?? emptyModelingSpecializationCopyRow(slotKey);
       return {
+        ...copy,
         slotKey,
         label: MODELING_SLOT_LABELS[slotKey],
         itemId: row?.id ?? null,
@@ -120,10 +256,93 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       };
     },
   );
+  const manufacturingContent = buildManufacturingIntelligenceContent(manufacturingCopyRows, rows);
+  const manufacturingMediaById = new Map(
+    byGroup(SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE).map((row) => [
+      row.slotId,
+      row,
+    ]),
+  );
+  const manufacturing: AdminManufacturingItemRow[] = manufacturingContent.items.map((item) => {
+    const mediaRow = manufacturingMediaById.get(item.id);
+    return {
+      id: item.id,
+      label: item.title,
+      itemId: mediaRow?.id ?? null,
+      imageObjectKey: mediaRow?.r2ObjectKey ?? null,
+      displayUrl: item.imageSrc,
+      title: item.title,
+      description: item.description,
+      imageAlt: item.imageAlt,
+      zoom: item.transform.zoom,
+      offsetX: item.transform.offsetX,
+      offsetY: item.transform.offsetY,
+    };
+  });
+  const manufacturingMobileContent = buildManufacturingIntelligenceMobileContent(
+    manufacturingMobileCopyRows,
+    rows,
+  );
+  const manufacturingMobileMediaById = new Map(
+    byGroup(SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE_MOBILE).map((row) => [
+      row.slotId,
+      row,
+    ]),
+  );
+  const manufacturingMobile: AdminManufacturingItemRow[] = manufacturingMobileContent.items.map(
+    (item) => {
+      const mediaRow = manufacturingMobileMediaById.get(getManufacturingMobileMediaSlotId(item.id));
+      return {
+        id: item.id,
+        label: item.title,
+        itemId: mediaRow?.id ?? null,
+        imageObjectKey: mediaRow?.r2ObjectKey ?? null,
+        displayUrl: item.imageSrc,
+        title: item.title,
+        description: item.description,
+        imageAlt: item.imageAlt,
+        zoom: item.transform.zoom,
+        offsetX: item.transform.offsetX,
+        offsetY: item.transform.offsetY,
+      };
+    },
+  );
+  const founderDesktopContent = buildFounderDesktopContent(
+    founderCopyRows,
+    byGroup(SITE_MEDIA_GROUP_KEYS.FOUNDER_DESKTOP),
+  );
+  const founderDesktopMedia = byGroup(SITE_MEDIA_GROUP_KEYS.FOUNDER_DESKTOP).find(
+    (row) => row.slotId === getFounderDesktopMediaSlotId(),
+  );
+  const founderDesktop: AdminFounderSectionRow = {
+    ...founderDesktopContent,
+    itemId: founderDesktopMedia?.id ?? null,
+    imageObjectKey: founderDesktopMedia?.r2ObjectKey ?? null,
+  };
+  const founderMobileContent = buildFounderMobileContent(
+    founderMobileCopyRows,
+    byGroup(SITE_MEDIA_GROUP_KEYS.FOUNDER_MOBILE),
+  );
+  const founderMobileMedia = byGroup(SITE_MEDIA_GROUP_KEYS.FOUNDER_MOBILE).find(
+    (row) => row.slotId === getFounderMobileMediaSlotId(),
+  );
+  const founderMobile: AdminFounderSectionRow = {
+    ...founderMobileContent,
+    itemId: founderMobileMedia?.id ?? null,
+    imageObjectKey: founderMobileMedia?.r2ObjectKey ?? null,
+  };
+  const engineeringProcess = mergeEngineeringProcessSteps(engineeringProcessRows);
 
   return {
     groupsMeta: SITE_MEDIA_GROUPS,
     modeling,
+    manufacturingHeadingDesktop: manufacturingContent.headingDesktop,
+    manufacturingHeadingMobile: manufacturingContent.headingMobile,
+    manufacturing,
+    manufacturingMobile,
+    founderDesktop,
+    founderMobile,
+    engineeringProcess,
     finishedRow1: byGroup(SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1).map(
       mapOrderedRow,
     ),

@@ -3,6 +3,7 @@
 import type { AdminModelingSlotRow } from "@/lib/site-media/get-site-media-admin";
 
 import { ModelingSlotPreview } from "./ModelingSlotPreview";
+import { ModelingSlotCopyEditor } from "./ModelingSlotCopyEditor";
 import { ModelingSlotVariantUpload } from "./ModelingSlotVariantUpload";
 
 type ModelingSlotFormProps = {
@@ -13,6 +14,7 @@ function ModelingSlotForm({ row }: ModelingSlotFormProps) {
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100">
       <ModelingSlotPreview row={row} />
+      <ModelingSlotCopyEditor row={row} />
       <ModelingSlotVariantUpload row={row} variant="desktop" />
       <ModelingSlotVariantUpload row={row} variant="mobile" />
     </div>

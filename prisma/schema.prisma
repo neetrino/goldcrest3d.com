@@ -121,8 +121,60 @@ model SiteMediaItem {
 
 /// Editable hero (power banner) title + body per landing slide — managed in Admin → Media Manager.
 model PowerBannerCopy {
-  bannerKey String   @id
+  bannerKey String
+  viewport  String
   title     String   @db.Text
   body      String   @db.Text
   updatedAt DateTime @updatedAt
+
+  @@id([bannerKey, viewport])
+}
+
+/// Editable text content for each Modeling Specialization card.
+/// Stores desktop/mobile title and body separately. Bodies are newline-separated lines.
+model ModelingSpecializationCopy {
+  slotKey               String   @id
+  titleDesktop          String?  @db.Text
+  titleMobile           String?  @db.Text
+  bodyDesktop           String?  @db.Text
+  bodyMobile            String?  @db.Text
+  /// Optional emphasized fragment for slots that require highlighted wording.
+  desktopLine1Emphasis  String?  @db.Text
+  updatedAt             DateTime @updatedAt
+}
+
+/// Editable text content for Manufacturing Intelligence section (key-value).
+model ManufacturingIntelligenceCopy {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+/// Editable text content for Manufacturing Intelligence mobile section (key-value).
+model ManufacturingIntelligenceMobileCopy {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+/// Editable text content for Founder & Lead CAD Engineer desktop section.
+model FounderSectionCopy {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+/// Editable text content for Founder & Lead CAD Engineer mobile section.
+model FounderSectionMobileCopy {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+/// Editable text content for Our Engineering Process section (shared desktop/mobile).
+model EngineeringProcessCopy {
+  stepKey     String   @id
+  title       String   @db.Text
+  description String   @db.Text
+  updatedAt   DateTime @updatedAt
 }

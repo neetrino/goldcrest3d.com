@@ -1,4 +1,5 @@
 import { LANDING_SECTION_IDS } from "@/constants";
+import type { EngineeringProcessStep } from "@/lib/engineering-process/engineering-process.types";
 
 /**
  * Mobile: Inter 24/32, 277px wide, tracking 1.27px.
@@ -17,40 +18,11 @@ const PROCESS_STEP_TITLE_CLASS =
 const PROCESS_STEP_DESC_CLASS =
   "max-w-[331px] font-sans text-sm font-light leading-5 tracking-[-0.15px] text-[#4A5565] md:max-w-none md:font-manrope md:text-[16px] md:font-light md:leading-[1.45] md:tracking-normal md:text-[rgba(24,22,16,0.6)] lg:text-[15px]";
 
-const STEPS: Array<{ num: string; title: string; description: string }> = [
-  {
-    num: "01",
-    title: "Concept Review",
-    description:
-      "Client vision, references and technical requirements are evaluated. Feasibility and structural considerations assessed before quotation.",
-  },
-  {
-    num: "02",
-    title: "Quotation & Prepayment",
-    description:
-      "Project scope defined and pricing confirmed. Modeling begins upon agreed prepayment.",
-  },
-  {
-    num: "03",
-    title: "Progress Review",
-    description:
-      "Half-ready or structurally defined model presented for evaluation. Adjustments discussed and aligned before finalization.",
-  },
-  {
-    num: "04",
-    title: "Final Model Presentation",
-    description:
-      "Completed production-ready model delivered for approval. All structural and dimensional aspects calibrated and verified.",
-  },
-  {
-    num: "05",
-    title: "Final Payment & File Release",
-    description:
-      "Upon final payment, calibrated manufacturing files are delivered for production.",
-  },
-];
+type SectionProcessProps = {
+  steps: EngineeringProcessStep[];
+};
 
-export function SectionProcess() {
+export function SectionProcess({ steps }: SectionProcessProps) {
   return (
     <section
       id={LANDING_SECTION_IDS.PROCESS}
@@ -62,12 +34,12 @@ export function SectionProcess() {
           Our Engineering Process
         </h2>
         <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-6 lg:mt-12">
-          {STEPS.map((step) => (
+          {steps.map((step) => (
             <div
-              key={step.num}
+              key={step.key}
               className="flex min-w-0 flex-col space-y-4 lg:space-y-3"
             >
-              <span className={PROCESS_STEP_NUM_CLASS}>{step.num}</span>
+              <span className={PROCESS_STEP_NUM_CLASS}>{step.number}</span>
               <h3 className={PROCESS_STEP_TITLE_CLASS}>{step.title}</h3>
               <p className={PROCESS_STEP_DESC_CLASS}>{step.description}</p>
             </div>

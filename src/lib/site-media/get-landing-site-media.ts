@@ -1,5 +1,29 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
+import {
+  buildFounderDesktopContent,
+  buildFounderMobileContent,
+} from "@/lib/founder-section/founder-section-content";
+import { founderSectionCopy } from "@/lib/founder-section/founder-section-copy-prisma";
+import { founderSectionMobileCopy } from "@/lib/founder-section/founder-section-mobile-copy-prisma";
+import type { FounderSectionContent } from "@/lib/founder-section/founder-section.types";
+import {
+  getDefaultEngineeringProcessSteps,
+  mergeEngineeringProcessSteps,
+} from "@/lib/engineering-process/engineering-process.defaults";
+import { engineeringProcessCopy } from "@/lib/engineering-process/engineering-process-copy-prisma";
+import type { EngineeringProcessStep } from "@/lib/engineering-process/engineering-process.types";
+import { buildManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-content";
+import { buildManufacturingIntelligenceMobileContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-mobile-content";
+import type { ManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence.types";
+import { manufacturingIntelligenceCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy-prisma";
+import { manufacturingIntelligenceMobileCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-mobile-copy-prisma";
 import { logger } from "@/lib/logger";
+import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
+import {
+  emptyModelingSpecializationCopyRow,
+  normalizeModelingSpecializationCopyPayload,
+} from "@/lib/modeling-specialization-copy/normalize-modeling-specialization-copy";
+import type { ModelingSpecializationCopyRow } from "@/lib/modeling-specialization-copy/modeling-specialization-copy.types";
 
 import { isMigrationPendingError } from "./is-migration-pending-error";
 import {
@@ -23,6 +47,11 @@ import {
 export type ModelingSlotResolvedMedia = {
   desktop: string;
   mobile: string;
+  titleDesktop: string;
+  titleMobile: string;
+  bodyDesktop: string;
+  bodyMobile: string;
+  desktopLine1Emphasis: string;
 };
 
 export type LandingModelingMedia = Record<ModelingSlotKey, ModelingSlotResolvedMedia>;
@@ -34,6 +63,11 @@ export type LandingFinishedMedia = {
 
 export type LandingSiteMedia = {
   modeling: LandingModelingMedia;
+  manufacturingDesktop: ManufacturingIntelligenceContent;
+  manufacturingMobile: ManufacturingIntelligenceContent;
+  founderDesktop: FounderSectionContent;
+  founderMobile: FounderSectionContent;
+  engineeringProcess: EngineeringProcessStep[];
   finished: LandingFinishedMedia;
 };
 
@@ -80,10 +114,45 @@ function buildFinishedRow(
  */
 export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
   try {
-    const [modelingRows, row1Rows, row2Rows] = await Promise.all([
+    const [
+      modelingRows,
+      manufacturingMediaRows,
+      manufacturingMobileMediaRows,
+      founderDesktopMediaRows,
+      founderMobileMediaRows,
+      row1Rows,
+      row2Rows,
+      modelingCopyRows,
+      manufacturingCopyRows,
+      manufacturingMobileCopyRows,
+      founderDesktopCopyRows,
+      founderMobileCopyRows,
+      engineeringProcessCopyRows,
+    ] =
+      await Promise.all([
       siteMediaItem.findMany({
         where: {
           sectionKey: SITE_MEDIA_GROUP_KEYS.MODELING_SPECIALIZATION,
+        },
+      }),
+      siteMediaItem.findMany({
+        where: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE,
+        },
+      }),
+      siteMediaItem.findMany({
+        where: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.MANUFACTURING_INTELLIGENCE_MOBILE,
+        },
+      }),
+      siteMediaItem.findMany({
+        where: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.FOUNDER_DESKTOP,
+        },
+      }),
+      siteMediaItem.findMany({
+        where: {
+          sectionKey: SITE_MEDIA_GROUP_KEYS.FOUNDER_MOBILE,
         },
       }),
       siteMediaItem.findMany({
@@ -96,6 +165,12 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
           sectionKey: SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW2,
         },
       }),
+      modelingSpecializationCopy.findMany(),
+      manufacturingIntelligenceCopy.findMany(),
+      manufacturingIntelligenceMobileCopy.findMany(),
+      founderSectionCopy.findMany(),
+      founderSectionMobileCopy.findMany(),
+      engineeringProcessCopy.findMany(),
     ]);
 
     const modelingBySlot = new Map<
@@ -112,27 +187,99 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
     );
 
     const modeling = {} as LandingModelingMedia;
+    const copyBySlot = new Map<ModelingSlotKey, ModelingSpecializationCopyRow>(
+      modelingCopyRows.map((row) => [
+        row.slotKey as ModelingSlotKey,
+        {
+          slotKey: row.slotKey as ModelingSlotKey,
+          ...normalizeModelingSpecializationCopyPayload({
+            titleDesktop: row.titleDesktop ?? "",
+            titleMobile: row.titleMobile ?? "",
+            bodyDesktop: row.bodyDesktop ?? "",
+            bodyMobile: row.bodyMobile ?? "",
+            desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
+          }),
+        },
+      ]),
+    );
     for (const slot of ORDERED_MODELING_SLOT_KEYS) {
       const row = modelingBySlot.get(slot);
+      const copy = copyBySlot.get(slot) ?? emptyModelingSpecializationCopyRow(slot);
       if (!row) {
         modeling[slot] = {
           desktop: mergeModelingUrl(slot, undefined),
           mobile: mergeModelingUrl(slot, undefined),
+          titleDesktop: copy.titleDesktop,
+          titleMobile: copy.titleMobile,
+          bodyDesktop: copy.bodyDesktop,
+          bodyMobile: copy.bodyMobile,
+          desktopLine1Emphasis: copy.desktopLine1Emphasis,
         };
         continue;
       }
       const desktopUrl = mergeModelingUrl(slot, row.desktop);
       const mobileKey = row.mobile ?? row.desktop;
       const mobileUrl = mergeModelingUrl(slot, mobileKey);
-      modeling[slot] = { desktop: desktopUrl, mobile: mobileUrl };
+      modeling[slot] = {
+        desktop: desktopUrl,
+        mobile: mobileUrl,
+        titleDesktop: copy.titleDesktop,
+        titleMobile: copy.titleMobile,
+        bodyDesktop: copy.bodyDesktop,
+        bodyMobile: copy.bodyMobile,
+        desktopLine1Emphasis: copy.desktopLine1Emphasis,
+      };
     }
+    const manufacturingDesktop = buildManufacturingIntelligenceContent(
+      manufacturingCopyRows.map((row) => ({
+        key: row.key,
+        value: row.value,
+      })),
+      manufacturingMediaRows,
+    );
+    const manufacturingMobile = buildManufacturingIntelligenceMobileContent(
+      manufacturingMobileCopyRows.map((row) => ({
+        key: row.key,
+        value: row.value,
+      })),
+      manufacturingMobileMediaRows,
+    );
+    const founderDesktop = buildFounderDesktopContent(
+      founderDesktopCopyRows.map((row) => ({
+        key: row.key,
+        value: row.value,
+      })),
+      founderDesktopMediaRows,
+    );
+    const founderMobile = buildFounderMobileContent(
+      founderMobileCopyRows.map((row) => ({
+        key: row.key,
+        value: row.value,
+      })),
+      founderMobileMediaRows,
+    );
+    const engineeringProcess = mergeEngineeringProcessSteps(
+      engineeringProcessCopyRows.map((row) => ({
+        stepKey: row.stepKey,
+        title: row.title,
+        description: row.description,
+      })),
+    );
 
     const finished: LandingFinishedMedia = {
       row1: buildFinishedRow(row1Rows, DEFAULT_FINISHED_ROW1),
       row2: buildFinishedRow(row2Rows, DEFAULT_FINISHED_ROW2),
     };
 
-    return { modeling, finished };
+    return {
+      modeling,
+      manufacturingDesktop,
+      manufacturingMobile,
+      founderDesktop,
+      founderMobile,
+      engineeringProcess,
+      finished,
+    };
   } catch (err) {
     if (isMigrationPendingError(err)) {
       logger.info("getLandingSiteMedia: migration pending, static fallback");
@@ -148,10 +295,29 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
   const modeling = {} as LandingModelingMedia;
   for (const slot of ORDERED_MODELING_SLOT_KEYS) {
     const url = DEFAULT_MODELING_IMAGE_URL[slot];
-    modeling[slot] = { desktop: url, mobile: url };
+    const copy = emptyModelingSpecializationCopyRow(slot);
+    modeling[slot] = {
+      desktop: url,
+      mobile: url,
+      titleDesktop: copy.titleDesktop,
+      titleMobile: copy.titleMobile,
+      bodyDesktop: copy.bodyDesktop,
+      bodyMobile: copy.bodyMobile,
+      desktopLine1Emphasis: copy.desktopLine1Emphasis,
+    };
   }
+  const manufacturingDesktop = buildManufacturingIntelligenceContent([], []);
+  const manufacturingMobile = buildManufacturingIntelligenceMobileContent([], []);
+  const founderDesktop = buildFounderDesktopContent([], []);
+  const founderMobile = buildFounderMobileContent([], []);
+  const engineeringProcess = getDefaultEngineeringProcessSteps();
   return {
     modeling,
+    manufacturingDesktop,
+    manufacturingMobile,
+    founderDesktop,
+    founderMobile,
+    engineeringProcess,
     finished: {
       row1: [...DEFAULT_FINISHED_ROW1],
       row2: [...DEFAULT_FINISHED_ROW2],

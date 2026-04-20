@@ -9,22 +9,36 @@ import {
 } from "react";
 import {
   resolveManufacturingDetailImageDimensions,
+  type ManufacturingSpecializationId,
   type ManufacturingDetailPhotoLayout,
-  type ManufacturingSpecializationItem,
 } from "@/constants/manufacturing-specialization";
+import {
+  DEFAULT_MANUFACTURING_IMAGE_TRANSFORM,
+  normalizeManufacturingImageTransform,
+  type ManufacturingImageTransform,
+} from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 import { MANUFACTURING_IMAGE_TRANSITION_MS } from "./manufacturing-image.constants";
 
 export type ManufacturingDetailPayload = {
-  id: ManufacturingSpecializationItem["id"];
+  id: ManufacturingSpecializationId;
   src: string;
   alt: string;
   widthPx: number;
   heightPx: number;
   photoLayout: ManufacturingDetailPhotoLayout;
+  transform: ManufacturingImageTransform;
+};
+
+export type ManufacturingActiveItem = {
+  id: ManufacturingSpecializationId;
+  imageSrc: string;
+  imageAlt: string;
+  detailPhotoLayout: ManufacturingDetailPhotoLayout | undefined;
+  transform: ManufacturingImageTransform;
 };
 
 type UseManufacturingDetailLayersArgs = {
-  activeItem: ManufacturingSpecializationItem | undefined;
+  activeItem: ManufacturingActiveItem | undefined;
 };
 
 type SlotIndex = 0 | 1;
@@ -38,17 +52,20 @@ export function useManufacturingDetailLayers({
   activeItem,
 }: UseManufacturingDetailLayersArgs) {
   const activeDetail = useMemo<ManufacturingDetailPayload | null>(() => {
-    if (!activeItem?.detailImageSrc) return null;
+    if (!activeItem?.imageSrc) return null;
     const dims = resolveManufacturingDetailImageDimensions(
       activeItem.detailPhotoLayout,
     );
     return {
       id: activeItem.id,
-      src: activeItem.detailImageSrc,
-      alt: activeItem.detailImageAlt ?? "",
+      src: activeItem.imageSrc,
+      alt: activeItem.imageAlt,
       widthPx: dims.widthPx,
       heightPx: dims.heightPx,
       photoLayout: dims.photoLayout,
+      transform: normalizeManufacturingImageTransform(
+        activeItem.transform ?? DEFAULT_MANUFACTURING_IMAGE_TRANSFORM,
+      ),
     };
   }, [activeItem]);
 

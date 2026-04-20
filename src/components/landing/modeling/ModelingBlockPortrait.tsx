@@ -5,35 +5,31 @@ function portraitLayerBackground(imageUrl: string): string {
   return `url("${imageUrl}") #E0F2F1 center / cover no-repeat`;
 }
 
-const PORTRAIT_DESCRIPTION_LINES = [
-  "Advanced pavé and fine-setting structures",
-  "developed with micron-level precision.",
-  "Invisible settings and ultra-thin tolerances",
-  "engineered with strict structural discipline.",
-] as const;
-
-/** Below `sm` only; desktop unchanged. */
-const PORTRAIT_DESCRIPTION_LINES_MOBILE = [
-  "Advanced pavé and fine-setting structures",
-  "developed with micron-level precision.",
-] as const;
-
 type ModelingBlockPortraitProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  titleDesktop: string;
+  titleMobile: string;
+  descriptionLinesDesktop: string[];
+  descriptionLinesMobile: string[];
 };
 
 export function ModelingBlockPortrait({
   imageUrlDesktop,
   imageUrlMobile,
+  titleDesktop,
+  titleMobile,
+  descriptionLinesDesktop,
+  descriptionLinesMobile,
 }: ModelingBlockPortraitProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
     <ModelingCard
-      title="High Jewelry"
+      title={titleDesktop}
+      titleMobile={titleMobile}
       description=""
-      descriptionLines={[...PORTRAIT_DESCRIPTION_LINES]}
-      descriptionLinesMobile={[...PORTRAIT_DESCRIPTION_LINES_MOBILE]}
+      descriptionLines={[...descriptionLinesDesktop]}
+      descriptionLinesMobile={[...descriptionLinesMobile]}
       imageSrc={imageUrlDesktop}
       imageId={LANDING_IMAGE_IDS.MODELING_PORTRAIT}
       imageOnLeft={false}

@@ -8,9 +8,9 @@ import {
 } from "@/components/landing/GetAQuoteButton";
 import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-copy.types";
 import {
-  resolveModelingBodyDisplay,
   resolveModelingTitleDesktop,
-  resolveModelingTitleMobileLines,
+  splitMultilineText,
+  splitMultilineTextPreservingLines,
 } from "./resolve-power-banner-display";
 import {
   SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX,
@@ -19,15 +19,18 @@ import {
 } from "./power-banners-layout.constants";
 
 type ModelingHeroSlideTextStackProps = {
-  copy: PowerBannerCopyEntry;
+  desktopCopy: PowerBannerCopyEntry;
+  mobileCopy: PowerBannerCopyEntry;
 };
 
 export function ModelingHeroSlideTextStack({
-  copy,
+  desktopCopy,
+  mobileCopy,
 }: ModelingHeroSlideTextStackProps) {
-  const desktopTitle = resolveModelingTitleDesktop(copy.title);
-  const mobileTitleLines = resolveModelingTitleMobileLines(copy.title);
-  const { desktopParagraph, mobileLines } = resolveModelingBodyDisplay(copy.body);
+  const desktopTitle = resolveModelingTitleDesktop(desktopCopy.title);
+  const mobileTitleLines = splitMultilineText(mobileCopy.title);
+  const desktopLines = splitMultilineTextPreservingLines(desktopCopy.body);
+  const mobileLines = splitMultilineText(mobileCopy.body);
 
   return (
     <div
@@ -76,7 +79,13 @@ export function ModelingHeroSlideTextStack({
             </Fragment>
           ))}
         </span>
-        <span className="hidden md:inline">{desktopParagraph}</span>
+        <span className="hidden md:block">
+          {desktopLines.map((line, i) => (
+            <span key={i} className="block">
+              {line.length > 0 ? line : "\u00A0"}
+            </span>
+          ))}
+        </span>
       </p>
       <GetAQuoteButton
         id={HERO_GET_QUOTE_BUTTON_ID}

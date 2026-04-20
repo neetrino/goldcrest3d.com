@@ -4,6 +4,7 @@ import Image from "next/image";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG } from "@/components/landing/landing-media-frame.constants";
 
 import type { ModelingCardProps } from "./modeling-card.types";
+import { renderModelingTitleText } from "./modeling-copy-line";
 
 export type ModelingCardGradientLayoutProps = Pick<
   ModelingCardProps,
@@ -21,6 +22,7 @@ export type ModelingCardGradientLayoutProps = Pick<
   textAlignClass: string;
   descriptionContent: ReactNode;
   descriptionClassNameGradient: string;
+  hasDescriptionContent: boolean;
   DescriptionTag: "div" | "p";
 };
 
@@ -38,6 +40,7 @@ export function ModelingCardGradientLayout({
   textAlignClass,
   descriptionContent,
   descriptionClassNameGradient,
+  hasDescriptionContent,
   DescriptionTag,
 }: ModelingCardGradientLayoutProps) {
   return (
@@ -70,15 +73,17 @@ export function ModelingCardGradientLayout({
             className={`order-1 flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white md:order-2 md:w-1/2 md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
           >
             <h3
-              className={`font-manrope text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${
+              className={`font-manrope whitespace-pre-wrap text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible" : ""} ${
                 titleBold ? "font-bold" : "font-extrabold"
               }`}
             >
-              {title}
+              {renderModelingTitleText(title)}
             </h3>
-            <DescriptionTag className={descriptionClassNameGradient}>
-              {descriptionContent}
-            </DescriptionTag>
+            {hasDescriptionContent ? (
+              <DescriptionTag className={descriptionClassNameGradient}>
+                {descriptionContent}
+              </DescriptionTag>
+            ) : null}
           </div>
         </>
       ) : hasImage ? (
@@ -87,15 +92,17 @@ export function ModelingCardGradientLayout({
             className={`flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white md:w-1/2 md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
           >
             <h3
-              className={`font-manrope text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${
+              className={`font-manrope whitespace-pre-wrap text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible" : ""} ${
                 titleBold ? "font-bold" : "font-extrabold"
               }`}
             >
-              {title}
+              {renderModelingTitleText(title)}
             </h3>
-            <DescriptionTag className={descriptionClassNameGradient}>
-              {descriptionContent}
-            </DescriptionTag>
+            {hasDescriptionContent ? (
+              <DescriptionTag className={descriptionClassNameGradient}>
+                {descriptionContent}
+              </DescriptionTag>
+            ) : null}
           </div>
           <div
             className="relative h-[calc(240px*var(--ms,1))] shrink-0 overflow-hidden md:h-full md:min-h-0 md:w-1/2"
@@ -122,15 +129,17 @@ export function ModelingCardGradientLayout({
           className={`flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white md:w-full md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
         >
           <h3
-            className={`font-manrope text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${
+            className={`font-manrope whitespace-pre-wrap text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible" : ""} ${
               titleBold ? "font-bold" : "font-extrabold"
             }`}
           >
-            {title}
+            {renderModelingTitleText(title)}
           </h3>
-          <DescriptionTag className={descriptionClassNameGradient}>
-            {descriptionContent}
-          </DescriptionTag>
+          {hasDescriptionContent ? (
+            <DescriptionTag className={descriptionClassNameGradient}>
+              {descriptionContent}
+            </DescriptionTag>
+          ) : null}
         </div>
       )}
     </article>

@@ -1,13 +1,19 @@
 import { LANDING_ELEMENT_IDS } from "@/constants";
-import { resolveRenderingSubtitleDisplay } from "./resolve-power-banner-display";
+import {
+  splitMultilineTextPreservingLines,
+} from "./resolve-power-banner-display";
 
 type RenderingHeroSubtitleLinesProps = {
-  body: string;
+  desktopBody: string;
+  mobileBody: string;
 };
 
-export function RenderingHeroSubtitleLines({ body }: RenderingHeroSubtitleLinesProps) {
-  const { desktopLine1, desktopLine2, mobileLines } =
-    resolveRenderingSubtitleDisplay(body);
+export function RenderingHeroSubtitleLines({
+  desktopBody,
+  mobileBody,
+}: RenderingHeroSubtitleLinesProps) {
+  const desktopLines = splitMultilineTextPreservingLines(desktopBody);
+  const mobileLines = splitMultilineTextPreservingLines(mobileBody);
 
   return (
     <p
@@ -17,15 +23,16 @@ export function RenderingHeroSubtitleLines({ body }: RenderingHeroSubtitleLinesP
       <span className="md:hidden">
         {mobileLines.map((line, i) => (
           <span key={i} className="block whitespace-nowrap">
-            {line}
+            {line.length > 0 ? line : "\u00A0"}
           </span>
         ))}
       </span>
       <span className="hidden md:block">
-        <span className="block md:whitespace-nowrap">{desktopLine1}</span>
-        {desktopLine2 ? (
-          <span className="block md:whitespace-nowrap">{desktopLine2}</span>
-        ) : null}
+        {desktopLines.map((line, i) => (
+          <span key={i} className="block md:whitespace-nowrap">
+            {line.length > 0 ? line : "\u00A0"}
+          </span>
+        ))}
       </span>
     </p>
   );
