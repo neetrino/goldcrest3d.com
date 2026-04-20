@@ -102,6 +102,11 @@ const SECTION_META: Record<
 };
 
 function ManufacturingItemEditor({ row, variant }: ManufacturingItemEditorProps) {
+  const transformResetKey = `${variant}:${row.id}:${row.zoom}:${row.offsetX}:${row.offsetY}`;
+  return <ManufacturingItemEditorContent key={transformResetKey} row={row} variant={variant} />;
+}
+
+function ManufacturingItemEditorContent({ row, variant }: ManufacturingItemEditorProps) {
   const router = useRouter();
   const previewFrameRef = useRef<HTMLDivElement | null>(null);
   const [transform, setTransform] = useState<TransformState>(toInitialTransform(row));
@@ -138,10 +143,6 @@ function ManufacturingItemEditor({ row, variant }: ManufacturingItemEditorProps)
       router.refresh();
     }
   }, [router, saveState?.ok, uploadState?.ok]);
-
-  useEffect(() => {
-    setTransform(toInitialTransform(row));
-  }, [row.id, row.zoom, row.offsetX, row.offsetY]);
 
   useEffect(() => {
     return () => {

@@ -39,6 +39,20 @@ type EditorDraft = {
   bodyMobileOffsetY: number;
 };
 
+function toInitialDraft(row: AdminModelingSlotRow): EditorDraft {
+  return {
+    titleDesktop: row.titleDesktop,
+    titleMobile: row.titleMobile,
+    bodyDesktop: row.bodyDesktop,
+    bodyMobile: row.bodyMobile,
+    desktopLine1Emphasis: row.desktopLine1Emphasis,
+    titleDesktopOffsetY: row.titleDesktopOffsetY,
+    titleMobileOffsetY: row.titleMobileOffsetY,
+    bodyDesktopOffsetY: row.bodyDesktopOffsetY,
+    bodyMobileOffsetY: row.bodyMobileOffsetY,
+  };
+}
+
 function clampOffset(value: number): number {
   return Math.min(MAX_OFFSET_Y, Math.max(MIN_OFFSET_Y, Math.round(value)));
 }
@@ -51,19 +65,25 @@ function offsetLabel(key: OffsetFieldKey): string {
 }
 
 export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
+  const draftResetKey = [
+    row.slotKey,
+    row.titleDesktop,
+    row.titleMobile,
+    row.bodyDesktop,
+    row.bodyMobile,
+    row.desktopLine1Emphasis,
+    row.titleDesktopOffsetY,
+    row.titleMobileOffsetY,
+    row.bodyDesktopOffsetY,
+    row.bodyMobileOffsetY,
+  ].join("|");
+  return <ModelingSlotCopyEditorContent key={draftResetKey} row={row} />;
+}
+
+function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [draft, setDraft] = useState<EditorDraft>({
-    titleDesktop: row.titleDesktop,
-    titleMobile: row.titleMobile,
-    bodyDesktop: row.bodyDesktop,
-    bodyMobile: row.bodyMobile,
-    desktopLine1Emphasis: row.desktopLine1Emphasis,
-    titleDesktopOffsetY: row.titleDesktopOffsetY,
-    titleMobileOffsetY: row.titleMobileOffsetY,
-    bodyDesktopOffsetY: row.bodyDesktopOffsetY,
-    bodyMobileOffsetY: row.bodyMobileOffsetY,
-  });
+  const [draft, setDraft] = useState<EditorDraft>(() => toInitialDraft(row));
   const [state, formAction, isPending] = useActionState<
     SiteMediaActionResult | null,
     FormData
@@ -71,24 +91,10 @@ export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
 
   useEffect(() => {
     if (state?.ok) {
-      setIsModalOpen(false);
       router.refresh();
     }
   }, [router, state?.ok]);
-
-  useEffect(() => {
-    setDraft({
-      titleDesktop: row.titleDesktop,
-      titleMobile: row.titleMobile,
-      bodyDesktop: row.bodyDesktop,
-      bodyMobile: row.bodyMobile,
-      desktopLine1Emphasis: row.desktopLine1Emphasis,
-      titleDesktopOffsetY: row.titleDesktopOffsetY,
-      titleMobileOffsetY: row.titleMobileOffsetY,
-      bodyDesktopOffsetY: row.bodyDesktopOffsetY,
-      bodyMobileOffsetY: row.bodyMobileOffsetY,
-    });
-  }, [row]);
+  const isDialogVisible = isModalOpen && !state?.ok;
 
   const showEmphasisField = row.slotKey === MODELING_SLOT_KEYS.HIGH_JEWELRY;
   const nudgeOffset = (field: OffsetFieldKey, delta: number) => {
@@ -125,7 +131,7 @@ export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
         </button>
       </div>
 
-      {isModalOpen ? (
+      {isDialogVisible ? (
         <div
           className="fixed inset-0 z-50 flex min-h-screen w-screen items-center justify-center bg-slate-900/70 p-3 sm:p-6"
           role="dialog"

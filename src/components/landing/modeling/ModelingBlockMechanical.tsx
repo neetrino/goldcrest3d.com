@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
@@ -45,19 +45,20 @@ export function ModelingBlockMechanical({
   bodyMobileOffsetY,
   isAndroidViewport,
 }: ModelingBlockMechanicalProps) {
-  const [isAndroidClient, setIsAndroidClient] = useState(isAndroidViewport);
-  const sameUrl = imageUrlDesktop === imageUrlMobile;
-  const hasDesktopTitle = titleDesktop.trim().length > 0;
-  const hasMobileTitle = titleMobile.trim().length > 0;
-
-  useEffect(() => {
+  const [isAndroidClient] = useState(() => {
+    if (typeof navigator === "undefined") {
+      return isAndroidViewport;
+    }
     const nav = navigator as Navigator & {
       userAgentData?: { platform?: string };
     };
     const hasAndroidUa = /Android/i.test(navigator.userAgent);
     const hasAndroidPlatform = /Android/i.test(nav.userAgentData?.platform ?? "");
-    setIsAndroidClient(hasAndroidUa || hasAndroidPlatform);
-  }, []);
+    return hasAndroidUa || hasAndroidPlatform;
+  });
+  const sameUrl = imageUrlDesktop === imageUrlMobile;
+  const hasDesktopTitle = titleDesktop.trim().length > 0;
+  const hasMobileTitle = titleMobile.trim().length > 0;
 
   const isAndroidResolved = isAndroidViewport || isAndroidClient;
   const mobileOverlayTranslateYPx = isAndroidResolved

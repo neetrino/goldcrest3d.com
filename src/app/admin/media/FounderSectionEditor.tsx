@@ -73,6 +73,11 @@ function toInitialTransform(row: AdminFounderSectionRow): TransformState {
 }
 
 export function FounderSectionEditor({ row, variant }: FounderSectionEditorProps) {
+  const transformResetKey = `${variant}:${row.image.transform.zoom}:${row.image.transform.offsetX}:${row.image.transform.offsetY}`;
+  return <FounderSectionEditorContent key={transformResetKey} row={row} variant={variant} />;
+}
+
+function FounderSectionEditorContent({ row, variant }: FounderSectionEditorProps) {
   const router = useRouter();
   const meta = SECTION_META[variant];
   const [transform, setTransform] = useState<TransformState>(toInitialTransform(row));
@@ -104,10 +109,6 @@ export function FounderSectionEditor({ row, variant }: FounderSectionEditorProps
       router.refresh();
     }
   }, [router, saveState?.ok, uploadState?.ok]);
-
-  useEffect(() => {
-    setTransform(toInitialTransform(row));
-  }, [row.image.transform.zoom, row.image.transform.offsetX, row.image.transform.offsetY]);
 
   useEffect(
     () => () => {

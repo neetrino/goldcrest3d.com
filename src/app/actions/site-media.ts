@@ -16,7 +16,6 @@ import {
   normalizeManufacturingImageTransform,
 } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 import { manufacturingIntelligenceCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy-prisma";
-import { manufacturingIntelligenceMobileCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-mobile-copy-prisma";
 import {
   getManufacturingItemDescriptionKey,
   getManufacturingItemTitleKey,
