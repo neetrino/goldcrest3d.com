@@ -16,12 +16,16 @@ import "./modeling/modeling-section-scale.css";
 
 type SectionModelingProps = {
   modeling: LandingModelingMedia;
+  isAndroidViewport: boolean;
 };
 
 /**
  * Modeling Specialization section. 2×3 grid — քարտերը լրիվ սյուն, aspect 83/43, փոքր gap, սուր անկյուններ.
  */
-export function SectionModeling({ modeling }: SectionModelingProps) {
+export function SectionModeling({
+  modeling,
+  isAndroidViewport,
+}: SectionModelingProps) {
   return (
     <section
       id={LANDING_SECTION_IDS.SPECIALIZATIONS}
@@ -82,6 +86,7 @@ export function SectionModeling({ modeling }: SectionModelingProps) {
             descriptionLinesMobile={toCopyLines(
               modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyMobile,
             )}
+            isAndroidViewport={isAndroidViewport}
           />
           <ModelingBlockHeritage
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HERITAGE].desktop}

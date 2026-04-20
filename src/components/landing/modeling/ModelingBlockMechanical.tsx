@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
@@ -7,6 +10,7 @@ import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy
 
 /** Mobile-only overlay nudge down (`max-sm:translate-y`); paired with `--mechanical-overlay-ty`. */
 const MOBILE_OVERLAY_TRANSLATE_Y_PX = 100;
+const MOBILE_OVERLAY_TRANSLATE_Y_ANDROID_PX = 70;
 
 /** Desktop (md+): nudge first title line up without shifting the rest of the overlay. */
 const TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS = "md:-translate-y-1.5";
@@ -20,6 +24,7 @@ type ModelingBlockMechanicalProps = {
   titleMobile: string;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  isAndroidViewport: boolean;
 };
 
 /** Mechanical & Lock Systems block. Full-bleed image with title and description overlay. */
@@ -30,10 +35,27 @@ export function ModelingBlockMechanical({
   titleMobile,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  isAndroidViewport,
 }: ModelingBlockMechanicalProps) {
+  const [isAndroidClient, setIsAndroidClient] = useState(isAndroidViewport);
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   const hasDesktopTitle = titleDesktop.trim().length > 0;
   const hasMobileTitle = titleMobile.trim().length > 0;
+
+  useEffect(() => {
+    const nav = navigator as Navigator & {
+      userAgentData?: { platform?: string };
+    };
+    const hasAndroidUa = /Android/i.test(navigator.userAgent);
+    const hasAndroidPlatform = /Android/i.test(nav.userAgentData?.platform ?? "");
+    setIsAndroidClient(hasAndroidUa || hasAndroidPlatform);
+  }, []);
+
+  const isAndroidResolved = isAndroidViewport || isAndroidClient;
+  const mobileOverlayTranslateYPx = isAndroidResolved
+    ? MOBILE_OVERLAY_TRANSLATE_Y_ANDROID_PX
+    : MOBILE_OVERLAY_TRANSLATE_Y_PX;
+
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -77,7 +99,7 @@ export function ModelingBlockMechanical({
         className={`absolute inset-0 z-10 flex flex-col items-start justify-start gap-[calc(1rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-black max-sm:-translate-x-[calc(0.375rem*var(--ms,1))] max-sm:translate-y-[calc(var(--mechanical-overlay-ty)*var(--ms,1))] md:gap-[calc(1.25rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] md:pt-[calc(3.25rem*var(--ms,1))] ${OVERLAY_DESKTOP_NUDGE_UP_CLASS}`}
         style={
           {
-            ["--mechanical-overlay-ty" as string]: `${MOBILE_OVERLAY_TRANSLATE_Y_PX}px`,
+            ["--mechanical-overlay-ty" as string]: `${mobileOverlayTranslateYPx}px`,
           } as React.CSSProperties
         }
       >
