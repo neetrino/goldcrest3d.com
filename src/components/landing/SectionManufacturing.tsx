@@ -164,7 +164,7 @@ export function SectionManufacturing({
               {manufacturing.headingMobile}
             </h2>
 
-            <div className="flex min-w-0 flex-col divide-y divide-black/10 lg:pt-[94px]">
+            <div className="flex min-w-0 flex-col divide-y divide-black/10 lg:pt-[50px]">
               {manufacturing.items.map((item) => (
                 <div key={item.id} className="flex min-w-0 flex-col">
                   <ManufacturingAccordionRow
