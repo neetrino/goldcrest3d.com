@@ -71,6 +71,7 @@ export function PowerBannerCopyEditor({
 }: PowerBannerCopyEditorProps) {
   const router = useRouter();
   const meta = POWER_BANNER_ADMIN_LABELS[bannerKey];
+  const bannerTitle = initial.title.trim() || meta.name;
   const viewportLabel = viewport === "desktop" ? "Desktop" : "Mobile";
   const [transform, setTransform] = useState<TransformState>(toInitialTransform(initial));
   const draggingRef = useRef<{
@@ -159,14 +160,14 @@ export function PowerBannerCopyEditor({
   return (
     <div
       className="flex flex-col gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-6"
-      aria-label={`Edit ${viewportLabel.toLowerCase()} hero banner for ${meta.name}`}
+      aria-label={`Edit ${viewportLabel.toLowerCase()} hero banner for ${bannerTitle}`}
     >
       <div className="border-b border-slate-200/80 pb-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-[#e2c481]">
           {viewportLabel} hero banner
         </p>
         <h3 className="mt-2 text-lg font-semibold tracking-tight text-slate-900">
-          {meta.name}
+          {bannerTitle}
         </h3>
         <p className="mt-1 text-sm text-slate-600">{meta.hint}</p>
       </div>

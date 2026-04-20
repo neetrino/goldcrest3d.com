@@ -8,6 +8,11 @@ import {
 const MAX_TITLE_LEN = 280;
 const MAX_BODY_LEN = 4000;
 const MAX_ALT_LEN = 280;
+
+function normalizeMultilineValue(value: string): string {
+  return value.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+}
+
 const numberField = (label: string) =>
   z.coerce.number().refine((value) => Number.isFinite(value), `${label} must be a number.`);
 
@@ -25,7 +30,7 @@ export const powerBannerCopyFormSchema = z.object({
   body: z
     .string()
     .max(MAX_BODY_LEN, `Description must be at most ${MAX_BODY_LEN} characters`)
-    .transform((s) => s.trim()),
+    .transform((s) => normalizeMultilineValue(s).trim()),
 });
 
 export const powerBannerTransformFormSchema = z.object({

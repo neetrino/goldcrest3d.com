@@ -19,13 +19,11 @@ export default async function Home() {
   return (
     <>
       <LandingNav />
-      <main className="min-h-screen pt-[length:var(--landing-nav-height)]">
-        <LandingSections
-          siteMedia={siteMedia}
-          powerBannerCopy={powerBannerCopy}
-          initialIsMobileViewport={initialIsMobileViewport}
-        />
-      </main>
+      <LandingSections
+        siteMedia={siteMedia}
+        powerBannerCopy={powerBannerCopy}
+        initialIsMobileViewport={initialIsMobileViewport}
+      />
     </>
   );
 }

@@ -5,6 +5,7 @@ import {
 import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-copy.types";
 import {
   splitMultilineText,
+  splitMultilineTextPreservingLines,
 } from "./resolve-power-banner-display";
 import { SECTION3_TEXT_COLUMN_TOP_MD_CLASS } from "./power-banners-layout.constants";
 
@@ -17,8 +18,8 @@ export function DesignHeroSlideCopy({
   desktopCopy,
   mobileCopy,
 }: DesignHeroSlideCopyProps) {
-  const desktopSubtitleLines = splitMultilineText(desktopCopy.body);
-  const mobileSubtitleLines = splitMultilineText(mobileCopy.body);
+  const desktopSubtitleLines = splitMultilineTextPreservingLines(desktopCopy.body);
+  const mobileSubtitleLines = splitMultilineTextPreservingLines(mobileCopy.body);
   const mobileTitle = splitMultilineText(mobileCopy.title).join(" ");
 
   return (
@@ -35,14 +36,14 @@ export function DesignHeroSlideCopy({
             <span className="md:hidden">
               {mobileSubtitleLines.map((line, i) => (
                 <span key={i} className="block">
-                  {line}
+                  {line.length > 0 ? line : "\u00A0"}
                 </span>
               ))}
             </span>
             <span className="hidden md:block">
               {desktopSubtitleLines.map((line, i) => (
                 <span key={i} className="block md:whitespace-nowrap">
-                  {line}
+                  {line.length > 0 ? line : "\u00A0"}
                 </span>
               ))}
             </span>

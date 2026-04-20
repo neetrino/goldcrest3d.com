@@ -8,9 +8,9 @@ import {
 } from "@/components/landing/GetAQuoteButton";
 import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-copy.types";
 import {
-  resolveModelingBodyDesktop,
   resolveModelingTitleDesktop,
   splitMultilineText,
+  splitMultilineTextPreservingLines,
 } from "./resolve-power-banner-display";
 import {
   SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX,
@@ -29,7 +29,7 @@ export function ModelingHeroSlideTextStack({
 }: ModelingHeroSlideTextStackProps) {
   const desktopTitle = resolveModelingTitleDesktop(desktopCopy.title);
   const mobileTitleLines = splitMultilineText(mobileCopy.title);
-  const desktopParagraph = resolveModelingBodyDesktop(desktopCopy.body);
+  const desktopLines = splitMultilineTextPreservingLines(desktopCopy.body);
   const mobileLines = splitMultilineText(mobileCopy.body);
 
   return (
@@ -79,7 +79,13 @@ export function ModelingHeroSlideTextStack({
             </Fragment>
           ))}
         </span>
-        <span className="hidden md:inline">{desktopParagraph}</span>
+        <span className="hidden md:block">
+          {desktopLines.map((line, i) => (
+            <span key={i} className="block">
+              {line.length > 0 ? line : "\u00A0"}
+            </span>
+          ))}
+        </span>
       </p>
       <GetAQuoteButton
         id={HERO_GET_QUOTE_BUTTON_ID}
