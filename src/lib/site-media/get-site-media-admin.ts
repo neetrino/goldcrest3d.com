@@ -1,5 +1,11 @@
 import { logger } from "@/lib/logger";
 import {
+  EMPTY_FOOTER_SOCIAL_LINKS,
+  FOOTER_SOCIAL_KEYS,
+  type FooterSocialLinks,
+} from "@/lib/footer-social/footer-social.keys";
+import { footerSocialLink } from "@/lib/footer-social/footer-social-prisma";
+import {
   buildFounderDesktopContent,
   buildFounderMobileContent,
   getFounderDesktopMediaSlotId,
@@ -100,6 +106,7 @@ export type AdminSiteMediaBundle = {
   founderDesktop: AdminFounderSectionRow;
   founderMobile: AdminFounderSectionRow;
   engineeringProcess: AdminEngineeringProcessStepRow[];
+  footerSocialLinks: FooterSocialLinks;
   finishedRow1: AdminOrderedItemRow[];
   finishedRow2: AdminOrderedItemRow[];
 };
@@ -136,8 +143,18 @@ function emptyAdminBundle(): AdminSiteMediaBundle {
       imageObjectKey: null,
     },
     engineeringProcess: getDefaultEngineeringProcessSteps(),
+    footerSocialLinks: EMPTY_FOOTER_SOCIAL_LINKS,
     finishedRow1: [],
     finishedRow2: [],
+  };
+}
+
+function mapFooterSocialLinks(rows: Array<{ key: string; url: string | null }>): FooterSocialLinks {
+  const byKey = new Map(rows.map((row) => [row.key, row.url]));
+  return {
+    instagram: byKey.get(FOOTER_SOCIAL_KEYS.INSTAGRAM) ?? null,
+    linkedin: byKey.get(FOOTER_SOCIAL_KEYS.LINKEDIN) ?? null,
+    behance: byKey.get(FOOTER_SOCIAL_KEYS.BEHANCE) ?? null,
   };
 }
 
@@ -165,6 +182,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
   let founderCopyRows: { key: string; value: string }[];
   let founderMobileCopyRows: { key: string; value: string }[];
   let engineeringProcessRows: { stepKey: string; title: string; description: string }[];
+  let footerSocialRows: { key: string; url: string | null }[];
   try {
     const [
       siteMediaRows,
@@ -174,6 +192,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       founderRows,
       founderMobileRows,
       engineeringRows,
+      socialRows,
     ] = await Promise.all([
       siteMediaItem.findMany({
         orderBy: [{ sectionKey: "asc" }, { sortOrder: "asc" }],
@@ -184,6 +203,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       founderSectionCopy.findMany(),
       founderSectionMobileCopy.findMany(),
       engineeringProcessCopy.findMany(),
+      footerSocialLink.findMany(),
     ]);
     rows = siteMediaRows;
     copyRows = modelingCopyRows.map((row) => ({
@@ -220,6 +240,10 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       stepKey: row.stepKey,
       title: row.title,
       description: row.description,
+    }));
+    footerSocialRows = socialRows.map((row) => ({
+      key: row.key,
+      url: row.url,
     }));
   } catch (err) {
     if (isMigrationPendingError(err)) {
@@ -340,6 +364,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
     imageObjectKey: founderMobileMedia?.r2ObjectKey ?? null,
   };
   const engineeringProcess = mergeEngineeringProcessSteps(engineeringProcessRows);
+  const footerSocialLinks = mapFooterSocialLinks(footerSocialRows);
 
   return {
     groupsMeta: SITE_MEDIA_GROUPS,
@@ -351,6 +376,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
     founderDesktop,
     founderMobile,
     engineeringProcess,
+    footerSocialLinks,
     finishedRow1: byGroup(SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW1).map(
       mapOrderedRow,
     ),

@@ -1,5 +1,11 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
 import {
+  EMPTY_FOOTER_SOCIAL_LINKS,
+  FOOTER_SOCIAL_KEYS,
+  type FooterSocialLinks,
+} from "@/lib/footer-social/footer-social.keys";
+import { footerSocialLink } from "@/lib/footer-social/footer-social-prisma";
+import {
   buildFounderDesktopContent,
   buildFounderMobileContent,
 } from "@/lib/founder-section/founder-section-content";
@@ -72,8 +78,18 @@ export type LandingSiteMedia = {
   founderDesktop: FounderSectionContent;
   founderMobile: FounderSectionContent;
   engineeringProcess: EngineeringProcessStep[];
+  footerSocialLinks: FooterSocialLinks;
   finished: LandingFinishedMedia;
 };
+
+function mapFooterSocialLinks(rows: Array<{ key: string; url: string | null }>): FooterSocialLinks {
+  const byKey = new Map(rows.map((row) => [row.key, row.url]));
+  return {
+    instagram: byKey.get(FOOTER_SOCIAL_KEYS.INSTAGRAM) ?? null,
+    linkedin: byKey.get(FOOTER_SOCIAL_KEYS.LINKEDIN) ?? null,
+    behance: byKey.get(FOOTER_SOCIAL_KEYS.BEHANCE) ?? null,
+  };
+}
 
 function mergeModelingUrl(
   slot: ModelingSlotKey,
@@ -132,6 +148,7 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       founderDesktopCopyRows,
       founderMobileCopyRows,
       engineeringProcessCopyRows,
+      footerSocialRows,
     ] =
       await Promise.all([
       siteMediaItem.findMany({
@@ -175,6 +192,7 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       founderSectionCopy.findMany(),
       founderSectionMobileCopy.findMany(),
       engineeringProcessCopy.findMany(),
+      footerSocialLink.findMany(),
     ]);
 
     const modelingBySlot = new Map<
@@ -281,6 +299,12 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
         description: row.description,
       })),
     );
+    const footerSocialLinks = mapFooterSocialLinks(
+      footerSocialRows.map((row) => ({
+        key: row.key,
+        url: row.url,
+      })),
+    );
 
     const finished: LandingFinishedMedia = {
       row1: buildFinishedRow(row1Rows, DEFAULT_FINISHED_ROW1),
@@ -294,6 +318,7 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
       founderDesktop,
       founderMobile,
       engineeringProcess,
+      footerSocialLinks,
       finished,
     };
   } catch (err) {
@@ -338,6 +363,7 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
     founderDesktop,
     founderMobile,
     engineeringProcess,
+    footerSocialLinks: EMPTY_FOOTER_SOCIAL_LINKS,
     finished: {
       row1: [...DEFAULT_FINISHED_ROW1],
       row2: [...DEFAULT_FINISHED_ROW2],
