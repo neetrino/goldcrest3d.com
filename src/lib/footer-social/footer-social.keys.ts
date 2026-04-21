@@ -3,6 +3,7 @@ export const FOOTER_SOCIAL_KEYS = {
   LINKEDIN: "linkedin",
   BEHANCE: "behance",
   YOUTUBE: "youtube",
+  WHATSAPP_PHONE: "whatsapp_phone",
 } as const;
 
 export type FooterSocialKey = (typeof FOOTER_SOCIAL_KEYS)[keyof typeof FOOTER_SOCIAL_KEYS];
@@ -12,6 +13,7 @@ export type FooterSocialLinks = {
   linkedin: string | null;
   behance: string | null;
   youtube: string | null;
+  whatsappPhone: string | null;
 };
 
 export const EMPTY_FOOTER_SOCIAL_LINKS: FooterSocialLinks = {
@@ -19,4 +21,5 @@ export const EMPTY_FOOTER_SOCIAL_LINKS: FooterSocialLinks = {
   linkedin: null,
   behance: null,
   youtube: null,
+  whatsappPhone: null,
 };

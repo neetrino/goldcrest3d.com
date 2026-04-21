@@ -85,6 +85,20 @@ export function FooterSocialLinksSection({ links }: FooterSocialLinksSectionProp
           />
         </label>
 
+        <label className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium text-slate-700">WhatsApp Phone</span>
+          <input
+            type="tel"
+            name="whatsappPhone"
+            placeholder="+374 (00) 000 - 000"
+            defaultValue={links.whatsappPhone ?? ""}
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
+          />
+          <span className="text-xs text-slate-500">
+            Used for Footer Direct Line / WhatsApp link.
+          </span>
+        </label>
+
         <ModelingSlotFormMessages state={saveState} />
         <MediaFormSubmitButton pendingLabel="Saving…">Save social links</MediaFormSubmitButton>
       </form>

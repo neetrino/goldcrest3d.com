@@ -156,6 +156,7 @@ function mapFooterSocialLinks(rows: Array<{ key: string; url: string | null }>):
     linkedin: byKey.get(FOOTER_SOCIAL_KEYS.LINKEDIN) ?? null,
     behance: byKey.get(FOOTER_SOCIAL_KEYS.BEHANCE) ?? null,
     youtube: byKey.get(FOOTER_SOCIAL_KEYS.YOUTUBE) ?? null,
+    whatsappPhone: byKey.get(FOOTER_SOCIAL_KEYS.WHATSAPP_PHONE) ?? null,
   };
 }
 

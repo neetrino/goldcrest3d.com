@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import type { FooterSocialLinks } from "@/lib/footer-social/footer-social.keys";
+import { toWhatsAppChatLink } from "@/lib/footer-social/whatsapp";
 import Link from "next/link";
 
 /** Figma 92:248 — ներքին նկարի տոկոսներ (ֆրեյմը՝ FOOTER_LOGO_FRAME_CLASS) */
@@ -256,6 +257,9 @@ function getFooterSocialIcons(links: FooterSocialLinks): FooterSocialIcon[] {
 
 export function LandingFooter({ socialLinks }: LandingFooterProps) {
   const socialIcons = getFooterSocialIcons(socialLinks);
+  const whatsappPhone = socialLinks.whatsappPhone?.trim() ?? "";
+  const whatsappLink = toWhatsAppChatLink(whatsappPhone);
+  const hasWhatsappPhone = whatsappPhone.length > 0 && whatsappLink !== null;
 
   return (
     <footer
@@ -316,17 +320,18 @@ export function LandingFooter({ socialLinks }: LandingFooterProps) {
                     Direct Line / WhatsApp
                   </p>
                 </div>
-                <p className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-none`}>
-                  <a href="tel:+37441141110">+374 (41) 141 - 110</a>
-                  <span className="text-[#94A3B8]"></span>
-                  <a
-                    href="https://wa.me/37441141110"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-colors hover:text-[var(--foreground)]"
-                  >
-                  </a>
-                </p>
+                {hasWhatsappPhone ? (
+                  <p className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-none`}>
+                    <a
+                      href={whatsappLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-[var(--foreground)]"
+                    >
+                      {whatsappPhone}
+                    </a>
+                  </p>
+                ) : null}
               </div>
               <div className={FOOTER_CONTACT_LOCATION_BLOCK_CLASS}>
                 <div className="flex flex-col gap-1">

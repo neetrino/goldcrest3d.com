@@ -317,6 +317,7 @@ export async function updateFooterSocialLinks(
     linkedin: formData.get("linkedin"),
     behance: formData.get("behance"),
     youtube: formData.get("youtube"),
+    whatsappPhone: formData.get("whatsappPhone"),
   });
   if (!parsed.success) {
     const fieldErrors = parsed.error.flatten().fieldErrors;
@@ -327,6 +328,7 @@ export async function updateFooterSocialLinks(
         fieldErrors.linkedin?.[0] ??
         fieldErrors.behance?.[0] ??
         fieldErrors.youtube?.[0] ??
+        fieldErrors.whatsappPhone?.[0] ??
         "Invalid social links.",
     };
   }
@@ -336,6 +338,7 @@ export async function updateFooterSocialLinks(
     linkedin: parsed.data.linkedin.length > 0 ? parsed.data.linkedin : null,
     behance: parsed.data.behance.length > 0 ? parsed.data.behance : null,
     youtube: parsed.data.youtube.length > 0 ? parsed.data.youtube : null,
+    whatsappPhone: parsed.data.whatsappPhone.length > 0 ? parsed.data.whatsappPhone : null,
   };
 
   try {
@@ -370,6 +373,14 @@ export async function updateFooterSocialLinks(
         url: normalized.youtube,
       },
       update: { url: normalized.youtube },
+    });
+    await footerSocialLink.upsert({
+      where: { key: FOOTER_SOCIAL_KEYS.WHATSAPP_PHONE },
+      create: {
+        key: FOOTER_SOCIAL_KEYS.WHATSAPP_PHONE,
+        url: normalized.whatsappPhone,
+      },
+      update: { url: normalized.whatsappPhone },
     });
   } catch (error) {
     logger.error("updateFooterSocialLinks", error);
