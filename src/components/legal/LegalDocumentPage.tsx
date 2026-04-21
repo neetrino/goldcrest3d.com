@@ -1,65 +1,84 @@
 import Link from "next/link";
 
-import type { LegalSection } from "@/lib/legal/legal-content.types";
+import type { LegalDocumentContent } from "@/lib/legal/legal-content.types";
 
 type LegalDocumentPageProps = {
-  title: string;
-  lastUpdated: string;
-  intro: string[];
-  sections: LegalSection[];
+  content: LegalDocumentContent;
 };
 
-function renderSection(section: LegalSection) {
+export function LegalDocumentPage({ content }: LegalDocumentPageProps) {
   return (
-    <section key={section.title} className="space-y-3">
-      <h2 className="text-xl font-semibold text-slate-900">{section.title}</h2>
-      {section.paragraphs?.map((paragraph) => (
-        <p key={paragraph} className="text-sm leading-7 text-slate-700 md:text-base">
-          {paragraph}
-        </p>
-      ))}
-      {section.bullets ? (
-        <ul className="list-disc space-y-2 pl-5 text-sm leading-7 text-slate-700 md:text-base">
-          {section.bullets.map((bullet) => (
-            <li key={bullet}>{bullet}</li>
-          ))}
-        </ul>
-      ) : null}
-    </section>
-  );
-}
-
-export function LegalDocumentPage({
-  title,
-  lastUpdated,
-  intro,
-  sections,
-}: LegalDocumentPageProps) {
-  return (
-    <main className="min-h-screen bg-[#f8f7f6] px-4 py-12 sm:px-6 md:px-8">
-      <div className="mx-auto w-full max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 md:p-10">
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-6">
-          <Link href="/" className="text-sm font-medium text-slate-600 hover:text-slate-900">
-            Back to Home
-          </Link>
-          <p className="text-xs uppercase tracking-wide text-slate-500">
-            Last updated: {lastUpdated}
+    <main className="bg-[#f8f7f6] px-4 py-12 sm:px-6 lg:px-8">
+      <article className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <header className="mb-8 border-b border-slate-200 pb-6">
+          <p className="text-xs font-semibold uppercase tracking-[1px] text-slate-500">
+            Legal
           </p>
-        </div>
-
-        <header className="mb-10 space-y-4">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
-            {title}
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            {content.title}
           </h1>
-          {intro.map((paragraph) => (
-            <p key={paragraph} className="text-sm leading-7 text-slate-700 md:text-base">
+          <p className="mt-3 text-sm text-slate-600">
+            Last updated: {content.lastUpdated}
+          </p>
+        </header>
+
+        <section className="space-y-4 text-slate-700">
+          {content.introduction.map((paragraph) => (
+            <p key={paragraph} className="leading-7">
               {paragraph}
             </p>
           ))}
-        </header>
+        </section>
 
-        <div className="space-y-8">{sections.map((section) => renderSection(section))}</div>
-      </div>
+        <div className="mt-10 space-y-8">
+          {content.sections.map((section) => (
+            <section key={section.title} className="space-y-4">
+              <h2 className="text-xl font-semibold text-slate-900">{section.title}</h2>
+              {section.paragraphs?.map((paragraph) => (
+                <p key={paragraph} className="leading-7 text-slate-700">
+                  {paragraph}
+                </p>
+              ))}
+              {section.bullets?.length ? (
+                <ul className="list-disc space-y-2 pl-6 text-slate-700">
+                  {section.bullets.map((bullet) => (
+                    <li key={bullet} className="leading-7">
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </section>
+          ))}
+        </div>
+
+        <footer className="mt-10 border-t border-slate-200 pt-6">
+          <p className="text-slate-700">
+            For questions, contact us at{" "}
+            <a
+              href={`mailto:${content.contactEmail}`}
+              className="font-medium text-slate-900 underline underline-offset-2 hover:text-slate-700"
+            >
+              {content.contactEmail}
+            </a>
+            .
+          </p>
+          <div className="mt-4 flex flex-wrap gap-4 text-sm">
+            <Link href="/" className="text-slate-700 underline underline-offset-2">
+              Back to home
+            </Link>
+            <Link
+              href="/privacy"
+              className="text-slate-700 underline underline-offset-2"
+            >
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-slate-700 underline underline-offset-2">
+              Terms of Service
+            </Link>
+          </div>
+        </footer>
+      </article>
     </main>
   );
 }
