@@ -63,6 +63,7 @@ export const LANDING_IMAGE_IDS = {
   FOOTER_SOCIAL_1: "footer-social-1",
   FOOTER_SOCIAL_2: "footer-social-2",
   FOOTER_SOCIAL_3: "footer-social-3",
+  FOOTER_SOCIAL_4: "footer-social-4",
 } as const;
 
 export type LandingImageId =

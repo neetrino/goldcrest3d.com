@@ -74,6 +74,17 @@ export function FooterSocialLinksSection({ links }: FooterSocialLinksSectionProp
           />
         </label>
 
+        <label className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium text-slate-700">YouTube URL</span>
+          <input
+            type="url"
+            name="youtube"
+            placeholder="https://www.youtube.com/@your-channel"
+            defaultValue={links.youtube ?? ""}
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
+          />
+        </label>
+
         <ModelingSlotFormMessages state={saveState} />
         <MediaFormSubmitButton pendingLabel="Saving…">Save social links</MediaFormSubmitButton>
       </form>

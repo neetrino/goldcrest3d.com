@@ -28,4 +28,5 @@ export const footerSocialLinksFormSchema = z.object({
   instagram: urlField("Instagram"),
   linkedin: urlField("LinkedIn"),
   behance: urlField("Behance"),
+  youtube: urlField("YouTube"),
 });

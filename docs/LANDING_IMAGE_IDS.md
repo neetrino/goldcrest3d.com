@@ -22,6 +22,7 @@
 | `footer-follow-image` | Footer | Follow բլոկի պատկեր |
 | `footer-social-1` | Footer | Սոց. 1 (Instagram) |
 | `footer-social-2` | Footer | Սոց. 2 (LinkedIn) |
-| `footer-social-3` | Footer | Սոց. 3 (YouTube) |
+| `footer-social-3` | Footer | Սոց. 3 (Behance) |
+| `footer-social-4` | Footer | Սոց. 4 (YouTube) |
 
 Source of truth: `src/constants/index.ts` → `LANDING_IMAGE_IDS`.

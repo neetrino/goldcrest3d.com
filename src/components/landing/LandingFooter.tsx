@@ -202,7 +202,7 @@ type LandingFooterProps = {
 };
 
 type FooterSocialIcon = {
-  key: "instagram" | "linkedin" | "behance";
+  key: "instagram" | "linkedin" | "behance" | "youtube";
   href: string;
   ariaLabel: string;
   imageId: string;
@@ -240,6 +240,15 @@ function getFooterSocialIcons(links: FooterSocialLinks): FooterSocialIcon[] {
       ariaLabel: "Behance",
       imageId: LANDING_IMAGE_IDS.FOOTER_SOCIAL_3,
       imageSrc: LANDING_IMAGES.social3,
+    });
+  }
+  if (isNonEmptyLink(links.youtube)) {
+    icons.push({
+      key: "youtube",
+      href: links.youtube,
+      ariaLabel: "YouTube",
+      imageId: LANDING_IMAGE_IDS.FOOTER_SOCIAL_4,
+      imageSrc: LANDING_IMAGES.social4,
     });
   }
   return icons;
