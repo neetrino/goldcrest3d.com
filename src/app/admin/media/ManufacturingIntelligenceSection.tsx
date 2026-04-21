@@ -38,6 +38,8 @@ const MAX_ZOOM = 2.5;
 const MIN_OFFSET = -400;
 const MAX_OFFSET = 400;
 const NUDGE_STEP = 12;
+const APPROXIMATE_IMAGE_SIZE_LABEL =
+  "Approximate: ~980px x 653px (varies by specialization layout)";
 
 type TransformState = {
   zoom: number;
@@ -229,7 +231,10 @@ function ManufacturingItemEditorContent({ row, variant }: ManufacturingItemEdito
       </div>
 
       <form action={uploadAction} className="rounded-xl border border-slate-200/90 bg-slate-50/80 p-4">
-        <p className="text-sm font-semibold text-slate-900">Image</p>
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <p className="text-sm font-semibold text-slate-900">Image</p>
+          <p className="text-xs text-slate-500">{APPROXIMATE_IMAGE_SIZE_LABEL}</p>
+        </div>
         {currentFileName ? (
           <p className="mt-1 text-xs text-slate-600">
             <span className="font-medium text-slate-700">Stored file:</span>{" "}
