@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import type { LegalDocumentContent } from "@/lib/legal/legal-content.types";
 
 type LegalDocumentPageProps = {
@@ -11,15 +9,9 @@ export function LegalDocumentPage({ content }: LegalDocumentPageProps) {
     <main className="bg-[#f8f7f6] px-4 py-12 sm:px-6 lg:px-8">
       <article className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <header className="mb-8 border-b border-slate-200 pb-6">
-          <p className="text-xs font-semibold uppercase tracking-[1px] text-slate-500">
-            Legal
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
             {content.title}
           </h1>
-          <p className="mt-3 text-sm text-slate-600">
-            Last updated: {content.lastUpdated}
-          </p>
         </header>
 
         <section className="space-y-4 text-slate-700">
@@ -63,20 +55,6 @@ export function LegalDocumentPage({ content }: LegalDocumentPageProps) {
             </a>
             .
           </p>
-          <div className="mt-4 flex flex-wrap gap-4 text-sm">
-            <Link href="/" className="text-slate-700 underline underline-offset-2">
-              Back to home
-            </Link>
-            <Link
-              href="/privacy"
-              className="text-slate-700 underline underline-offset-2"
-            >
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="text-slate-700 underline underline-offset-2">
-              Terms of Service
-            </Link>
-          </div>
         </footer>
       </article>
     </main>
