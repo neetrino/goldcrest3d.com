@@ -33,7 +33,10 @@ const phoneField = z
     (value) =>
       value.length === 0 ||
       /^[\d\s()+-]+$/.test(value),
-    { message: "WhatsApp phone contains invalid characters." },
+    {
+      message:
+        "WhatsApp phone may contain only digits, spaces, plus (+), parentheses (), and hyphen (-).",
+    },
   )
   .refine(
     (value) => value.length === 0 || isValidWhatsAppPhoneNumber(value),

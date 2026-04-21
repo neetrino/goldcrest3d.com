@@ -3,7 +3,7 @@
 import { updateFooterSocialLinks, type SiteMediaActionResult } from "@/app/actions/site-media";
 import type { FooterSocialLinks } from "@/lib/footer-social/footer-social.keys";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState, type FormEvent } from "react";
 
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotFormMessages } from "./ModelingSlotFormMessages";
@@ -12,18 +12,44 @@ type FooterSocialLinksSectionProps = {
   links: FooterSocialLinks;
 };
 
+const ALLOWED_PHONE_INPUT_CHARACTERS = /^[\d\s()+-]*$/;
+const INVALID_PHONE_CHARACTERS_REGEX = /[^\d\s()+-]+/g;
+const WHATSAPP_PHONE_ALLOWED_CHARS_MESSAGE =
+  "Only digits, spaces, plus (+), parentheses (), and hyphen (-) are allowed.";
+
+function sanitizeWhatsAppPhoneInput(value: string): string {
+  return value.replace(INVALID_PHONE_CHARACTERS_REGEX, "");
+}
+
 export function FooterSocialLinksSection({ links }: FooterSocialLinksSectionProps) {
   const router = useRouter();
   const [saveState, saveAction] = useActionState<SiteMediaActionResult | null, FormData>(
     updateFooterSocialLinks,
     null,
   );
+  const [whatsappPhoneInputError, setWhatsappPhoneInputError] = useState<string | null>(null);
 
   useEffect(() => {
     if (saveState?.ok) {
       router.refresh();
     }
   }, [router, saveState?.ok]);
+
+  const handleWhatsAppPhoneInput = (event: FormEvent<HTMLInputElement>) => {
+    const inputElement = event.currentTarget;
+    const nextValue = inputElement.value;
+    const sanitizedValue = sanitizeWhatsAppPhoneInput(nextValue);
+
+    if (sanitizedValue !== nextValue) {
+      inputElement.value = sanitizedValue;
+      setWhatsappPhoneInputError(WHATSAPP_PHONE_ALLOWED_CHARS_MESSAGE);
+      return;
+    }
+
+    if (ALLOWED_PHONE_INPUT_CHARACTERS.test(nextValue)) {
+      setWhatsappPhoneInputError(null);
+    }
+  };
 
   return (
     <section className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-white to-slate-50/90 p-6 shadow-sm sm:p-8">
@@ -92,8 +118,12 @@ export function FooterSocialLinksSection({ links }: FooterSocialLinksSectionProp
             name="whatsappPhone"
             placeholder="+374 (00) 000 - 000"
             defaultValue={links.whatsappPhone ?? ""}
+            onInput={handleWhatsAppPhoneInput}
             className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
           />
+          {whatsappPhoneInputError ? (
+            <span className="text-xs text-red-600">{whatsappPhoneInputError}</span>
+          ) : null}
           <span className="text-xs text-slate-500">
             Used for Footer Direct Line / WhatsApp link.
           </span>
