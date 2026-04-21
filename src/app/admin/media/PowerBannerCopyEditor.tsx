@@ -31,6 +31,10 @@ const MAX_ZOOM = 2.5;
 const MIN_OFFSET = -400;
 const MAX_OFFSET = 400;
 const NUDGE_STEP = 12;
+const RECOMMENDED_IMAGE_SIZE: Record<PowerBannerViewport, { width: number; height: number }> = {
+  desktop: { width: 1918, height: 707 },
+  mobile: { width: 367, height: 679 },
+};
 
 type TransformState = {
   zoom: number;
@@ -73,6 +77,7 @@ export function PowerBannerCopyEditor({
   const meta = POWER_BANNER_ADMIN_LABELS[bannerKey];
   const bannerTitle = initial.title.trim() || meta.name;
   const viewportLabel = viewport === "desktop" ? "Desktop" : "Mobile";
+  const recommendedSize = RECOMMENDED_IMAGE_SIZE[viewport];
   const [transform, setTransform] = useState<TransformState>(toInitialTransform(initial));
   const draggingRef = useRef<{
     pointerId: number;
@@ -173,7 +178,12 @@ export function PowerBannerCopyEditor({
       </div>
 
       <form action={uploadAction} className="rounded-xl border border-slate-200/90 bg-slate-50/80 p-4">
-        <p className="text-sm font-semibold text-slate-900">{viewportLabel} image</p>
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <p className="text-sm font-semibold text-slate-900">{viewportLabel} image</p>
+          <p className="text-xs text-slate-500">
+            Recommended: {recommendedSize.width}px x {recommendedSize.height}px
+          </p>
+        </div>
         {currentFileName ? (
           <p className="mt-1 text-xs text-slate-600">
             <span className="font-medium text-slate-700">Stored file:</span>{" "}

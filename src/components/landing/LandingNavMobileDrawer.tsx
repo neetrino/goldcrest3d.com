@@ -9,6 +9,7 @@ export type LandingNavMobileItem = { id: LandingSectionId; label: string };
 type LandingNavMobileDrawerProps = {
   menuId: string;
   items: LandingNavMobileItem[];
+  sectionHrefPrefix: "#" | "/#";
   onClose: () => void;
 };
 
@@ -19,6 +20,7 @@ const Z_INDEX_MOBILE_NAV_DRAWER = 101;
 export function LandingNavMobileDrawer({
   menuId,
   items,
+  sectionHrefPrefix,
   onClose,
 }: LandingNavMobileDrawerProps) {
   if (typeof document === "undefined") {
@@ -49,7 +51,7 @@ export function LandingNavMobileDrawer({
           {items.map(({ id, label }) => (
             <li key={id}>
               <Link
-                href={`#${id}`}
+                href={`${sectionHrefPrefix}${id}`}
                 className="block rounded-lg px-3 py-3 text-[15px] font-medium text-[#0f172a] no-underline transition hover:bg-black/5 focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
                 onClick={onClose}
               >

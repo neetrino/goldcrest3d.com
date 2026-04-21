@@ -59,4 +59,6 @@ export const LANDING_IMAGES = {
   social2: "/images/footer/follow-social-linkedin.svg",
   /** Footer Follow — Behance (Figma 92:227), ֆայլը SVG է */
   social3: "/images/footer/follow-social-behance.svg",
+  /** Footer Follow — YouTube (same visual style as other social icons) */
+  social4: "/images/footer/follow-social-youtube.svg",
 } as const;

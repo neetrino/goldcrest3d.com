@@ -13,6 +13,7 @@ import { ManufacturingIntelligenceSection } from "./ManufacturingIntelligenceSec
 import { PowerBannerCopySection } from "./PowerBannerCopySection";
 import { FounderSectionEditor } from "./FounderSectionEditor";
 import { EngineeringProcessSection } from "./EngineeringProcessSection";
+import { FooterSocialLinksSection } from "./FooterSocialLinksSection";
 
 type MediaManagerClientProps = {
   bundle: AdminSiteMediaBundle;
@@ -29,7 +30,8 @@ type MediaManagerTabKey =
   | "finished-row-1"
   | "finished-row-2"
   | "power-banner-desktop"
-  | "power-banner-mobile";
+  | "power-banner-mobile"
+  | "footer-social-links";
 
 const MEDIA_MANAGER_TABS: ReadonlyArray<{ key: MediaManagerTabKey; label: string }> = [
   { key: "power-banner-desktop", label: "Hero Banners — Desktop" },
@@ -51,6 +53,7 @@ const MEDIA_MANAGER_TABS: ReadonlyArray<{ key: MediaManagerTabKey; label: string
   { key: "finished-row-1", label: "Finished Creations — top row" },
   { key: "finished-row-2", label: "Finished Creations — bottom row" },
   { key: "engineering-process", label: "Our Engineering Process" },
+  { key: "footer-social-links", label: "Footer Social Links" },
 ];
 
 const MEDIA_MANAGER_TAB_KEYS: readonly MediaManagerTabKey[] = MEDIA_MANAGER_TABS.map(
@@ -171,6 +174,10 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
 
       {selectedTab === "power-banner-mobile" ? (
         <PowerBannerCopySection bundle={powerBannerCopy} viewport="mobile" />
+      ) : null}
+
+      {selectedTab === "footer-social-links" ? (
+        <FooterSocialLinksSection links={bundle.footerSocialLinks} />
       ) : null}
     </div>
   );

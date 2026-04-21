@@ -56,7 +56,7 @@ export function LandingSections({
       <SectionQuote />
 
       <footer id={LANDING_SECTION_IDS.FOOTER}>
-        <LandingFooter />
+        <LandingFooter socialLinks={siteMedia.footerSocialLinks} />
       </footer>
     </>
   );

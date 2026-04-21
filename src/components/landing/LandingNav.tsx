@@ -27,8 +27,15 @@ const REQUEST_QUOTE_BTN_CLASSES =
 /** Stable DOM id — `useId()` can mismatch SSR vs hydrate when the tree shifts (e.g. after refresh). */
 const LANDING_NAV_MOBILE_MENU_DOM_ID = "landing-nav-mobile-menu";
 
-export function LandingNav() {
+type LandingNavProps = {
+  useAbsoluteSectionLinks?: boolean;
+};
+
+export function LandingNav({
+  useAbsoluteSectionLinks = false,
+}: LandingNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const sectionHrefPrefix: "#" | "/#" = useAbsoluteSectionLinks ? "/#" : "#";
 
   const closeMenu = useCallback(() => {
     setMobileOpen(false);
@@ -43,7 +50,7 @@ export function LandingNav() {
     >
       <div className="mx-auto grid h-full w-full max-w-[1612px] min-w-0 grid-cols-[1fr_auto_1fr] items-center gap-x-2 px-[length:var(--landing-nav-padding-x)] sm:gap-x-3 lg:gap-x-6">
         <Link
-          href={`#${LANDING_SECTION_IDS.HERO}`}
+          href={`${sectionHrefPrefix}${LANDING_SECTION_IDS.HERO}`}
           className="col-start-1 row-start-1 flex h-[length:var(--landing-nav-logo-height)] w-[length:var(--landing-nav-logo-width)] min-h-[length:var(--landing-nav-logo-height)] min-w-[length:var(--landing-nav-logo-width)] shrink-0 translate-x-0 items-center justify-self-start sm:translate-x-0 xl:translate-x-88"
           aria-label="Goldcrest 3D — Home"
         >
@@ -64,7 +71,7 @@ export function LandingNav() {
           {NAV_ITEMS.map(({ id, label }) => (
             <li key={id} className="flex shrink-0 items-center">
               <Link
-                href={`#${id}`}
+                href={`${sectionHrefPrefix}${id}`}
                 className="whitespace-nowrap text-[13px] font-medium leading-[18px] text-[#0f172a] no-underline transition hover:opacity-80 focus-visible:outline focus-visible:ring-2 focus-visible:ring-[var(--foreground)]/30"
               >
                 {label}
@@ -85,7 +92,7 @@ export function LandingNav() {
           </button>
           <Link
             id="landing-nav-request-quote"
-            href={`#${LANDING_SECTION_IDS.QUOTE}`}
+            href={`${sectionHrefPrefix}${LANDING_SECTION_IDS.QUOTE}`}
             className={REQUEST_QUOTE_BTN_CLASSES}
             aria-label="Request a Quote"
           >
@@ -97,6 +104,7 @@ export function LandingNav() {
         <LandingNavMobileDrawer
           menuId={LANDING_NAV_MOBILE_MENU_DOM_ID}
           items={NAV_ITEMS}
+          sectionHrefPrefix={sectionHrefPrefix}
           onClose={closeMenu}
         />
       ) : null}

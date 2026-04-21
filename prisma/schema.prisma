@@ -182,3 +182,10 @@ model EngineeringProcessCopy {
   description String   @db.Text
   updatedAt   DateTime @updatedAt
 }
+
+/// Editable footer social links for the "Follow" block.
+model FooterSocialLink {
+  key       String   @id
+  url       String?  @db.Text
+  updatedAt DateTime @updatedAt
+}

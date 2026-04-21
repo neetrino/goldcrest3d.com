@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/auth";
 import { MANUFACTURING_SPECIALIZATION_ITEMS } from "@/constants/manufacturing-specialization";
 import { prisma } from "@/lib/db";
+import { FOOTER_SOCIAL_KEYS } from "@/lib/footer-social/footer-social.keys";
+import { footerSocialLink } from "@/lib/footer-social/footer-social-prisma";
 import { FOUNDER_SECTION_COPY_KEYS } from "@/lib/founder-section/founder-section-copy.keys";
 import { engineeringProcessCopy } from "@/lib/engineering-process/engineering-process-copy-prisma";
 import {
@@ -59,6 +61,7 @@ import { founderSectionFormSchema } from "@/lib/validations/founderSection";
 import { modelingSpecializationCopyFormSchema } from "@/lib/validations/modelingSpecializationCopy";
 import { powerBannerTransformFormSchema } from "@/lib/validations/powerBannerCopy";
 import { engineeringProcessStepFormSchema } from "@/lib/validations/engineeringProcessStep";
+import { footerSocialLinksFormSchema } from "@/lib/validations/footerSocialLinks";
 
 const MODELING_SLOT_SET = new Set<string>(Object.values(MODELING_SLOT_KEYS));
 const MANUFACTURING_SLOT_SET = new Set<string>(
@@ -296,6 +299,92 @@ export async function updateEngineeringProcessStep(
   } catch (error) {
     logger.error("updateEngineeringProcessStep", error);
     return { ok: false, error: "Could not save process step content." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function updateFooterSocialLinks(
+  _prev: SiteMediaActionResult | null,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsed = footerSocialLinksFormSchema.safeParse({
+    instagram: formData.get("instagram"),
+    linkedin: formData.get("linkedin"),
+    behance: formData.get("behance"),
+    youtube: formData.get("youtube"),
+    whatsappPhone: formData.get("whatsappPhone"),
+  });
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    return {
+      ok: false,
+      error:
+        fieldErrors.instagram?.[0] ??
+        fieldErrors.linkedin?.[0] ??
+        fieldErrors.behance?.[0] ??
+        fieldErrors.youtube?.[0] ??
+        fieldErrors.whatsappPhone?.[0] ??
+        "Invalid social links.",
+    };
+  }
+
+  const normalized = {
+    instagram: parsed.data.instagram.length > 0 ? parsed.data.instagram : null,
+    linkedin: parsed.data.linkedin.length > 0 ? parsed.data.linkedin : null,
+    behance: parsed.data.behance.length > 0 ? parsed.data.behance : null,
+    youtube: parsed.data.youtube.length > 0 ? parsed.data.youtube : null,
+    whatsappPhone: parsed.data.whatsappPhone.length > 0 ? parsed.data.whatsappPhone : null,
+  };
+
+  try {
+    await footerSocialLink.upsert({
+      where: { key: FOOTER_SOCIAL_KEYS.INSTAGRAM },
+      create: {
+        key: FOOTER_SOCIAL_KEYS.INSTAGRAM,
+        url: normalized.instagram,
+      },
+      update: { url: normalized.instagram },
+    });
+    await footerSocialLink.upsert({
+      where: { key: FOOTER_SOCIAL_KEYS.LINKEDIN },
+      create: {
+        key: FOOTER_SOCIAL_KEYS.LINKEDIN,
+        url: normalized.linkedin,
+      },
+      update: { url: normalized.linkedin },
+    });
+    await footerSocialLink.upsert({
+      where: { key: FOOTER_SOCIAL_KEYS.BEHANCE },
+      create: {
+        key: FOOTER_SOCIAL_KEYS.BEHANCE,
+        url: normalized.behance,
+      },
+      update: { url: normalized.behance },
+    });
+    await footerSocialLink.upsert({
+      where: { key: FOOTER_SOCIAL_KEYS.YOUTUBE },
+      create: {
+        key: FOOTER_SOCIAL_KEYS.YOUTUBE,
+        url: normalized.youtube,
+      },
+      update: { url: normalized.youtube },
+    });
+    await footerSocialLink.upsert({
+      where: { key: FOOTER_SOCIAL_KEYS.WHATSAPP_PHONE },
+      create: {
+        key: FOOTER_SOCIAL_KEYS.WHATSAPP_PHONE,
+        url: normalized.whatsappPhone,
+      },
+      update: { url: normalized.whatsappPhone },
+    });
+  } catch (error) {
+    logger.error("updateFooterSocialLinks", error);
+    return { ok: false, error: "Could not save social links." };
   }
 
   revalidateSite();

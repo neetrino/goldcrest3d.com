@@ -2,6 +2,8 @@ import type { CSSProperties } from "react";
 
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
+import type { FooterSocialLinks } from "@/lib/footer-social/footer-social.keys";
+import { toWhatsAppChatLink } from "@/lib/footer-social/whatsapp";
 import Link from "next/link";
 
 /** Figma 92:248 — ներքին նկարի տոկոսներ (ֆրեյմը՝ FOOTER_LOGO_FRAME_CLASS) */
@@ -196,7 +198,69 @@ function FooterEmailIcon() {
   );
 }
 
-export function LandingFooter() {
+type LandingFooterProps = {
+  socialLinks: FooterSocialLinks;
+};
+
+type FooterSocialIcon = {
+  key: "instagram" | "linkedin" | "behance" | "youtube";
+  href: string;
+  ariaLabel: string;
+  imageId: string;
+  imageSrc: string;
+};
+
+function isNonEmptyLink(value: string | null): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function getFooterSocialIcons(links: FooterSocialLinks): FooterSocialIcon[] {
+  const icons: FooterSocialIcon[] = [];
+  if (isNonEmptyLink(links.instagram)) {
+    icons.push({
+      key: "instagram",
+      href: links.instagram,
+      ariaLabel: "Instagram",
+      imageId: LANDING_IMAGE_IDS.FOOTER_SOCIAL_1,
+      imageSrc: LANDING_IMAGES.social1,
+    });
+  }
+  if (isNonEmptyLink(links.linkedin)) {
+    icons.push({
+      key: "linkedin",
+      href: links.linkedin,
+      ariaLabel: "LinkedIn",
+      imageId: LANDING_IMAGE_IDS.FOOTER_SOCIAL_2,
+      imageSrc: LANDING_IMAGES.social2,
+    });
+  }
+  if (isNonEmptyLink(links.behance)) {
+    icons.push({
+      key: "behance",
+      href: links.behance,
+      ariaLabel: "Behance",
+      imageId: LANDING_IMAGE_IDS.FOOTER_SOCIAL_3,
+      imageSrc: LANDING_IMAGES.social3,
+    });
+  }
+  if (isNonEmptyLink(links.youtube)) {
+    icons.push({
+      key: "youtube",
+      href: links.youtube,
+      ariaLabel: "YouTube",
+      imageId: LANDING_IMAGE_IDS.FOOTER_SOCIAL_4,
+      imageSrc: LANDING_IMAGES.social4,
+    });
+  }
+  return icons;
+}
+
+export function LandingFooter({ socialLinks }: LandingFooterProps) {
+  const socialIcons = getFooterSocialIcons(socialLinks);
+  const whatsappPhone = socialLinks.whatsappPhone?.trim() ?? "";
+  const whatsappLink = toWhatsAppChatLink(whatsappPhone);
+  const hasWhatsappPhone = whatsappPhone.length > 0 && whatsappLink !== null;
+
   return (
     <footer
       className={`-mt-8 overflow-x-clip border-t border-[#e2e8f0] bg-[#f8f7f6] ${FOOTER_OUTER_PADDING_CLASS}`}
@@ -256,17 +320,18 @@ export function LandingFooter() {
                     Direct Line / WhatsApp
                   </p>
                 </div>
-                <p className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-none`}>
-                  <a href="tel:+37441141110">+374 (41) 141 - 110</a>
-                  <span className="text-[#94A3B8]"></span>
-                  <a
-                    href="https://wa.me/37441141110"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-colors hover:text-[var(--foreground)]"
-                  >
-                  </a>
-                </p>
+                {hasWhatsappPhone ? (
+                  <p className={`${FOOTER_CONTACT_LINE_CLASS} md:max-w-none`}>
+                    <a
+                      href={whatsappLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-[var(--foreground)]"
+                    >
+                      {whatsappPhone}
+                    </a>
+                  </p>
+                ) : null}
               </div>
               <div className={FOOTER_CONTACT_LOCATION_BLOCK_CLASS}>
                 <div className="flex flex-col gap-1">
@@ -291,59 +356,30 @@ export function LandingFooter() {
           >
             <div className={FOOTER_FOLLOW_HEADING_AND_SOCIAL_NUDGE_RIGHT_CLASS}>
               <h3 className={FOOTER_FOLLOW_HEADING_CLASS}>Follow</h3>
-              <div className={FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS}>
-                <a
-                  href="https://www.instagram.com/goldcrest3d/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
-                  aria-label="Instagram"
-                  data-landing-image={LANDING_IMAGE_IDS.FOOTER_SOCIAL_1}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element -- Follow icons are SVG from Figma */}
-                  <img
-                    src={LANDING_IMAGES.social1}
-                    alt=""
-                    width={48}
-                    height={48}
-                    className="rounded-full"
-                  />
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
-                  aria-label="LinkedIn"
-                  data-landing-image={LANDING_IMAGE_IDS.FOOTER_SOCIAL_2}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={LANDING_IMAGES.social2}
-                    alt=""
-                    width={48}
-                    height={48}
-                    className="rounded-full"
-                  />
-                </a>
-                <a
-                  href="https://www.behance.net"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
-                  aria-label="Behance"
-                  data-landing-image={LANDING_IMAGE_IDS.FOOTER_SOCIAL_3}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={LANDING_IMAGES.social3}
-                    alt=""
-                    width={48}
-                    height={48}
-                    className="rounded-full"
-                  />
-                </a>
-              </div>
+              {socialIcons.length > 0 ? (
+                <div className={FOOTER_FOLLOW_SOCIAL_ICONS_ROW_CLASS}>
+                  {socialIcons.map((icon) => (
+                    <a
+                      key={icon.key}
+                      href={icon.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-12 w-12 items-center justify-center rounded-full bg-white/5 transition hover:opacity-80"
+                      aria-label={icon.ariaLabel}
+                      data-landing-image={icon.imageId}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element -- Follow icons are SVG from Figma */}
+                      <img
+                        src={icon.imageSrc}
+                        alt=""
+                        width={48}
+                        height={48}
+                        className="rounded-full"
+                      />
+                    </a>
+                  ))}
+                </div>
+              ) : null}
             </div>
             <div className={FOOTER_FOLLOW_MAP_OUTER_WRAPPER_CLASS}>
               <a

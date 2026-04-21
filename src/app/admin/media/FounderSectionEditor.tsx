@@ -27,6 +27,10 @@ const MAX_ZOOM = 2.5;
 const MIN_OFFSET = -400;
 const MAX_OFFSET = 400;
 const NUDGE_STEP = 12;
+const FOUNDER_APPROXIMATE_IMAGE_SIZE_LABEL: Record<FounderSectionVariant, string> = {
+  desktop: "Approximate: ~493px wide x ~560-680px tall (breakpoint dependent)",
+  mobile: "Approximate: ~343px x ~432px (full-width on mobile)",
+};
 
 type TransformState = {
   zoom: number;
@@ -80,6 +84,7 @@ export function FounderSectionEditor({ row, variant }: FounderSectionEditorProps
 function FounderSectionEditorContent({ row, variant }: FounderSectionEditorProps) {
   const router = useRouter();
   const meta = SECTION_META[variant];
+  const approximateSizeLabel = FOUNDER_APPROXIMATE_IMAGE_SIZE_LABEL[variant];
   const [transform, setTransform] = useState<TransformState>(toInitialTransform(row));
   const draggingRef = useRef<{
     pointerId: number;
@@ -169,7 +174,10 @@ function FounderSectionEditorContent({ row, variant }: FounderSectionEditorProps
       </div>
 
       <form action={uploadAction} className="mt-6 rounded-xl border border-slate-200/90 bg-slate-50/80 p-4">
-        <p className="text-sm font-semibold text-slate-900">Image</p>
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <p className="text-sm font-semibold text-slate-900">Image</p>
+          <p className="text-xs text-slate-500">{approximateSizeLabel}</p>
+        </div>
         {currentFileName ? (
           <p className="mt-1 text-xs text-slate-600">
             <span className="font-medium text-slate-700">Stored file:</span>{" "}
