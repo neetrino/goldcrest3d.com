@@ -129,7 +129,8 @@ section[id] {
 }
 
 /* Hero slide 1 — modeling title: mobile Figma 30/30 +1px nudge; md+ unchanged */
-#hero-modeling-text-group > h1 {
+/* Descendant h1 (not child combinator): title may sit inside offset wrappers for mobile admin nudges */
+#hero-modeling-text-group h1 {
   align-self: stretch;
   color: #fff;
   text-align: center;
@@ -141,20 +142,21 @@ section[id] {
 }
 
 @media (min-width: 768px) {
-  #hero-modeling-text-group > h1 {
+  #hero-modeling-text-group h1 {
     font-size: 52px;
     line-height: 72px;
   }
 }
 
 /* Jewelry Rendering title — mobile: Inter; md+: SF Compact */
-.power-banners-section2-text-cluster > h1 {
+/* Descendant h1: stack split for mobile-only vs desktop-only titles */
+.power-banners-section2-text-cluster h1 {
   color: #fff;
   text-align: left;
 }
 
 @media (max-width: 767px) {
-  .power-banners-section2-text-cluster > h1 {
+  .power-banners-section2-text-cluster h1 {
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     font-size: 30px;
     font-style: normal;
@@ -166,7 +168,7 @@ section[id] {
 }
 
 @media (min-width: 768px) {
-  .power-banners-section2-text-cluster > h1 {
+  .power-banners-section2-text-cluster h1 {
     font-family: "SF Compact", -apple-system, system-ui, sans-serif;
     font-size: 52px;
     font-style: normal;

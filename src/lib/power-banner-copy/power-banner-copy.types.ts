@@ -7,6 +7,12 @@ import type { ManufacturingImageTransform } from "@/lib/manufacturing-intelligen
 export type PowerBannerCopyEntry = {
   title: string;
   body: string;
+  /** Hero slide: vertical nudge (px) for the title for this viewport row. */
+  titleOffsetY: number;
+  /** Hero slide: vertical nudge (px) for the description for this viewport row. */
+  bodyOffsetY: number;
+  /** Hero slide: vertical nudge (px) for Get a Quote for this viewport row. */
+  ctaOffsetY: number;
   imageAlt: string;
   imageSrc: string;
   imageObjectKey: string | null;

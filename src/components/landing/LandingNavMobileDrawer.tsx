@@ -38,7 +38,7 @@ export function LandingNavMobileDrawer({
       />
       <div
         id={menuId}
-        className="fixed inset-x-0 border-b border-black/10 bg-white/98 py-4 shadow-md lg:hidden"
+        className="landing-nav-horizontal-padding fixed inset-x-0 border-b border-black/10 bg-white/98 py-4 shadow-md lg:hidden"
         style={{
           zIndex: Z_INDEX_MOBILE_NAV_DRAWER,
           top: "var(--landing-nav-height)",
@@ -47,7 +47,7 @@ export function LandingNavMobileDrawer({
         aria-modal={true}
         aria-label="Site sections"
       >
-        <ul className="mx-auto flex max-w-lg list-none flex-col gap-1 px-[length:var(--landing-nav-padding-x)]">
+        <ul className="mx-auto flex max-w-lg list-none flex-col gap-1">
           {items.map(({ id, label }) => (
             <li key={id}>
               <Link

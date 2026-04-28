@@ -125,6 +125,12 @@ model PowerBannerCopy {
   viewport  String
   title     String   @db.Text
   body      String   @db.Text
+  /// Per-viewport hero: vertical offset (px) for the title line(s).
+  titleOffsetY Int @default(0)
+  /// Per-viewport hero: vertical offset (px) for the description line(s).
+  bodyOffsetY  Int @default(0)
+  /// Per-viewport hero: vertical offset (px) for the Get a Quote CTA.
+  ctaOffsetY  Int    @default(0)
   updatedAt DateTime @updatedAt
 
   @@id([bannerKey, viewport])

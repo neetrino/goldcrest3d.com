@@ -48,14 +48,15 @@ export function RenderingHeroSlideBackgrounds({
         </div>
       </div>
       <div
-        className="pointer-events-none absolute left-0 top-0 z-0 hidden h-[var(--section2-bg-layout-height)] w-full overflow-hidden md:block"
+        className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden md:block"
         aria-hidden
       >
         <div
-          className="h-full w-full origin-left"
+          className="h-full w-full"
           style={
             {
               transform: getManufacturingImageTransformCssValue(desktopTransform),
+              transformOrigin: "center center",
             } as CSSProperties
           }
         >
@@ -64,7 +65,7 @@ export function RenderingHeroSlideBackgrounds({
             alt=""
             fill
             sizes={HERO_DESKTOP_IMAGE_SIZES}
-            className="object-cover object-left"
+            className="object-cover object-center"
           />
         </div>
       </div>

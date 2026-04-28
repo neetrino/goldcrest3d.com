@@ -41,8 +41,8 @@
    */
   --manufacturing-intelligence-photo-scale-lg: 1.26;
   /**
-   * Printing / Mechanical Stress / Tolerance detail images — tablet viewports only (see globals-manufacturing.css).
-   * Applied at 768–1023 and 1024–1366; not on mobile or wide desktop.
+   * Printing / Mechanical Stress / Tolerance detail images — tablet band only (see globals-manufacturing.css).
+   * Not applied on desktop lg+ Manufacturing Intelligence column (768–1023 only for those rules).
    */
   --manufacturing-intelligence-detail-photo-tablet-scale: 1.17;
   /** 3D Printing Strategy detail — նկարը մի քիչ ցածր frame-ի կենտրոնից */
@@ -190,4 +190,13 @@
     --landing-nav-logo-slot: 90px;
     --landing-nav-logo-offset-x: 300px;
   }
+}
+
+/**
+ * Landing nav — horizontal inset respects CSS vars and device safe areas (notched phones).
+ * Keeps logo / CTA inside the usable viewport without changing spacing on typical desktop.
+ */
+.landing-nav-horizontal-padding {
+  padding-left: max(var(--landing-nav-padding-x), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--landing-nav-padding-x), env(safe-area-inset-right, 0px));
 }

@@ -244,16 +244,29 @@
     padding-top: var(--manufacturing-intelligence-image-col-padding-top-lg);
   }
 
-  .manufacturing-intelligence-image-frame {
+  /**
+   * Desktop-only frame: shrinks with the column; detail images use --desktop-fit (contain + center).
+   */
+  .manufacturing-intelligence-image-frame--desktop {
     aspect-ratio: 6 / 5;
+    flex-shrink: 1;
     height: 610px;
     max-height: var(--manufacturing-intelligence-image-frame-max-h-lg);
     max-width: 100%;
-    width: 732px;
+    min-width: 0;
+    width: min(732px, 100%);
     transform: translate(
       var(--manufacturing-intelligence-image-nudge-x-lg),
       var(--manufacturing-intelligence-image-nudge-y-lg)
     );
+  }
+
+  /**
+   * Slot layers center the asset vertically and horizontally so scale-down does not drift upward.
+   */
+  .manufacturing-intelligence-image-frame--desktop .manufacturing-intelligence-detail-slot-layer--desktop {
+    align-items: center;
+    justify-content: center;
   }
 
   .manufacturing-intelligence-photo {
@@ -323,84 +336,21 @@
     transform-origin: left center;
     width: var(--manufacturing-wall-thickness-detail-display-width-lg);
   }
-}
 
-/**
- * Two-column Manufacturing Intelligence starts at 1024px (lg). The lg block above uses a
- * two-class selector and overrode the 768–1023 nudge — so at “tablet” widths with side-by-side
- * layout there was no visible shift. Re-apply the same horizontal offset here; 1367px+ stays on
- * the base lg transform only.
- */
-@media (min-width: 1024px) and (max-width: 1366px) {
-  .manufacturing-intelligence-photo-detail--printing-strategy-resin {
-    transform: translateY(var(--manufacturing-printing-strategy-resin-detail-nudge-y))
-      scale(var(--manufacturing-intelligence-detail-photo-tablet-scale));
-    transform-origin: center center;
-  }
-
-  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--mechanical-stress-load-distribution {
-    transform: translateX(
-      calc(
-        var(--manufacturing-mechanical-stress-detail-nudge-x-lg) +
-          var(--manufacturing-mechanical-stress-detail-nudge-x-tablet-offset)
-      )
-    )
-      scale(
-        calc(
-          var(--manufacturing-mechanical-stress-detail-scale-lg) *
-            var(--manufacturing-intelligence-detail-photo-tablet-scale)
-        )
-      );
-    transform-origin: left center;
-    width: var(--manufacturing-mechanical-stress-detail-display-width-lg);
-  }
-
-  .manufacturing-intelligence-photo-detail:not([class*="manufacturing-intelligence-photo-detail--"]) {
-    transform: translateX(var(--manufacturing-tolerance-control-detail-nudge-x-tablet-offset))
-      scale(var(--manufacturing-intelligence-detail-photo-tablet-scale));
-    transform-origin: left center;
-  }
-
-  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--casting-compensation-metal-flow {
-    margin-inline-start: var(--manufacturing-casting-compensation-detail-nudge-x-lg-offset);
-    transform: translate(
-      calc(
-        var(--manufacturing-casting-compensation-detail-nudge-x) +
-          var(--manufacturing-casting-compensation-detail-nudge-x-tablet-offset)
-      ),
-      calc(
-        var(--manufacturing-casting-compensation-detail-nudge-y) +
-          var(--manufacturing-casting-compensation-detail-nudge-y-lg-offset)
-      )
-    );
-    width: var(--manufacturing-casting-compensation-detail-display-width-lg);
-  }
-
-  .manufacturing-intelligence-photo-detail--stone-seat-geometry-setting {
-    transform: translate(
-      calc(
-        var(--manufacturing-stone-seat-geometry-detail-nudge-x) +
-          var(--manufacturing-stone-seat-geometry-detail-nudge-x-lg-offset) +
-          var(--manufacturing-stone-seat-geometry-detail-nudge-x-tablet-offset)
-      ),
-      var(--manufacturing-stone-seat-geometry-detail-nudge-y)
-    ) scale(var(--manufacturing-stone-seat-geometry-detail-scale-lg));
-    transform-origin: left center;
-  }
-
-  .manufacturing-intelligence-photo-detail.manufacturing-intelligence-photo-detail--wall-thickness-engineering {
-    transform: translate(
-      calc(
-        var(--manufacturing-wall-thickness-detail-nudge-x) +
-          var(--manufacturing-wall-thickness-detail-nudge-x-lg-offset) +
-          var(--manufacturing-wall-thickness-detail-nudge-x-tablet-offset)
-      ),
-      calc(
-        var(--manufacturing-wall-thickness-detail-nudge-y) +
-          var(--manufacturing-wall-thickness-detail-nudge-y-lg-offset)
-      )
-    ) scale(var(--manufacturing-wall-thickness-detail-scale-lg));
-    transform-origin: left center;
-    width: var(--manufacturing-wall-thickness-detail-display-width-lg);
+  /**
+   * Desktop column: scale detail images to fit the frame (no horizontal clip); flex keeps them
+   * vertically and horizontally centered so they do not “jump” upward when the viewport narrows.
+   * Per-image Figma nudges are disabled here — admin pan/zoom remains on the inner transform wrapper.
+   */
+  .manufacturing-intelligence-image-frame--desktop .manufacturing-intelligence-photo-detail--desktop-fit {
+    aspect-ratio: unset !important;
+    height: auto !important;
+    margin-inline-start: 0 !important;
+    max-height: 100% !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    transform: none !important;
+    width: auto !important;
   }
 }

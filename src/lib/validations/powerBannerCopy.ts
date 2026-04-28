@@ -4,6 +4,10 @@ import {
   POWER_BANNER_KEY_SET,
   POWER_BANNER_VIEWPORT_SET,
 } from "@/lib/power-banner-copy/power-banner-keys";
+import {
+  POWER_BANNER_MOBILE_TEXT_CTA_OFFSET_MAX,
+  POWER_BANNER_MOBILE_TEXT_CTA_OFFSET_MIN,
+} from "@/lib/power-banner-copy/power-banner-copy-offsets.constants";
 
 const MAX_TITLE_LEN = 280;
 const MAX_BODY_LEN = 4000;
@@ -15,6 +19,12 @@ function normalizeMultilineValue(value: string): string {
 
 const numberField = (label: string) =>
   z.coerce.number().refine((value) => Number.isFinite(value), `${label} must be a number.`);
+
+const optionalPxOffset = z.preprocess((raw) => {
+  if (raw === "" || raw === null || raw === undefined) return 0;
+  const n = Number(raw);
+  return Number.isFinite(n) ? Math.round(n) : 0;
+}, z.number().int().min(POWER_BANNER_MOBILE_TEXT_CTA_OFFSET_MIN).max(POWER_BANNER_MOBILE_TEXT_CTA_OFFSET_MAX));
 
 export const powerBannerCopyFormSchema = z.object({
   bannerKey: z
@@ -31,6 +41,9 @@ export const powerBannerCopyFormSchema = z.object({
     .string()
     .max(MAX_BODY_LEN, `Description must be at most ${MAX_BODY_LEN} characters`)
     .transform((s) => normalizeMultilineValue(s).trim()),
+  titleOffsetY: optionalPxOffset,
+  bodyOffsetY: optionalPxOffset,
+  ctaOffsetY: optionalPxOffset,
 });
 
 export const powerBannerTransformFormSchema = z.object({

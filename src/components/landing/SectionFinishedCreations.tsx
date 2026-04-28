@@ -3,7 +3,14 @@
 import { LANDING_SECTION_IDS } from "@/constants";
 import type { FinishedGalleryItem } from "@/lib/site-media/landing-defaults";
 import Image from "next/image";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useFinishedCreationsCarouselMetrics } from "@/components/landing/useFinishedCreationsCarouselMetrics";
 
 /** Carousel: small row (row 2) â€” design aspect; slide width is fluid from container. */
@@ -60,9 +67,12 @@ const MOBILE_ROW2_SIDE_BLEED_PX = 68;
  */
 const MOBILE_GALLERY_NUDGE_RIGHT_PX = 0;
 
-/** Mobile row2 only: sliver of the previous slide on the left edge when `activePage > 0`. */
-const MOBILE_CAROUSEL_EDGE_PEEK_PX = 220;
-  
+/**
+ * Until the row2 viewport is measured, keep a non-zero step (same idea as row1 fallback)
+ * so both strips animate together on first swipe / autoplay.
+ */
+const MOBILE_ROW2_FALLBACK_CELL_WIDTH_PX = 120;
+
 /** Layout helpers only; width/margin set inline with `MOBILE_ROW2_SIDE_BLEED_PX`. */
 const MOBILE_ROW2_FULL_BLEED_CLASS = "min-w-0 max-w-none shrink-0";
 
@@ -103,30 +113,136 @@ export function SectionFinishedCreations({
   const TOTAL_PAGES = Math.max(1, ROW1_IMAGES.length);
   const ROW2_IMAGE_COUNT = Math.max(1, ROW2_IMAGES.length);
 
-  const [activePage, setActivePage] = useState(0);
+  /** Logical page for dots, autoplay, aria (0 … TOTAL_PAGES − 1). */
+  const [page, setPage] = useState(0);
+  /**
+   * Bumped on manual navigation only so the autoplay interval is recreated and the
+   * full 5s countdown restarts (avoids immediate auto-advance after swipe/buttons/dots).
+   */
+  const [autoplayResetEpoch, setAutoplayResetEpoch] = useState(0);
+  /**
+   * Horizontal strip index into doubled strips (0 … TOTAL_PAGES inclusive).
+   * Index TOTAL_PAGES is the duplicate of 0 for seamless wrap. Drives both rows.
+   */
+  const [stripIndexRow1, setStripIndexRow1] = useState(0);
+  /** When false, transform updates apply without CSS transition (instant reposition). */
+  const [carouselTransitionEnabled, setCarouselTransitionEnabled] = useState(true);
+
   const mobileSwipeStartRef = useRef<{ x: number; y: number } | null>(null);
+  const stripIndexRow1Ref = useRef(0);
+  const forwardWrapAnimatingRef = useRef(false);
   const mobileRow2ViewportRef = useRef<HTMLDivElement>(null);
   const [mobileRow2CellWidthPx, setMobileRow2CellWidthPx] = useState(0);
 
-  const goPrev = useCallback(() => {
-    setActivePage((p) => (p <= 0 ? TOTAL_PAGES - 1 : p - 1));
-  }, [TOTAL_PAGES]);
+  useEffect(() => {
+    stripIndexRow1Ref.current = stripIndexRow1;
+  }, [stripIndexRow1]);
 
-  const goNext = useCallback(() => {
-    setActivePage((p) => (p >= TOTAL_PAGES - 1 ? 0 : p + 1));
-  }, [TOTAL_PAGES]);
+  const flushTransitionToggle = useCallback(() => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setCarouselTransitionEnabled(true);
+      });
+    });
+  }, []);
+
+  const runWithoutCarouselTransition = useCallback(
+    (fn: () => void) => {
+      setCarouselTransitionEnabled(false);
+      fn();
+      flushTransitionToggle();
+    },
+    [flushTransitionToggle],
+  );
+
+  const finishForwardWrapRow1 = useCallback(() => {
+    forwardWrapAnimatingRef.current = false;
+    runWithoutCarouselTransition(() => {
+      setStripIndexRow1(0);
+      setPage(0);
+    });
+  }, [runWithoutCarouselTransition]);
+
+  const goPrev = useCallback((source: "autoplay" | "manual" = "manual") => {
+    if (TOTAL_PAGES <= 1) {
+      return;
+    }
+    if (source === "manual") {
+      setAutoplayResetEpoch((e) => e + 1);
+    }
+    if (page <= 0) {
+      const lastPage = TOTAL_PAGES - 1;
+      setCarouselTransitionEnabled(false);
+      setStripIndexRow1(TOTAL_PAGES);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setCarouselTransitionEnabled(true);
+          setPage(lastPage);
+          setStripIndexRow1(lastPage);
+        });
+      });
+      return;
+    }
+    const prevPage = page - 1;
+    setPage(prevPage);
+    setStripIndexRow1(prevPage);
+  }, [TOTAL_PAGES, page]);
+
+  const goNext = useCallback((source: "autoplay" | "manual" = "manual") => {
+    if (TOTAL_PAGES <= 1) {
+      return;
+    }
+    if (forwardWrapAnimatingRef.current) {
+      return;
+    }
+    if (source === "manual") {
+      setAutoplayResetEpoch((e) => e + 1);
+    }
+    if (page >= TOTAL_PAGES - 1) {
+      forwardWrapAnimatingRef.current = true;
+      setStripIndexRow1(TOTAL_PAGES);
+      return;
+    }
+    const nextPage = page + 1;
+    setPage(nextPage);
+    setStripIndexRow1(nextPage);
+  }, [TOTAL_PAGES, page]);
 
   useEffect(() => {
     if (TOTAL_PAGES <= 1) {
       return;
     }
     const intervalId = window.setInterval(() => {
-      setActivePage((page) => (page >= TOTAL_PAGES - 1 ? 0 : page + 1));
+      goNext("autoplay");
     }, FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS);
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [TOTAL_PAGES]);
+  }, [TOTAL_PAGES, goNext, autoplayResetEpoch]);
+
+  const onCarouselTransitionEnd = useCallback(
+    (event: React.TransitionEvent<HTMLDivElement>) => {
+      event.stopPropagation();
+      if (event.target !== event.currentTarget) {
+        return;
+      }
+      if (event.propertyName !== "transform") {
+        return;
+      }
+      if (stripIndexRow1Ref.current !== TOTAL_PAGES) {
+        return;
+      }
+      finishForwardWrapRow1();
+    },
+    [TOTAL_PAGES, finishForwardWrapRow1],
+  );
+
+  const carouselMotionTransitionMs = carouselTransitionEnabled
+    ? MOBILE_CAROUSEL_TRANSITION_MS
+    : 0;
+  const carouselDesktopTransitionMs = carouselTransitionEnabled
+    ? DESKTOP_CAROUSEL_TRANSITION_MS
+    : 0;
 
   useLayoutEffect(() => {
     const el = mobileRow2ViewportRef.current;
@@ -197,7 +313,13 @@ export function SectionFinishedCreations({
 
   /** Images rendered once; sliding via transform. Duplicated for seamless loop. */
   const row1StripImages = [...ROW1_IMAGES, ...ROW1_IMAGES];
-  const row2StripImages = [...ROW2_IMAGES, ...ROW2_IMAGES];
+  /** One carousel step per page (same length as row1); cycle row2 assets when counts differ. */
+  const row2StripImages = useMemo(() => {
+    const segment = Array.from({ length: TOTAL_PAGES }, (_, i) => {
+      return ROW2_IMAGES[i % ROW2_IMAGE_COUNT];
+    });
+    return [...segment, ...segment];
+  }, [TOTAL_PAGES, ROW2_IMAGES, ROW2_IMAGE_COUNT]);
 
   const mobileRow1OverflowRef = useRef<HTMLDivElement>(null);
   const [mobileRow1SlideWidthPx, setMobileRow1SlideWidthPx] = useState(0);
@@ -237,29 +359,27 @@ export function SectionFinishedCreations({
     DESKTOP_ROW2_PEEK_FULL_CENTER_SLIDES,
   );
 
-  const mobileRow2StepPx =
-    mobileRow2CellWidthPx > 0 ? mobileRow2CellWidthPx + MOBILE_GAP_PX : 0;
-  const mobileRow2BaseTransformPx =
-    mobileRow2StepPx > 0
-      ? (activePage % ROW2_IMAGE_COUNT) * mobileRow2StepPx
-      : 0;
-  const mobileRow2PeekAdjustPx =
-    activePage > 0 && mobileRow2StepPx > 0 ? MOBILE_CAROUSEL_EDGE_PEEK_PX : 0;
-  const mobileRow2TransformPx = mobileRow2BaseTransformPx - mobileRow2PeekAdjustPx;
+  const mobileRow2CellWidthEffective =
+    mobileRow2CellWidthPx > 0
+      ? mobileRow2CellWidthPx
+      : MOBILE_ROW2_FALLBACK_CELL_WIDTH_PX;
+  const mobileRow2StepPx = mobileRow2CellWidthEffective + MOBILE_GAP_PX;
+  /** Same index × step as row1 — no edge peek offset so both rows move in lockstep. */
+  const mobileRow2TransformPx = stripIndexRow1 * mobileRow2StepPx;
 
   const desktopRow1TransformPx = Math.round(
     desktopMetrics.row1PeekOffsetPx +
-      (activePage % TOTAL_PAGES) * desktopMetrics.row1TranslatePx,
+      stripIndexRow1 * desktopMetrics.row1TranslatePx,
   );
   const desktopRow2TransformPx = Math.round(
     desktopMetrics.row2PeekOffsetPx +
-      (activePage % ROW2_IMAGE_COUNT) * desktopMetrics.row2TranslatePx,
+      stripIndexRow1 * desktopMetrics.row2TranslatePx,
   );
   const mobileTopRowBleedPx = MOBILE_TOP_ROW_BLEED_PX;
   const mobileRow1CardWidthPx =
     mobileRow1SlideWidthPx > 0 ? mobileRow1SlideWidthPx : MOBILE_ROW1_ITEM_WIDTH_PX;
   const mobileRow1SlideStepPx = mobileRow1CardWidthPx + MOBILE_GAP_PX;
-  const mobileRow1TranslatePx = -activePage * mobileRow1SlideStepPx;
+  const mobileRow1TranslatePx = -stripIndexRow1 * mobileRow1SlideStepPx;
 
   return (
     <section
@@ -299,10 +419,11 @@ export function SectionFinishedCreations({
                 <div
                   className="flex shrink-0 flex-row gap-1 transition-transform motion-reduce:duration-0"
                   style={{
-                    transitionDuration: `${MOBILE_CAROUSEL_TRANSITION_MS}ms`,
+                    transitionDuration: `${carouselMotionTransitionMs}ms`,
                     transitionTimingFunction: MOBILE_CAROUSEL_TRANSITION_EASING,
                     transform: `translate3d(${mobileRow1TranslatePx}px, 0, 0)`,
                   }}
+                  onTransitionEnd={onCarouselTransitionEnd}
                 >
                   {row1StripImages.map((item, index) => (
                     <div
@@ -319,7 +440,7 @@ export function SectionFinishedCreations({
                         alt=""
                         fill
                         className={`object-cover ${item.objectPositionClass ?? ""} ${
-                          index === activePage + 1 &&
+                          index === page + 1 &&
                           item.objectPositionClass !== GALLERY_OBJECT_POSITION_PORTRAIT_CLASS
                             ? MOBILE_ROW1_RIGHT_OBJECT_POSITION_CLASS
                             : ""
@@ -342,28 +463,18 @@ export function SectionFinishedCreations({
               <div
                 className="flex shrink-0 flex-row gap-1 transition-transform motion-reduce:duration-0"
                 style={{
-                  transitionDuration: `${MOBILE_CAROUSEL_TRANSITION_MS}ms`,
+                  transitionDuration: `${carouselMotionTransitionMs}ms`,
                   transitionTimingFunction: MOBILE_CAROUSEL_TRANSITION_EASING,
-                  transform:
-                    mobileRow2StepPx > 0
-                      ? `translate3d(-${mobileRow2TransformPx}px, 0, 0)`
-                      : "translate3d(0, 0, 0)",
+                  transform: `translate3d(-${mobileRow2TransformPx}px, 0, 0)`,
                 }}
               >
                 {row2StripImages.map((item, index) => (
                   <div
                     key={`mobile-row2-${item.id}-${index}`}
                     data-landing-image={item.imageId}
-                    className={`relative overflow-hidden rounded-none ${
-                      mobileRow2CellWidthPx > 0
-                        ? "shrink-0"
-                        : "min-h-0 min-w-0 flex-1 basis-0"
-                    }`}
+                    className="relative shrink-0 overflow-hidden rounded-none"
                     style={{
-                      width:
-                        mobileRow2CellWidthPx > 0
-                          ? mobileRow2CellWidthPx
-                          : undefined,
+                      width: mobileRow2CellWidthEffective,
                       height: MOBILE_ROW2_CELL_HEIGHT_PX,
                     }}
                   >
@@ -387,9 +498,10 @@ export function SectionFinishedCreations({
               <div
                 className="flex gap-2 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
                 style={{
-                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                  transitionDuration: `${carouselDesktopTransitionMs}ms`,
                   transform: `translate3d(-${desktopRow1TransformPx}px, 0, 0)`,
                 }}
+                onTransitionEnd={onCarouselTransitionEnd}
               >
                 {row1StripImages.map((item, index) => (
                   <div
@@ -413,7 +525,7 @@ export function SectionFinishedCreations({
               <div
                 className="flex gap-2 transition-transform ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-0"
                 style={{
-                  transitionDuration: `${DESKTOP_CAROUSEL_TRANSITION_MS}ms`,
+                  transitionDuration: `${carouselDesktopTransitionMs}ms`,
                   transform: `translate3d(-${desktopRow2TransformPx}px, 0, 0)`,
                 }}
               >
@@ -447,7 +559,9 @@ export function SectionFinishedCreations({
         >
           <button
             type="button"
-            onClick={goPrev}
+            onClick={() => {
+              goPrev();
+            }}
             className="flex min-h-11 min-w-11 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
             aria-label="Previous page"
           >
@@ -461,18 +575,25 @@ export function SectionFinishedCreations({
                 key={i}
                 type="button"
                 role="tab"
-                aria-selected={activePage === i}
+                aria-selected={page === i}
                 aria-label={`Page ${i + 1}`}
-                onClick={() => setActivePage(i)}
+                onClick={() => {
+                  forwardWrapAnimatingRef.current = false;
+                  setAutoplayResetEpoch((e) => e + 1);
+                  setPage(i);
+                  setStripIndexRow1(i);
+                }}
                 className={`h-2 rounded-full border-0 transition-all duration-200 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-[#c69f58] focus:ring-offset-2 ${
-                  activePage === i ? "w-6 bg-[#181610]" : "w-2 bg-[#d1d1d1]"
+                  page === i ? "w-6 bg-[#181610]" : "w-2 bg-[#d1d1d1]"
                 }`}
               />
             ))}
           </div>
           <button
             type="button"
-            onClick={goNext}
+            onClick={() => {
+              goNext();
+            }}
             className="flex min-h-11 min-w-11 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
             aria-label="Next page"
           >

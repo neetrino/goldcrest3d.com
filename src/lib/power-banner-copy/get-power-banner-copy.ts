@@ -19,48 +19,33 @@ import {
   type PowerBannerKey,
   type PowerBannerViewport,
 } from "./power-banner-keys";
-import type { PowerBannerCopyBundle } from "./power-banner-copy.types";
+import type { PowerBannerCopyBundle, PowerBannerCopyEntry } from "./power-banner-copy.types";
+
+function defaultBannerEntry(
+  viewport: PowerBannerViewport,
+  bannerKey: PowerBannerKey,
+): PowerBannerCopyEntry {
+  return {
+    ...POWER_BANNER_DEFAULT_COPY[viewport][bannerKey],
+    ...POWER_BANNER_DEFAULT_MEDIA[viewport][bannerKey],
+    titleOffsetY: 0,
+    bodyOffsetY: 0,
+    ctaOffsetY: 0,
+    imageObjectKey: null,
+    imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS[viewport][bannerKey],
+  };
+}
 
 function emptyBundle(): PowerBannerCopyBundle {
   const desktop = {
-    MODELING: {
-      ...POWER_BANNER_DEFAULT_COPY.desktop.MODELING,
-      ...POWER_BANNER_DEFAULT_MEDIA.desktop.MODELING,
-      imageObjectKey: null,
-      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.desktop.MODELING,
-    },
-    RENDERING: {
-      ...POWER_BANNER_DEFAULT_COPY.desktop.RENDERING,
-      ...POWER_BANNER_DEFAULT_MEDIA.desktop.RENDERING,
-      imageObjectKey: null,
-      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.desktop.RENDERING,
-    },
-    DESIGN: {
-      ...POWER_BANNER_DEFAULT_COPY.desktop.DESIGN,
-      ...POWER_BANNER_DEFAULT_MEDIA.desktop.DESIGN,
-      imageObjectKey: null,
-      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.desktop.DESIGN,
-    },
+    MODELING: defaultBannerEntry("desktop", "MODELING"),
+    RENDERING: defaultBannerEntry("desktop", "RENDERING"),
+    DESIGN: defaultBannerEntry("desktop", "DESIGN"),
   };
   const mobile = {
-    MODELING: {
-      ...POWER_BANNER_DEFAULT_COPY.mobile.MODELING,
-      ...POWER_BANNER_DEFAULT_MEDIA.mobile.MODELING,
-      imageObjectKey: null,
-      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.mobile.MODELING,
-    },
-    RENDERING: {
-      ...POWER_BANNER_DEFAULT_COPY.mobile.RENDERING,
-      ...POWER_BANNER_DEFAULT_MEDIA.mobile.RENDERING,
-      imageObjectKey: null,
-      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.mobile.RENDERING,
-    },
-    DESIGN: {
-      ...POWER_BANNER_DEFAULT_COPY.mobile.DESIGN,
-      ...POWER_BANNER_DEFAULT_MEDIA.mobile.DESIGN,
-      imageObjectKey: null,
-      imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS.mobile.DESIGN,
-    },
+    MODELING: defaultBannerEntry("mobile", "MODELING"),
+    RENDERING: defaultBannerEntry("mobile", "RENDERING"),
+    DESIGN: defaultBannerEntry("mobile", "DESIGN"),
   };
   return { desktop, mobile };
 }
@@ -69,7 +54,7 @@ function emptyBundle(): PowerBannerCopyBundle {
  * Loads persisted hero copy and merges with defaults for any missing banner row.
  */
 export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle> {
-  let rows: { bannerKey: string; viewport: string; title: string; body: string }[];
+  let rows: Awaited<ReturnType<typeof prisma.powerBannerCopy.findMany>>;
   let mediaRows: Awaited<ReturnType<typeof siteMediaItem.findMany>>;
   try {
     const [copyRows, heroMediaRows] = await Promise.all([
@@ -90,10 +75,25 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
   }
 
   const out = emptyBundle();
-  const copyByViewportAndKey = new Map<string, { title: string; body: string }>();
+  const copyByViewportAndKey = new Map<
+    string,
+    {
+      title: string;
+      body: string;
+      titleOffsetY: number;
+      bodyOffsetY: number;
+      ctaOffsetY: number;
+    }
+  >();
   for (const row of rows) {
     const mapKey = `${row.viewport}:${row.bannerKey}`;
-    copyByViewportAndKey.set(mapKey, { title: row.title, body: row.body });
+    copyByViewportAndKey.set(mapKey, {
+      title: row.title,
+      body: row.body,
+      titleOffsetY: Number.isFinite(row.titleOffsetY) ? row.titleOffsetY : 0,
+      bodyOffsetY: Number.isFinite(row.bodyOffsetY) ? row.bodyOffsetY : 0,
+      ctaOffsetY: Number.isFinite(row.ctaOffsetY) ? row.ctaOffsetY : 0,
+    });
   }
 
   for (const viewport of POWER_BANNER_VIEWPORTS) {
@@ -105,6 +105,9 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
           ...out[viewport][key],
           title: row.title,
           body: row.body,
+          titleOffsetY: row.titleOffsetY,
+          bodyOffsetY: row.bodyOffsetY,
+          ctaOffsetY: row.ctaOffsetY,
         };
       }
 
