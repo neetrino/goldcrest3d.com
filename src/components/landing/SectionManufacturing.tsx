@@ -4,20 +4,17 @@ import { LANDING_IMAGE_IDS, LANDING_SECTION_IDS } from "@/constants";
 import {
   MANUFACTURING_SPECIALIZATION_IDS,
   type ManufacturingSpecializationId,
-  getManufacturingDetailPhotoLayoutClassName,
 } from "@/constants/manufacturing-specialization";
 import {
   MANUFACTURING_TRANSFORM_BASE_FRAME_HEIGHT_PX,
   MANUFACTURING_TRANSFORM_BASE_FRAME_WIDTH_PX,
-  getManufacturingImageTransformCssValue,
 } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 import type {
   ManufacturingIntelligenceContent,
   ManufacturingIntelligenceItemContent,
 } from "@/lib/manufacturing-intelligence/manufacturing-intelligence.types";
-import Image from "next/image";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { MANUFACTURING_IMAGE_OPACITY_CLASS } from "./manufacturing-image.constants";
+import { ManufacturingIntelligenceDetailImageFrame } from "./ManufacturingIntelligenceDetailImageFrame";
 import { useManufacturingDetailLayers } from "./useManufacturingDetailLayers";
 
 /** Figma accordion chevron â€” 24Ã—14, Õ¶Õ¥Ö€Ö„Ö‡Õ« Õ½Õ¬Õ¡Ö„ */
@@ -110,7 +107,8 @@ export function SectionManufacturing({
   mobileContent,
   initialIsMobileViewport,
 }: SectionManufacturingProps) {
-  const imageFrameRef = useRef<HTMLDivElement | null>(null);
+  const desktopImageFrameRef = useRef<HTMLDivElement | null>(null);
+  const mobileImageFrameRef = useRef<HTMLDivElement | null>(null);
   const [frameSize, setFrameSize] = useState({
     frameWidthPx: MANUFACTURING_TRANSFORM_BASE_FRAME_WIDTH_PX,
     frameHeightPx: MANUFACTURING_TRANSFORM_BASE_FRAME_HEIGHT_PX,
@@ -154,7 +152,7 @@ export function SectionManufacturing({
   };
 
   useLayoutEffect(() => {
-    const frame = imageFrameRef.current;
+    const frame = isMobileViewport ? mobileImageFrameRef.current : desktopImageFrameRef.current;
     if (!frame) return;
     const syncFrameSize = () => {
       const nextWidth = frame.clientWidth;
@@ -169,7 +167,16 @@ export function SectionManufacturing({
     const observer = new ResizeObserver(syncFrameSize);
     observer.observe(frame);
     return () => observer.disconnect();
-  }, []);
+  }, [isMobileViewport, activeId]);
+
+  const detailLayersProps = {
+    slot0,
+    slot1,
+    slot0Visible,
+    slot1Visible,
+    elevatedSlot,
+    frameSize,
+  };
 
   return (
     <section
@@ -199,80 +206,30 @@ export function SectionManufacturing({
                     isActive={activeId === item.id}
                     onToggle={() => handleToggle(item.id)}
                   />
+                  {isMobileViewport && activeId === item.id ? (
+                    <div className="px-[30px] pb-6 pt-4">
+                      <div className="relative min-h-[240px] w-full">
+                        <ManufacturingIntelligenceDetailImageFrame
+                          {...detailLayersProps}
+                          ref={mobileImageFrameRef}
+                          frameClassName="manufacturing-intelligence-image-frame relative mx-auto aspect-[750/625] w-full overflow-hidden"
+                        />
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </div>
 
-            <div className="manufacturing-intelligence-image-column relative min-h-[280px] w-full lg:min-h-0">
-              <div
-                ref={imageFrameRef}
-                className="manufacturing-intelligence-image-frame relative mx-auto aspect-[750/625] w-full overflow-hidden lg:ml-auto lg:mr-0"
-                data-landing-image={LANDING_IMAGE_IDS.MANUFACTURING_MAIN}
-              >
-                {slot0 ? (
-                  <div
-                    className={`pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-start ${
-                      elevatedSlot === 0 ? "z-[2]" : "z-[1]"
-                    }`}
-                  >
-                    <div
-                      style={{
-                        transform: getManufacturingImageTransformCssValue(
-                          slot0.transform,
-                          frameSize,
-                        ),
-                      }}
-                    >
-                      <Image
-                        key="mfg-detail-slot-0"
-                        src={slot0.src}
-                        alt={slot0.alt}
-                        width={slot0.widthPx}
-                        height={slot0.heightPx}
-                        sizes="(max-width: 1024px) 100vw, 45vw"
-                        className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
-                          slot0.photoLayout,
-                        )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
-                          slot0Visible ? "opacity-100" : "opacity-0"
-                        }`}
-                        aria-hidden={!slot0Visible}
-                      />
-                    </div>
-                  </div>
-                ) : null}
-                {slot1 ? (
-                  <div
-                    className={`pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-start ${
-                      elevatedSlot === 1 ? "z-[2]" : "z-[1]"
-                    }`}
-                  >
-                    <div
-                      style={{
-                        transform: getManufacturingImageTransformCssValue(
-                          slot1.transform,
-                          frameSize,
-                        ),
-                      }}
-                    >
-                      <Image
-                        key="mfg-detail-slot-1"
-                        src={slot1.src}
-                        alt={slot1.alt}
-                        width={slot1.widthPx}
-                        height={slot1.heightPx}
-                        sizes="(max-width: 1024px) 100vw, 45vw"
-                        className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
-                          slot1.photoLayout,
-                        )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
-                          slot1Visible ? "opacity-100" : "opacity-0"
-                        }`}
-                        aria-hidden={!slot1Visible}
-                      />
-                    </div>
-                  </div>
-                ) : null}
+            {!isMobileViewport ? (
+              <div className="manufacturing-intelligence-image-column relative min-h-[280px] w-full lg:min-h-0">
+                <ManufacturingIntelligenceDetailImageFrame
+                  {...detailLayersProps}
+                  ref={desktopImageFrameRef}
+                  frameClassName="manufacturing-intelligence-image-frame relative mx-auto aspect-[750/625] w-full overflow-hidden lg:ml-auto lg:mr-0"
+                />
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </div>
