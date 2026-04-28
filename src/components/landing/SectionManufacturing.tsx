@@ -212,6 +212,7 @@ export function SectionManufacturing({
                         <ManufacturingIntelligenceDetailImageFrame
                           {...detailLayersProps}
                           ref={mobileImageFrameRef}
+                          variant="mobile"
                           frameClassName="manufacturing-intelligence-image-frame relative mx-auto aspect-[750/625] w-full overflow-hidden"
                         />
                       </div>
@@ -226,7 +227,8 @@ export function SectionManufacturing({
                 <ManufacturingIntelligenceDetailImageFrame
                   {...detailLayersProps}
                   ref={desktopImageFrameRef}
-                  frameClassName="manufacturing-intelligence-image-frame relative mx-auto aspect-[750/625] w-full overflow-hidden lg:ml-auto lg:mr-0"
+                  variant="desktop"
+                  frameClassName="manufacturing-intelligence-image-frame manufacturing-intelligence-image-frame--desktop relative mx-auto aspect-[750/625] w-full overflow-hidden lg:ml-auto lg:mr-0"
                 />
               </div>
             ) : null}

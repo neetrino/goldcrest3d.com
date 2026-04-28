@@ -27,6 +27,8 @@ export const ManufacturingIntelligenceDetailImageFrame = forwardRef<
     elevatedSlot: 0 | 1 | null;
     frameSize: ManufacturingImageFrameSize;
     frameClassName: string;
+    /** Desktop column: image fits frame with object-fit contain and flex centering; mobile uses max-h-full. */
+    variant?: "mobile" | "desktop";
   }
 >(function ManufacturingIntelligenceDetailImageFrame(
   {
@@ -37,9 +39,22 @@ export const ManufacturingIntelligenceDetailImageFrame = forwardRef<
     elevatedSlot,
     frameSize,
     frameClassName,
+    variant = "mobile",
   },
   ref,
 ) {
+  const photoDetailHeightClass =
+    variant === "desktop" ? "" : "max-h-full";
+  const photoDetailDesktopFitClass =
+    variant === "desktop" ? "manufacturing-intelligence-photo-detail--desktop-fit" : "";
+  const slotLayerClass =
+    variant === "desktop"
+      ? "manufacturing-intelligence-detail-slot-layer--desktop min-h-0"
+      : "";
+  const slotFlexAlignment =
+    variant === "desktop"
+      ? "items-center justify-center"
+      : "items-center justify-center lg:justify-start";
   return (
     <div
       ref={ref}
@@ -48,7 +63,7 @@ export const ManufacturingIntelligenceDetailImageFrame = forwardRef<
     >
       {slot0 ? (
         <div
-          className={`pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-start ${
+          className={`pointer-events-none absolute inset-0 flex ${slotFlexAlignment} ${slotLayerClass} ${
             elevatedSlot === 0 ? "z-[2]" : "z-[1]"
           }`}
         >
@@ -67,7 +82,7 @@ export const ManufacturingIntelligenceDetailImageFrame = forwardRef<
               width={slot0.widthPx}
               height={slot0.heightPx}
               sizes="(max-width: 1024px) 100vw, 45vw"
-              className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
+              className={`manufacturing-intelligence-photo-detail relative ${photoDetailDesktopFitClass} ${photoDetailHeightClass} ${getManufacturingDetailPhotoLayoutClassName(
                 slot0.photoLayout,
               )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
                 slot0Visible ? "opacity-100" : "opacity-0"
@@ -79,7 +94,7 @@ export const ManufacturingIntelligenceDetailImageFrame = forwardRef<
       ) : null}
       {slot1 ? (
         <div
-          className={`pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-start ${
+          className={`pointer-events-none absolute inset-0 flex ${slotFlexAlignment} ${slotLayerClass} ${
             elevatedSlot === 1 ? "z-[2]" : "z-[1]"
           }`}
         >
@@ -98,7 +113,7 @@ export const ManufacturingIntelligenceDetailImageFrame = forwardRef<
               width={slot1.widthPx}
               height={slot1.heightPx}
               sizes="(max-width: 1024px) 100vw, 45vw"
-              className={`manufacturing-intelligence-photo-detail relative max-h-full ${getManufacturingDetailPhotoLayoutClassName(
+              className={`manufacturing-intelligence-photo-detail relative ${photoDetailDesktopFitClass} ${photoDetailHeightClass} ${getManufacturingDetailPhotoLayoutClassName(
                 slot1.photoLayout,
               )} ${MANUFACTURING_IMAGE_OPACITY_CLASS} ${
                 slot1Visible ? "opacity-100" : "opacity-0"
