@@ -48,7 +48,7 @@ export function DesignHeroSlideBackgrounds({
         </div>
       </div>
       <div
-        className="pointer-events-none absolute left-0 top-0 z-0 hidden h-[var(--section3-bg-layout-height)] w-full overflow-hidden md:block"
+        className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden md:block"
         aria-hidden
       >
         <div
@@ -56,7 +56,7 @@ export function DesignHeroSlideBackgrounds({
           style={
             {
               transform: getManufacturingImageTransformCssValue(desktopTransform),
-              transformOrigin: "left center",
+              transformOrigin: "center center",
             } as CSSProperties
           }
         >
@@ -65,7 +65,7 @@ export function DesignHeroSlideBackgrounds({
             alt=""
             fill
             sizes={HERO_DESKTOP_IMAGE_SIZES}
-            className="object-cover md:max-xl:object-[30%_center] xl:object-left"
+            className="object-cover object-center"
           />
         </div>
       </div>

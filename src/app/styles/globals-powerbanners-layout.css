@@ -128,11 +128,16 @@
 }
 
 @media (min-width: 768px) {
+  /**
+   * Same viewport-anchored strip as section1 (.power-banners-section1-image-strip):
+   * width scales with 100vw so shrinking the window crops the hero consistently.
+   */
   .power-banners-section2-block {
-    --power-banners-block-width-compensation-x: 3vw;
-    width: var(--section2-block-design-width);
-    width: 106%;
-    max-width: 100%;
+    --power-banners-block-width-compensation-x: 0px;
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: 0;
     height: var(--section2-block-visible-height);
   }
 }
@@ -174,10 +179,11 @@
   .power-banners-section3-block {
     --section3-bg-layout-height: var(--power-banners-hero-height-desktop);
     --section3-block-visible-height: var(--power-banners-hero-height-desktop);
-    --power-banners-block-width-compensation-x: 3vw;
-    width: var(--section3-block-design-width);
-    width: 106%;
-    max-width: 100%;
+    --power-banners-block-width-compensation-x: 0px;
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: 0;
     height: var(--section3-block-visible-height);
     min-height: var(--section3-block-visible-height);
   }
