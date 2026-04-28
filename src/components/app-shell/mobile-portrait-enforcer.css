@@ -1,0 +1,49 @@
+/**
+ * Portrait enforcer overlay — phone hint animation (scoped class names).
+ * z-index below JS Number.MAX_SAFE_INTEGER; above typical modals.
+ */
+
+.gc-portrait-enforcer__overlay {
+  z-index: 2147483000;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: max(2rem, env(safe-area-inset-left));
+  padding-right: max(2rem, env(safe-area-inset-right));
+}
+
+html.gc-portrait-enforcer--locks-scroll,
+html.gc-portrait-enforcer--locks-scroll body {
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+@keyframes gc-portrait-enforcer-phone-tilt {
+  0%,
+  100% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(12deg);
+  }
+}
+
+@keyframes gc-portrait-enforcer-ring-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+}
+
+.gc-portrait-enforcer__phone-wrap {
+  animation: gc-portrait-enforcer-phone-tilt 2.4s ease-in-out infinite;
+}
+
+.gc-portrait-enforcer__ring {
+  animation: gc-portrait-enforcer-ring-pulse 2s ease-in-out infinite;
+}
