@@ -3,7 +3,14 @@
 import { LANDING_SECTION_IDS } from "@/constants";
 import type { FinishedGalleryItem } from "@/lib/site-media/landing-defaults";
 import Image from "next/image";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useFinishedCreationsCarouselMetrics } from "@/components/landing/useFinishedCreationsCarouselMetrics";
 
 /** Carousel: small row (row 2) â€” design aspect; slide width is fluid from container. */
@@ -114,15 +121,10 @@ export function SectionFinishedCreations({
    */
   const [autoplayResetEpoch, setAutoplayResetEpoch] = useState(0);
   /**
-   * Horizontal strip index into doubled row1 (0 … TOTAL_PAGES inclusive).
-   * Index TOTAL_PAGES is the duplicate of 0 for seamless wrap.
+   * Horizontal strip index into doubled strips (0 … TOTAL_PAGES inclusive).
+   * Index TOTAL_PAGES is the duplicate of 0 for seamless wrap. Drives both rows.
    */
   const [stripIndexRow1, setStripIndexRow1] = useState(0);
-  /**
-   * Horizontal strip index into doubled row2 (0 … ROW2_IMAGE_COUNT inclusive).
-   * Index ROW2_IMAGE_COUNT is the duplicate of 0 for seamless wrap.
-   */
-  const [stripIndexRow2, setStripIndexRow2] = useState(0);
   /** When false, transform updates apply without CSS transition (instant reposition). */
   const [carouselTransitionEnabled, setCarouselTransitionEnabled] = useState(true);
 
@@ -157,7 +159,6 @@ export function SectionFinishedCreations({
     forwardWrapAnimatingRef.current = false;
     runWithoutCarouselTransition(() => {
       setStripIndexRow1(0);
-      setStripIndexRow2(0);
       setPage(0);
     });
   }, [runWithoutCarouselTransition]);
@@ -171,22 +172,13 @@ export function SectionFinishedCreations({
     }
     if (page <= 0) {
       const lastPage = TOTAL_PAGES - 1;
-      const lastRow2Slot = lastPage % ROW2_IMAGE_COUNT;
       setCarouselTransitionEnabled(false);
       setStripIndexRow1(TOTAL_PAGES);
-      if (lastRow2Slot === 0) {
-        setStripIndexRow2(0);
-      } else {
-        setStripIndexRow2(ROW2_IMAGE_COUNT);
-      }
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setCarouselTransitionEnabled(true);
           setPage(lastPage);
           setStripIndexRow1(lastPage);
-          setStripIndexRow2(
-            lastRow2Slot === 0 ? 0 : ROW2_IMAGE_COUNT + lastRow2Slot,
-          );
         });
       });
       return;
@@ -194,8 +186,7 @@ export function SectionFinishedCreations({
     const prevPage = page - 1;
     setPage(prevPage);
     setStripIndexRow1(prevPage);
-    setStripIndexRow2(prevPage % ROW2_IMAGE_COUNT);
-  }, [TOTAL_PAGES, ROW2_IMAGE_COUNT, page]);
+  }, [TOTAL_PAGES, page]);
 
   const goNext = useCallback((source: "autoplay" | "manual" = "manual") => {
     if (TOTAL_PAGES <= 1) {
@@ -210,13 +201,11 @@ export function SectionFinishedCreations({
     if (page >= TOTAL_PAGES - 1) {
       forwardWrapAnimatingRef.current = true;
       setStripIndexRow1(TOTAL_PAGES);
-      setStripIndexRow2(ROW2_IMAGE_COUNT);
       return;
     }
     const nextPage = page + 1;
     setPage(nextPage);
     setStripIndexRow1(nextPage);
-    setStripIndexRow2(nextPage % ROW2_IMAGE_COUNT);
   }, [TOTAL_PAGES, page]);
 
   useEffect(() => {
@@ -324,7 +313,13 @@ export function SectionFinishedCreations({
 
   /** Images rendered once; sliding via transform. Duplicated for seamless loop. */
   const row1StripImages = [...ROW1_IMAGES, ...ROW1_IMAGES];
-  const row2StripImages = [...ROW2_IMAGES, ...ROW2_IMAGES];
+  /** One carousel step per page (same length as row1); cycle row2 assets when counts differ. */
+  const row2StripImages = useMemo(() => {
+    const segment = Array.from({ length: TOTAL_PAGES }, (_, i) => {
+      return ROW2_IMAGES[i % ROW2_IMAGE_COUNT];
+    });
+    return [...segment, ...segment];
+  }, [TOTAL_PAGES, ROW2_IMAGES, ROW2_IMAGE_COUNT]);
 
   const mobileRow1OverflowRef = useRef<HTMLDivElement>(null);
   const [mobileRow1SlideWidthPx, setMobileRow1SlideWidthPx] = useState(0);
@@ -370,7 +365,7 @@ export function SectionFinishedCreations({
       : MOBILE_ROW2_FALLBACK_CELL_WIDTH_PX;
   const mobileRow2StepPx = mobileRow2CellWidthEffective + MOBILE_GAP_PX;
   /** Same index × step as row1 — no edge peek offset so both rows move in lockstep. */
-  const mobileRow2TransformPx = stripIndexRow2 * mobileRow2StepPx;
+  const mobileRow2TransformPx = stripIndexRow1 * mobileRow2StepPx;
 
   const desktopRow1TransformPx = Math.round(
     desktopMetrics.row1PeekOffsetPx +
@@ -378,7 +373,7 @@ export function SectionFinishedCreations({
   );
   const desktopRow2TransformPx = Math.round(
     desktopMetrics.row2PeekOffsetPx +
-      stripIndexRow2 * desktopMetrics.row2TranslatePx,
+      stripIndexRow1 * desktopMetrics.row2TranslatePx,
   );
   const mobileTopRowBleedPx = MOBILE_TOP_ROW_BLEED_PX;
   const mobileRow1CardWidthPx =
@@ -587,7 +582,6 @@ export function SectionFinishedCreations({
                   setAutoplayResetEpoch((e) => e + 1);
                   setPage(i);
                   setStripIndexRow1(i);
-                  setStripIndexRow2(i % ROW2_IMAGE_COUNT);
                 }}
                 className={`h-2 rounded-full border-0 transition-all duration-200 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-[#c69f58] focus:ring-offset-2 ${
                   page === i ? "w-6 bg-[#181610]" : "w-2 bg-[#d1d1d1]"
