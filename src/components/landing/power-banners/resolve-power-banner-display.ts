@@ -18,6 +18,7 @@ export function splitMultilineTextPreservingLines(text: string): string[] {
   return normalized.split("\n");
 }
 
+/** Desktop hero modeling title: non-empty lines joined with spaces (admin may use multiple lines). */
 export function resolveModelingTitleDesktop(title: string): string {
   return splitMultilineText(title).join(" ");
 }

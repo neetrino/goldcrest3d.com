@@ -49,6 +49,9 @@ export async function updatePowerBannerCopy(
     viewport: formData.get("viewport"),
     title: formData.get("title"),
     body: formData.get("body"),
+    titleOffsetY: formData.get("titleOffsetY"),
+    bodyOffsetY: formData.get("bodyOffsetY"),
+    ctaOffsetY: formData.get("ctaOffsetY"),
   });
 
   if (!parsed.success) {
@@ -58,17 +61,23 @@ export async function updatePowerBannerCopy(
       first.viewport?.[0] ??
       first.title?.[0] ??
       first.body?.[0] ??
+      first.titleOffsetY?.[0] ??
+      first.bodyOffsetY?.[0] ??
+      first.ctaOffsetY?.[0] ??
       "Invalid input.";
     return { ok: false, error: msg };
   }
 
-  const { bannerKey, viewport, title, body } = parsed.data;
+  const { bannerKey, viewport, title, body, titleOffsetY, bodyOffsetY, ctaOffsetY } =
+    parsed.data;
   if (title.length === 0) {
     return { ok: false, error: "Title is required." };
   }
   if (body.length === 0) {
     return { ok: false, error: "Description is required." };
   }
+
+  const typedViewport = viewport as PowerBannerViewport;
 
   try {
     await prisma.powerBannerCopy.upsert({
@@ -83,12 +92,20 @@ export async function updatePowerBannerCopy(
         viewport,
         title,
         body,
+        titleOffsetY,
+        bodyOffsetY,
+        ctaOffsetY,
       },
-      update: { title, body },
+      update: {
+        title,
+        body,
+        titleOffsetY,
+        bodyOffsetY,
+        ctaOffsetY,
+      },
     });
 
     const typedKey = bannerKey as PowerBannerKey;
-    const typedViewport = viewport as PowerBannerViewport;
     const slotId = POWER_BANNER_SLOT_IDS[typedViewport][typedKey];
     const defaultTransform = POWER_BANNER_DEFAULT_TRANSFORMS[typedViewport][typedKey];
     const sortOrder = POWER_BANNER_KEYS.indexOf(bannerKey as PowerBannerKey);

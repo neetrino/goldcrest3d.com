@@ -1,13 +1,13 @@
 /* Mobile only: unify largest hero blocks size to 367x679 (20/37). */
 @media (max-width: 767px) {
-  .power-banners-section2-text-cluster > h1 {
+  .power-banners-section2-text-cluster h1 {
     flex: 1 0 0;
     top: 24px;
     text-align: left;
   }
 
   /* Jewelry Design (section3) — layout only; typography matches ≥1024px via globals-theme-base-hero */
-  .power-banners-section3-text-cluster > h1.hero-primary-title-typography-design {
+  .power-banners-section3-text-cluster h1.hero-primary-title-typography-design {
     flex: 1 0 0;
     color: #000;
     text-align: right;
@@ -102,7 +102,7 @@
     transform: translateY(-68px) !important;
   }
 
-  #hero-modeling-text-group > h1 {
+  #hero-modeling-text-group h1 {
     align-self: stretch;
     color: #fff;
     text-align: center;

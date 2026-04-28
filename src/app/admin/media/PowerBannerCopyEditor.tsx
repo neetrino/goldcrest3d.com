@@ -24,6 +24,10 @@ import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotFormMessages } from "./ModelingSlotFormMessages";
 import { PowerBannerCopyMessages } from "./PowerBannerCopyMessages";
 import { SITE_MEDIA_FORMATS_LABEL, SITE_MEDIA_MAX_SIZE_MB } from "./media-manager.constants";
+import {
+  clampMobileCopyOffsetPx,
+  PowerBannerMobileVerticalOffsets,
+} from "./PowerBannerMobileVerticalOffsets";
 import Image from "next/image";
 
 const MIN_ZOOM = 0.5;
@@ -43,7 +47,8 @@ type TransformState = {
 };
 
 function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
+  const v = Number.isFinite(value) ? value : 0;
+  return Math.min(max, Math.max(min, v));
 }
 
 function normalizeTransform(transform: TransformState): TransformState {
@@ -79,6 +84,15 @@ export function PowerBannerCopyEditor({
   const viewportLabel = viewport === "desktop" ? "Desktop" : "Mobile";
   const recommendedSize = RECOMMENDED_IMAGE_SIZE[viewport];
   const [transform, setTransform] = useState<TransformState>(toInitialTransform(initial));
+  const [titleOffsetY, setTitleOffsetY] = useState(() =>
+    clampMobileCopyOffsetPx(initial.titleOffsetY),
+  );
+  const [bodyOffsetY, setBodyOffsetY] = useState(() =>
+    clampMobileCopyOffsetPx(initial.bodyOffsetY),
+  );
+  const [ctaOffsetY, setCtaOffsetY] = useState(() =>
+    clampMobileCopyOffsetPx(initial.ctaOffsetY),
+  );
   const draggingRef = useRef<{
     pointerId: number;
     startX: number;
@@ -323,6 +337,21 @@ export function PowerBannerCopyEditor({
       <form action={formAction} className="flex flex-col gap-4">
         <input type="hidden" name="bannerKey" value={bannerKey} />
         <input type="hidden" name="viewport" value={viewport} />
+        <input
+          type="hidden"
+          name="titleOffsetY"
+          value={String(clampMobileCopyOffsetPx(titleOffsetY))}
+        />
+        <input
+          type="hidden"
+          name="bodyOffsetY"
+          value={String(clampMobileCopyOffsetPx(bodyOffsetY))}
+        />
+        <input
+          type="hidden"
+          name="ctaOffsetY"
+          value={String(clampMobileCopyOffsetPx(ctaOffsetY))}
+        />
 
         <div className="flex flex-col gap-2">
           <label
@@ -365,6 +394,22 @@ export function PowerBannerCopyEditor({
             Line breaks apply only to the {viewportLabel.toLowerCase()} hero version.
           </p>
         </div>
+
+        <PowerBannerMobileVerticalOffsets
+          viewportLabel={viewport === "desktop" ? "Desktop" : "Mobile"}
+          titleOffsetY={titleOffsetY}
+          bodyOffsetY={bodyOffsetY}
+          ctaOffsetY={ctaOffsetY}
+          onNudgeTitle={(delta) =>
+            setTitleOffsetY((prev) => clampMobileCopyOffsetPx(prev + delta))
+          }
+          onNudgeBody={(delta) =>
+            setBodyOffsetY((prev) => clampMobileCopyOffsetPx(prev + delta))
+          }
+          onNudgeCta={(delta) =>
+            setCtaOffsetY((prev) => clampMobileCopyOffsetPx(prev + delta))
+          }
+        />
 
         <PowerBannerCopyMessages state={state} />
 

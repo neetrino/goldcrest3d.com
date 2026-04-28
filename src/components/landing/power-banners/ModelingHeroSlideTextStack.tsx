@@ -32,24 +32,24 @@ export function ModelingHeroSlideTextStack({
   const desktopLines = splitMultilineTextPreservingLines(desktopCopy.body);
   const mobileLines = splitMultilineText(mobileCopy.body);
 
+  const clusterStyle = {
+    ["--section1-modeling-text-nudge-y-mobile" as string]: `${SECTION1_HERO_TEXT_NUDGE_DOWN_PX + SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX}px`,
+    ["--section1-modeling-text-nudge-y-desktop" as string]: `${SECTION1_HERO_TEXT_NUDGE_DOWN_PX}px`,
+  } as CSSProperties;
+
   return (
     <div
       id={LANDING_ELEMENT_IDS.HERO_MODELING_TEXT_GROUP}
       className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center px-6 pb-10 pt-8 text-center max-md:translate-y-[var(--section1-modeling-text-nudge-y-mobile)] md:translate-y-[var(--section1-modeling-text-nudge-y-desktop)] md:pb-16 md:pt-12"
-      style={
-        {
-          ["--section1-modeling-text-nudge-y-mobile" as string]: `${SECTION1_HERO_TEXT_NUDGE_DOWN_PX + SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX}px`,
-          ["--section1-modeling-text-nudge-y-desktop" as string]: `${SECTION1_HERO_TEXT_NUDGE_DOWN_PX}px`,
-        } as CSSProperties
-      }
+      style={clusterStyle}
     >
-      <h1
-        className="inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance md:max-w-none"
-        style={{
-          transform: `translateY(-${SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
-        }}
-      >
-        <span className="md:hidden">
+      <div className="flex w-full flex-col items-center md:hidden">
+        <h1
+          className="inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance"
+          style={{
+            transform: `translateY(${mobileCopy.titleOffsetY - SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
+          }}
+        >
           {mobileTitleLines.map((line, i) => (
             <span
               key={i}
@@ -58,40 +58,57 @@ export function ModelingHeroSlideTextStack({
               {line}
             </span>
           ))}
-        </span>
-        <span className="hidden md:inline">{desktopTitle}</span>
-      </h1>
-      <p
-        id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
-        className="hero-primary-subtitle-typography mt-4 shrink-0 md:mt-5"
-      >
-        <span className="md:hidden">
-          {mobileLines.map((line, i) => (
-            <Fragment key={i}>
-              {i > 0 ? (
-                <>
-                  <br className="md:hidden" />{" "}
-                </>
-              ) : null}
-              <span className={i === 0 ? "whitespace-nowrap" : undefined}>
-                {line}
+        </h1>
+        <div style={{ transform: `translateY(${mobileCopy.bodyOffsetY}px)` }}>
+          <p
+            id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
+            className="hero-primary-subtitle-typography mt-4 shrink-0"
+          >
+            {mobileLines.map((line, i) => (
+              <Fragment key={i}>
+                {i > 0 ? (
+                  <>
+                    <br className="md:hidden" />{" "}
+                  </>
+                ) : null}
+                <span className={i === 0 ? "whitespace-nowrap" : undefined}>{line}</span>
+              </Fragment>
+            ))}
+          </p>
+        </div>
+      </div>
+
+      <div className="hidden w-full flex-col items-center md:flex">
+        <h1
+          className="inline-block max-w-none whitespace-normal text-balance"
+          style={{
+            transform: `translateY(${desktopCopy.titleOffsetY - SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
+          }}
+        >
+          {desktopTitle}
+        </h1>
+        <div style={{ transform: `translateY(${desktopCopy.bodyOffsetY}px)` }}>
+          <p className="hero-primary-subtitle-typography mt-5 shrink-0">
+            {desktopLines.map((line, i) => (
+              <span key={i} className="block">
+                {line.length > 0 ? line : "\u00A0"}
               </span>
-            </Fragment>
-          ))}
-        </span>
-        <span className="hidden md:block">
-          {desktopLines.map((line, i) => (
-            <span key={i} className="block">
-              {line.length > 0 ? line : "\u00A0"}
-            </span>
-          ))}
-        </span>
-      </p>
-      <GetAQuoteButton
-        id={HERO_GET_QUOTE_BUTTON_ID}
-        variant="gold"
-        className="mt-6 shrink-0 md:mt-8"
-      />
+            ))}
+          </p>
+        </div>
+      </div>
+
+      <span
+        className="mt-6 inline-flex max-md:[transform:translateY(var(--hero-modeling-cta-y-mobile,0px))] md:mt-8 md:[transform:translateY(var(--hero-modeling-cta-y-desktop,0px))]"
+        style={
+          {
+            ["--hero-modeling-cta-y-mobile" as string]: `${mobileCopy.ctaOffsetY}px`,
+            ["--hero-modeling-cta-y-desktop" as string]: `${desktopCopy.ctaOffsetY}px`,
+          } as CSSProperties
+        }
+      >
+        <GetAQuoteButton id={HERO_GET_QUOTE_BUTTON_ID} variant="gold" />
+      </span>
     </div>
   );
 }
