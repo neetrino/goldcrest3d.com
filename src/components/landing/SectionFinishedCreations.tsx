@@ -109,6 +109,11 @@ export function SectionFinishedCreations({
   /** Logical page for dots, autoplay, aria (0 … TOTAL_PAGES − 1). */
   const [page, setPage] = useState(0);
   /**
+   * Bumped on manual navigation only so the autoplay interval is recreated and the
+   * full 5s countdown restarts (avoids immediate auto-advance after swipe/buttons/dots).
+   */
+  const [autoplayResetEpoch, setAutoplayResetEpoch] = useState(0);
+  /**
    * Horizontal strip index into doubled row1 (0 … TOTAL_PAGES inclusive).
    * Index TOTAL_PAGES is the duplicate of 0 for seamless wrap.
    */
@@ -157,9 +162,12 @@ export function SectionFinishedCreations({
     });
   }, [runWithoutCarouselTransition]);
 
-  const goPrev = useCallback(() => {
+  const goPrev = useCallback((source: "autoplay" | "manual" = "manual") => {
     if (TOTAL_PAGES <= 1) {
       return;
+    }
+    if (source === "manual") {
+      setAutoplayResetEpoch((e) => e + 1);
     }
     if (page <= 0) {
       const lastPage = TOTAL_PAGES - 1;
@@ -189,12 +197,15 @@ export function SectionFinishedCreations({
     setStripIndexRow2(prevPage % ROW2_IMAGE_COUNT);
   }, [TOTAL_PAGES, ROW2_IMAGE_COUNT, page]);
 
-  const goNext = useCallback(() => {
+  const goNext = useCallback((source: "autoplay" | "manual" = "manual") => {
     if (TOTAL_PAGES <= 1) {
       return;
     }
     if (forwardWrapAnimatingRef.current) {
       return;
+    }
+    if (source === "manual") {
+      setAutoplayResetEpoch((e) => e + 1);
     }
     if (page >= TOTAL_PAGES - 1) {
       forwardWrapAnimatingRef.current = true;
@@ -213,12 +224,12 @@ export function SectionFinishedCreations({
       return;
     }
     const intervalId = window.setInterval(() => {
-      goNext();
+      goNext("autoplay");
     }, FINISHED_CREATIONS_AUTOPLAY_INTERVAL_MS);
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [TOTAL_PAGES, goNext]);
+  }, [TOTAL_PAGES, goNext, autoplayResetEpoch]);
 
   const onCarouselTransitionEnd = useCallback(
     (event: React.TransitionEvent<HTMLDivElement>) => {
@@ -553,7 +564,9 @@ export function SectionFinishedCreations({
         >
           <button
             type="button"
-            onClick={goPrev}
+            onClick={() => {
+              goPrev();
+            }}
             className="flex min-h-11 min-w-11 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
             aria-label="Previous page"
           >
@@ -571,6 +584,7 @@ export function SectionFinishedCreations({
                 aria-label={`Page ${i + 1}`}
                 onClick={() => {
                   forwardWrapAnimatingRef.current = false;
+                  setAutoplayResetEpoch((e) => e + 1);
                   setPage(i);
                   setStripIndexRow1(i);
                   setStripIndexRow2(i % ROW2_IMAGE_COUNT);
@@ -583,7 +597,9 @@ export function SectionFinishedCreations({
           </div>
           <button
             type="button"
-            onClick={goNext}
+            onClick={() => {
+              goNext();
+            }}
             className="flex min-h-11 min-w-11 items-center justify-center rounded-none border-0 bg-transparent text-[#181610] transition-opacity hover:opacity-70 focus:outline-none focus:ring-2 focus:ring-[#c69f58]"
             aria-label="Next page"
           >
