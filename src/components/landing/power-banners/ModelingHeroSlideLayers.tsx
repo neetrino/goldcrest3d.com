@@ -12,15 +12,19 @@ import {
 type ModelingHeroSlideLayersProps = {
   desktopBgSrc: string;
   mobileBgSrc: string;
+  tabletBgSrc: string;
   desktopTransform: ManufacturingImageTransform;
   mobileTransform: ManufacturingImageTransform;
+  tabletTransform: ManufacturingImageTransform;
 };
 
 export function ModelingHeroSlideLayers({
   desktopBgSrc,
   mobileBgSrc,
+  tabletBgSrc,
   desktopTransform,
   mobileTransform,
+  tabletTransform,
 }: ModelingHeroSlideLayersProps) {
   return (
     <>
@@ -49,7 +53,27 @@ export function ModelingHeroSlideLayers({
         </div>
       </div>
       <div
-        className="power-banners-section1-bg pointer-events-none absolute inset-0 hidden overflow-hidden md:block"
+        className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden md:block lg:hidden"
+        style={
+          {
+            transform: getManufacturingImageTransformCssValue(tabletTransform),
+            transformOrigin: "center center",
+          } as CSSProperties
+        }
+        aria-hidden
+      >
+        <Image
+          src={tabletBgSrc}
+          alt=""
+          fill
+          priority
+          unoptimized
+          sizes={HERO_DESKTOP_IMAGE_SIZES}
+          className="object-cover"
+        />
+      </div>
+      <div
+        className="power-banners-section1-bg pointer-events-none absolute inset-0 hidden overflow-hidden lg:block"
         style={
           {
             transform: getManufacturingImageTransformCssValue(desktopTransform),
@@ -63,6 +87,7 @@ export function ModelingHeroSlideLayers({
           alt=""
           fill
           priority
+          unoptimized
           sizes={HERO_DESKTOP_IMAGE_SIZES}
           className="object-cover"
         />

@@ -21,15 +21,19 @@ import {
 type ModelingHeroSlideTextStackProps = {
   desktopCopy: PowerBannerCopyEntry;
   mobileCopy: PowerBannerCopyEntry;
+  tabletCopy: PowerBannerCopyEntry;
 };
 
 export function ModelingHeroSlideTextStack({
   desktopCopy,
   mobileCopy,
+  tabletCopy,
 }: ModelingHeroSlideTextStackProps) {
   const desktopTitle = resolveModelingTitleDesktop(desktopCopy.title);
+  const tabletTitle = resolveModelingTitleDesktop(tabletCopy.title);
   const mobileTitleLines = splitMultilineText(mobileCopy.title);
   const desktopLines = splitMultilineTextPreservingLines(desktopCopy.body);
+  const tabletLines = splitMultilineTextPreservingLines(tabletCopy.body);
   const mobileLines = splitMultilineText(mobileCopy.body);
 
   const clusterStyle = {
@@ -40,14 +44,14 @@ export function ModelingHeroSlideTextStack({
   return (
     <div
       id={LANDING_ELEMENT_IDS.HERO_MODELING_TEXT_GROUP}
-      className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center px-6 pb-10 pt-8 text-center max-md:translate-y-[var(--section1-modeling-text-nudge-y-mobile)] md:translate-y-[var(--section1-modeling-text-nudge-y-desktop)] md:pb-16 md:pt-12"
+      className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center px-6 pb-10 pt-8 text-center max-md:translate-y-[var(--section1-modeling-text-nudge-y-mobile)] lg:translate-y-[var(--section1-modeling-text-nudge-y-desktop)] lg:pb-16 lg:pt-12 md:max-lg:translate-y-[var(--section1-modeling-text-nudge-y-desktop)] md:max-lg:pb-16 md:max-lg:pt-12"
       style={clusterStyle}
     >
       <div className="flex w-full flex-col items-center md:hidden">
         <h1
           className="inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance"
           style={{
-            transform: `translateY(${mobileCopy.titleOffsetY - SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
+            transform: `translate(${mobileCopy.titleOffsetX}px, ${mobileCopy.titleOffsetY - SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
           }}
         >
           {mobileTitleLines.map((line, i) => (
@@ -59,7 +63,11 @@ export function ModelingHeroSlideTextStack({
             </span>
           ))}
         </h1>
-        <div style={{ transform: `translateY(${mobileCopy.bodyOffsetY}px)` }}>
+        <div
+          style={{
+            transform: `translate(${mobileCopy.bodyOffsetX}px, ${mobileCopy.bodyOffsetY}px)`,
+          }}
+        >
           <p
             id={LANDING_ELEMENT_IDS.HERO_MODELING_SUBTITLE}
             className="hero-primary-subtitle-typography mt-4 shrink-0"
@@ -78,16 +86,44 @@ export function ModelingHeroSlideTextStack({
         </div>
       </div>
 
-      <div className="hidden w-full flex-col items-center md:flex">
+      <div className="hidden w-full flex-col items-center md:flex lg:hidden">
         <h1
           className="inline-block max-w-none whitespace-normal text-balance"
           style={{
-            transform: `translateY(${desktopCopy.titleOffsetY - SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
+            transform: `translate(${tabletCopy.titleOffsetX}px, ${tabletCopy.titleOffsetY - SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
+          }}
+        >
+          {tabletTitle}
+        </h1>
+        <div
+          style={{
+            transform: `translate(${tabletCopy.bodyOffsetX}px, ${tabletCopy.bodyOffsetY}px)`,
+          }}
+        >
+          <p className="hero-primary-subtitle-typography mt-5 shrink-0">
+            {tabletLines.map((line, i) => (
+              <span key={i} className="block">
+                {line.length > 0 ? line : "\u00A0"}
+              </span>
+            ))}
+          </p>
+        </div>
+      </div>
+
+      <div className="hidden w-full flex-col items-center lg:flex">
+        <h1
+          className="inline-block max-w-none whitespace-normal text-balance"
+          style={{
+            transform: `translate(${desktopCopy.titleOffsetX}px, ${desktopCopy.titleOffsetY - SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
           }}
         >
           {desktopTitle}
         </h1>
-        <div style={{ transform: `translateY(${desktopCopy.bodyOffsetY}px)` }}>
+        <div
+          style={{
+            transform: `translate(${desktopCopy.bodyOffsetX}px, ${desktopCopy.bodyOffsetY}px)`,
+          }}
+        >
           <p className="hero-primary-subtitle-typography mt-5 shrink-0">
             {desktopLines.map((line, i) => (
               <span key={i} className="block">
@@ -99,15 +135,28 @@ export function ModelingHeroSlideTextStack({
       </div>
 
       <span
-        className="mt-6 inline-flex max-md:[transform:translateY(var(--hero-modeling-cta-y-mobile,0px))] md:mt-8 md:[transform:translateY(var(--hero-modeling-cta-y-desktop,0px))]"
-        style={
-          {
-            ["--hero-modeling-cta-y-mobile" as string]: `${mobileCopy.ctaOffsetY}px`,
-            ["--hero-modeling-cta-y-desktop" as string]: `${desktopCopy.ctaOffsetY}px`,
-          } as CSSProperties
-        }
+        className="mt-6 inline-flex md:hidden"
+        style={{
+          transform: `translate(${mobileCopy.ctaOffsetX}px, ${mobileCopy.ctaOffsetY}px)`,
+        }}
       >
         <GetAQuoteButton id={HERO_GET_QUOTE_BUTTON_ID} variant="gold" />
+      </span>
+      <span
+        className="mt-6 hidden md:inline-flex lg:hidden"
+        style={{
+          transform: `translate(${tabletCopy.ctaOffsetX}px, ${tabletCopy.ctaOffsetY}px)`,
+        }}
+      >
+        <GetAQuoteButton variant="gold" />
+      </span>
+      <span
+        className="mt-6 hidden lg:inline-flex"
+        style={{
+          transform: `translate(${desktopCopy.ctaOffsetX}px, ${desktopCopy.ctaOffsetY}px)`,
+        }}
+      >
+        <GetAQuoteButton variant="gold" />
       </span>
     </div>
   );

@@ -40,9 +40,10 @@ export function ModelingMediaSection({
           {description}
         </p>
         <p className="mt-3 text-sm text-slate-500">
-          Each block has two slots — desktop/tablet and mobile. Upload both for best results;
-          if mobile is omitted, the desktop file is used on small screens. Changes go live after
-          a successful upload (refresh the homepage if needed).
+          Each block has desktop (large screens) and mobile assets. If mobile is omitted, the
+          desktop file is used on small screens. Tablet-only content is managed under the separate
+          &quot;Modeling Specialization — Tablet&quot; tab. Changes go live after a successful save
+          or upload.
         </p>
       </div>
       <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

@@ -12,15 +12,19 @@ import {
 type DesignHeroSlideBackgroundsProps = {
   desktopBgSrc: string;
   mobileBgSrc: string;
+  tabletBgSrc: string;
   desktopTransform: ManufacturingImageTransform;
   mobileTransform: ManufacturingImageTransform;
+  tabletTransform: ManufacturingImageTransform;
 };
 
 export function DesignHeroSlideBackgrounds({
   desktopBgSrc,
   mobileBgSrc,
+  tabletBgSrc,
   desktopTransform,
   mobileTransform,
+  tabletTransform,
 }: DesignHeroSlideBackgroundsProps) {
   return (
     <>
@@ -48,7 +52,29 @@ export function DesignHeroSlideBackgrounds({
         </div>
       </div>
       <div
-        className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden md:block"
+        className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden md:block lg:hidden"
+        aria-hidden
+      >
+        <div
+          className="h-full w-full"
+          style={
+            {
+              transform: getManufacturingImageTransformCssValue(tabletTransform),
+              transformOrigin: "center center",
+            } as CSSProperties
+          }
+        >
+          <Image
+            src={tabletBgSrc}
+            alt=""
+            fill
+            sizes={HERO_DESKTOP_IMAGE_SIZES}
+            className="object-cover object-center"
+          />
+        </div>
+      </div>
+      <div
+        className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden lg:block"
         aria-hidden
       >
         <div

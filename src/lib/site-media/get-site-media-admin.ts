@@ -52,18 +52,25 @@ export type AdminModelingSlotRow = {
   itemId: string | null;
   r2ObjectKey: string | null;
   r2ObjectKeyMobile: string | null;
+  r2ObjectKeyTablet: string | null;
   displayUrl: string | null;
   displayUrlMobile: string | null;
+  displayUrlTablet: string | null;
   altText: string;
   titleDesktop: string;
   titleMobile: string;
   bodyDesktop: string;
   bodyMobile: string;
+  titleTablet: string;
+  bodyTablet: string;
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
+  titleTabletOffsetY: number;
+  bodyTabletOffsetY: number;
   desktopLine1Emphasis: string;
+  tabletLine1Emphasis: string;
 };
 
 export type AdminOrderedItemRow = {
@@ -120,8 +127,10 @@ function emptyAdminBundle(): AdminSiteMediaBundle {
       itemId: null,
       r2ObjectKey: null,
       r2ObjectKeyMobile: null,
+      r2ObjectKeyTablet: null,
       displayUrl: null,
       displayUrlMobile: null,
+      displayUrlTablet: null,
       altText: "",
     }),
   );
@@ -215,11 +224,16 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
         titleMobile: row.titleMobile ?? "",
         bodyDesktop: row.bodyDesktop ?? "",
         bodyMobile: row.bodyMobile ?? "",
-          titleDesktopOffsetY: row.titleDesktopOffsetY ?? 0,
-          titleMobileOffsetY: row.titleMobileOffsetY ?? 0,
-          bodyDesktopOffsetY: row.bodyDesktopOffsetY ?? 0,
-          bodyMobileOffsetY: row.bodyMobileOffsetY ?? 0,
+        titleTablet: row.titleTablet ?? "",
+        bodyTablet: row.bodyTablet ?? "",
+        titleDesktopOffsetY: row.titleDesktopOffsetY ?? 0,
+        titleMobileOffsetY: row.titleMobileOffsetY ?? 0,
+        bodyDesktopOffsetY: row.bodyDesktopOffsetY ?? 0,
+        bodyMobileOffsetY: row.bodyMobileOffsetY ?? 0,
+        titleTabletOffsetY: row.titleTabletOffsetY ?? 0,
+        bodyTabletOffsetY: row.bodyTabletOffsetY ?? 0,
         desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
+        tabletLine1Emphasis: row.tabletLine1Emphasis ?? "",
       }),
     }));
     manufacturingCopyRows = manufacturingRows.map((row) => ({
@@ -280,11 +294,15 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
         itemId: row?.id ?? null,
         r2ObjectKey: row?.r2ObjectKey ?? null,
         r2ObjectKeyMobile: row?.r2ObjectKeyMobile ?? null,
+        r2ObjectKeyTablet: row?.r2ObjectKeyTablet ?? null,
         displayUrl: row?.r2ObjectKey
           ? resolveSiteMediaDisplayUrl(row.r2ObjectKey)
           : null,
         displayUrlMobile: row?.r2ObjectKeyMobile
           ? resolveSiteMediaDisplayUrl(row.r2ObjectKeyMobile)
+          : null,
+        displayUrlTablet: row?.r2ObjectKeyTablet
+          ? resolveSiteMediaDisplayUrl(row.r2ObjectKeyTablet)
           : null,
         altText: row?.alt ?? "",
       };

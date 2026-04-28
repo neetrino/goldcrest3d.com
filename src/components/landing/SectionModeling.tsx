@@ -90,18 +90,25 @@ export function SectionModeling({
           <ModelingBlockMechanical
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.MECHANICAL].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.MECHANICAL].mobile}
+            imageUrlTablet={modeling[MODELING_SLOT_KEYS.MECHANICAL].tablet}
             titleDesktop={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleDesktop}
             titleMobile={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleMobile}
+            titleTablet={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleTablet}
             titleDesktopOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleDesktopOffsetY}
             titleMobileOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleMobileOffsetY}
+            titleTabletOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleTabletOffsetY}
             descriptionLinesDesktop={toCopyLines(
               modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyDesktop,
             )}
             descriptionLinesMobile={toCopyLines(
               modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyMobile,
             )}
+            descriptionLinesTablet={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyTablet,
+            )}
             bodyDesktopOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyDesktopOffsetY}
             bodyMobileOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyMobileOffsetY}
+            bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyTabletOffsetY}
             isAndroidViewport={isAndroidViewport}
           />
           <ModelingBlockHeritage

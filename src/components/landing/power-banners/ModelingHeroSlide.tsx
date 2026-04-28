@@ -11,19 +11,25 @@ import { ModelingHeroSlideTextStack } from "./ModelingHeroSlideTextStack";
 type ModelingHeroSlideProps = {
   desktopBgSrc: string;
   mobileBgSrc: string;
+  tabletBgSrc: string;
   desktopCopy: PowerBannerCopyEntry;
   mobileCopy: PowerBannerCopyEntry;
+  tabletCopy: PowerBannerCopyEntry;
   desktopTransform: ManufacturingImageTransform;
   mobileTransform: ManufacturingImageTransform;
+  tabletTransform: ManufacturingImageTransform;
 };
 
 export function ModelingHeroSlide({
   desktopBgSrc,
   mobileBgSrc,
+  tabletBgSrc,
   desktopCopy,
   mobileCopy,
+  tabletCopy,
   desktopTransform,
   mobileTransform,
+  tabletTransform,
 }: ModelingHeroSlideProps) {
   return (
     <div
@@ -41,10 +47,16 @@ export function ModelingHeroSlide({
         <ModelingHeroSlideLayers
           desktopBgSrc={desktopBgSrc}
           mobileBgSrc={mobileBgSrc}
+          tabletBgSrc={tabletBgSrc}
           desktopTransform={desktopTransform}
           mobileTransform={mobileTransform}
+          tabletTransform={tabletTransform}
         />
-        <ModelingHeroSlideTextStack desktopCopy={desktopCopy} mobileCopy={mobileCopy} />
+        <ModelingHeroSlideTextStack
+          desktopCopy={desktopCopy}
+          mobileCopy={mobileCopy}
+          tabletCopy={tabletCopy}
+        />
       </div>
       <div className="power-banners-section1-tail shrink-0" aria-hidden />
     </div>

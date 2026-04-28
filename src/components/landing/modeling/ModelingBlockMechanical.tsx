@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -12,22 +13,30 @@ import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy
 const MOBILE_OVERLAY_TRANSLATE_Y_PX = 100;
 const MOBILE_OVERLAY_TRANSLATE_Y_ANDROID_PX = 70;
 
-/** Desktop (md+): nudge first title line up without shifting the rest of the overlay. */
-const TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS = "md:-translate-y-1.5";
+/** Desktop (lg+): nudge first title line up without shifting the rest of the overlay. */
+const TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS = "lg:-translate-y-1.5";
+/** Tablet (md–lg): align with tablet typography tier. */
+const TITLE_LINE1_TABLET_NUDGE_UP_CLASS = "md:-translate-y-1.5";
 const TITLE_MOBILE_NUDGE_DOWN_CLASS = "max-sm:mt-[calc(1.25rem*var(--ms,1))]";
-const OVERLAY_DESKTOP_NUDGE_UP_CLASS = "sm:-translate-y-[calc(1.5rem*var(--ms,1))]";
+const OVERLAY_TABLET_DESKTOP_NUDGE_UP_CLASS =
+  "md:-translate-y-[calc(1.5rem*var(--ms,1))] lg:-translate-y-[calc(1.5rem*var(--ms,1))]";
 
 type ModelingBlockMechanicalProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  imageUrlTablet: string;
   titleDesktop: string;
   titleMobile: string;
+  titleTablet: string;
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
+  titleTabletOffsetY: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
+  bodyTabletOffsetY: number;
   isAndroidViewport: boolean;
 };
 
@@ -35,14 +44,19 @@ type ModelingBlockMechanicalProps = {
 export function ModelingBlockMechanical({
   imageUrlDesktop,
   imageUrlMobile,
+  imageUrlTablet,
   titleDesktop,
   titleMobile,
+  titleTablet,
   titleDesktopOffsetY,
   titleMobileOffsetY,
+  titleTabletOffsetY,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  descriptionLinesTablet,
   bodyDesktopOffsetY,
   bodyMobileOffsetY,
+  bodyTabletOffsetY,
   isAndroidViewport,
 }: ModelingBlockMechanicalProps) {
   const [isAndroidClient] = useState(() => {
@@ -56,9 +70,9 @@ export function ModelingBlockMechanical({
     const hasAndroidPlatform = /Android/i.test(nav.userAgentData?.platform ?? "");
     return hasAndroidUa || hasAndroidPlatform;
   });
-  const sameUrl = imageUrlDesktop === imageUrlMobile;
   const hasDesktopTitle = titleDesktop.trim().length > 0;
   const hasMobileTitle = titleMobile.trim().length > 0;
+  const hasTabletTitle = titleTablet.trim().length > 0;
 
   const isAndroidResolved = isAndroidViewport || isAndroidClient;
   const mobileOverlayTranslateYPx = isAndroidResolved
@@ -73,61 +87,63 @@ export function ModelingBlockMechanical({
         className="absolute inset-0"
         style={{ backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }}
       >
-        {sameUrl ? (
+        <div className="absolute inset-0 md:hidden">
+          <Image
+            src={imageUrlMobile}
+            alt=""
+            fill
+            className="min-h-0 min-w-0 h-full w-full object-cover object-[56%_center]"
+            sizes="(max-width: 767px) 100vw, 0px"
+          />
+        </div>
+        <div className="absolute inset-0 hidden md:block lg:hidden">
+          <Image
+            src={imageUrlTablet}
+            alt=""
+            fill
+            className="h-full w-full object-cover object-center"
+            sizes="(max-width: 1023px) 50vw, 0px"
+          />
+        </div>
+        <div className="absolute inset-0 hidden lg:block">
           <Image
             src={imageUrlDesktop}
             alt=""
             fill
-            className="h-full w-full object-cover max-md:object-[56%_center] md:object-center"
-            sizes="(max-width: 767px) 100vw, 50vw"
+            className="h-full w-full object-cover object-center"
+            sizes="(max-width: 1280px) 50vw, 33vw"
           />
-        ) : (
-          <>
-            <div className="absolute inset-0 md:hidden">
-              <Image
-                src={imageUrlMobile}
-                alt=""
-                fill
-                className="min-h-0 min-w-0 h-full w-full object-cover object-[56%_center]"
-                sizes="(max-width: 767px) 100vw, 0px"
-              />
-            </div>
-            <div className="absolute inset-0 hidden md:block">
-              <Image
-                src={imageUrlDesktop}
-                alt=""
-                fill
-                className="h-full w-full object-cover object-center"
-                sizes="(max-width: 1280px) 50vw, 33vw"
-              />
-            </div>
-          </>
-        )}
+        </div>
       </div>
       <div
-        className={`absolute inset-0 z-10 flex flex-col items-start justify-start gap-[calc(1rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-black max-sm:-translate-x-[calc(0.375rem*var(--ms,1))] max-sm:translate-y-[calc(var(--mechanical-overlay-ty)*var(--ms,1))] md:gap-[calc(1.25rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] md:pt-[calc(3.25rem*var(--ms,1))] ${OVERLAY_DESKTOP_NUDGE_UP_CLASS}`}
+        className={`absolute inset-0 z-10 flex flex-col items-start justify-start gap-[calc(1rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-black max-sm:-translate-x-[calc(0.375rem*var(--ms,1))] max-sm:translate-y-[calc(var(--mechanical-overlay-ty)*var(--ms,1))] md:gap-[calc(1.25rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] md:pt-[calc(3.25rem*var(--ms,1))] ${OVERLAY_TABLET_DESKTOP_NUDGE_UP_CLASS}`}
         style={
           {
             ["--mechanical-overlay-ty" as string]: `${mobileOverlayTranslateYPx}px`,
-          } as React.CSSProperties
+          } as CSSProperties
         }
       >
-        {hasMobileTitle || hasDesktopTitle ? (
+        {hasMobileTitle || hasTabletTitle || hasDesktopTitle ? (
           <div className="w-full">
-            <h3 className={`z-10 h-[calc(28px*var(--ms,1)*var(--mt,1))] w-[calc(283px*var(--ms,1))] max-w-full shrink-0 overflow-visible text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:w-full sm:max-w-[calc(520px*var(--ms,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal md:scale-x-105 md:origin-left ${TITLE_MOBILE_NUDGE_DOWN_CLASS}`}>
+            <h3 className={`z-10 h-[calc(28px*var(--ms,1)*var(--mt,1))] w-[calc(283px*var(--ms,1))] max-w-full shrink-0 overflow-visible text-left font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] max-sm:whitespace-normal md:max-lg:h-[calc(24px*var(--ms,1)*var(--mt,1))] md:max-lg:w-full md:max-lg:max-w-[calc(520px*var(--ms,1))] md:max-lg:font-manrope md:max-lg:text-[calc(32px*var(--ms,1)*var(--mt,1))] md:max-lg:leading-[calc(24px*var(--ms,1)*var(--mt,1))] md:max-lg:tracking-normal md:max-lg:scale-x-105 md:max-lg:origin-left lg:h-[calc(24px*var(--ms,1)*var(--mt,1))] lg:w-full lg:max-w-[calc(520px*var(--ms,1))] lg:font-manrope lg:text-[calc(32px*var(--ms,1)*var(--mt,1))] lg:leading-[calc(24px*var(--ms,1)*var(--mt,1))] lg:tracking-normal lg:scale-x-105 lg:origin-left ${TITLE_MOBILE_NUDGE_DOWN_CLASS}`}>
               {hasMobileTitle ? (
                 <span
-                  className={`block whitespace-pre-wrap sm:hidden ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}
+                  className={`block whitespace-pre-wrap md:hidden ${TITLE_LINE1_TABLET_NUDGE_UP_CLASS}`}
                   style={{ transform: `translateY(calc(${titleMobileOffsetY}px * var(--ms,1)))` }}
                 >
                   {renderModelingTitleText(titleMobile)}
                 </span>
               ) : null}
-              {hasDesktopTitle ? (
+              {hasTabletTitle ? (
                 <span
-                  className="hidden sm:block"
-                  style={{ transform: `translateY(calc(${titleDesktopOffsetY}px * var(--ms,1)))` }}
+                  className={`hidden whitespace-pre-wrap md:block lg:hidden ${TITLE_LINE1_TABLET_NUDGE_UP_CLASS}`}
+                  style={{ transform: `translateY(calc(${titleTabletOffsetY}px * var(--ms,1)))` }}
                 >
+                  {renderModelingTitleText(titleTablet)}
+                </span>
+              ) : null}
+              {hasDesktopTitle ? (
+                <span className="hidden lg:block" style={{ transform: `translateY(calc(${titleDesktopOffsetY}px * var(--ms,1)))` }}>
                   <span className={`block whitespace-pre-wrap ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
                     {renderModelingTitleText(titleDesktop)}
                   </span>
@@ -138,7 +154,7 @@ export function ModelingBlockMechanical({
         ) : null}
         {descriptionLinesMobile.length > 0 ? (
           <p
-            className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] sm:hidden"
+            className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] md:hidden"
             style={{ transform: `translateY(calc(${bodyMobileOffsetY}px * var(--ms,1)))` }}
           >
             {descriptionLinesMobile.map((line, i) => (
@@ -148,10 +164,21 @@ export function ModelingBlockMechanical({
             ))}
           </p>
         ) : null}
+        {descriptionLinesTablet.length > 0 ? (
+          <div style={{ transform: `translateY(calc(${bodyTabletOffsetY}px * var(--ms,1)))` }}>
+            <p className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] md:max-lg:block lg:hidden">
+              {descriptionLinesTablet.map((line, i) => (
+                <span key={`t-${i}`} className="block whitespace-nowrap">
+                  {renderModelingCopyLine(line)}
+                </span>
+              ))}
+            </p>
+          </div>
+        ) : null}
         {descriptionLinesDesktop.length > 0 ? (
           <div style={{ transform: `translateY(calc(${bodyDesktopOffsetY}px * var(--ms,1)))` }}>
             <div
-              className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:block lg:-translate-y-[calc(1rem*var(--ms,1))]"
+              className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] lg:block lg:-translate-y-[calc(1rem*var(--ms,1))]"
               style={{ overflow: "visible" }}
             >
               {descriptionLinesDesktop.map((line, i) => (

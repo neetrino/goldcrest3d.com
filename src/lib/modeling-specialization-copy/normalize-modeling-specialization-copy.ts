@@ -23,11 +23,16 @@ export function normalizeModelingSpecializationCopyPayload(
     titleMobile: normalizeMultilineValue(payload.titleMobile),
     bodyDesktop: normalizeMultilineValue(payload.bodyDesktop),
     bodyMobile: normalizeMultilineValue(payload.bodyMobile),
+    titleTablet: normalizeMultilineValue(payload.titleTablet),
+    bodyTablet: normalizeMultilineValue(payload.bodyTablet),
     titleDesktopOffsetY: clampOffset(payload.titleDesktopOffsetY),
     titleMobileOffsetY: clampOffset(payload.titleMobileOffsetY),
     bodyDesktopOffsetY: clampOffset(payload.bodyDesktopOffsetY),
     bodyMobileOffsetY: clampOffset(payload.bodyMobileOffsetY),
+    titleTabletOffsetY: clampOffset(payload.titleTabletOffsetY),
+    bodyTabletOffsetY: clampOffset(payload.bodyTabletOffsetY),
     desktopLine1Emphasis: normalizeSingleLineValue(payload.desktopLine1Emphasis),
+    tabletLine1Emphasis: normalizeSingleLineValue(payload.tabletLine1Emphasis),
   };
 }
 
@@ -48,10 +53,15 @@ export function emptyModelingSpecializationCopyRow(
     titleMobile: "",
     bodyDesktop: "",
     bodyMobile: "",
+    titleTablet: "",
+    bodyTablet: "",
     titleDesktopOffsetY: 0,
     titleMobileOffsetY: 0,
     bodyDesktopOffsetY: 0,
     bodyMobileOffsetY: 0,
+    titleTabletOffsetY: 0,
+    bodyTabletOffsetY: 0,
     desktopLine1Emphasis: "",
+    tabletLine1Emphasis: "",
   };
 }

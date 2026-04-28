@@ -29,7 +29,10 @@ import {
 } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-mobile-copy.keys";
 import { logger } from "@/lib/logger";
 import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
-import { normalizeModelingSpecializationCopyPayload } from "@/lib/modeling-specialization-copy/normalize-modeling-specialization-copy";
+import {
+  emptyModelingSpecializationCopyRow,
+  normalizeModelingSpecializationCopyPayload,
+} from "@/lib/modeling-specialization-copy/normalize-modeling-specialization-copy";
 import { getManufacturingMobileMediaSlotId } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-mobile-content";
 import { siteMediaItem } from "@/lib/site-media/site-media-prisma";
 import {
@@ -59,6 +62,7 @@ import {
 } from "@/lib/validations/manufacturingIntelligenceItem";
 import { founderSectionFormSchema } from "@/lib/validations/founderSection";
 import { modelingSpecializationCopyFormSchema } from "@/lib/validations/modelingSpecializationCopy";
+import { modelingTabletSlotCopyFormSchema } from "@/lib/validations/modelingTabletSpecializationCopy";
 import { powerBannerTransformFormSchema } from "@/lib/validations/powerBannerCopy";
 import { engineeringProcessStepFormSchema } from "@/lib/validations/engineeringProcessStep";
 import { footerSocialLinksFormSchema } from "@/lib/validations/footerSocialLinks";
@@ -74,8 +78,8 @@ const MANUFACTURING_MOBILE_SORT_ORDER = new Map<string, number>(
   MANUFACTURING_SPECIALIZATION_ITEMS.map((item, index) => [item.id, index]),
 );
 
-export type ModelingSlotImageVariant = "desktop" | "mobile";
-export type HeroBannerImageVariant = "desktop" | "mobile";
+export type ModelingSlotImageVariant = "desktop" | "mobile" | "tablet";
+export type HeroBannerImageVariant = "desktop" | "mobile" | "tablet";
 export type FounderSectionVariant = "desktop" | "mobile";
 
 const ORDERED_GROUPS = new Set<SiteMediaGroupKey>([
@@ -120,7 +124,7 @@ export async function upsertModelingSlotImage(
   if (!MODELING_SLOT_SET.has(slotKey)) {
     return { ok: false, error: "Invalid slot." };
   }
-  if (variant !== "desktop" && variant !== "mobile") {
+  if (variant !== "desktop" && variant !== "mobile" && variant !== "tablet") {
     return { ok: false, error: "Invalid variant." };
   }
   const file = formData.get("file");
@@ -131,15 +135,18 @@ export async function upsertModelingSlotImage(
   if (err) return { ok: false, error: err };
 
   const isDesktop = variant === "desktop";
-  const newKey = isDesktop
-    ? await uploadSiteMediaToR2(file)
-    : await uploadModelingMobileImageToR2(file);
+  const isTablet = variant === "tablet";
+  const newKey =
+    variant === "mobile"
+      ? await uploadModelingMobileImageToR2(file)
+      : await uploadSiteMediaToR2(file);
   if (!newKey) {
     return {
       ok: false,
-      error: isDesktop
-        ? "Upload failed. Check R2 configuration."
-        : "Upload failed. The image could not be processed (try PNG, JPEG, or WebP) or R2 is misconfigured.",
+      error:
+        variant === "mobile"
+          ? "Upload failed. The image could not be processed (try PNG, JPEG, or WebP) or R2 is misconfigured."
+          : "Upload failed. Check R2 configuration.",
     };
   }
 
@@ -150,7 +157,11 @@ export async function upsertModelingSlotImage(
     });
 
     if (existing) {
-      const oldKey = isDesktop ? existing.r2ObjectKey : existing.r2ObjectKeyMobile;
+      const oldKey = isDesktop
+        ? existing.r2ObjectKey
+        : isTablet
+          ? existing.r2ObjectKeyTablet
+          : existing.r2ObjectKeyMobile;
       if (oldKey) {
         await deleteObjectFromR2(oldKey);
       }
@@ -158,7 +169,9 @@ export async function upsertModelingSlotImage(
         where: { id: existing.id },
         data: isDesktop
           ? { r2ObjectKey: newKey }
-          : { r2ObjectKeyMobile: newKey },
+          : isTablet
+            ? { r2ObjectKeyTablet: newKey }
+            : { r2ObjectKeyMobile: newKey },
       });
     } else {
       await siteMediaItem.create({
@@ -167,7 +180,8 @@ export async function upsertModelingSlotImage(
           slotId: typedSlot,
           sortOrder: 0,
           r2ObjectKey: isDesktop ? newKey : null,
-          r2ObjectKeyMobile: isDesktop ? null : newKey,
+          r2ObjectKeyMobile: variant === "mobile" ? newKey : null,
+          r2ObjectKeyTablet: isTablet ? newKey : null,
         },
       });
     }
@@ -219,7 +233,9 @@ export async function updateModelingSlotCopy(
     };
   }
 
+  const slotTyped = parsed.data.slotKey as ModelingSlotKey;
   const payload = normalizeModelingSpecializationCopyPayload({
+    ...emptyModelingSpecializationCopyRow(slotTyped),
     titleDesktop: parsed.data.titleDesktop,
     titleMobile: parsed.data.titleMobile,
     bodyDesktop: parsed.data.bodyDesktop,
@@ -253,6 +269,70 @@ export async function updateModelingSlotCopy(
   } catch (e) {
     logger.error("updateModelingSlotCopy", e);
     return { ok: false, error: "Could not save text content." };
+  }
+
+  revalidateSite();
+  return { ok: true };
+}
+
+export async function updateModelingTabletSlotCopy(
+  _prev: SiteMediaActionResult | null,
+  formData: FormData,
+): Promise<SiteMediaActionResult> {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
+  const parsed = modelingTabletSlotCopyFormSchema.safeParse({
+    slotKey: formData.get("slotKey"),
+    titleTablet: formData.get("titleTablet"),
+    bodyTablet: formData.get("bodyTablet"),
+    titleTabletOffsetY: formData.get("titleTabletOffsetY"),
+    bodyTabletOffsetY: formData.get("bodyTabletOffsetY"),
+    tabletLine1Emphasis: formData.get("tabletLine1Emphasis"),
+  });
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    return {
+      ok: false,
+      error:
+        fieldErrors.slotKey?.[0] ??
+        fieldErrors.titleTablet?.[0] ??
+        fieldErrors.bodyTablet?.[0] ??
+        fieldErrors.titleTabletOffsetY?.[0] ??
+        fieldErrors.bodyTabletOffsetY?.[0] ??
+        fieldErrors.tabletLine1Emphasis?.[0] ??
+        "Invalid input.",
+    };
+  }
+
+  const slotKey = parsed.data.slotKey as ModelingSlotKey;
+  const tabletPayload = normalizeModelingSpecializationCopyPayload({
+    ...emptyModelingSpecializationCopyRow(slotKey),
+    titleTablet: parsed.data.titleTablet,
+    bodyTablet: parsed.data.bodyTablet,
+    titleTabletOffsetY: parsed.data.titleTabletOffsetY,
+    bodyTabletOffsetY: parsed.data.bodyTabletOffsetY,
+    tabletLine1Emphasis: parsed.data.tabletLine1Emphasis,
+  });
+
+  try {
+    await modelingSpecializationCopy.upsert({
+      where: { slotKey: parsed.data.slotKey },
+      create: {
+        slotKey: parsed.data.slotKey,
+        ...tabletPayload,
+      },
+      update: {
+        titleTablet: tabletPayload.titleTablet,
+        bodyTablet: tabletPayload.bodyTablet,
+        titleTabletOffsetY: tabletPayload.titleTabletOffsetY,
+        bodyTabletOffsetY: tabletPayload.bodyTabletOffsetY,
+        tabletLine1Emphasis: tabletPayload.tabletLine1Emphasis,
+      },
+    });
+  } catch (e) {
+    logger.error("updateModelingTabletSlotCopy", e);
+    return { ok: false, error: "Could not save tablet text content." };
   }
 
   revalidateSite();

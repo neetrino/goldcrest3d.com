@@ -28,6 +28,7 @@ import {
   clampMobileCopyOffsetPx,
   PowerBannerMobileVerticalOffsets,
 } from "./PowerBannerMobileVerticalOffsets";
+import { PowerBannerTabletCopyPositionControls } from "./PowerBannerTabletCopyPositionControls";
 import Image from "next/image";
 
 const MIN_ZOOM = 0.5;
@@ -38,6 +39,7 @@ const NUDGE_STEP = 12;
 const RECOMMENDED_IMAGE_SIZE: Record<PowerBannerViewport, { width: number; height: number }> = {
   desktop: { width: 1918, height: 707 },
   mobile: { width: 367, height: 679 },
+  tablet: { width: 1536, height: 640 },
 };
 
 type TransformState = {
@@ -81,14 +83,24 @@ export function PowerBannerCopyEditor({
   const router = useRouter();
   const meta = POWER_BANNER_ADMIN_LABELS[bannerKey];
   const bannerTitle = initial.title.trim() || meta.name;
-  const viewportLabel = viewport === "desktop" ? "Desktop" : "Mobile";
+  const viewportLabel =
+    viewport === "desktop" ? "Desktop" : viewport === "tablet" ? "Tablet" : "Mobile";
   const recommendedSize = RECOMMENDED_IMAGE_SIZE[viewport];
   const [transform, setTransform] = useState<TransformState>(toInitialTransform(initial));
+  const [titleOffsetX, setTitleOffsetX] = useState(() =>
+    clampMobileCopyOffsetPx(initial.titleOffsetX),
+  );
   const [titleOffsetY, setTitleOffsetY] = useState(() =>
     clampMobileCopyOffsetPx(initial.titleOffsetY),
   );
+  const [bodyOffsetX, setBodyOffsetX] = useState(() =>
+    clampMobileCopyOffsetPx(initial.bodyOffsetX),
+  );
   const [bodyOffsetY, setBodyOffsetY] = useState(() =>
     clampMobileCopyOffsetPx(initial.bodyOffsetY),
+  );
+  const [ctaOffsetX, setCtaOffsetX] = useState(() =>
+    clampMobileCopyOffsetPx(initial.ctaOffsetX),
   );
   const [ctaOffsetY, setCtaOffsetY] = useState(() =>
     clampMobileCopyOffsetPx(initial.ctaOffsetY),
@@ -339,13 +351,40 @@ export function PowerBannerCopyEditor({
         <input type="hidden" name="viewport" value={viewport} />
         <input
           type="hidden"
+          name="titleOffsetX"
+          value={
+            viewport === "tablet"
+              ? String(clampMobileCopyOffsetPx(titleOffsetX))
+              : "0"
+          }
+        />
+        <input
+          type="hidden"
           name="titleOffsetY"
           value={String(clampMobileCopyOffsetPx(titleOffsetY))}
         />
         <input
           type="hidden"
+          name="bodyOffsetX"
+          value={
+            viewport === "tablet"
+              ? String(clampMobileCopyOffsetPx(bodyOffsetX))
+              : "0"
+          }
+        />
+        <input
+          type="hidden"
           name="bodyOffsetY"
           value={String(clampMobileCopyOffsetPx(bodyOffsetY))}
+        />
+        <input
+          type="hidden"
+          name="ctaOffsetX"
+          value={
+            viewport === "tablet"
+              ? String(clampMobileCopyOffsetPx(ctaOffsetX))
+              : "0"
+          }
         />
         <input
           type="hidden"
@@ -395,21 +434,43 @@ export function PowerBannerCopyEditor({
           </p>
         </div>
 
-        <PowerBannerMobileVerticalOffsets
-          viewportLabel={viewport === "desktop" ? "Desktop" : "Mobile"}
-          titleOffsetY={titleOffsetY}
-          bodyOffsetY={bodyOffsetY}
-          ctaOffsetY={ctaOffsetY}
-          onNudgeTitle={(delta) =>
-            setTitleOffsetY((prev) => clampMobileCopyOffsetPx(prev + delta))
-          }
-          onNudgeBody={(delta) =>
-            setBodyOffsetY((prev) => clampMobileCopyOffsetPx(prev + delta))
-          }
-          onNudgeCta={(delta) =>
-            setCtaOffsetY((prev) => clampMobileCopyOffsetPx(prev + delta))
-          }
-        />
+        {viewport === "tablet" ? (
+          <PowerBannerTabletCopyPositionControls
+            title={{ x: titleOffsetX, y: titleOffsetY }}
+            body={{ x: bodyOffsetX, y: bodyOffsetY }}
+            cta={{ x: ctaOffsetX, y: ctaOffsetY }}
+            onChangeTitle={(next) => {
+              setTitleOffsetX(next.x);
+              setTitleOffsetY(next.y);
+            }}
+            onChangeBody={(next) => {
+              setBodyOffsetX(next.x);
+              setBodyOffsetY(next.y);
+            }}
+            onChangeCta={(next) => {
+              setCtaOffsetX(next.x);
+              setCtaOffsetY(next.y);
+            }}
+          />
+        ) : (
+          <PowerBannerMobileVerticalOffsets
+            viewportLabel={
+              viewport === "desktop" ? "Desktop" : "Mobile"
+            }
+            titleOffsetY={titleOffsetY}
+            bodyOffsetY={bodyOffsetY}
+            ctaOffsetY={ctaOffsetY}
+            onNudgeTitle={(delta) =>
+              setTitleOffsetY((prev) => clampMobileCopyOffsetPx(prev + delta))
+            }
+            onNudgeBody={(delta) =>
+              setBodyOffsetY((prev) => clampMobileCopyOffsetPx(prev + delta))
+            }
+            onNudgeCta={(delta) =>
+              setCtaOffsetY((prev) => clampMobileCopyOffsetPx(prev + delta))
+            }
+          />
+        )}
 
         <PowerBannerCopyMessages state={state} />
 

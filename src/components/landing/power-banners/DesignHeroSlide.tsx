@@ -7,19 +7,25 @@ import { DesignHeroSlideCopy } from "./DesignHeroSlideCopy";
 type DesignHeroSlideProps = {
   desktopBgSrc: string;
   mobileBgSrc: string;
+  tabletBgSrc: string;
   desktopCopy: PowerBannerCopyEntry;
   mobileCopy: PowerBannerCopyEntry;
+  tabletCopy: PowerBannerCopyEntry;
   desktopTransform: ManufacturingImageTransform;
   mobileTransform: ManufacturingImageTransform;
+  tabletTransform: ManufacturingImageTransform;
 };
 
 export function DesignHeroSlide({
   desktopBgSrc,
   mobileBgSrc,
+  tabletBgSrc,
   desktopCopy,
   mobileCopy,
+  tabletCopy,
   desktopTransform,
   mobileTransform,
+  tabletTransform,
 }: DesignHeroSlideProps) {
   return (
     <div
@@ -29,10 +35,16 @@ export function DesignHeroSlide({
       <DesignHeroSlideBackgrounds
         desktopBgSrc={desktopBgSrc}
         mobileBgSrc={mobileBgSrc}
+        tabletBgSrc={tabletBgSrc}
         desktopTransform={desktopTransform}
         mobileTransform={mobileTransform}
+        tabletTransform={tabletTransform}
       />
-      <DesignHeroSlideCopy desktopCopy={desktopCopy} mobileCopy={mobileCopy} />
+      <DesignHeroSlideCopy
+        desktopCopy={desktopCopy}
+        mobileCopy={mobileCopy}
+        tabletCopy={tabletCopy}
+      />
     </div>
   );
 }

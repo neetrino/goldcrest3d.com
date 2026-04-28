@@ -49,6 +49,20 @@ export const POWER_BANNER_DEFAULT_COPY: Record<
       body: "Concept-to-CAD development for legacy collection building. Your vision, engineered.",
     },
   },
+  tablet: {
+    MODELING: {
+      title: "3D Production-Ready Modeling",
+      body: "Engineered for casting, printing and precise stone setting. Every micron accounted for.",
+    },
+    RENDERING: {
+      title: "Jewelry Rendering",
+      body: "High-resolution assets for brand presentation and global sales. Perfection in every light ray.",
+    },
+    DESIGN: {
+      title: "Jewelry Design",
+      body: "Concept-to-CAD development for legacy collection building. Your vision, engineered.",
+    },
+  },
 };
 
 export const POWER_BANNER_DEFAULT_MEDIA: Record<
@@ -80,6 +94,20 @@ export const POWER_BANNER_DEFAULT_MEDIA: Record<
     },
     DESIGN: {
       imageSrc: SECTION3_HERO_BG_MOBILE_PATH,
+      imageAlt: "Jewelry Design hero banner",
+    },
+  },
+  tablet: {
+    MODELING: {
+      imageSrc: LANDING_IMAGES.heroModeling,
+      imageAlt: "3D Production-Ready Modeling hero banner",
+    },
+    RENDERING: {
+      imageSrc: LANDING_IMAGES.heroRendering,
+      imageAlt: "Jewelry Rendering hero banner",
+    },
+    DESIGN: {
+      imageSrc: LANDING_IMAGES.heroDesign,
       imageAlt: "Jewelry Design hero banner",
     },
   },
@@ -116,6 +144,23 @@ export const POWER_BANNER_DEFAULT_TRANSFORMS: Record<
       zoom: 1,
       offsetX: 0,
       offsetY: 0,
+    }),
+    DESIGN: normalizeManufacturingImageTransform({
+      zoom: 1,
+      offsetX: 0,
+      offsetY: 0,
+    }),
+  },
+  tablet: {
+    MODELING: normalizeManufacturingImageTransform({
+      zoom: SECTION1_HERO_BG_SCALE,
+      offsetX: 0,
+      offsetY: -(SECTION1_HERO_BG_IMAGE_NUDGE_UP_PX - SECTION1_HERO_BG_NUDGE_DOWN_PX),
+    }),
+    RENDERING: normalizeManufacturingImageTransform({
+      zoom: SECTION2_HERO_BG_SCALE,
+      offsetX: -SECTION2_HERO_BG_IMAGE_NUDGE_LEFT_PX,
+      offsetY: -SECTION2_HERO_BG_IMAGE_NUDGE_UP_PX,
     }),
     DESIGN: normalizeManufacturingImageTransform({
       zoom: 1,

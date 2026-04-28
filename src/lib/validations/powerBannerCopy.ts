@@ -41,8 +41,11 @@ export const powerBannerCopyFormSchema = z.object({
     .string()
     .max(MAX_BODY_LEN, `Description must be at most ${MAX_BODY_LEN} characters`)
     .transform((s) => normalizeMultilineValue(s).trim()),
+  titleOffsetX: optionalPxOffset,
   titleOffsetY: optionalPxOffset,
+  bodyOffsetX: optionalPxOffset,
   bodyOffsetY: optionalPxOffset,
+  ctaOffsetX: optionalPxOffset,
   ctaOffsetY: optionalPxOffset,
 });
 
@@ -58,6 +61,10 @@ export const powerBannerTransformFormSchema = z.object({
     .max(MAX_ALT_LEN, `Image alt must be at most ${MAX_ALT_LEN} characters`)
     .transform((s) => s.trim()),
   zoom: numberField("Zoom").min(0.5).max(2.5),
-  offsetX: numberField("Horizontal offset").min(-400).max(400),
-  offsetY: numberField("Vertical offset").min(-400).max(400),
+  offsetX: numberField("Horizontal offset")
+    .min(POWER_BANNER_MOBILE_TEXT_CTA_OFFSET_MIN)
+    .max(POWER_BANNER_MOBILE_TEXT_CTA_OFFSET_MAX),
+  offsetY: numberField("Vertical offset")
+    .min(POWER_BANNER_MOBILE_TEXT_CTA_OFFSET_MIN)
+    .max(POWER_BANNER_MOBILE_TEXT_CTA_OFFSET_MAX),
 });

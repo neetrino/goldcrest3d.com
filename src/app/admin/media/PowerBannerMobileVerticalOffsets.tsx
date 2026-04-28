@@ -8,7 +8,7 @@ import {
 
 type PowerBannerMobileVerticalOffsetsProps = {
   /** Which hero viewport these offsets apply to (copy row + site rendering). */
-  viewportLabel: "Desktop" | "Mobile";
+  viewportLabel: "Desktop" | "Mobile" | "Tablet";
   titleOffsetY: number;
   bodyOffsetY: number;
   ctaOffsetY: number;

@@ -11,6 +11,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
+    "db:repair-schema": "prisma db execute --file prisma/repair-neon-add-missing-columns.sql",
     "db:seed": "tsx prisma/seed.ts",
     "test": "vitest",
     "test:run": "vitest run",
