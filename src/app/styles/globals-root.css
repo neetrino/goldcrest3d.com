@@ -191,3 +191,12 @@
     --landing-nav-logo-offset-x: 300px;
   }
 }
+
+/**
+ * Landing nav — horizontal inset respects CSS vars and device safe areas (notched phones).
+ * Keeps logo / CTA inside the usable viewport without changing spacing on typical desktop.
+ */
+.landing-nav-horizontal-padding {
+  padding-left: max(var(--landing-nav-padding-x), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--landing-nav-padding-x), env(safe-area-inset-right, 0px));
+}
