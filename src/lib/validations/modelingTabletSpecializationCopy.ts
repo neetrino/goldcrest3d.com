@@ -14,6 +14,12 @@ const offsetField = z.coerce
   .min(MIN_OFFSET_Y, `Offset must be >= ${MIN_OFFSET_Y}`)
   .max(MAX_OFFSET_Y, `Offset must be <= ${MAX_OFFSET_Y}`);
 
+/** Missing form fields (e.g. optional emphasis input not rendered) arrive as `null` from FormData. */
+function formDataOptionalString(raw: unknown): string {
+  if (raw === null || raw === undefined) return "";
+  return typeof raw === "string" ? raw : String(raw);
+}
+
 export const modelingTabletSlotCopyFormSchema = z.object({
   slotKey: z
     .string()
@@ -22,7 +28,10 @@ export const modelingTabletSlotCopyFormSchema = z.object({
   bodyTablet: z.string().max(MAX_BODY_LEN, `Tablet description max ${MAX_BODY_LEN} chars`),
   titleTabletOffsetY: offsetField,
   bodyTabletOffsetY: offsetField,
-  tabletLine1Emphasis: z
-    .string()
-    .max(MAX_TITLE_LEN, `Tablet emphasized fragment max ${MAX_TITLE_LEN} chars`),
+  tabletLine1Emphasis: z.preprocess(
+    formDataOptionalString,
+    z
+      .string()
+      .max(MAX_TITLE_LEN, `Tablet emphasized fragment max ${MAX_TITLE_LEN} chars`),
+  ),
 });

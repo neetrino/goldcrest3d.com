@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 
-import { HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX } from "./modeling-card.typography-layout.constants";
+import {
+  HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX,
+  HIPHOP_TABLET_DESCRIPTION_CLASS,
+} from "./modeling-card.typography-layout.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
 import { renderModelingCopyLine } from "./modeling-copy-line";
 
@@ -19,6 +22,7 @@ export type ModelingCardDescriptionContentParams = Pick<
   | "descriptionLines"
   | "descriptionLinesDesktop"
   | "descriptionLinesMobile"
+  | "descriptionLinesTablet"
   | "descriptionLayout"
   | "firstDescriptionLineId"
   | "firstDescriptionLineMarginRight"
@@ -28,6 +32,8 @@ export type ModelingCardDescriptionContentParams = Pick<
   hasLines: boolean;
   hipHopMobileLayout: boolean;
   bridalMobileLayout: boolean;
+  /** When true, split mobile / tablet / desktop copy at md and lg (modeling CMS tablet tier). */
+  modelingTabletTierEnabled?: boolean;
   lineWrapClass: string;
   hipHopMobileLineClass: string;
   hipHopMobileLineSingleLineClass: string;
@@ -35,6 +41,35 @@ export type ModelingCardDescriptionContentParams = Pick<
   bridalRowSpanClass: string;
   bridalRowSpanClassDesktop: string;
 };
+
+function renderHipHopBreakpointDesktopLines(
+  lines: string[],
+  keyPrefix: string,
+  continuationGapClass = "sm:mt-[calc(0.375rem*var(--ms,1))]",
+): ReactNode {
+  return lines.map((line, i) => (
+    <span
+      key={`${keyPrefix}-${i}`}
+      className={`block text-center ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i > 0 ? continuationGapClass : ""}`}
+    >
+      {line.includes(" performance.")
+        ? (
+            <>
+              {line.split(" performance.")[0]}
+              <span className="block">performance.</span>
+            </>
+          )
+        : line.includes(" performance․")
+          ? (
+              <>
+                {line.split(" performance․")[0]}
+                <span className="block">performance․</span>
+              </>
+            )
+          : renderModelingCopyLine(line)}
+    </span>
+  ));
+}
 
 export function renderModelingCardDescriptionContent(
   p: ModelingCardDescriptionContentParams,
@@ -44,6 +79,7 @@ export function renderModelingCardDescriptionContent(
     descriptionLines,
     descriptionLinesDesktop,
     descriptionLinesMobile,
+    descriptionLinesTablet,
     descriptionLayout = "stack",
     firstDescriptionLineId,
     firstDescriptionLineMarginRight,
@@ -52,6 +88,7 @@ export function renderModelingCardDescriptionContent(
     hasLines,
     hipHopMobileLayout,
     bridalMobileLayout,
+    modelingTabletTierEnabled = false,
     lineWrapClass,
     hipHopMobileLineClass,
     hipHopMobileLineSingleLineClass,
@@ -65,6 +102,71 @@ export function renderModelingCardDescriptionContent(
 
   if (descriptionLayout === "row") {
     if (bridalMobileLayout) {
+      const tabletStackLines =
+        descriptionLinesTablet != null &&
+        descriptionLinesTablet.some((l) => l.trim().length > 0)
+          ? descriptionLinesTablet
+          : [];
+
+      const bridalDesktopStack = (lines: string[], keyPrefix: string) => (
+        <div className="flex w-fit max-w-full flex-col items-start gap-0.5 text-left">
+          {lines.map((line, i) => (
+            <span
+              key={`${keyPrefix}-${i}`}
+              id={i === 0 ? firstDescriptionLineId : undefined}
+              className={`block font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black ${
+                line.trim() === "Secure prong architecture developed for long-term wear."
+                  ? "mt-[calc(0.875rem*var(--ms,1))]"
+                  : ""
+              }`}
+            >
+              {line.includes(" settings built for durability,") ? (
+                <>
+                  {line.split(" settings built for durability,")[0]}
+                  <span className="block">settings built for durability,</span>
+                </>
+              ) : line.includes(" long-term wear.") ? (
+                <>
+                  {line.split(" long-term wear.")[0]}
+                  <span className="block">long-term wear.</span>
+                </>
+              ) : (
+                renderModelingCopyLine(line)
+              )}
+            </span>
+          ))}
+        </div>
+      );
+
+      if (modelingTabletTierEnabled && descriptionLinesTablet != null) {
+        return (
+          <>
+            {descriptionLinesMobile != null && descriptionLinesMobile.length > 0 ? (
+              <div className="flex w-full flex-col items-start gap-0.5 md:hidden">
+                {descriptionLinesMobile.map((line, i) => (
+                  <span
+                    key={`bridal-mobile-${i}`}
+                    className={`${bridalRowSpanClass} ${lineWrapClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
+                  >
+                    {renderModelingCopyLine(line)}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+            {tabletStackLines.length > 0 ? (
+              <div className="hidden w-full min-w-0 flex-col items-start md:flex lg:hidden md:-translate-x-[calc(-0.1rem*var(--ms,1))]">
+                {bridalDesktopStack(tabletStackLines, "bridal-tablet-stack")}
+              </div>
+            ) : null}
+            {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
+              <div className="hidden w-full min-w-0 flex-col items-start lg:flex lg:-translate-x-[calc(-0.1rem*var(--ms,1))]">
+                {bridalDesktopStack(descriptionLinesDesktop, "bridal-desktop-stack")}
+              </div>
+            ) : null}
+          </>
+        );
+      }
+
       return (
         <>
           {descriptionLinesMobile != null && descriptionLinesMobile.length > 0 ? (
@@ -81,33 +183,7 @@ export function renderModelingCardDescriptionContent(
           ) : null}
           {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
             <div className="hidden w-full min-w-0 flex-col items-start sm:flex sm:-translate-x-[calc(-0.1rem*var(--ms,1))]">
-              <div className="flex w-fit max-w-full flex-col items-start gap-0.5 text-left">
-                {descriptionLinesDesktop.map((line, i) => (
-                  <span
-                    key={`bridal-desktop-stack-${i}`}
-                    id={i === 0 ? firstDescriptionLineId : undefined}
-                    className={`block font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black ${
-                      line.trim() === "Secure prong architecture developed for long-term wear."
-                        ? "mt-[calc(0.875rem*var(--ms,1))]"
-                        : ""
-                    }`}
-                  >
-                    {line.includes(" settings built for durability,") ? (
-                      <>
-                        {line.split(" settings built for durability,")[0]}
-                        <span className="block">settings built for durability,</span>
-                      </>
-                    ) : line.includes(" long-term wear.") ? (
-                      <>
-                        {line.split(" long-term wear.")[0]}
-                        <span className="block">long-term wear.</span>
-                      </>
-                    ) : (
-                      renderModelingCopyLine(line)
-                    )}
-                  </span>
-                ))}
-              </div>
+              {bridalDesktopStack(descriptionLinesDesktop, "bridal-desktop-stack")}
             </div>
           ) : null}
         </>
@@ -149,6 +225,54 @@ export function renderModelingCardDescriptionContent(
   }
 
   if (hipHopMobileLayout) {
+    const tabletHipHopLines =
+      descriptionLinesTablet != null &&
+      descriptionLinesTablet.some((l) => l.trim().length > 0)
+        ? descriptionLinesTablet
+        : [];
+
+    if (modelingTabletTierEnabled && descriptionLinesTablet != null) {
+      return (
+        <>
+          {descriptionLines.length > 0 ? (
+            <div className="md:hidden">
+              {descriptionLines.map((line, i) => {
+                const forceSingleLineOnMobile =
+                  HIPHOP_MOBILE_FORCE_SINGLE_LINE_TEXTS.has(line.trim());
+                const shiftLeftOnMobile = HIPHOP_MOBILE_SHIFT_LEFT_LINES.has(
+                  line.trim(),
+                );
+                return (
+                  <span
+                    key={i}
+                    className={`${hipHopMobileLineClass} ${forceSingleLineOnMobile ? "max-md:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-md:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
+                  >
+                    {renderModelingCopyLine(line)}
+                  </span>
+                );
+              })}
+            </div>
+          ) : null}
+          {tabletHipHopLines.length > 0 ? (
+            <div
+              className={`hidden min-w-0 flex-col items-center md:flex lg:hidden md:gap-0 ${HIPHOP_TABLET_DESCRIPTION_CLASS}`}
+            >
+              {renderHipHopBreakpointDesktopLines(
+                tabletHipHopLines,
+                "hiphop-tablet",
+                "md:mt-[calc(0.375rem*var(--ms,1))]",
+              )}
+            </div>
+          ) : null}
+          {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
+            <div className="hidden min-w-0 flex-col items-center lg:flex lg:gap-0">
+              {renderHipHopBreakpointDesktopLines(descriptionLinesDesktop, "hiphop-desktop")}
+            </div>
+          ) : null}
+        </>
+      );
+    }
+
     return (
       <>
         {descriptionLines.length > 0 ? (
@@ -172,28 +296,7 @@ export function renderModelingCardDescriptionContent(
         ) : null}
         {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
           <div className="hidden min-w-0 flex-col items-center sm:flex sm:gap-0">
-            {descriptionLinesDesktop.map((line, i) => (
-              <span
-                key={`hiphop-desktop-${i}`}
-                className={`block text-center ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i > 0 ? "sm:mt-[calc(0.375rem*var(--ms,1))]" : ""}`}
-              >
-                {line.includes(" performance.")
-                  ? (
-                      <>
-                        {line.split(" performance.")[0]}
-                        <span className="block">performance.</span>
-                      </>
-                    )
-                  : line.includes(" performance․")
-                    ? (
-                        <>
-                          {line.split(" performance․")[0]}
-                          <span className="block">performance․</span>
-                        </>
-                      )
-                    : renderModelingCopyLine(line)}
-              </span>
-            ))}
+            {renderHipHopBreakpointDesktopLines(descriptionLinesDesktop, "hiphop-desktop")}
           </div>
         ) : null}
       </>

@@ -18,6 +18,18 @@ export type ModelingCardProps = {
    * With `mobileBridalTypography`: below `sm`, these lines replace `descriptionLines` (e.g. split first paragraph); `sm+` still uses `descriptionLines`.
    */
   descriptionLinesMobile?: string[];
+  /** Tablet tier copy (768px–1023px); shown when set with dual image cards using `imagePairBreakpoint="md"`. */
+  descriptionLinesTablet?: string[];
+  /** Tablet-only title (md–lg); empty hides title on tablet — no desktop fallback. */
+  titleTablet?: string;
+  /** Tablet image URL (768px–1023px); optional layer between mobile and desktop. */
+  imageSrcTablet?: string;
+  /** CSS background for tablet tier (Portrait block). */
+  imageLayerBackgroundTablet?: Pick<CSSProperties, "background">;
+  /** Additional tablet title vertical offset (px). */
+  titleOffsetYTablet?: number;
+  /** Additional tablet description vertical offset (px). */
+  descriptionOffsetYTablet?: number;
   /** When omitted, card shows gradient + text only (no image column). */
   imageSrc?: string;
   /** data-landing-image id for this card's image (section-by-section replacement). */
@@ -122,10 +134,10 @@ export type ModelingCardProps = {
    */
   mobilePortraitTypography?: boolean;
   /**
-   * Optional `next/image` fill layer classes.
-   * Default: `object-contain`.
+   * Optional `next/image` fill layer classes for mobile (&lt; md when paired) and **tablet** (md–lg triple tier).
+   * Default: `object-cover object-center` — fills the frame without letterboxing.
    */
   imageFillClassName?: string;
-  /** With `imageSrcMobile`: `sm+` image `className` (e.g. `object-contain`). */
+  /** lg+ image layer when using `imageSrc` pairs (often `object-contain` for product framing). */
   imageFillClassNameDesktop?: string;
 };

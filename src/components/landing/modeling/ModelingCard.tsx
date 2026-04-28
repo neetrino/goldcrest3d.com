@@ -14,7 +14,10 @@ export function ModelingCard({
   descriptionLines,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  descriptionLinesTablet,
+  titleTablet,
   imageSrc,
+  imageSrcTablet,
   imageId,
   gradient,
   imageOnLeft,
@@ -25,6 +28,7 @@ export function ModelingCard({
   imagePosition = DEFAULT_IMAGE_POSITION,
   imageLayerBackground,
   imageLayerBackgroundMobile,
+  imageLayerBackgroundTablet,
   imageSrcMobile,
   imagePairBreakpoint = "sm",
   textDark = false,
@@ -39,12 +43,14 @@ export function ModelingCard({
   titleMarginTop,
   titleOffsetYDesktop = 0,
   titleOffsetYMobile = 0,
+  titleOffsetYTablet = 0,
   titleMarginTopCompensate,
   textBlockMarginLeft,
   textBlockMarginTop,
   descriptionMarginTop,
   descriptionOffsetYDesktop = 0,
   descriptionOffsetYMobile = 0,
+  descriptionOffsetYTablet = 0,
   firstDescriptionLineId,
   firstDescriptionLineMarginRight,
   firstDescriptionLineTranslateX,
@@ -68,7 +74,13 @@ export function ModelingCard({
   const hasLines =
     hasNonEmptyLines(descriptionLines) ||
     hasNonEmptyLines(descriptionLinesDesktop) ||
-    hasNonEmptyLines(descriptionLinesMobile);
+    hasNonEmptyLines(descriptionLinesMobile) ||
+    hasNonEmptyLines(descriptionLinesTablet);
+  const modelingTabletTierEnabled =
+    Boolean(descriptionLinesTablet !== undefined) &&
+    imagePairBreakpoint === "md" &&
+    imageSrcMobile != null &&
+    !independentTitleDescription;
   const hasDescriptionContent = hasLines || description.trim().length > 0;
   const hipHopMobileLayout = mobileHipHopTypography;
   const bridalMobileLayout =
@@ -105,6 +117,7 @@ export function ModelingCard({
     descriptionLines,
     descriptionLinesDesktop,
     descriptionLinesMobile,
+    descriptionLinesTablet,
     descriptionLayout,
     firstDescriptionLineId,
     firstDescriptionLineMarginRight,
@@ -113,6 +126,7 @@ export function ModelingCard({
     hasLines,
     hipHopMobileLayout,
     bridalMobileLayout,
+    modelingTabletTierEnabled,
     lineWrapClass,
     hipHopMobileLineClass,
     hipHopMobileLineSingleLineClass,
@@ -141,9 +155,15 @@ export function ModelingCard({
     imagePairBreakpoint === "md"
       ? "absolute inset-0 md:hidden"
       : "absolute inset-0 sm:hidden";
+  const imgTabletWrapperClass =
+    modelingTabletTierEnabled && imagePairBreakpoint === "md"
+      ? "absolute inset-0 hidden md:block lg:hidden"
+      : "";
   const imgDesktopWrapperClass =
     imagePairBreakpoint === "md"
-      ? "absolute inset-0 hidden md:block"
+      ? modelingTabletTierEnabled
+        ? "absolute inset-0 hidden lg:block"
+        : "absolute inset-0 hidden md:block"
       : "absolute inset-0 hidden sm:block";
   const textAlignClass =
     textAlign === "center"
@@ -197,13 +217,18 @@ export function ModelingCard({
       <ModelingCardFullBleed
         title={title}
         titleMobile={titleMobile}
+        titleTablet={titleTablet}
         imageSrc={imageSrc}
+        imageSrcTablet={imageSrcTablet}
         imageId={imageId}
         imageSrcMobile={imageSrcMobile}
         imageLayerBackground={imageLayerBackground}
         imageLayerBackgroundMobile={imageLayerBackgroundMobile}
+        imageLayerBackgroundTablet={imageLayerBackgroundTablet}
         imageFillClassName={imageFillClassName}
         imageFillClassNameDesktop={imageFillClassNameDesktop}
+        modelingTabletTierEnabled={modelingTabletTierEnabled}
+        imgTabletWrapperClass={imgTabletWrapperClass}
         independentTitleDescription={independentTitleDescription}
         textAlign={textAlign}
         titleBlockTop={titleBlockTop}
@@ -218,10 +243,12 @@ export function ModelingCard({
         titleMarginTop={titleMarginTop}
         titleOffsetYDesktop={titleOffsetYDesktop}
         titleOffsetYMobile={titleOffsetYMobile}
+        titleOffsetYTablet={titleOffsetYTablet}
         titleMarginTopCompensate={titleMarginTopCompensate}
         descriptionMarginTop={descriptionMarginTop}
         descriptionOffsetYDesktop={descriptionOffsetYDesktop}
         descriptionOffsetYMobile={descriptionOffsetYMobile}
+        descriptionOffsetYTablet={descriptionOffsetYTablet}
         descriptionLinesMobile={descriptionLinesMobile}
         textColor={textColor}
         hipHopMobileLayout={hipHopMobileLayout}

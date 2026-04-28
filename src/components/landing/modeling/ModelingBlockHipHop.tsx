@@ -5,48 +5,67 @@ import { ModelingCard } from "./ModelingCard";
 type ModelingBlockHipHopProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  imageUrlTablet: string;
   titleDesktop: string;
   titleMobile: string;
+  titleTablet: string;
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
+  titleTabletOffsetY: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
+  bodyTabletOffsetY: number;
 };
 
 /** Hip-Hop Jewelry block — Figma background layer on image area. */
 export function ModelingBlockHipHop({
   imageUrlDesktop,
   imageUrlMobile,
+  imageUrlTablet,
   titleDesktop,
   titleMobile,
+  titleTablet,
   titleDesktopOffsetY,
   titleMobileOffsetY,
+  titleTabletOffsetY,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  descriptionLinesTablet,
   bodyDesktopOffsetY,
   bodyMobileOffsetY,
+  bodyTabletOffsetY,
 }: ModelingBlockHipHopProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
     <ModelingCard
       title={titleDesktop}
       titleMobile={titleMobile}
+      titleTablet={titleTablet}
       titleOffsetYDesktop={titleDesktopOffsetY}
       titleOffsetYMobile={titleMobileOffsetY}
+      titleOffsetYTablet={titleTabletOffsetY}
       description=""
       descriptionLines={descriptionLinesMobile}
       descriptionLinesDesktop={descriptionLinesDesktop}
+      descriptionLinesTablet={descriptionLinesTablet}
       descriptionOffsetYDesktop={bodyDesktopOffsetY}
       descriptionOffsetYMobile={bodyMobileOffsetY}
+      descriptionOffsetYTablet={bodyTabletOffsetY}
       imageSrc={imageUrlDesktop}
+      imageSrcMobile={imageUrlMobile}
+      imageSrcTablet={imageUrlTablet}
       imageId={LANDING_IMAGE_IDS.MODELING_HIPHOP}
       imageOnLeft={false}
       textAlign="left"
       imageLayerBackground={getModelingHipHopCardBackgroundStyle(imageUrlDesktop)}
       imageLayerBackgroundMobile={
         sameUrl ? undefined : getModelingHipHopCardBackgroundStyle(imageUrlMobile)
+      }
+      imageLayerBackgroundTablet={
+        sameUrl ? undefined : getModelingHipHopCardBackgroundStyle(imageUrlTablet)
       }
       imagePairBreakpoint="md"
       mobileHipHopTypography

@@ -1,17 +1,41 @@
 "use client";
 
-import { POWER_BANNER_MOBILE_TEXT_CTA_OFFSET_NUDGE_STEP } from "@/lib/power-banner-copy/power-banner-copy-offsets.constants";
-
-import { clampMobileCopyOffsetPx } from "./PowerBannerMobileVerticalOffsets";
+import type { PowerBannerViewport } from "@/lib/power-banner-copy/power-banner-keys";
+import {
+  clampPowerBannerCopyOffsetPx,
+  POWER_BANNER_MOBILE_TEXT_CTA_OFFSET_NUDGE_STEP,
+} from "@/lib/power-banner-copy/power-banner-copy-offsets.constants";
 
 const STEP = POWER_BANNER_MOBILE_TEXT_CTA_OFFSET_NUDGE_STEP;
+
+const SECTION_COPY: Record<
+  PowerBannerViewport,
+  { heading: string; description: string }
+> = {
+  desktop: {
+    heading: "Desktop text position",
+    description:
+      "Title, description, and Get a Quote for large screens (lg breakpoint and above). Saved only on the desktop hero row — separate from tablet and mobile rows.",
+  },
+  mobile: {
+    heading: "Mobile text position",
+    description:
+      "Adjustments apply on the default mobile hero layout. Saved only on the mobile hero row — separate from desktop and tablet.",
+  },
+  tablet: {
+    heading: "Tablet text position",
+    description:
+      "768px–1023px layout. Saved only on the tablet hero row — separate from desktop and mobile.",
+  },
+};
 
 type AxisOffsets = {
   x: number;
   y: number;
 };
 
-type PowerBannerTabletCopyPositionControlsProps = {
+type PowerBannerCopyPositionControlsProps = {
+  viewport: PowerBannerViewport;
   title: AxisOffsets;
   body: AxisOffsets;
   cta: AxisOffsets;
@@ -32,12 +56,12 @@ function PositionRow({
   const nudgeY = (delta: number) =>
     onChange({
       ...value,
-      y: clampMobileCopyOffsetPx(value.y + delta),
+      y: clampPowerBannerCopyOffsetPx(value.y + delta),
     });
   const nudgeX = (delta: number) =>
     onChange({
       ...value,
-      x: clampMobileCopyOffsetPx(value.x + delta),
+      x: clampPowerBannerCopyOffsetPx(value.x + delta),
     });
 
   return (
@@ -111,23 +135,23 @@ function PositionRow({
 }
 
 /**
- * Tablet-only hero text positioning (title, description, CTA). Does not affect desktop/mobile rows.
+ * Per-viewport hero text positioning (title, description, CTA). Each viewport row in
+ * `PowerBannerCopy` stores its own X/Y offsets independently.
  */
-export function PowerBannerTabletCopyPositionControls({
+export function PowerBannerCopyPositionControls({
+  viewport,
   title,
   body,
   cta,
   onChangeTitle,
   onChangeBody,
   onChangeCta,
-}: PowerBannerTabletCopyPositionControlsProps) {
+}: PowerBannerCopyPositionControlsProps) {
+  const copy = SECTION_COPY[viewport];
   return (
     <div className="rounded-xl border border-slate-200/90 bg-slate-50/80 p-4">
-      <p className="text-sm font-semibold text-slate-900">Tablet text position</p>
-      <p className="mt-1 text-xs text-slate-600">
-        Adjust title, description, and Get a Quote independently on tablet viewports only (768px–1023px).
-        Horizontal and vertical offsets are stored only on the tablet hero row — desktop layout is unchanged.
-      </p>
+      <p className="text-sm font-semibold text-slate-900">{copy.heading}</p>
+      <p className="mt-1 text-xs text-slate-600">{copy.description}</p>
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <PositionRow label="Title" value={title} onChange={onChangeTitle} />
         <PositionRow label="Description" value={body} onChange={onChangeBody} />

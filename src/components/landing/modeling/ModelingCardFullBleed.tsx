@@ -16,11 +16,14 @@ export type ModelingCardFullBleedProps = Pick<
   ModelingCardProps,
   | "title"
   | "titleMobile"
+  | "titleTablet"
   | "imageSrc"
+  | "imageSrcTablet"
   | "imageId"
   | "imageSrcMobile"
   | "imageLayerBackground"
   | "imageLayerBackgroundMobile"
+  | "imageLayerBackgroundTablet"
   | "imageFillClassName"
   | "imageFillClassNameDesktop"
   | "independentTitleDescription"
@@ -37,17 +40,21 @@ export type ModelingCardFullBleedProps = Pick<
   | "titleMarginTop"
   | "titleOffsetYDesktop"
   | "titleOffsetYMobile"
+  | "titleOffsetYTablet"
   | "titleMarginTopCompensate"
   | "descriptionMarginTop"
   | "descriptionOffsetYDesktop"
   | "descriptionOffsetYMobile"
+  | "descriptionOffsetYTablet"
   | "descriptionLinesMobile"
 > & {
   textColor: string;
   hipHopMobileLayout: boolean;
   bridalMobileLayout: boolean;
   portraitMobileLayout: boolean;
+  modelingTabletTierEnabled?: boolean;
   imgMobileWrapperClass: string;
+  imgTabletWrapperClass?: string;
   imgDesktopWrapperClass: string;
   imageStyle: CSSProperties;
   overlayTextContainerClass: string;
@@ -66,6 +73,19 @@ export type ModelingCardFullBleedProps = Pick<
 function buildResponsiveOffsetStyle(mobileOffsetY: number, desktopOffsetY: number): CSSProperties {
   return {
     ["--offset-y-mobile" as string]: `${mobileOffsetY}px`,
+    ["--offset-y-desktop" as string]: `${desktopOffsetY}px`,
+    transform: "translateY(calc(var(--offset-y-active) * var(--ms,1)))",
+  };
+}
+
+function buildTripleOffsetStyle(
+  mobileOffsetY: number,
+  tabletOffsetY: number,
+  desktopOffsetY: number,
+): CSSProperties {
+  return {
+    ["--offset-y-mobile" as string]: `${mobileOffsetY}px`,
+    ["--offset-y-tablet" as string]: `${tabletOffsetY}px`,
     ["--offset-y-desktop" as string]: `${desktopOffsetY}px`,
     transform: "translateY(calc(var(--offset-y-active) * var(--ms,1)))",
   };
@@ -93,13 +113,17 @@ function buildDescriptionMarginStyle(
 export function ModelingCardFullBleed({
   title,
   titleMobile,
+  titleTablet,
   imageSrc,
+  imageSrcTablet,
   imageId,
   imageSrcMobile,
   imageLayerBackground,
   imageLayerBackgroundMobile,
+  imageLayerBackgroundTablet,
   imageFillClassName = "object-cover object-center",
   imageFillClassNameDesktop = "object-contain",
+  modelingTabletTierEnabled = false,
   independentTitleDescription = false,
   textAlign,
   titleBlockTop,
@@ -114,16 +138,19 @@ export function ModelingCardFullBleed({
   titleMarginTop,
   titleOffsetYDesktop = 0,
   titleOffsetYMobile = 0,
+  titleOffsetYTablet = 0,
   titleMarginTopCompensate,
   descriptionMarginTop,
   descriptionOffsetYDesktop = 0,
   descriptionOffsetYMobile = 0,
+  descriptionOffsetYTablet = 0,
   descriptionLinesMobile,
   textColor,
   hipHopMobileLayout,
   bridalMobileLayout,
   portraitMobileLayout,
   imgMobileWrapperClass,
+  imgTabletWrapperClass: imgTabletWrapperClassProp,
   imgDesktopWrapperClass,
   imageStyle,
   overlayTextContainerClass,
@@ -138,26 +165,41 @@ export function ModelingCardFullBleed({
   hasDescriptionContent,
   DescriptionTag,
 }: ModelingCardFullBleedProps) {
+  const imgTabletWrapperClass = imgTabletWrapperClassProp ?? "";
+  const titleTabletResolved = (titleTablet ?? "").trim();
   const hasDesktopTitle = title.trim().length > 0;
   const hasMobileTitle = (titleMobile ?? "").trim().length > 0;
+  const hasTabletTitle = modelingTabletTierEnabled && titleTabletResolved.length > 0;
   const hasHipHopMobileMultilineTitle = hipHopMobileLayout && (titleMobile ?? "").includes("\n");
-  const responsiveTitleOffsetStyle = buildResponsiveOffsetStyle(
-    titleOffsetYMobile,
-    titleOffsetYDesktop,
-  );
-  const responsiveDescriptionOffsetStyle = buildResponsiveOffsetStyle(
-    descriptionOffsetYMobile,
-    descriptionOffsetYDesktop,
-  );
+  const responsiveTitleOffsetStyle = modelingTabletTierEnabled
+    ? buildTripleOffsetStyle(titleOffsetYMobile, titleOffsetYTablet, titleOffsetYDesktop)
+    : buildResponsiveOffsetStyle(titleOffsetYMobile, titleOffsetYDesktop);
+  const responsiveDescriptionOffsetStyle = modelingTabletTierEnabled
+    ? buildTripleOffsetStyle(
+        descriptionOffsetYMobile,
+        descriptionOffsetYTablet,
+        descriptionOffsetYDesktop,
+      )
+    : buildResponsiveOffsetStyle(descriptionOffsetYMobile, descriptionOffsetYDesktop);
 
   return (
     <article className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}>
       <div className="absolute inset-0" data-landing-image={imageId}>
         {imageLayerBackground && imageLayerBackgroundMobile ? (
-          <>
-            <div className={imgMobileWrapperClass} style={imageLayerBackgroundMobile} />
-            <div className={imgDesktopWrapperClass} style={imageLayerBackground} />
-          </>
+          modelingTabletTierEnabled &&
+          imgTabletWrapperClass.length > 0 &&
+          imageLayerBackgroundTablet != null ? (
+            <>
+              <div className={imgMobileWrapperClass} style={imageLayerBackgroundMobile} />
+              <div className={imgTabletWrapperClass} style={imageLayerBackgroundTablet} />
+              <div className={imgDesktopWrapperClass} style={imageLayerBackground} />
+            </>
+          ) : (
+            <>
+              <div className={imgMobileWrapperClass} style={imageLayerBackgroundMobile} />
+              <div className={imgDesktopWrapperClass} style={imageLayerBackground} />
+            </>
+          )
         ) : (
           <div
             className="absolute inset-0"
@@ -169,28 +211,63 @@ export function ModelingCardFullBleed({
         )}
         {!imageLayerBackground && imageSrc ? (
           imageSrcMobile != null ? (
-            <>
-              <div className={imgMobileWrapperClass}>
-                <Image
-                  src={imageSrcMobile}
-                  alt=""
-                  fill
-                  className={`min-h-0 min-w-0 ${imageFillClassName}`}
-                  style={imageStyle}
-                  sizes="(max-width: 767px) 100vw, 0px"
-                />
-              </div>
-              <div className={imgDesktopWrapperClass}>
-                <Image
-                  src={imageSrc}
-                  alt=""
-                  fill
-                  className={imageFillClassNameDesktop}
-                  style={imageStyle}
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </div>
-            </>
+            modelingTabletTierEnabled && imgTabletWrapperClass.length > 0 ? (
+              <>
+                <div className={imgMobileWrapperClass}>
+                  <Image
+                    src={imageSrcMobile}
+                    alt=""
+                    fill
+                    className={`min-h-0 min-w-0 ${imageFillClassName}`}
+                    style={imageStyle}
+                    sizes="(max-width: 767px) 100vw, 0px"
+                  />
+                </div>
+                <div className={imgTabletWrapperClass}>
+                  <Image
+                    src={(imageSrcTablet ?? imageSrc) as string}
+                    alt=""
+                    fill
+                    className={`min-h-0 min-w-0 ${imageFillClassName}`}
+                    style={imageStyle}
+                    sizes="(max-width: 1023px) 50vw, 0px"
+                  />
+                </div>
+                <div className={imgDesktopWrapperClass}>
+                  <Image
+                    src={imageSrc}
+                    alt=""
+                    fill
+                    className={imageFillClassNameDesktop}
+                    style={imageStyle}
+                    sizes="(min-width: 1024px) 50vw, 0px"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className={imgMobileWrapperClass}>
+                  <Image
+                    src={imageSrcMobile}
+                    alt=""
+                    fill
+                    className={`min-h-0 min-w-0 ${imageFillClassName}`}
+                    style={imageStyle}
+                    sizes="(max-width: 767px) 100vw, 0px"
+                  />
+                </div>
+                <div className={imgDesktopWrapperClass}>
+                  <Image
+                    src={imageSrc}
+                    alt=""
+                    fill
+                    className={imageFillClassNameDesktop}
+                    style={imageStyle}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
+              </>
+            )
           ) : (
             <Image
               src={imageSrc}
@@ -211,7 +288,7 @@ export function ModelingCardFullBleed({
         {independentTitleDescription ? (
           portraitMobileLayout ? (
             <>
-              <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:hidden">
+              <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] md:hidden">
                 <div style={{ transform: `translateY(calc(${titleOffsetYMobile}px * var(--ms,1)))` }}>
                   <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
                     {(titleMobile ?? title) === PORTRAIT_MOBILE_TITLE_FULL ? (
@@ -234,7 +311,7 @@ export function ModelingCardFullBleed({
                   </div>
                 </div>
               </div>
-              <div className={`absolute inset-0 hidden sm:block ${desktopOverlayShiftClassName ?? ""}`}>
+              <div className={`absolute inset-0 hidden lg:block ${desktopOverlayShiftClassName ?? ""}`}>
                 {hasDesktopTitle ? (
                   <div
                     className={textAlignClass}
@@ -305,30 +382,60 @@ export function ModelingCardFullBleed({
           )
         ) : (
           <>
-            {hasDesktopTitle || hasMobileTitle ? (
+            {hasDesktopTitle || hasMobileTitle || hasTabletTitle ? (
               <div
-                className="w-full [--offset-y-active:var(--offset-y-mobile)] sm:[--offset-y-active:var(--offset-y-desktop)]"
+                className={
+                  modelingTabletTierEnabled
+                    ? "w-full [--offset-y-active:var(--offset-y-mobile)] md:[--offset-y-active:var(--offset-y-tablet)] lg:[--offset-y-active:var(--offset-y-desktop)]"
+                    : "w-full [--offset-y-active:var(--offset-y-mobile)] sm:[--offset-y-active:var(--offset-y-desktop)]"
+                }
                 style={responsiveTitleOffsetStyle}
               >
                 <h3
-                  className={`${titleClassNameResolved} ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible sm:h-[calc(24px*var(--ms,1)*var(--mt,1))]" : ""} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center max-sm:-translate-y-[calc(3rem*var(--ms,1))] sm:-translate-y-[calc(6rem*var(--ms,1))]" : ""} ${hasHipHopMobileMultilineTitle ? "max-sm:leading-[calc(1.22rem*var(--ms,1)*var(--mt,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                  className={`${titleClassNameResolved} ${hasDescriptionContent ? `h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible ${modelingTabletTierEnabled ? "md:h-[calc(24px*var(--ms,1)*var(--mt,1))] lg:h-[calc(24px*var(--ms,1)*var(--mt,1))]" : "sm:h-[calc(24px*var(--ms,1)*var(--mt,1))]"}` : ""} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center max-sm:-translate-y-[calc(3rem*var(--ms,1))] sm:-translate-y-[calc(6rem*var(--ms,1))]" : ""} ${hasHipHopMobileMultilineTitle ? "max-sm:leading-[calc(1.22rem*var(--ms,1)*var(--mt,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                   style={{
                     ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                     ...(titleMarginTop != null && { marginTop: titleMarginTop }),
                   }}
                 >
-                  {hasMobileTitle ? (
-                    <span className="whitespace-pre-wrap sm:hidden">{renderModelingTitleText(titleMobile ?? "")}</span>
-                  ) : null}
-                  {hasDesktopTitle ? (
-                    <span className="hidden whitespace-pre-wrap sm:inline">{renderModelingTitleText(title)}</span>
-                  ) : null}
+                  {modelingTabletTierEnabled ? (
+                    <>
+                      {hasMobileTitle ? (
+                        <span className="whitespace-pre-wrap md:hidden">
+                          {renderModelingTitleText(titleMobile ?? "")}
+                        </span>
+                      ) : null}
+                      {hasTabletTitle ? (
+                        <span className="hidden whitespace-pre-wrap md:inline lg:hidden">
+                          {renderModelingTitleText(titleTabletResolved)}
+                        </span>
+                      ) : null}
+                      {hasDesktopTitle ? (
+                        <span className="hidden whitespace-pre-wrap lg:inline">
+                          {renderModelingTitleText(title)}
+                        </span>
+                      ) : null}
+                    </>
+                  ) : (
+                    <>
+                      {hasMobileTitle ? (
+                        <span className="whitespace-pre-wrap sm:hidden">{renderModelingTitleText(titleMobile ?? "")}</span>
+                      ) : null}
+                      {hasDesktopTitle ? (
+                        <span className="hidden whitespace-pre-wrap sm:inline">{renderModelingTitleText(title)}</span>
+                      ) : null}
+                    </>
+                  )}
                 </h3>
               </div>
             ) : null}
             {hasDescriptionContent ? (
               <div
-                className="[--offset-y-active:var(--offset-y-mobile)] sm:[--offset-y-active:var(--offset-y-desktop)]"
+                className={
+                  modelingTabletTierEnabled
+                    ? "[--offset-y-active:var(--offset-y-mobile)] md:[--offset-y-active:var(--offset-y-tablet)] lg:[--offset-y-active:var(--offset-y-desktop)]"
+                    : "[--offset-y-active:var(--offset-y-mobile)] sm:[--offset-y-active:var(--offset-y-desktop)]"
+                }
                 style={responsiveDescriptionOffsetStyle}
               >
                 <DescriptionTag
