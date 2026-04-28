@@ -48,10 +48,10 @@ export function LandingNav({
       className="fixed inset-x-0 top-0 z-50 h-[length:var(--landing-nav-height)] w-full max-w-[100vw] overflow-x-clip bg-white/97 backdrop-blur-sm"
       aria-label="Main navigation"
     >
-      <div className="landing-nav-horizontal-padding mx-auto grid h-full w-full max-w-[1612px] min-w-0 grid-cols-[1fr_auto_1fr] items-center gap-x-1 min-[381px]:gap-x-2 sm:gap-x-3 lg:gap-x-6">
+      <div className="landing-nav-horizontal-padding mx-auto grid h-full w-full max-w-[1612px] min-w-0 grid-cols-[minmax(calc(var(--landing-nav-logo-offset-x)+var(--landing-nav-logo-width)),1fr)_auto_1fr] items-center gap-x-1 min-[381px]:gap-x-2 sm:gap-x-3 lg:gap-x-6">
         <Link
           href={`${sectionHrefPrefix}${LANDING_SECTION_IDS.HERO}`}
-          className="col-start-1 row-start-1 flex h-[length:var(--landing-nav-logo-height)] w-[length:var(--landing-nav-logo-width)] min-h-[length:var(--landing-nav-logo-height)] min-w-[length:var(--landing-nav-logo-width)] shrink-0 translate-x-0 items-center justify-self-start sm:translate-x-0 xl:translate-x-88"
+          className="col-start-1 row-start-1 flex h-[length:var(--landing-nav-logo-height)] w-[length:var(--landing-nav-logo-width)] min-h-[length:var(--landing-nav-logo-height)] min-w-[length:var(--landing-nav-logo-width)] shrink-0 items-center justify-self-start ms-[length:var(--landing-nav-logo-offset-x)]"
           aria-label="Goldcrest 3D — Home"
         >
           <Image
@@ -65,7 +65,7 @@ export function LandingNav({
           />
         </Link>
         <ul
-          className="col-start-2 row-start-1 hidden w-max min-w-0 list-none items-center justify-self-center gap-[clamp(0.75rem,2.4vw,4rem)] lg:max-xl:gap-[clamp(0.65rem,1.65vw,2.75rem)] lg:flex"
+          className="col-start-2 row-start-1 hidden w-max min-w-0 list-none items-center justify-self-center gap-[clamp(0.75rem,2.4vw,4rem)] lg:flex lg:max-xl:gap-[clamp(0.65rem,1.65vw,2.75rem)]"
           aria-label="Nav links"
         >
           {NAV_ITEMS.map(({ id, label }) => (
