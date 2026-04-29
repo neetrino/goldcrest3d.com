@@ -146,11 +146,15 @@ function buildFinishedRow(
     const src = url ?? fallback.src;
     const imageId =
       defaults[index]?.imageId ?? LANDING_IMAGE_IDS.FINISHED_1;
+    /** Default slot 0 uses portrait-specific `object-position` for bundled art only. */
+    const usesResolvedUpload = url != null;
     return {
       id: row.slotId,
       imageId,
       src,
-      objectPositionClass: fallback.objectPositionClass,
+      objectPositionClass: usesResolvedUpload
+        ? undefined
+        : fallback.objectPositionClass,
     };
   });
 }
