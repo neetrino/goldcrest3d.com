@@ -10,6 +10,7 @@ export type SiteMediaItemRow = {
   sortOrder: number;
   r2ObjectKey: string | null;
   r2ObjectKeyMobile: string | null;
+  r2ObjectKeyTablet: string | null;
   legacySrc: string | null;
   alt: string | null;
   layoutMeta: unknown | null;

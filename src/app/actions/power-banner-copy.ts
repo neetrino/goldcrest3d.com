@@ -49,8 +49,11 @@ export async function updatePowerBannerCopy(
     viewport: formData.get("viewport"),
     title: formData.get("title"),
     body: formData.get("body"),
+    titleOffsetX: formData.get("titleOffsetX"),
     titleOffsetY: formData.get("titleOffsetY"),
+    bodyOffsetX: formData.get("bodyOffsetX"),
     bodyOffsetY: formData.get("bodyOffsetY"),
+    ctaOffsetX: formData.get("ctaOffsetX"),
     ctaOffsetY: formData.get("ctaOffsetY"),
   });
 
@@ -61,15 +64,28 @@ export async function updatePowerBannerCopy(
       first.viewport?.[0] ??
       first.title?.[0] ??
       first.body?.[0] ??
+      first.titleOffsetX?.[0] ??
       first.titleOffsetY?.[0] ??
+      first.bodyOffsetX?.[0] ??
       first.bodyOffsetY?.[0] ??
+      first.ctaOffsetX?.[0] ??
       first.ctaOffsetY?.[0] ??
       "Invalid input.";
     return { ok: false, error: msg };
   }
 
-  const { bannerKey, viewport, title, body, titleOffsetY, bodyOffsetY, ctaOffsetY } =
-    parsed.data;
+  const {
+    bannerKey,
+    viewport,
+    title,
+    body,
+    titleOffsetX,
+    titleOffsetY,
+    bodyOffsetX,
+    bodyOffsetY,
+    ctaOffsetX,
+    ctaOffsetY,
+  } = parsed.data;
   if (title.length === 0) {
     return { ok: false, error: "Title is required." };
   }
@@ -92,15 +108,21 @@ export async function updatePowerBannerCopy(
         viewport,
         title,
         body,
+        titleOffsetX,
         titleOffsetY,
+        bodyOffsetX,
         bodyOffsetY,
+        ctaOffsetX,
         ctaOffsetY,
       },
       update: {
         title,
         body,
+        titleOffsetX,
         titleOffsetY,
+        bodyOffsetX,
         bodyOffsetY,
+        ctaOffsetX,
         ctaOffsetY,
       },
     });

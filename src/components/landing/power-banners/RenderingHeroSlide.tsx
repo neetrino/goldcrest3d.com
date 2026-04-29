@@ -12,19 +12,25 @@ import { RenderingHeroSlideCopy } from "./RenderingHeroSlideCopy";
 type RenderingHeroSlideProps = {
   desktopBgSrc: string;
   mobileBgSrc: string;
+  tabletBgSrc: string;
   desktopCopy: PowerBannerCopyEntry;
   mobileCopy: PowerBannerCopyEntry;
+  tabletCopy: PowerBannerCopyEntry;
   desktopTransform: ManufacturingImageTransform;
   mobileTransform: ManufacturingImageTransform;
+  tabletTransform: ManufacturingImageTransform;
 };
 
 export function RenderingHeroSlide({
   desktopBgSrc,
   mobileBgSrc,
+  tabletBgSrc,
   desktopCopy,
   mobileCopy,
+  tabletCopy,
   desktopTransform,
   mobileTransform,
+  tabletTransform,
 }: RenderingHeroSlideProps) {
   return (
     <div
@@ -40,10 +46,16 @@ export function RenderingHeroSlide({
       <RenderingHeroSlideBackgrounds
         desktopBgSrc={desktopBgSrc}
         mobileBgSrc={mobileBgSrc}
+        tabletBgSrc={tabletBgSrc}
         desktopTransform={desktopTransform}
         mobileTransform={mobileTransform}
+        tabletTransform={tabletTransform}
       />
-      <RenderingHeroSlideCopy desktopCopy={desktopCopy} mobileCopy={mobileCopy} />
+      <RenderingHeroSlideCopy
+        desktopCopy={desktopCopy}
+        mobileCopy={mobileCopy}
+        tabletCopy={tabletCopy}
+      />
     </div>
   );
 }

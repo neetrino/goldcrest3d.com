@@ -80,7 +80,7 @@ function ManufacturingAccordionRow({
           }
         >
           <p
-            className={`manufacturing-intelligence-accordion-detail text-[15px] font-normal leading-[22px] tracking-normal text-black/80 ${
+            className={`manufacturing-intelligence-accordion-detail text-[15px] font-normal leading-[22px] tracking-normal text-black/80 md:max-lg:text-[14px] md:max-lg:leading-[21px] ${
               descriptionHasManualLineBreaks
                 ? "whitespace-pre-line break-words md:whitespace-pre"
                 : ""
@@ -194,7 +194,7 @@ export function SectionManufacturing({
 
         <div className="manufacturing-intelligence-card-shell mt-0 overflow-hidden rounded-none bg-[linear-gradient(-65.02deg,#f8f7f6_0.94%,#c0c6cd_99.4%)] lg:mt-[76px]">
           <div className="grid min-h-0 grid-cols-1 gap-12 py-12 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)] lg:gap-0 lg:py-0 lg:pl-[2.61%] lg:pr-[4.59%]">
-            <h2 className="manufacturing-intelligence-heading mx-auto w-[257px] max-w-full text-center font-sans text-[30px] font-medium leading-[36px] tracking-[0.396px] text-black lg:hidden">
+            <h2 className="manufacturing-intelligence-heading mx-auto w-[257px] max-w-full text-center font-sans text-[30px] font-medium leading-[36px] tracking-[0.396px] text-black md:max-lg:text-[27px] md:max-lg:leading-[32px] lg:hidden">
               {manufacturing.headingMobile}
             </h2>
 

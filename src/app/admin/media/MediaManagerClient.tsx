@@ -9,6 +9,7 @@ import { SITE_MEDIA_GROUP_KEYS } from "@/lib/site-media/site-media.registry";
 
 import { OrderedGallerySection } from "./OrderedGallerySection";
 import { ModelingMediaSection } from "./ModelingMediaSection";
+import { ModelingTabletMediaSection } from "./ModelingTabletMediaSection";
 import { ManufacturingIntelligenceSection } from "./ManufacturingIntelligenceSection";
 import { PowerBannerCopySection } from "./PowerBannerCopySection";
 import { FounderSectionEditor } from "./FounderSectionEditor";
@@ -22,6 +23,7 @@ type MediaManagerClientProps = {
 
 type MediaManagerTabKey =
   | "modeling"
+  | "modeling-tablet"
   | "manufacturing-intelligence"
   | "manufacturing-intelligence-mobile"
   | "founder-desktop"
@@ -31,12 +33,18 @@ type MediaManagerTabKey =
   | "finished-row-2"
   | "power-banner-desktop"
   | "power-banner-mobile"
+  | "power-banner-tablet"
   | "footer-social-links";
 
 const MEDIA_MANAGER_TABS: ReadonlyArray<{ key: MediaManagerTabKey; label: string }> = [
   { key: "power-banner-desktop", label: "Hero Banners — Desktop" },
   { key: "power-banner-mobile", label: "Hero Banners — Mobile" },
+  { key: "power-banner-tablet", label: "Hero Banners — Tablet" },
   { key: "modeling", label: "Modeling Specialization" },
+  {
+    key: "modeling-tablet",
+    label: "Modeling Specialization — Tablet",
+  },
   { key: "manufacturing-intelligence", label: "Manufacturing Intelligence" },
   {
     key: "manufacturing-intelligence-mobile",
@@ -126,6 +134,14 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
         />
       ) : null}
 
+      {selectedTab === "modeling-tablet" ? (
+        <ModelingTabletMediaSection
+          title="Modeling Specialization — Tablet"
+          description="Tablet-only images and copy for each specialization card (768px–1023px)."
+          slots={bundle.modeling}
+        />
+      ) : null}
+
       {selectedTab === "manufacturing-intelligence" ? (
         <ManufacturingIntelligenceSection rows={bundle.manufacturing} />
       ) : null}
@@ -174,6 +190,10 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
 
       {selectedTab === "power-banner-mobile" ? (
         <PowerBannerCopySection bundle={powerBannerCopy} viewport="mobile" />
+      ) : null}
+
+      {selectedTab === "power-banner-tablet" ? (
+        <PowerBannerCopySection bundle={powerBannerCopy} viewport="tablet" />
       ) : null}
 
       {selectedTab === "footer-social-links" ? (

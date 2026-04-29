@@ -6,11 +6,22 @@ type ModelingSpecializationCopyDbRow = {
   titleMobile: string | null;
   bodyDesktop: string | null;
   bodyMobile: string | null;
+  titleTablet: string | null;
+  bodyTablet: string | null;
   titleDesktopOffsetY: number | null;
   titleMobileOffsetY: number | null;
   bodyDesktopOffsetY: number | null;
   bodyMobileOffsetY: number | null;
+  titleDesktopOffsetX: number | null;
+  bodyDesktopOffsetX: number | null;
+  titleMobileOffsetX: number | null;
+  bodyMobileOffsetX: number | null;
+  titleTabletOffsetY: number | null;
+  bodyTabletOffsetY: number | null;
+  titleTabletOffsetX: number | null;
+  bodyTabletOffsetX: number | null;
   desktopLine1Emphasis: string | null;
+  tabletLine1Emphasis: string | null;
   updatedAt: Date;
 };
 

@@ -4,16 +4,19 @@ import { splitMultilineTextPreservingLines } from "./resolve-power-banner-displa
 type RenderingHeroSubtitleLinesProps = {
   desktopBody: string;
   mobileBody: string;
-  surface?: "responsive" | "mobile-only" | "desktop-only";
+  tabletBody?: string;
+  surface?: "responsive" | "mobile-only" | "tablet-only" | "desktop-only";
 };
 
 export function RenderingHeroSubtitleLines({
   desktopBody,
   mobileBody,
+  tabletBody,
   surface = "responsive",
 }: RenderingHeroSubtitleLinesProps) {
   const desktopLines = splitMultilineTextPreservingLines(desktopBody);
   const mobileLines = splitMultilineTextPreservingLines(mobileBody);
+  const tabletLines = splitMultilineTextPreservingLines(tabletBody ?? "");
 
   if (surface === "mobile-only") {
     return (
@@ -30,11 +33,23 @@ export function RenderingHeroSubtitleLines({
     );
   }
 
+  if (surface === "tablet-only") {
+    return (
+      <p className="hero-primary-subtitle-typography relative hidden w-full max-w-[433px] self-start text-left md:inline-block lg:hidden">
+        {tabletLines.map((line, i) => (
+          <span key={i} className="block md:whitespace-nowrap">
+            {line.length > 0 ? line : "\u00A0"}
+          </span>
+        ))}
+      </p>
+    );
+  }
+
   if (surface === "desktop-only") {
     return (
-      <p className="hero-primary-subtitle-typography relative hidden w-full max-w-[433px] self-start text-left md:inline-block">
+      <p className="hero-primary-subtitle-typography relative hidden w-full max-w-[433px] self-start text-left lg:inline-block">
         {desktopLines.map((line, i) => (
-          <span key={i} className="block md:whitespace-nowrap">
+          <span key={i} className="block lg:whitespace-nowrap">
             {line.length > 0 ? line : "\u00A0"}
           </span>
         ))}
@@ -54,9 +69,16 @@ export function RenderingHeroSubtitleLines({
           </span>
         ))}
       </span>
-      <span className="hidden md:block">
-        {desktopLines.map((line, i) => (
+      <span className="hidden md:block lg:hidden">
+        {tabletLines.map((line, i) => (
           <span key={i} className="block md:whitespace-nowrap">
+            {line.length > 0 ? line : "\u00A0"}
+          </span>
+        ))}
+      </span>
+      <span className="hidden lg:block">
+        {desktopLines.map((line, i) => (
+          <span key={i} className="block lg:whitespace-nowrap">
             {line.length > 0 ? line : "\u00A0"}
           </span>
         ))}

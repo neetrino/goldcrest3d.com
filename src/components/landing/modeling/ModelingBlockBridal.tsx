@@ -5,43 +5,76 @@ import { ModelingCard } from "./ModelingCard";
 type ModelingBlockBridalProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  imageUrlTablet: string;
   titleDesktop: string;
   titleMobile: string;
+  titleTablet: string;
   titleDesktopOffsetY: number;
+  titleDesktopOffsetX: number;
   titleMobileOffsetY: number;
+  titleMobileOffsetX: number;
+  titleTabletOffsetY: number;
+  titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
+  bodyDesktopOffsetX: number;
   bodyMobileOffsetY: number;
+  bodyMobileOffsetX: number;
+  bodyTabletOffsetY: number;
+  bodyTabletOffsetX: number;
 };
 
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
 export function ModelingBlockBridal({
   imageUrlDesktop,
   imageUrlMobile,
+  imageUrlTablet,
   titleDesktop,
   titleMobile,
+  titleTablet,
   titleDesktopOffsetY,
+  titleDesktopOffsetX,
   titleMobileOffsetY,
+  titleMobileOffsetX,
+  titleTabletOffsetY,
+  titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  descriptionLinesTablet,
   bodyDesktopOffsetY,
+  bodyDesktopOffsetX,
   bodyMobileOffsetY,
+  bodyMobileOffsetX,
+  bodyTabletOffsetY,
+  bodyTabletOffsetX,
 }: ModelingBlockBridalProps) {
   return (
     <ModelingCard
       title={titleDesktop}
       titleMobile={titleMobile}
+      titleTablet={titleTablet}
       titleOffsetYDesktop={titleDesktopOffsetY}
+      titleOffsetXDesktop={titleDesktopOffsetX}
       titleOffsetYMobile={titleMobileOffsetY}
+      titleOffsetXMobile={titleMobileOffsetX}
+      titleOffsetYTablet={titleTabletOffsetY}
+      titleOffsetXTablet={titleTabletOffsetX}
       description=""
       descriptionLines={[...descriptionLinesDesktop]}
       descriptionLinesDesktop={[...descriptionLinesDesktop]}
       descriptionLinesMobile={[...descriptionLinesMobile]}
+      descriptionLinesTablet={[...descriptionLinesTablet]}
       descriptionOffsetYDesktop={bodyDesktopOffsetY}
+      descriptionOffsetXDesktop={bodyDesktopOffsetX}
       descriptionOffsetYMobile={bodyMobileOffsetY}
+      descriptionOffsetXMobile={bodyMobileOffsetX}
+      descriptionOffsetYTablet={bodyTabletOffsetY}
+      descriptionOffsetXTablet={bodyTabletOffsetX}
       imageSrc={imageUrlDesktop}
       imageSrcMobile={imageUrlMobile}
+      imageSrcTablet={imageUrlTablet}
       imagePairBreakpoint="md"
       imageId={LANDING_IMAGE_IDS.MODELING_BRIDAL}
       imageOnLeft={true}

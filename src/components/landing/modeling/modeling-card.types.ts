@@ -18,6 +18,22 @@ export type ModelingCardProps = {
    * With `mobileBridalTypography`: below `sm`, these lines replace `descriptionLines` (e.g. split first paragraph); `sm+` still uses `descriptionLines`.
    */
   descriptionLinesMobile?: string[];
+  /** Tablet tier copy (768px–1023px); shown when set with dual image cards using `imagePairBreakpoint="md"`. */
+  descriptionLinesTablet?: string[];
+  /** Tablet-only title (md–lg); empty hides title on tablet — no desktop fallback. */
+  titleTablet?: string;
+  /** Tablet image URL (768px–1023px); optional layer between mobile and desktop. */
+  imageSrcTablet?: string;
+  /** CSS background for tablet tier (Portrait block). */
+  imageLayerBackgroundTablet?: Pick<CSSProperties, "background">;
+  /** Additional tablet title vertical offset (translateY %). */
+  titleOffsetYTablet?: number;
+  /** Additional tablet title horizontal offset (translateX %). */
+  titleOffsetXTablet?: number;
+  /** Additional tablet description vertical offset (translateY %). */
+  descriptionOffsetYTablet?: number;
+  /** Additional tablet description horizontal offset (translateX %). */
+  descriptionOffsetXTablet?: number;
   /** When omitted, card shows gradient + text only (no image column). */
   imageSrc?: string;
   /** data-landing-image id for this card's image (section-by-section replacement). */
@@ -69,10 +85,14 @@ export type ModelingCardProps = {
   titleMarginRight?: string;
   /** Optional margin-top on the title only (pushes title down). */
   titleMarginTop?: string;
-  /** Additional desktop title vertical offset in px (positive = down). */
+  /** Additional desktop title vertical offset as translateY % (positive = down). */
   titleOffsetYDesktop?: number;
-  /** Additional mobile title vertical offset in px (positive = down). */
+  /** Additional desktop title horizontal offset as translateX % (positive = right). */
+  titleOffsetXDesktop?: number;
+  /** Additional mobile title vertical offset as translateY % (positive = down). */
   titleOffsetYMobile?: number;
+  /** Additional mobile title horizontal offset as translateX % (positive = right). */
+  titleOffsetXMobile?: number;
   /** When true and titleMarginTop is set, description gets negative margin so it stays in place. */
   titleMarginTopCompensate?: boolean;
   /** With fluidTextLayout: shift the whole text block right (e.g. "8%"). */
@@ -81,10 +101,14 @@ export type ModelingCardProps = {
   textBlockMarginTop?: string;
   /** Margin-top on the description only (moves description down, title unchanged). */
   descriptionMarginTop?: string;
-  /** Additional desktop description vertical offset in px (positive = down). */
+  /** Additional desktop description vertical offset as translateY % (positive = down). */
   descriptionOffsetYDesktop?: number;
-  /** Additional mobile description vertical offset in px (positive = down). */
+  /** Additional desktop description horizontal offset as translateX % (positive = right). */
+  descriptionOffsetXDesktop?: number;
+  /** Additional mobile description vertical offset as translateY % (positive = down). */
   descriptionOffsetYMobile?: number;
+  /** Additional mobile description horizontal offset as translateX % (positive = right). */
+  descriptionOffsetXMobile?: number;
   /** Id for the first description line only (when descriptionLines + row); isolates it for styling. */
   firstDescriptionLineId?: string;
   /** Margin-right on the first description line only (adds space before second line in row layout). */
@@ -122,10 +146,10 @@ export type ModelingCardProps = {
    */
   mobilePortraitTypography?: boolean;
   /**
-   * Optional `next/image` fill layer classes.
-   * Default: `object-contain`.
+   * Optional `next/image` fill layer classes for mobile (&lt; md when paired) and **tablet** (md–lg triple tier).
+   * Default: `object-cover object-center` — fills the frame without letterboxing.
    */
   imageFillClassName?: string;
-  /** With `imageSrcMobile`: `sm+` image `className` (e.g. `object-contain`). */
+  /** lg+ image layer when using `imageSrc` pairs (often `object-contain` for product framing). */
   imageFillClassNameDesktop?: string;
 };

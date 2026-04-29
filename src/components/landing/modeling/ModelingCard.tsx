@@ -2,8 +2,12 @@ import { renderModelingCardDescriptionContent } from "./ModelingCardDescriptionC
 import { ModelingCardFullBleed } from "./ModelingCardFullBleed";
 import { ModelingCardGradientLayout } from "./ModelingCardGradientLayout";
 import { getModelingCardWidthStyle } from "./modeling-card.constants";
-import { DEFAULT_IMAGE_POSITION } from "./modeling-card.typography-layout.constants";
+import {
+  DEFAULT_IMAGE_POSITION,
+  PORTRAIT_TABLET_OVERLAY_DESC_CLASS,
+} from "./modeling-card.typography-layout.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
+import { renderModelingCopyLine } from "./modeling-copy-line";
 
 export type { ModelingCardProps } from "./modeling-card.types";
 
@@ -14,7 +18,10 @@ export function ModelingCard({
   descriptionLines,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  descriptionLinesTablet,
+  titleTablet,
   imageSrc,
+  imageSrcTablet,
   imageId,
   gradient,
   imageOnLeft,
@@ -25,6 +32,7 @@ export function ModelingCard({
   imagePosition = DEFAULT_IMAGE_POSITION,
   imageLayerBackground,
   imageLayerBackgroundMobile,
+  imageLayerBackgroundTablet,
   imageSrcMobile,
   imagePairBreakpoint = "sm",
   textDark = false,
@@ -38,13 +46,21 @@ export function ModelingCard({
   titleMarginRight,
   titleMarginTop,
   titleOffsetYDesktop = 0,
+  titleOffsetXDesktop = 0,
   titleOffsetYMobile = 0,
+  titleOffsetXMobile = 0,
+  titleOffsetYTablet = 0,
+  titleOffsetXTablet = 0,
   titleMarginTopCompensate,
   textBlockMarginLeft,
   textBlockMarginTop,
   descriptionMarginTop,
   descriptionOffsetYDesktop = 0,
+  descriptionOffsetXDesktop = 0,
   descriptionOffsetYMobile = 0,
+  descriptionOffsetXMobile = 0,
+  descriptionOffsetYTablet = 0,
+  descriptionOffsetXTablet = 0,
   firstDescriptionLineId,
   firstDescriptionLineMarginRight,
   firstDescriptionLineTranslateX,
@@ -68,7 +84,13 @@ export function ModelingCard({
   const hasLines =
     hasNonEmptyLines(descriptionLines) ||
     hasNonEmptyLines(descriptionLinesDesktop) ||
-    hasNonEmptyLines(descriptionLinesMobile);
+    hasNonEmptyLines(descriptionLinesMobile) ||
+    hasNonEmptyLines(descriptionLinesTablet);
+  const modelingTabletTierEnabled =
+    Boolean(descriptionLinesTablet !== undefined) &&
+    imagePairBreakpoint === "md" &&
+    imageSrcMobile != null &&
+    !independentTitleDescription;
   const hasDescriptionContent = hasLines || description.trim().length > 0;
   const hipHopMobileLayout = mobileHipHopTypography;
   const bridalMobileLayout =
@@ -77,6 +99,11 @@ export function ModelingCard({
     mobilePortraitTypography &&
     hasLines &&
     independentTitleDescription;
+  const hasTabletDescriptionLines = hasNonEmptyLines(descriptionLinesTablet);
+  const tabletImageColumnEnabled =
+    imagePairBreakpoint === "md" &&
+    (modelingTabletTierEnabled || portraitMobileLayout) &&
+    (Boolean(imageSrcTablet) || imageLayerBackgroundTablet != null);
   const textColor = textDark ? "text-black" : "text-white";
   const descriptionColor = textDark
     ? descriptionMuted
@@ -100,11 +127,25 @@ export function ModelingCard({
     : "";
   const bridalRowSpanClassDesktop = `${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""}`;
 
+  const portraitTabletDescriptionContent =
+    portraitMobileLayout &&
+    descriptionLinesTablet != null &&
+    hasTabletDescriptionLines ? (
+      <div className={PORTRAIT_TABLET_OVERLAY_DESC_CLASS}>
+        {descriptionLinesTablet.map((line, i) => (
+          <span key={`portrait-tablet-desc-${i}`} className="block">
+            {renderModelingCopyLine(line)}
+          </span>
+        ))}
+      </div>
+    ) : undefined;
+
   const descriptionContent = renderModelingCardDescriptionContent({
     description,
     descriptionLines,
     descriptionLinesDesktop,
     descriptionLinesMobile,
+    descriptionLinesTablet,
     descriptionLayout,
     firstDescriptionLineId,
     firstDescriptionLineMarginRight,
@@ -113,6 +154,7 @@ export function ModelingCard({
     hasLines,
     hipHopMobileLayout,
     bridalMobileLayout,
+    modelingTabletTierEnabled,
     lineWrapClass,
     hipHopMobileLineClass,
     hipHopMobileLineSingleLineClass,
@@ -141,9 +183,14 @@ export function ModelingCard({
     imagePairBreakpoint === "md"
       ? "absolute inset-0 md:hidden"
       : "absolute inset-0 sm:hidden";
+  const imgTabletWrapperClass = tabletImageColumnEnabled
+    ? "absolute inset-0 hidden md:block lg:hidden"
+    : "";
   const imgDesktopWrapperClass =
     imagePairBreakpoint === "md"
-      ? "absolute inset-0 hidden md:block"
+      ? tabletImageColumnEnabled
+        ? "absolute inset-0 hidden lg:block"
+        : "absolute inset-0 hidden md:block"
       : "absolute inset-0 hidden sm:block";
   const textAlignClass =
     textAlign === "center"
@@ -197,13 +244,19 @@ export function ModelingCard({
       <ModelingCardFullBleed
         title={title}
         titleMobile={titleMobile}
+        titleTablet={titleTablet}
         imageSrc={imageSrc}
+        imageSrcTablet={imageSrcTablet}
         imageId={imageId}
         imageSrcMobile={imageSrcMobile}
         imageLayerBackground={imageLayerBackground}
         imageLayerBackgroundMobile={imageLayerBackgroundMobile}
+        imageLayerBackgroundTablet={imageLayerBackgroundTablet}
         imageFillClassName={imageFillClassName}
         imageFillClassNameDesktop={imageFillClassNameDesktop}
+        modelingTabletTierEnabled={modelingTabletTierEnabled}
+        imgTabletWrapperClass={imgTabletWrapperClass}
+        portraitTabletDescriptionContent={portraitTabletDescriptionContent}
         independentTitleDescription={independentTitleDescription}
         textAlign={textAlign}
         titleBlockTop={titleBlockTop}
@@ -217,11 +270,19 @@ export function ModelingCard({
         titleMarginRight={titleMarginRight}
         titleMarginTop={titleMarginTop}
         titleOffsetYDesktop={titleOffsetYDesktop}
+        titleOffsetXDesktop={titleOffsetXDesktop}
         titleOffsetYMobile={titleOffsetYMobile}
+        titleOffsetXMobile={titleOffsetXMobile}
+        titleOffsetYTablet={titleOffsetYTablet}
+        titleOffsetXTablet={titleOffsetXTablet}
         titleMarginTopCompensate={titleMarginTopCompensate}
         descriptionMarginTop={descriptionMarginTop}
         descriptionOffsetYDesktop={descriptionOffsetYDesktop}
+        descriptionOffsetXDesktop={descriptionOffsetXDesktop}
         descriptionOffsetYMobile={descriptionOffsetYMobile}
+        descriptionOffsetXMobile={descriptionOffsetXMobile}
+        descriptionOffsetYTablet={descriptionOffsetYTablet}
+        descriptionOffsetXTablet={descriptionOffsetXTablet}
         descriptionLinesMobile={descriptionLinesMobile}
         textColor={textColor}
         hipHopMobileLayout={hipHopMobileLayout}
@@ -262,8 +323,10 @@ export function ModelingCard({
       imageFillClassName={imageFillClassName}
       titleBold={titleBold}
       titleOffsetYDesktop={titleOffsetYDesktop}
+      titleOffsetXDesktop={titleOffsetXDesktop}
       titleOffsetYMobile={titleOffsetYMobile}
       descriptionOffsetYDesktop={descriptionOffsetYDesktop}
+      descriptionOffsetXDesktop={descriptionOffsetXDesktop}
       descriptionOffsetYMobile={descriptionOffsetYMobile}
       gradientFrameStyle={gradientFrameStyle}
       hasImage={hasImage}

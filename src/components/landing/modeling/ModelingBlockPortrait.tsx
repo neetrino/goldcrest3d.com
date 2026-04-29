@@ -8,40 +8,79 @@ function portraitLayerBackground(imageUrl: string): string {
 type ModelingBlockPortraitProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  imageUrlTablet: string;
+  /** True when portrait slot has a dedicated tablet R2 asset (not default-only). */
+  tabletAssetPresent: boolean;
   titleDesktop: string;
   titleMobile: string;
+  titleTablet: string;
   titleDesktopOffsetY: number;
+  titleDesktopOffsetX: number;
   titleMobileOffsetY: number;
+  titleMobileOffsetX: number;
+  titleTabletOffsetY: number;
+  titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
+  bodyDesktopOffsetX: number;
   bodyMobileOffsetY: number;
+  bodyMobileOffsetX: number;
+  bodyTabletOffsetY: number;
+  bodyTabletOffsetX: number;
 };
 
 export function ModelingBlockPortrait({
   imageUrlDesktop,
   imageUrlMobile,
+  imageUrlTablet,
+  tabletAssetPresent,
   titleDesktop,
   titleMobile,
+  titleTablet,
   titleDesktopOffsetY,
+  titleDesktopOffsetX,
   titleMobileOffsetY,
+  titleMobileOffsetX,
+  titleTabletOffsetY,
+  titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  descriptionLinesTablet,
   bodyDesktopOffsetY,
+  bodyDesktopOffsetX,
   bodyMobileOffsetY,
+  bodyMobileOffsetX,
+  bodyTabletOffsetY,
+  bodyTabletOffsetX,
 }: ModelingBlockPortraitProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
+  const tabletBg =
+    tabletAssetPresent && imageUrlTablet.length > 0
+      ? portraitLayerBackground(imageUrlTablet)
+      : undefined;
   return (
     <ModelingCard
       title={titleDesktop}
       titleMobile={titleMobile}
+      titleTablet={titleTablet}
       titleOffsetYDesktop={titleDesktopOffsetY}
+      titleOffsetXDesktop={titleDesktopOffsetX}
       titleOffsetYMobile={titleMobileOffsetY}
+      titleOffsetXMobile={titleMobileOffsetX}
+      titleOffsetYTablet={titleTabletOffsetY}
+      titleOffsetXTablet={titleTabletOffsetX}
       description=""
       descriptionLines={[...descriptionLinesDesktop]}
       descriptionLinesMobile={[...descriptionLinesMobile]}
+      descriptionLinesTablet={[...descriptionLinesTablet]}
       descriptionOffsetYDesktop={bodyDesktopOffsetY}
+      descriptionOffsetXDesktop={bodyDesktopOffsetX}
       descriptionOffsetYMobile={bodyMobileOffsetY}
+      descriptionOffsetXMobile={bodyMobileOffsetX}
+      descriptionOffsetYTablet={bodyTabletOffsetY}
+      descriptionOffsetXTablet={bodyTabletOffsetX}
       imageSrc={imageUrlDesktop}
       imageId={LANDING_IMAGE_IDS.MODELING_PORTRAIT}
       imageOnLeft={false}
@@ -53,6 +92,8 @@ export function ModelingBlockPortrait({
       imageLayerBackgroundMobile={
         sameUrl ? undefined : { background: portraitLayerBackground(imageUrlMobile) }
       }
+      imageLayerBackgroundTablet={tabletBg != null ? { background: tabletBg } : undefined}
+      imageSrcTablet={tabletAssetPresent ? imageUrlTablet : undefined}
       imagePairBreakpoint="md"
       textDark
       independentTitleDescription

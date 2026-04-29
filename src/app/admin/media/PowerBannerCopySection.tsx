@@ -29,6 +29,12 @@ const VIEWPORT_META: Record<
     sectionDescription: "Manage mobile-only hero content and images.",
     badge: "Mobile hero banners",
   },
+  tablet: {
+    sectionTitle: "Tablet Hero Banners",
+    sectionDescription:
+      "Manage tablet-only hero content and images (768px–1023px viewports). Does not use desktop or mobile assets.",
+    badge: "Tablet hero banners",
+  },
 };
 
 export function PowerBannerCopySection({ bundle, viewport }: PowerBannerCopySectionProps) {

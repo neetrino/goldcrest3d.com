@@ -109,6 +109,8 @@ model SiteMediaItem {
   r2ObjectKey    String?
   /// Modeling Specialization only — separate mobile asset; optional when desktop is set (falls back to desktop URL on site).
   r2ObjectKeyMobile String?
+  /// Modeling Specialization only — tablet-only asset; isolated from desktop/mobile at runtime (no URL fallback).
+  r2ObjectKeyTablet String?
   legacySrc      String?
   alt            String?
   layoutMeta     Json?
@@ -131,6 +133,12 @@ model PowerBannerCopy {
   bodyOffsetY  Int @default(0)
   /// Per-viewport hero: vertical offset (px) for the Get a Quote CTA.
   ctaOffsetY  Int    @default(0)
+  /// Horizontal offset (px) for the title — used by tablet layout (desktop/mobile rows typically 0).
+  titleOffsetX Int    @default(0)
+  /// Horizontal offset (px) for the description — used by tablet layout.
+  bodyOffsetX  Int    @default(0)
+  /// Horizontal offset (px) for the Get a Quote CTA — used by tablet layout.
+  ctaOffsetX   Int    @default(0)
   updatedAt DateTime @updatedAt
 
   @@id([bannerKey, viewport])
@@ -144,12 +152,31 @@ model ModelingSpecializationCopy {
   titleMobile           String?  @db.Text
   bodyDesktop           String?  @db.Text
   bodyMobile            String?  @db.Text
+  /// Copy vertical offsets (ints): CSS translateY percentage, typically -100…100.
   titleDesktopOffsetY   Int      @default(0)
   titleMobileOffsetY    Int      @default(0)
   bodyDesktopOffsetY    Int      @default(0)
   bodyMobileOffsetY     Int      @default(0)
+  /// Desktop title horizontal shift (translateX % of text box; same clamp range as tablet X/Y).
+  titleDesktopOffsetX   Int      @default(0)
+  /// Desktop body horizontal shift (translateX % of text box).
+  bodyDesktopOffsetX    Int      @default(0)
+  /// Mobile title horizontal shift (translateX % of text box; same clamp as desktop/tablet X).
+  titleMobileOffsetX    Int      @default(0)
+  /// Mobile body horizontal shift (translateX % of text box).
+  bodyMobileOffsetX     Int      @default(0)
+  titleTablet           String?  @db.Text
+  bodyTablet            String?  @db.Text
+  /// Tablet vertical shifts (translateY % of text box; app clamp typically -10000…10000).
+  titleTabletOffsetY    Int      @default(0)
+  bodyTabletOffsetY     Int      @default(0)
+  /// Tablet title horizontal shift (translateX % of text box; app clamp typically -10000…10000).
+  titleTabletOffsetX    Int      @default(0)
+  /// Tablet body horizontal shift (translateX % of text box; same clamp as titleTabletOffsetX).
+  bodyTabletOffsetX     Int      @default(0)
   /// Optional emphasized fragment for slots that require highlighted wording.
   desktopLine1Emphasis  String?  @db.Text
+  tabletLine1Emphasis   String?  @db.Text
   updatedAt             DateTime @updatedAt
 }
 

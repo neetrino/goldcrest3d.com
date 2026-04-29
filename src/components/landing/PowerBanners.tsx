@@ -15,28 +15,37 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
       id: "modeling" as const,
       desktopBg: powerBannerCopy.desktop.MODELING.imageSrc,
       mobileBg: powerBannerCopy.mobile.MODELING.imageSrc,
+      tabletBg: powerBannerCopy.tablet.MODELING.imageSrc,
       desktopCopy: powerBannerCopy.desktop.MODELING,
       mobileCopy: powerBannerCopy.mobile.MODELING,
+      tabletCopy: powerBannerCopy.tablet.MODELING,
       desktopTransform: powerBannerCopy.desktop.MODELING.imageTransform,
       mobileTransform: powerBannerCopy.mobile.MODELING.imageTransform,
+      tabletTransform: powerBannerCopy.tablet.MODELING.imageTransform,
     },
     {
       id: "rendering" as const,
       desktopBg: powerBannerCopy.desktop.RENDERING.imageSrc,
       mobileBg: powerBannerCopy.mobile.RENDERING.imageSrc,
+      tabletBg: powerBannerCopy.tablet.RENDERING.imageSrc,
       desktopCopy: powerBannerCopy.desktop.RENDERING,
       mobileCopy: powerBannerCopy.mobile.RENDERING,
+      tabletCopy: powerBannerCopy.tablet.RENDERING,
       desktopTransform: powerBannerCopy.desktop.RENDERING.imageTransform,
       mobileTransform: powerBannerCopy.mobile.RENDERING.imageTransform,
+      tabletTransform: powerBannerCopy.tablet.RENDERING.imageTransform,
     },
     {
       id: "design" as const,
       desktopBg: powerBannerCopy.desktop.DESIGN.imageSrc,
       mobileBg: powerBannerCopy.mobile.DESIGN.imageSrc,
+      tabletBg: powerBannerCopy.tablet.DESIGN.imageSrc,
       desktopCopy: powerBannerCopy.desktop.DESIGN,
       mobileCopy: powerBannerCopy.mobile.DESIGN,
+      tabletCopy: powerBannerCopy.tablet.DESIGN,
       desktopTransform: powerBannerCopy.desktop.DESIGN.imageTransform,
       mobileTransform: powerBannerCopy.mobile.DESIGN.imageTransform,
+      tabletTransform: powerBannerCopy.tablet.DESIGN.imageTransform,
     },
   ] as const;
 
@@ -65,28 +74,37 @@ export function PowerBanners({ powerBannerCopy }: PowerBannersProps) {
               <ModelingHeroSlide
                 desktopBgSrc={slide.desktopBg}
                 mobileBgSrc={slide.mobileBg}
+                tabletBgSrc={slide.tabletBg}
                 desktopCopy={slide.desktopCopy}
                 mobileCopy={slide.mobileCopy}
+                tabletCopy={slide.tabletCopy}
                 desktopTransform={slide.desktopTransform}
                 mobileTransform={slide.mobileTransform}
+                tabletTransform={slide.tabletTransform}
               />
             ) : slide.id === "rendering" ? (
               <RenderingHeroSlide
                 desktopBgSrc={slide.desktopBg}
                 mobileBgSrc={slide.mobileBg}
+                tabletBgSrc={slide.tabletBg}
                 desktopCopy={slide.desktopCopy}
                 mobileCopy={slide.mobileCopy}
+                tabletCopy={slide.tabletCopy}
                 desktopTransform={slide.desktopTransform}
                 mobileTransform={slide.mobileTransform}
+                tabletTransform={slide.tabletTransform}
               />
             ) : (
               <DesignHeroSlide
                 desktopBgSrc={slide.desktopBg}
                 mobileBgSrc={slide.mobileBg}
+                tabletBgSrc={slide.tabletBg}
                 desktopCopy={slide.desktopCopy}
                 mobileCopy={slide.mobileCopy}
+                tabletCopy={slide.tabletCopy}
                 desktopTransform={slide.desktopTransform}
                 mobileTransform={slide.mobileTransform}
+                tabletTransform={slide.tabletTransform}
               />
             )}
           </div>

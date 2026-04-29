@@ -1,3 +1,8 @@
+import {
+  clampModelingCopyOffset,
+  clampModelingTabletCopyOffset,
+} from "@/constants/modeling-specialization-copy-offset";
+
 import type {
   ModelingSpecializationCopyPayload,
   ModelingSpecializationCopyRow,
@@ -11,10 +16,6 @@ function normalizeSingleLineValue(value: string): string {
   return value.trim();
 }
 
-function clampOffset(value: number): number {
-  return Math.min(300, Math.max(-300, Math.round(value)));
-}
-
 export function normalizeModelingSpecializationCopyPayload(
   payload: ModelingSpecializationCopyPayload,
 ): ModelingSpecializationCopyPayload {
@@ -23,11 +24,22 @@ export function normalizeModelingSpecializationCopyPayload(
     titleMobile: normalizeMultilineValue(payload.titleMobile),
     bodyDesktop: normalizeMultilineValue(payload.bodyDesktop),
     bodyMobile: normalizeMultilineValue(payload.bodyMobile),
-    titleDesktopOffsetY: clampOffset(payload.titleDesktopOffsetY),
-    titleMobileOffsetY: clampOffset(payload.titleMobileOffsetY),
-    bodyDesktopOffsetY: clampOffset(payload.bodyDesktopOffsetY),
-    bodyMobileOffsetY: clampOffset(payload.bodyMobileOffsetY),
+    titleTablet: normalizeMultilineValue(payload.titleTablet),
+    bodyTablet: normalizeMultilineValue(payload.bodyTablet),
+    titleDesktopOffsetY: clampModelingCopyOffset(payload.titleDesktopOffsetY),
+    titleMobileOffsetY: clampModelingCopyOffset(payload.titleMobileOffsetY),
+    bodyDesktopOffsetY: clampModelingCopyOffset(payload.bodyDesktopOffsetY),
+    bodyMobileOffsetY: clampModelingCopyOffset(payload.bodyMobileOffsetY),
+    titleDesktopOffsetX: clampModelingTabletCopyOffset(payload.titleDesktopOffsetX),
+    bodyDesktopOffsetX: clampModelingTabletCopyOffset(payload.bodyDesktopOffsetX),
+    titleMobileOffsetX: clampModelingTabletCopyOffset(payload.titleMobileOffsetX),
+    bodyMobileOffsetX: clampModelingTabletCopyOffset(payload.bodyMobileOffsetX),
+    titleTabletOffsetY: clampModelingTabletCopyOffset(payload.titleTabletOffsetY),
+    bodyTabletOffsetY: clampModelingTabletCopyOffset(payload.bodyTabletOffsetY),
+    titleTabletOffsetX: clampModelingTabletCopyOffset(payload.titleTabletOffsetX),
+    bodyTabletOffsetX: clampModelingTabletCopyOffset(payload.bodyTabletOffsetX),
     desktopLine1Emphasis: normalizeSingleLineValue(payload.desktopLine1Emphasis),
+    tabletLine1Emphasis: normalizeSingleLineValue(payload.tabletLine1Emphasis),
   };
 }
 
@@ -48,10 +60,21 @@ export function emptyModelingSpecializationCopyRow(
     titleMobile: "",
     bodyDesktop: "",
     bodyMobile: "",
+    titleTablet: "",
+    bodyTablet: "",
     titleDesktopOffsetY: 0,
     titleMobileOffsetY: 0,
     bodyDesktopOffsetY: 0,
     bodyMobileOffsetY: 0,
+    titleDesktopOffsetX: 0,
+    bodyDesktopOffsetX: 0,
+    titleMobileOffsetX: 0,
+    bodyMobileOffsetX: 0,
+    titleTabletOffsetY: 0,
+    bodyTabletOffsetY: 0,
+    titleTabletOffsetX: 0,
+    bodyTabletOffsetX: 0,
     desktopLine1Emphasis: "",
+    tabletLine1Emphasis: "",
   };
 }

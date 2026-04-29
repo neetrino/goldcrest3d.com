@@ -3,79 +3,141 @@ import Image from "next/image";
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
-import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
+import {
+  MODELING_CARD_FRAME_MOBILE_CLASSES,
+  modelingBodyLinesForLgViewport,
+  modelingCopyTranslatePercent,
+  modelingTitleForLgViewport,
+} from "./modeling-card.constants";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
+
+function reduceHighJewelryLines(lines: readonly string[]): string[] {
+  return lines.reduce<string[]>((acc, rawLine) => {
+    const line = rawLine.trim();
+    const previousLine = acc[acc.length - 1] ?? "";
+    const previousLineTrimmed = previousLine.trim();
+    const shouldMovePreciseDigitalToPrevious =
+      /^precise\s+digital\s+reconstruction\b/i.test(line) &&
+      /\bthrough$/i.test(previousLineTrimmed);
+    const shouldJoinWithPrevious =
+      /^digital\b/i.test(line) && /\bprecise$/i.test(previousLineTrimmed);
+
+    if (shouldMovePreciseDigitalToPrevious) {
+      acc[acc.length - 1] = `${previousLine} precise digital`;
+      const trimmedCurrentLine = line.replace(/^precise\s+digital\s+/i, "");
+      if (trimmedCurrentLine.length > 0) {
+        acc.push(trimmedCurrentLine);
+      }
+      return acc;
+    }
+
+    if (shouldJoinWithPrevious) {
+      acc[acc.length - 1] = `${previousLine} digital`;
+      const trimmedCurrentLine = line.replace(/^digital\s+/i, "");
+      if (trimmedCurrentLine.length > 0) {
+        acc.push(trimmedCurrentLine);
+      }
+      return acc;
+    }
+
+    acc.push(rawLine);
+    return acc;
+  }, []);
+}
 
 type ModelingBlockHighJewelryProps = {
   imageUrlDesktop: string;
   imageUrlMobile: string;
+  imageUrlTablet: string;
   titleDesktop: string;
   titleMobile: string;
+  titleTablet: string;
   titleDesktopOffsetY: number;
+  titleDesktopOffsetX: number;
   titleMobileOffsetY: number;
+  titleMobileOffsetX: number;
+  titleTabletOffsetY: number;
+  titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
+  descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
+  bodyDesktopOffsetX: number;
   bodyMobileOffsetY: number;
+  bodyMobileOffsetX: number;
+  bodyTabletOffsetY: number;
+  bodyTabletOffsetX: number;
   desktopLine1Emphasis: string;
+  tabletLine1Emphasis: string;
 };
 
-/** High Jewelry â€” `object-cover` Õ¡Õ´Õ¢Õ¸Õ²Õ» block-Õ¸Ö‚Õ´; mobile-Õ¸Ö‚Õ´ Õ¡Õ» anchor, desktop-Õ¸Ö‚Õ´ Õ¯Õ¥Õ¶Õ¿Ö€Õ¸Õ¶Õ¡ÖÕ¾Õ¡Õ® cropÖ‰ */
+/** High Jewelry — full-bleed; mobile / tablet / desktop assets and copy tiers. */
 export function ModelingBlockHighJewelry({
   imageUrlDesktop,
   imageUrlMobile,
+  imageUrlTablet,
   titleDesktop,
   titleMobile,
+  titleTablet,
   titleDesktopOffsetY,
+  titleDesktopOffsetX,
   titleMobileOffsetY,
+  titleMobileOffsetX,
+  titleTabletOffsetY,
+  titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
+  descriptionLinesTablet,
   bodyDesktopOffsetY,
+  bodyDesktopOffsetX,
   bodyMobileOffsetY,
+  bodyMobileOffsetX,
+  bodyTabletOffsetY,
+  bodyTabletOffsetX,
   desktopLine1Emphasis,
+  tabletLine1Emphasis,
 }: ModelingBlockHighJewelryProps) {
-  const sameUrl = imageUrlDesktop === imageUrlMobile;
-  const normalizedDesktopLines = descriptionLinesDesktop.reduce<string[]>(
-    (acc, rawLine) => {
-      const line = rawLine.trim();
-      const previousLine = acc[acc.length - 1] ?? "";
-      const previousLineTrimmed = previousLine.trim();
-      const shouldMovePreciseDigitalToPrevious =
-        /^precise\s+digital\s+reconstruction\b/i.test(line) &&
-        /\bthrough$/i.test(previousLineTrimmed);
-      const shouldJoinWithPrevious =
-        /^digital\b/i.test(line) && /\bprecise$/i.test(previousLineTrimmed);
+  const oneImage =
+    imageUrlDesktop === imageUrlMobile && imageUrlMobile === imageUrlTablet;
 
-      if (shouldMovePreciseDigitalToPrevious) {
-        acc[acc.length - 1] = `${previousLine} precise digital`;
-        const trimmedCurrentLine = line.replace(/^precise\s+digital\s+/i, "");
-        if (trimmedCurrentLine.length > 0) {
-          acc.push(trimmedCurrentLine);
-        }
-        return acc;
-      }
-
-      if (shouldJoinWithPrevious) {
-        acc[acc.length - 1] = `${previousLine} digital`;
-        const trimmedCurrentLine = line.replace(/^digital\s+/i, "");
-        if (trimmedCurrentLine.length > 0) {
-          acc.push(trimmedCurrentLine);
-        }
-        return acc;
-      }
-
-      acc.push(rawLine);
-      return acc;
-    },
-    [],
-  );
-  const desktopLinesNoBreakPreciseDigital = normalizedDesktopLines.map((line) =>
+  const normalizedTabletLines = reduceHighJewelryLines(descriptionLinesTablet);
+  const tabletLinesNoBreakPreciseDigital = normalizedTabletLines.map((line) =>
     line.replace(/\bprecise digital\b/gi, "precise\u00A0digital"),
   );
-  const desktopLine1 = desktopLinesNoBreakPreciseDigital[0] ?? "";
-  const desktopRest = desktopLinesNoBreakPreciseDigital.slice(1);
+
+  const tabletLine1 = tabletLinesNoBreakPreciseDigital[0] ?? "";
+  const tabletRest = tabletLinesNoBreakPreciseDigital.slice(1);
+
   const mobileLine1 = descriptionLinesMobile[0] ?? "";
   const mobileRest = descriptionLinesMobile.slice(1);
+
+  const titleTabletDisplay = titleTablet.trim();
+  const titleForLg = modelingTitleForLgViewport(titleDesktop, titleTablet, titleMobile);
+  const hasTabletDescriptionCopy = descriptionLinesTablet.some(
+    (line) => line.trim().length > 0,
+  );
+
+  const rawLinesForLg = modelingBodyLinesForLgViewport(
+    descriptionLinesDesktop,
+    descriptionLinesTablet,
+    descriptionLinesMobile,
+  );
+  const lgUsesDesktopCopy = descriptionLinesDesktop.some((l) => l.trim().length > 0);
+  const lgUsesTabletCopy =
+    !lgUsesDesktopCopy && descriptionLinesTablet.some((l) => l.trim().length > 0);
+  const normalizedLgDescLines = reduceHighJewelryLines(rawLinesForLg);
+  const lgDescLinesNoBreak = normalizedLgDescLines.map((line) =>
+    line.replace(/\bprecise digital\b/gi, "precise\u00A0digital"),
+  );
+  const lgDescLine1 = lgDescLinesNoBreak[0] ?? "";
+  const lgDescRest = lgDescLinesNoBreak.slice(1);
+  const lgDescLine1Emphasis = lgUsesDesktopCopy
+    ? desktopLine1Emphasis
+    : lgUsesTabletCopy
+      ? tabletLine1Emphasis
+      : "";
+  const hasLgDescriptionCopy = rawLinesForLg.some((l) => l.trim().length > 0);
+
   const objectClassName =
     "h-full w-full object-cover max-md:object-right md:object-[center_48%_center]";
   return (
@@ -87,7 +149,7 @@ export function ModelingBlockHighJewelry({
         data-landing-image={LANDING_IMAGE_IDS.MODELING_HIGH_JEWELRY}
         style={{ backgroundColor: LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED }}
       >
-        {sameUrl ? (
+        {oneImage ? (
           <Image
             src={imageUrlDesktop}
             alt=""
@@ -106,13 +168,22 @@ export function ModelingBlockHighJewelry({
                 sizes="(max-width: 767px) 100vw, 0px"
               />
             </div>
-            <div className="absolute inset-0 hidden md:block">
+            <div className="absolute inset-0 hidden md:block lg:hidden">
+              <Image
+                src={imageUrlTablet}
+                alt=""
+                fill
+                className="h-full w-full object-cover object-[center_48%_center]"
+                sizes="(max-width: 1023px) 50vw, 0px"
+              />
+            </div>
+            <div className="absolute inset-0 hidden lg:block">
               <Image
                 src={imageUrlDesktop}
                 alt=""
                 fill
                 className="h-full w-full object-cover object-[center_48%_center]"
-                sizes="(max-width: 1280px) 50vw, 33vw"
+                sizes="(min-width: 1024px) 33vw, 0px"
               />
             </div>
           </>
@@ -122,30 +193,44 @@ export function ModelingBlockHighJewelry({
         className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-sm:translate-y-[calc(144px*var(--ms,1))]"
         style={{ marginTop: "-33%" }}
       >
-        {titleDesktop.trim().length > 0 || titleMobile.trim().length > 0 ? (
-          <h3 className="h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-bold">
+        {titleForLg.length > 0 ? (
+          <h3 className="h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-extrabold sm:scale-x-105 sm:origin-center lg:font-manrope lg:font-extrabold">
             {titleMobile.trim().length > 0 ? (
               <span
-                className="inline-block whitespace-pre-wrap sm:hidden"
-                style={{ transform: `translateY(calc(${titleMobileOffsetY}px * var(--ms,1)))` }}
+                className="inline-block whitespace-pre-wrap md:hidden"
+                style={{
+                  transform: modelingCopyTranslatePercent(titleMobileOffsetX, titleMobileOffsetY),
+                }}
               >
                 {renderModelingTitleText(titleMobile)}
               </span>
             ) : null}
-            {titleDesktop.trim().length > 0 ? (
+            {titleTabletDisplay.length > 0 ? (
               <span
-                className="hidden whitespace-pre-wrap sm:inline-block"
-                style={{ transform: `translateY(calc(${titleDesktopOffsetY}px * var(--ms,1)))` }}
+                className="hidden whitespace-pre-wrap md:inline-block lg:hidden"
+                style={{
+                  transform: modelingCopyTranslatePercent(titleTabletOffsetX, titleTabletOffsetY),
+                }}
               >
-                {renderModelingTitleText(titleDesktop)}
+                {renderModelingTitleText(titleTabletDisplay)}
               </span>
             ) : null}
+            <span
+              className="hidden whitespace-pre-wrap lg:inline-block"
+              style={{
+                transform: modelingCopyTranslatePercent(titleDesktopOffsetX, titleDesktopOffsetY),
+              }}
+            >
+              {renderModelingTitleText(titleForLg)}
+            </span>
           </h3>
         ) : null}
         {descriptionLinesMobile.length > 0 ? (
           <p
-            className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden"
-            style={{ transform: `translateY(calc(${bodyMobileOffsetY}px * var(--ms,1)))` }}
+            className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden"
+            style={{
+              transform: modelingCopyTranslatePercent(bodyMobileOffsetX, bodyMobileOffsetY),
+            }}
           >
             <span className="block whitespace-nowrap">{renderModelingCopyLine(mobileLine1)}</span>
             {mobileRest.map((line, index) => (
@@ -158,20 +243,51 @@ export function ModelingBlockHighJewelry({
             ))}
           </p>
         ) : null}
-        {descriptionLinesDesktop.length > 0 ? (
+        {hasTabletDescriptionCopy ? (
           <div
-            className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 sm:block"
-            style={{ transform: `translateY(calc(${bodyDesktopOffsetY}px * var(--ms,1)))` }}
+            className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 md:block lg:hidden"
+            style={{
+              transform: modelingCopyTranslatePercent(bodyTabletOffsetX, bodyTabletOffsetY),
+            }}
           >
-            {desktopLine1.length > 0 ? (
+            {tabletLine1.length > 0 ? (
               <span className="block whitespace-nowrap -translate-x-[calc(1.9rem*var(--ms,1))]">
-                {renderModelingCopyLine(desktopLine1)}{" "}
-                {desktopLine1Emphasis.trim().length > 0 ? (
-                  <span className="whitespace-nowrap">{desktopLine1Emphasis}</span>
+                {renderModelingCopyLine(tabletLine1)}{" "}
+                {tabletLine1Emphasis.trim().length > 0 ? (
+                  <span className="whitespace-nowrap">{tabletLine1Emphasis}</span>
                 ) : null}
               </span>
             ) : null}
-            {desktopRest.map((line, index) => (
+            {tabletRest.map((line, index) => (
+              <span
+                key={`tablet-desc-${line}-${index}`}
+                className={
+                  index === 0
+                    ? "mt-[calc(0.125rem*var(--ms,1))] block whitespace-nowrap"
+                    : "block"
+                }
+              >
+                {renderModelingCopyLine(line)}
+              </span>
+            ))}
+          </div>
+        ) : null}
+        {hasLgDescriptionCopy ? (
+          <div
+            className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 lg:block"
+            style={{
+              transform: modelingCopyTranslatePercent(bodyDesktopOffsetX, bodyDesktopOffsetY),
+            }}
+          >
+            {lgDescLine1.length > 0 ? (
+              <span className="block whitespace-nowrap -translate-x-[calc(1.9rem*var(--ms,1))]">
+                {renderModelingCopyLine(lgDescLine1)}{" "}
+                {lgDescLine1Emphasis.trim().length > 0 ? (
+                  <span className="whitespace-nowrap">{lgDescLine1Emphasis}</span>
+                ) : null}
+              </span>
+            ) : null}
+            {lgDescRest.map((line, index) => (
               <span
                 key={`desktop-desc-${line}-${index}`}
                 className={

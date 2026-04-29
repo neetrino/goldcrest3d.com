@@ -28,8 +28,11 @@ function defaultBannerEntry(
   return {
     ...POWER_BANNER_DEFAULT_COPY[viewport][bannerKey],
     ...POWER_BANNER_DEFAULT_MEDIA[viewport][bannerKey],
+    titleOffsetX: 0,
     titleOffsetY: 0,
+    bodyOffsetX: 0,
     bodyOffsetY: 0,
+    ctaOffsetX: 0,
     ctaOffsetY: 0,
     imageObjectKey: null,
     imageTransform: POWER_BANNER_DEFAULT_TRANSFORMS[viewport][bannerKey],
@@ -47,7 +50,12 @@ function emptyBundle(): PowerBannerCopyBundle {
     RENDERING: defaultBannerEntry("mobile", "RENDERING"),
     DESIGN: defaultBannerEntry("mobile", "DESIGN"),
   };
-  return { desktop, mobile };
+  const tablet = {
+    MODELING: defaultBannerEntry("tablet", "MODELING"),
+    RENDERING: defaultBannerEntry("tablet", "RENDERING"),
+    DESIGN: defaultBannerEntry("tablet", "DESIGN"),
+  };
+  return { desktop, mobile, tablet };
 }
 
 /**
@@ -80,8 +88,11 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
     {
       title: string;
       body: string;
+      titleOffsetX: number;
       titleOffsetY: number;
+      bodyOffsetX: number;
       bodyOffsetY: number;
+      ctaOffsetX: number;
       ctaOffsetY: number;
     }
   >();
@@ -90,8 +101,11 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
     copyByViewportAndKey.set(mapKey, {
       title: row.title,
       body: row.body,
+      titleOffsetX: Number.isFinite(row.titleOffsetX) ? row.titleOffsetX : 0,
       titleOffsetY: Number.isFinite(row.titleOffsetY) ? row.titleOffsetY : 0,
+      bodyOffsetX: Number.isFinite(row.bodyOffsetX) ? row.bodyOffsetX : 0,
       bodyOffsetY: Number.isFinite(row.bodyOffsetY) ? row.bodyOffsetY : 0,
+      ctaOffsetX: Number.isFinite(row.ctaOffsetX) ? row.ctaOffsetX : 0,
       ctaOffsetY: Number.isFinite(row.ctaOffsetY) ? row.ctaOffsetY : 0,
     });
   }
@@ -105,8 +119,11 @@ export async function getPowerBannerCopyBundle(): Promise<PowerBannerCopyBundle>
           ...out[viewport][key],
           title: row.title,
           body: row.body,
+          titleOffsetX: row.titleOffsetX,
           titleOffsetY: row.titleOffsetY,
+          bodyOffsetX: row.bodyOffsetX,
           bodyOffsetY: row.bodyOffsetY,
+          ctaOffsetX: row.ctaOffsetX,
           ctaOffsetY: row.ctaOffsetY,
         };
       }

@@ -20,23 +20,28 @@ import {
 } from "./media-manager.constants";
 
 const VARIANT_LABEL: Record<ModelingSlotImageVariant, string> = {
-  desktop: "Desktop / tablet",
+  desktop: "Desktop (large screens)",
   mobile: "Mobile",
+  tablet: "Tablet",
 };
 
 const VARIANT_DESCRIPTION: Record<ModelingSlotImageVariant, string> = {
-  desktop: "Shown from the medium breakpoint up (tablets and desktops).",
+  desktop: "Shown from the large breakpoint up (wide desktops).",
   mobile: "Shown below the medium breakpoint (phones). If empty, the desktop image is used.",
+  tablet:
+    "Shown only between medium and large breakpoints. Does not use desktop or mobile uploads.",
 };
 
 const VARIANT_RECOMMENDED_SIZE: Record<ModelingSlotImageVariant, string> = {
   desktop: "942 × 488 px",
   mobile: "345 × 259 px",
+  tablet: "768 × 480 px",
 };
 
 const VARIANT_RECOMMENDED_LABEL: Record<ModelingSlotImageVariant, string> = {
-  desktop: "Desktop / tablet preview",
+  desktop: "Desktop preview",
   mobile: "Mobile preview",
+  tablet: "Tablet preview",
 };
 
 type ModelingSlotVariantUploadProps = {
@@ -66,10 +71,18 @@ export function ModelingSlotVariantUpload({
   }, [state?.ok, router]);
 
   const r2Key =
-    variant === "desktop" ? row.r2ObjectKey : row.r2ObjectKeyMobile;
+    variant === "desktop"
+      ? row.r2ObjectKey
+      : variant === "tablet"
+        ? row.r2ObjectKeyTablet
+        : row.r2ObjectKeyMobile;
   const currentFileName = formatR2ObjectDisplayName(r2Key);
   const hasImage =
-    variant === "desktop" ? Boolean(row.displayUrl) : Boolean(row.displayUrlMobile);
+    variant === "desktop"
+      ? Boolean(row.displayUrl)
+      : variant === "tablet"
+        ? Boolean(row.displayUrlTablet)
+        : Boolean(row.displayUrlMobile);
   const actionVerb = hasImage ? "Replace" : "Upload";
 
   return (

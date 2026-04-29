@@ -49,6 +49,13 @@
   line-height: 28px;
 }
 
+@media (min-width: 768px) and (max-width: 1023px) {
+  .manufacturing-intelligence-accordion-label {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
 .manufacturing-intelligence-accordion-detail {
   font-family: "SF Compact", -apple-system, system-ui, sans-serif;
 }

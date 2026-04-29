@@ -49,19 +49,33 @@ import {
   type ModelingSlotKey,
 } from "./site-media.registry";
 
-/** Desktop vs mobile URLs for Modeling Specialization (mobile falls back to desktop when not uploaded). */
+/** Desktop vs mobile URLs for Modeling Specialization (mobile falls back to desktop when not uploaded). Tablet tier is isolated (no runtime fallback to desktop/mobile URLs). */
 export type ModelingSlotResolvedMedia = {
   desktop: string;
   mobile: string;
+  tablet: string;
+  /** True when `r2ObjectKeyTablet` is set in DB (vs default placeholder URL only). */
+  hasTabletR2Upload: boolean;
   titleDesktop: string;
   titleMobile: string;
+  titleTablet: string;
   bodyDesktop: string;
   bodyMobile: string;
+  bodyTablet: string;
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
+  titleDesktopOffsetX: number;
+  titleMobileOffsetX: number;
+  titleTabletOffsetY: number;
+  titleTabletOffsetX: number;
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
+  bodyDesktopOffsetX: number;
+  bodyMobileOffsetX: number;
+  bodyTabletOffsetY: number;
+  bodyTabletOffsetX: number;
   desktopLine1Emphasis: string;
+  tabletLine1Emphasis: string;
 };
 
 export type LandingModelingMedia = Record<ModelingSlotKey, ModelingSlotResolvedMedia>;
@@ -104,6 +118,17 @@ function mergeModelingUrl(
   return url ?? DEFAULT_MODELING_IMAGE_URL[slot];
 }
 
+function mergeModelingTabletUrl(
+  slot: ModelingSlotKey,
+  r2ObjectKeyTablet: string | null | undefined,
+): string {
+  if (!r2ObjectKeyTablet) {
+    return DEFAULT_MODELING_IMAGE_URL[slot];
+  }
+  const url = resolveSiteMediaDisplayUrl(r2ObjectKeyTablet);
+  return url ?? DEFAULT_MODELING_IMAGE_URL[slot];
+}
+
 function buildFinishedRow(
   rows: Pick<SiteMediaItemRow, "slotId" | "r2ObjectKey" | "sortOrder">[],
   defaults: readonly FinishedGalleryItem[],
@@ -121,11 +146,15 @@ function buildFinishedRow(
     const src = url ?? fallback.src;
     const imageId =
       defaults[index]?.imageId ?? LANDING_IMAGE_IDS.FINISHED_1;
+    /** Default slot 0 uses portrait-specific `object-position` for bundled art only. */
+    const usesResolvedUpload = url != null;
     return {
       id: row.slotId,
       imageId,
       src,
-      objectPositionClass: fallback.objectPositionClass,
+      objectPositionClass: usesResolvedUpload
+        ? undefined
+        : fallback.objectPositionClass,
     };
   });
 }
@@ -199,13 +228,14 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
 
     const modelingBySlot = new Map<
       ModelingSlotKey,
-      { desktop: string | null; mobile: string | null }
+      { desktop: string | null; mobile: string | null; tablet: string | null }
     >(
       modelingRows.map((r: SiteMediaItemRow) => [
         r.slotId as ModelingSlotKey,
         {
           desktop: r.r2ObjectKey,
           mobile: r.r2ObjectKeyMobile,
+          tablet: r.r2ObjectKeyTablet,
         },
       ]),
     );
@@ -219,13 +249,24 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
           ...normalizeModelingSpecializationCopyPayload({
             titleDesktop: row.titleDesktop ?? "",
             titleMobile: row.titleMobile ?? "",
+            titleTablet: row.titleTablet ?? "",
             bodyDesktop: row.bodyDesktop ?? "",
             bodyMobile: row.bodyMobile ?? "",
+            bodyTablet: row.bodyTablet ?? "",
             titleDesktopOffsetY: row.titleDesktopOffsetY ?? 0,
             titleMobileOffsetY: row.titleMobileOffsetY ?? 0,
+            titleDesktopOffsetX: row.titleDesktopOffsetX ?? 0,
+            titleMobileOffsetX: row.titleMobileOffsetX ?? 0,
+            titleTabletOffsetY: row.titleTabletOffsetY ?? 0,
+            titleTabletOffsetX: row.titleTabletOffsetX ?? 0,
             bodyDesktopOffsetY: row.bodyDesktopOffsetY ?? 0,
             bodyMobileOffsetY: row.bodyMobileOffsetY ?? 0,
+            bodyDesktopOffsetX: row.bodyDesktopOffsetX ?? 0,
+            bodyMobileOffsetX: row.bodyMobileOffsetX ?? 0,
+            bodyTabletOffsetY: row.bodyTabletOffsetY ?? 0,
+            bodyTabletOffsetX: row.bodyTabletOffsetX ?? 0,
             desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
+            tabletLine1Emphasis: row.tabletLine1Emphasis ?? "",
           }),
         },
       ]),
@@ -237,33 +278,60 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
         modeling[slot] = {
           desktop: mergeModelingUrl(slot, undefined),
           mobile: mergeModelingUrl(slot, undefined),
+          tablet: mergeModelingTabletUrl(slot, undefined),
+          hasTabletR2Upload: false,
           titleDesktop: copy.titleDesktop,
           titleMobile: copy.titleMobile,
+          titleTablet: copy.titleTablet,
           bodyDesktop: copy.bodyDesktop,
           bodyMobile: copy.bodyMobile,
+          bodyTablet: copy.bodyTablet,
           titleDesktopOffsetY: copy.titleDesktopOffsetY,
           titleMobileOffsetY: copy.titleMobileOffsetY,
+          titleDesktopOffsetX: copy.titleDesktopOffsetX,
+          titleMobileOffsetX: copy.titleMobileOffsetX,
+          titleTabletOffsetY: copy.titleTabletOffsetY,
+          titleTabletOffsetX: copy.titleTabletOffsetX,
           bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
           bodyMobileOffsetY: copy.bodyMobileOffsetY,
+          bodyDesktopOffsetX: copy.bodyDesktopOffsetX,
+          bodyMobileOffsetX: copy.bodyMobileOffsetX,
+          bodyTabletOffsetY: copy.bodyTabletOffsetY,
+          bodyTabletOffsetX: copy.bodyTabletOffsetX,
           desktopLine1Emphasis: copy.desktopLine1Emphasis,
+          tabletLine1Emphasis: copy.tabletLine1Emphasis,
         };
         continue;
       }
       const desktopUrl = mergeModelingUrl(slot, row.desktop);
       const mobileKey = row.mobile ?? row.desktop;
       const mobileUrl = mergeModelingUrl(slot, mobileKey);
+      const tabletUrl = mergeModelingTabletUrl(slot, row.tablet);
       modeling[slot] = {
         desktop: desktopUrl,
         mobile: mobileUrl,
+        tablet: tabletUrl,
+        hasTabletR2Upload: Boolean(row.tablet),
         titleDesktop: copy.titleDesktop,
         titleMobile: copy.titleMobile,
+        titleTablet: copy.titleTablet,
         bodyDesktop: copy.bodyDesktop,
         bodyMobile: copy.bodyMobile,
+        bodyTablet: copy.bodyTablet,
         titleDesktopOffsetY: copy.titleDesktopOffsetY,
         titleMobileOffsetY: copy.titleMobileOffsetY,
+        titleDesktopOffsetX: copy.titleDesktopOffsetX,
+        titleMobileOffsetX: copy.titleMobileOffsetX,
+        titleTabletOffsetY: copy.titleTabletOffsetY,
+        titleTabletOffsetX: copy.titleTabletOffsetX,
         bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
         bodyMobileOffsetY: copy.bodyMobileOffsetY,
+        bodyDesktopOffsetX: copy.bodyDesktopOffsetX,
+        bodyMobileOffsetX: copy.bodyMobileOffsetX,
+        bodyTabletOffsetY: copy.bodyTabletOffsetY,
+        bodyTabletOffsetX: copy.bodyTabletOffsetX,
         desktopLine1Emphasis: copy.desktopLine1Emphasis,
+        tabletLine1Emphasis: copy.tabletLine1Emphasis,
       };
     }
     const manufacturingDesktop = buildManufacturingIntelligenceContent(
@@ -342,15 +410,28 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
     modeling[slot] = {
       desktop: url,
       mobile: url,
+      tablet: url,
+      hasTabletR2Upload: false,
       titleDesktop: copy.titleDesktop,
       titleMobile: copy.titleMobile,
+      titleTablet: copy.titleTablet,
       bodyDesktop: copy.bodyDesktop,
       bodyMobile: copy.bodyMobile,
+      bodyTablet: copy.bodyTablet,
       titleDesktopOffsetY: copy.titleDesktopOffsetY,
       titleMobileOffsetY: copy.titleMobileOffsetY,
+      titleDesktopOffsetX: copy.titleDesktopOffsetX,
+      titleMobileOffsetX: copy.titleMobileOffsetX,
+      titleTabletOffsetY: copy.titleTabletOffsetY,
+      titleTabletOffsetX: copy.titleTabletOffsetX,
       bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
       bodyMobileOffsetY: copy.bodyMobileOffsetY,
+      bodyDesktopOffsetX: copy.bodyDesktopOffsetX,
+      bodyMobileOffsetX: copy.bodyMobileOffsetX,
+      bodyTabletOffsetY: copy.bodyTabletOffsetY,
+      bodyTabletOffsetX: copy.bodyTabletOffsetX,
       desktopLine1Emphasis: copy.desktopLine1Emphasis,
+      tabletLine1Emphasis: copy.tabletLine1Emphasis,
     };
   }
   const manufacturingDesktop = buildManufacturingIntelligenceContent([], []);
