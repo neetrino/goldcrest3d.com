@@ -5,6 +5,7 @@ import { getModelingCardWidthStyle } from "./modeling-card.constants";
 import {
   DEFAULT_IMAGE_POSITION,
   PORTRAIT_MOBILE_OVERLAY_DESC_CLASS,
+  PORTRAIT_TABLET_OVERLAY_DESC_CLASS,
 } from "./modeling-card.typography-layout.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
 import { renderModelingCopyLine } from "./modeling-copy-line";
@@ -127,7 +128,7 @@ export function ModelingCard({
     portraitMobileLayout &&
     descriptionLinesTablet != null &&
     hasTabletDescriptionLines ? (
-      <div className={PORTRAIT_MOBILE_OVERLAY_DESC_CLASS}>
+      <div className={PORTRAIT_TABLET_OVERLAY_DESC_CLASS}>
         {descriptionLinesTablet.map((line, i) => (
           <span key={`portrait-tablet-desc-${i}`} className="block">
             {renderModelingCopyLine(line)}

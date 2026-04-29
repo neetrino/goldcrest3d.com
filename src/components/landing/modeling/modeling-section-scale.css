@@ -29,3 +29,10 @@
 .modeling-specialization-card-text-scale {
   --mt: 1.1;
 }
+
+/* Tablet (md–lg): overlay copy a bit smaller than sm in the same grid column (tighter than 1.04). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .modeling-specialization-card-text-scale {
+    --mt: 0.96;
+  }
+}

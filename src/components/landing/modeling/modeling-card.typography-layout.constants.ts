@@ -12,9 +12,17 @@ export const HIPHOP_TABLET_DESCRIPTION_CLASS =
 export const PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS =
   "flex w-full flex-col items-end gap-0 font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(20px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black";
 
+/** md–lg portrait overlay title — same scale as Hip-Hop / other modeling cards at `sm+`. */
+export const PORTRAIT_TABLET_OVERLAY_TITLE_CLASS =
+  "flex w-full flex-col items-end gap-0 font-manrope text-[calc(32px*var(--ms,1)*var(--mt,1))] font-extrabold leading-[calc(24px*var(--ms,1)*var(--mt,1))] tracking-normal text-black scale-x-105 origin-right";
+
 export const PORTRAIT_MOBILE_TITLE_FULL = "3D Portrait Jewelry";
 
 export const PORTRAIT_MOBILE_OVERLAY_DESC_CLASS =
   "w-[calc(155px*var(--ms,1))] max-w-full text-right font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153]";
+
+/** md–lg portrait slot body: wider than mobile overlay so tablet lines match design copy (not 155px reflow). */
+export const PORTRAIT_TABLET_OVERLAY_DESC_CLASS =
+  "w-[min(100%,calc(300px*var(--ms,1)))] max-w-full text-right font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70";
 
 export const DEFAULT_IMAGE_POSITION = "center center";

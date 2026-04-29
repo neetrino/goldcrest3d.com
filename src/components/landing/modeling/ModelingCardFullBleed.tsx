@@ -12,6 +12,7 @@ import {
   PORTRAIT_MOBILE_OVERLAY_DESC_CLASS,
   PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS,
   PORTRAIT_MOBILE_TITLE_FULL,
+  PORTRAIT_TABLET_OVERLAY_TITLE_CLASS,
 } from "./modeling-card.typography-layout.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
@@ -390,7 +391,7 @@ export function ModelingCardFullBleed({
                         ),
                       }}
                     >
-                      <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
+                      <h3 className={PORTRAIT_TABLET_OVERLAY_TITLE_CLASS}>
                         <span className="whitespace-pre-wrap">
                           {renderModelingTitleText(titleTabletResolved)}
                         </span>
