@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
 
-import { MobilePortraitEnforcer } from "@/components/app-shell/MobilePortraitEnforcer";
-
 import "./globals.css";
 
 const inter = Inter({
@@ -39,7 +37,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${manrope.variable} font-sans antialiased`}>
         {children}
-        <MobilePortraitEnforcer />
       </body>
     </html>
   );
