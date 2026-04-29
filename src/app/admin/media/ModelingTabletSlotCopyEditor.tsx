@@ -25,35 +25,44 @@ type ModelingTabletSlotCopyEditorProps = {
   row: AdminModelingSlotRow;
 };
 
+function buildRowTabletOffsetsSyncKey(r: AdminModelingSlotRow): string {
+  return [
+    r.slotKey,
+    r.titleTabletOffsetY,
+    r.bodyTabletOffsetY,
+    r.titleTabletOffsetX,
+    r.bodyTabletOffsetX,
+  ].join("\0");
+}
+
 export function ModelingTabletSlotCopyEditor({ row }: ModelingTabletSlotCopyEditorProps) {
   const router = useRouter();
+  const rowTabletOffsetsSyncKey = buildRowTabletOffsetsSyncKey(row);
   const [titleTabletOffsetY, setTitleTabletOffsetY] = useState(row.titleTabletOffsetY);
   const [bodyTabletOffsetY, setBodyTabletOffsetY] = useState(row.bodyTabletOffsetY);
   const [titleTabletOffsetX, setTitleTabletOffsetX] = useState(row.titleTabletOffsetX);
   const [bodyTabletOffsetX, setBodyTabletOffsetX] = useState(row.bodyTabletOffsetX);
+  const [syncedRowTabletOffsetsKey, setSyncedRowTabletOffsetsKey] = useState(
+    rowTabletOffsetsSyncKey,
+  );
   const [state, formAction, isPending] = useActionState<
     SiteMediaActionResult | null,
     FormData
   >(updateModelingTabletSlotCopy, null);
+
+  if (rowTabletOffsetsSyncKey !== syncedRowTabletOffsetsKey) {
+    setSyncedRowTabletOffsetsKey(rowTabletOffsetsSyncKey);
+    setTitleTabletOffsetY(row.titleTabletOffsetY);
+    setBodyTabletOffsetY(row.bodyTabletOffsetY);
+    setTitleTabletOffsetX(row.titleTabletOffsetX);
+    setBodyTabletOffsetX(row.bodyTabletOffsetX);
+  }
 
   useEffect(() => {
     if (state?.ok) {
       router.refresh();
     }
   }, [router, state?.ok]);
-
-  useEffect(() => {
-    setTitleTabletOffsetY(row.titleTabletOffsetY);
-    setBodyTabletOffsetY(row.bodyTabletOffsetY);
-    setTitleTabletOffsetX(row.titleTabletOffsetX);
-    setBodyTabletOffsetX(row.bodyTabletOffsetX);
-  }, [
-    row.slotKey,
-    row.titleTabletOffsetY,
-    row.bodyTabletOffsetY,
-    row.titleTabletOffsetX,
-    row.bodyTabletOffsetX,
-  ]);
 
   const showEmphasisField = row.slotKey === MODELING_SLOT_KEYS.HIGH_JEWELRY;
 

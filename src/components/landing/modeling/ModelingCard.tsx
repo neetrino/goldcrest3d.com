@@ -4,7 +4,6 @@ import { ModelingCardGradientLayout } from "./ModelingCardGradientLayout";
 import { getModelingCardWidthStyle } from "./modeling-card.constants";
 import {
   DEFAULT_IMAGE_POSITION,
-  PORTRAIT_MOBILE_OVERLAY_DESC_CLASS,
   PORTRAIT_TABLET_OVERLAY_DESC_CLASS,
 } from "./modeling-card.typography-layout.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
