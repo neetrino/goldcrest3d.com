@@ -157,6 +157,14 @@ model ModelingSpecializationCopy {
   titleMobileOffsetY    Int      @default(0)
   bodyDesktopOffsetY    Int      @default(0)
   bodyMobileOffsetY     Int      @default(0)
+  /// Desktop title horizontal shift (translateX % of text box; same clamp range as tablet X/Y).
+  titleDesktopOffsetX   Int      @default(0)
+  /// Desktop body horizontal shift (translateX % of text box).
+  bodyDesktopOffsetX    Int      @default(0)
+  /// Mobile title horizontal shift (translateX % of text box; same clamp as desktop/tablet X).
+  titleMobileOffsetX    Int      @default(0)
+  /// Mobile body horizontal shift (translateX % of text box).
+  bodyMobileOffsetX     Int      @default(0)
   titleTablet           String?  @db.Text
   bodyTablet            String?  @db.Text
   /// Tablet vertical shifts (translateY % of text box; app clamp typically -10000…10000).

@@ -212,6 +212,10 @@ export async function updateModelingSlotCopy(
     titleMobileOffsetY: formData.get("titleMobileOffsetY"),
     bodyDesktopOffsetY: formData.get("bodyDesktopOffsetY"),
     bodyMobileOffsetY: formData.get("bodyMobileOffsetY"),
+    titleDesktopOffsetX: formData.get("titleDesktopOffsetX"),
+    bodyDesktopOffsetX: formData.get("bodyDesktopOffsetX"),
+    titleMobileOffsetX: formData.get("titleMobileOffsetX"),
+    bodyMobileOffsetX: formData.get("bodyMobileOffsetX"),
     desktopLine1Emphasis: formData.get("desktopLine1Emphasis"),
   });
   if (!parsed.success) {
@@ -228,6 +232,10 @@ export async function updateModelingSlotCopy(
         fieldErrors.titleMobileOffsetY?.[0] ??
         fieldErrors.bodyDesktopOffsetY?.[0] ??
         fieldErrors.bodyMobileOffsetY?.[0] ??
+        fieldErrors.titleDesktopOffsetX?.[0] ??
+        fieldErrors.bodyDesktopOffsetX?.[0] ??
+        fieldErrors.titleMobileOffsetX?.[0] ??
+        fieldErrors.bodyMobileOffsetX?.[0] ??
         fieldErrors.desktopLine1Emphasis?.[0] ??
         "Invalid input.",
     };
@@ -244,6 +252,10 @@ export async function updateModelingSlotCopy(
     titleMobileOffsetY: parsed.data.titleMobileOffsetY,
     bodyDesktopOffsetY: parsed.data.bodyDesktopOffsetY,
     bodyMobileOffsetY: parsed.data.bodyMobileOffsetY,
+    titleDesktopOffsetX: parsed.data.titleDesktopOffsetX,
+    bodyDesktopOffsetX: parsed.data.bodyDesktopOffsetX,
+    titleMobileOffsetX: parsed.data.titleMobileOffsetX,
+    bodyMobileOffsetX: parsed.data.bodyMobileOffsetX,
     desktopLine1Emphasis: parsed.data.desktopLine1Emphasis,
   });
 
@@ -263,6 +275,10 @@ export async function updateModelingSlotCopy(
         titleMobileOffsetY: payload.titleMobileOffsetY,
         bodyDesktopOffsetY: payload.bodyDesktopOffsetY,
         bodyMobileOffsetY: payload.bodyMobileOffsetY,
+        titleDesktopOffsetX: payload.titleDesktopOffsetX,
+        bodyDesktopOffsetX: payload.bodyDesktopOffsetX,
+        titleMobileOffsetX: payload.titleMobileOffsetX,
+        bodyMobileOffsetX: payload.bodyMobileOffsetX,
         desktopLine1Emphasis: payload.desktopLine1Emphasis,
       },
     });

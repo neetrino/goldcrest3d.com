@@ -87,8 +87,12 @@ export type ModelingCardProps = {
   titleMarginTop?: string;
   /** Additional desktop title vertical offset as translateY % (positive = down). */
   titleOffsetYDesktop?: number;
+  /** Additional desktop title horizontal offset as translateX % (positive = right). */
+  titleOffsetXDesktop?: number;
   /** Additional mobile title vertical offset as translateY % (positive = down). */
   titleOffsetYMobile?: number;
+  /** Additional mobile title horizontal offset as translateX % (positive = right). */
+  titleOffsetXMobile?: number;
   /** When true and titleMarginTop is set, description gets negative margin so it stays in place. */
   titleMarginTopCompensate?: boolean;
   /** With fluidTextLayout: shift the whole text block right (e.g. "8%"). */
@@ -99,8 +103,12 @@ export type ModelingCardProps = {
   descriptionMarginTop?: string;
   /** Additional desktop description vertical offset as translateY % (positive = down). */
   descriptionOffsetYDesktop?: number;
+  /** Additional desktop description horizontal offset as translateX % (positive = right). */
+  descriptionOffsetXDesktop?: number;
   /** Additional mobile description vertical offset as translateY % (positive = down). */
   descriptionOffsetYMobile?: number;
+  /** Additional mobile description horizontal offset as translateX % (positive = right). */
+  descriptionOffsetXMobile?: number;
   /** Id for the first description line only (when descriptionLines + row); isolates it for styling. */
   firstDescriptionLineId?: string;
   /** Margin-right on the first description line only (adds space before second line in row layout). */

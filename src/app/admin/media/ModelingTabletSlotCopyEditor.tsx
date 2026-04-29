@@ -8,7 +8,6 @@ import {
   type SiteMediaActionResult,
 } from "@/app/actions/site-media";
 import {
-  clampModelingTabletCopyOffset,
   MODELING_COPY_OFFSET_NUDGE_PCT,
   MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT,
   MODELING_TABLET_COPY_OFFSET_MAX_PCT,
@@ -20,114 +19,11 @@ import { MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotFormMessages } from "./ModelingSlotFormMessages";
+import { ModelingWideRangePctOffsetStepper } from "./ModelingWideRangePctOffsetStepper";
 
 type ModelingTabletSlotCopyEditorProps = {
   row: AdminModelingSlotRow;
 };
-
-type TabletOffsetStepperProps = {
-  value: number;
-  disabled: boolean;
-  variant: "vertical" | "horizontal";
-  numericInputId: string;
-  onValueChange: (next: number) => void;
-};
-
-function TabletOffsetStepper({
-  value,
-  disabled,
-  variant,
-  numericInputId,
-  onValueChange,
-}: TabletOffsetStepperProps) {
-  const fineMinus = variant === "vertical" ? "−" : "Left";
-  const finePlus = variant === "vertical" ? "+" : "Right";
-  const btnClass = "rounded-lg border border-slate-200 px-2 py-1 text-sm";
-  const nudgeClass = `${btnClass} min-w-[2.35rem] text-xs font-medium`;
-  const applyDelta = (delta: number) => {
-    onValueChange(clampModelingTabletCopyOffset(value + delta));
-  };
-
-  return (
-    <div className="flex flex-col gap-1">
-      <div className="flex flex-wrap items-center gap-1">
-        <button
-          type="button"
-          disabled={disabled}
-          className={nudgeClass}
-          onClick={() => applyDelta(-MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT)}
-        >
-          −{MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT}
-        </button>
-        <button
-          type="button"
-          disabled={disabled}
-          className={nudgeClass}
-          onClick={() => applyDelta(-MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT)}
-        >
-          −{MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT}
-        </button>
-        <button
-          type="button"
-          disabled={disabled}
-          className={btnClass}
-          onClick={() => applyDelta(-MODELING_COPY_OFFSET_NUDGE_PCT)}
-        >
-          {fineMinus}
-        </button>
-        <span className="min-w-[3.75rem] text-center text-sm tabular-nums">{value}%</span>
-        <button
-          type="button"
-          disabled={disabled}
-          className={btnClass}
-          onClick={() => applyDelta(MODELING_COPY_OFFSET_NUDGE_PCT)}
-        >
-          {finePlus}
-        </button>
-        <button
-          type="button"
-          disabled={disabled}
-          className={nudgeClass}
-          onClick={() => applyDelta(MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT)}
-        >
-          +{MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT}
-        </button>
-        <button
-          type="button"
-          disabled={disabled}
-          className={nudgeClass}
-          onClick={() => applyDelta(MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT)}
-        >
-          +{MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT}
-        </button>
-      </div>
-      <div className="flex flex-wrap items-center gap-2">
-        <label htmlFor={numericInputId} className="text-xs text-slate-600">
-          Number
-        </label>
-        <input
-          id={numericInputId}
-          key={value}
-          type="number"
-          disabled={disabled}
-          defaultValue={value}
-          min={MODELING_TABLET_COPY_OFFSET_MIN_PCT}
-          max={MODELING_TABLET_COPY_OFFSET_MAX_PCT}
-          step={1}
-          className="w-[6.5rem] rounded-lg border border-slate-200 px-2 py-1 text-sm tabular-nums"
-          onBlur={(e) => {
-            const n = e.currentTarget.valueAsNumber;
-            if (!Number.isFinite(n)) {
-              e.currentTarget.value = String(value);
-              return;
-            }
-            onValueChange(clampModelingTabletCopyOffset(Math.trunc(n)));
-          }}
-        />
-      </div>
-    </div>
-  );
-}
 
 export function ModelingTabletSlotCopyEditor({ row }: ModelingTabletSlotCopyEditorProps) {
   const router = useRouter();
@@ -235,7 +131,7 @@ export function ModelingTabletSlotCopyEditor({ row }: ModelingTabletSlotCopyEdit
       <div className="flex flex-wrap gap-6">
         <div className="flex flex-col gap-1">
           <span className="text-xs font-medium text-slate-700">Title vertical (%)</span>
-          <TabletOffsetStepper
+          <ModelingWideRangePctOffsetStepper
             value={titleTabletOffsetY}
             disabled={isPending}
             variant="vertical"
@@ -245,7 +141,7 @@ export function ModelingTabletSlotCopyEditor({ row }: ModelingTabletSlotCopyEdit
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-xs font-medium text-slate-700">Title horizontal (%)</span>
-          <TabletOffsetStepper
+          <ModelingWideRangePctOffsetStepper
             value={titleTabletOffsetX}
             disabled={isPending}
             variant="horizontal"
@@ -255,7 +151,7 @@ export function ModelingTabletSlotCopyEditor({ row }: ModelingTabletSlotCopyEdit
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-xs font-medium text-slate-700">Body vertical (%)</span>
-          <TabletOffsetStepper
+          <ModelingWideRangePctOffsetStepper
             value={bodyTabletOffsetY}
             disabled={isPending}
             variant="vertical"
@@ -265,7 +161,7 @@ export function ModelingTabletSlotCopyEditor({ row }: ModelingTabletSlotCopyEdit
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-xs font-medium text-slate-700">Body horizontal (%)</span>
-          <TabletOffsetStepper
+          <ModelingWideRangePctOffsetStepper
             value={bodyTabletOffsetX}
             disabled={isPending}
             variant="horizontal"

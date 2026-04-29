@@ -67,6 +67,10 @@ export type AdminModelingSlotRow = {
   titleMobileOffsetY: number;
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
+  titleDesktopOffsetX: number;
+  bodyDesktopOffsetX: number;
+  titleMobileOffsetX: number;
+  bodyMobileOffsetX: number;
   titleTabletOffsetY: number;
   bodyTabletOffsetY: number;
   titleTabletOffsetX: number;
@@ -232,6 +236,10 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
         titleMobileOffsetY: row.titleMobileOffsetY ?? 0,
         bodyDesktopOffsetY: row.bodyDesktopOffsetY ?? 0,
         bodyMobileOffsetY: row.bodyMobileOffsetY ?? 0,
+        titleDesktopOffsetX: row.titleDesktopOffsetX ?? 0,
+        bodyDesktopOffsetX: row.bodyDesktopOffsetX ?? 0,
+        titleMobileOffsetX: row.titleMobileOffsetX ?? 0,
+        bodyMobileOffsetX: row.bodyMobileOffsetX ?? 0,
         titleTabletOffsetY: row.titleTabletOffsetY ?? 0,
         bodyTabletOffsetY: row.bodyTabletOffsetY ?? 0,
         titleTabletOffsetX: row.titleTabletOffsetX ?? 0,

@@ -47,7 +47,9 @@ export function ModelingCard({
   titleMarginRight,
   titleMarginTop,
   titleOffsetYDesktop = 0,
+  titleOffsetXDesktop = 0,
   titleOffsetYMobile = 0,
+  titleOffsetXMobile = 0,
   titleOffsetYTablet = 0,
   titleOffsetXTablet = 0,
   titleMarginTopCompensate,
@@ -55,7 +57,9 @@ export function ModelingCard({
   textBlockMarginTop,
   descriptionMarginTop,
   descriptionOffsetYDesktop = 0,
+  descriptionOffsetXDesktop = 0,
   descriptionOffsetYMobile = 0,
+  descriptionOffsetXMobile = 0,
   descriptionOffsetYTablet = 0,
   descriptionOffsetXTablet = 0,
   firstDescriptionLineId,
@@ -267,13 +271,17 @@ export function ModelingCard({
         titleMarginRight={titleMarginRight}
         titleMarginTop={titleMarginTop}
         titleOffsetYDesktop={titleOffsetYDesktop}
+        titleOffsetXDesktop={titleOffsetXDesktop}
         titleOffsetYMobile={titleOffsetYMobile}
+        titleOffsetXMobile={titleOffsetXMobile}
         titleOffsetYTablet={titleOffsetYTablet}
         titleOffsetXTablet={titleOffsetXTablet}
         titleMarginTopCompensate={titleMarginTopCompensate}
         descriptionMarginTop={descriptionMarginTop}
         descriptionOffsetYDesktop={descriptionOffsetYDesktop}
+        descriptionOffsetXDesktop={descriptionOffsetXDesktop}
         descriptionOffsetYMobile={descriptionOffsetYMobile}
+        descriptionOffsetXMobile={descriptionOffsetXMobile}
         descriptionOffsetYTablet={descriptionOffsetYTablet}
         descriptionOffsetXTablet={descriptionOffsetXTablet}
         descriptionLinesMobile={descriptionLinesMobile}
@@ -316,8 +324,10 @@ export function ModelingCard({
       imageFillClassName={imageFillClassName}
       titleBold={titleBold}
       titleOffsetYDesktop={titleOffsetYDesktop}
+      titleOffsetXDesktop={titleOffsetXDesktop}
       titleOffsetYMobile={titleOffsetYMobile}
       descriptionOffsetYDesktop={descriptionOffsetYDesktop}
+      descriptionOffsetXDesktop={descriptionOffsetXDesktop}
       descriptionOffsetYMobile={descriptionOffsetYMobile}
       gradientFrameStyle={gradientFrameStyle}
       hasImage={hasImage}

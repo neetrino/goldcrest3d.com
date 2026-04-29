@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { LANDING_MEDIA_CONTAIN_FRAME_BG } from "@/components/landing/landing-media-frame.constants";
 
+import { modelingCopyTranslatePercent } from "./modeling-card.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
 import { renderModelingTitleText } from "./modeling-copy-line";
 
@@ -16,8 +17,10 @@ export type ModelingCardGradientLayoutProps = Pick<
   | "imageFillClassName"
   | "titleBold"
   | "titleOffsetYDesktop"
+  | "titleOffsetXDesktop"
   | "titleOffsetYMobile"
   | "descriptionOffsetYDesktop"
+  | "descriptionOffsetXDesktop"
   | "descriptionOffsetYMobile"
 > & {
   gradientFrameStyle: CSSProperties;
@@ -39,7 +42,9 @@ export function ModelingCardGradientLayout({
   imageFillClassName = "object-cover object-center",
   titleBold = false,
   titleOffsetYDesktop = 0,
+  titleOffsetXDesktop = 0,
   descriptionOffsetYDesktop = 0,
+  descriptionOffsetXDesktop = 0,
   gradientFrameStyle,
   hasImage,
   imageStyle,
@@ -49,8 +54,11 @@ export function ModelingCardGradientLayout({
   hasDescriptionContent,
   DescriptionTag,
 }: ModelingCardGradientLayoutProps) {
-  const titleTransform = `translateY(calc(${titleOffsetYDesktop}% * var(--ms,1)))`;
-  const descriptionTransform = `translateY(calc(${descriptionOffsetYDesktop}% * var(--ms,1)))`;
+  const titleTransform = modelingCopyTranslatePercent(titleOffsetXDesktop, titleOffsetYDesktop);
+  const descriptionTransform = modelingCopyTranslatePercent(
+    descriptionOffsetXDesktop,
+    descriptionOffsetYDesktop,
+  );
   return (
     <article
       className="flex min-h-[calc(320px*var(--ms,1))] min-w-0 w-full flex-col overflow-hidden max-md:min-h-[calc(400px*var(--ms,1))] md:min-h-0 md:flex-row md:items-stretch md:aspect-[83/43]"

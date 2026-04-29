@@ -10,14 +10,18 @@ type ModelingBlockHipHopProps = {
   titleMobile: string;
   titleTablet: string;
   titleDesktopOffsetY: number;
+  titleDesktopOffsetX: number;
   titleMobileOffsetY: number;
+  titleMobileOffsetX: number;
   titleTabletOffsetY: number;
   titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
   descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
+  bodyDesktopOffsetX: number;
   bodyMobileOffsetY: number;
+  bodyMobileOffsetX: number;
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
 };
@@ -31,14 +35,18 @@ export function ModelingBlockHipHop({
   titleMobile,
   titleTablet,
   titleDesktopOffsetY,
+  titleDesktopOffsetX,
   titleMobileOffsetY,
+  titleMobileOffsetX,
   titleTabletOffsetY,
   titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
   descriptionLinesTablet,
   bodyDesktopOffsetY,
+  bodyDesktopOffsetX,
   bodyMobileOffsetY,
+  bodyMobileOffsetX,
   bodyTabletOffsetY,
   bodyTabletOffsetX,
 }: ModelingBlockHipHopProps) {
@@ -49,7 +57,9 @@ export function ModelingBlockHipHop({
       titleMobile={titleMobile}
       titleTablet={titleTablet}
       titleOffsetYDesktop={titleDesktopOffsetY}
+      titleOffsetXDesktop={titleDesktopOffsetX}
       titleOffsetYMobile={titleMobileOffsetY}
+      titleOffsetXMobile={titleMobileOffsetX}
       titleOffsetYTablet={titleTabletOffsetY}
       titleOffsetXTablet={titleTabletOffsetX}
       description=""
@@ -57,7 +67,9 @@ export function ModelingBlockHipHop({
       descriptionLinesDesktop={descriptionLinesDesktop}
       descriptionLinesTablet={descriptionLinesTablet}
       descriptionOffsetYDesktop={bodyDesktopOffsetY}
+      descriptionOffsetXDesktop={bodyDesktopOffsetX}
       descriptionOffsetYMobile={bodyMobileOffsetY}
+      descriptionOffsetXMobile={bodyMobileOffsetX}
       descriptionOffsetYTablet={bodyTabletOffsetY}
       descriptionOffsetXTablet={bodyTabletOffsetX}
       imageSrc={imageUrlDesktop}

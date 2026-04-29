@@ -19,14 +19,18 @@ type ModelingBlockHeritageProps = {
   titleMobile: string;
   titleTablet: string;
   titleDesktopOffsetY: number;
+  titleDesktopOffsetX: number;
   titleMobileOffsetY: number;
+  titleMobileOffsetX: number;
   titleTabletOffsetY: number;
   titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
   descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
+  bodyDesktopOffsetX: number;
   bodyMobileOffsetY: number;
+  bodyMobileOffsetX: number;
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
 };
@@ -36,14 +40,18 @@ type HeritageOverlayTextProps = {
   titleMobile: string;
   titleTablet: string;
   titleDesktopOffsetY: number;
+  titleDesktopOffsetX: number;
   titleMobileOffsetY: number;
+  titleMobileOffsetX: number;
   titleTabletOffsetY: number;
   titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
   descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
+  bodyDesktopOffsetX: number;
   bodyMobileOffsetY: number;
+  bodyMobileOffsetX: number;
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
 };
@@ -53,14 +61,18 @@ function HeritageOverlayText({
   titleMobile,
   titleTablet,
   titleDesktopOffsetY,
+  titleDesktopOffsetX,
   titleMobileOffsetY,
+  titleMobileOffsetX,
   titleTabletOffsetY,
   titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
   descriptionLinesTablet,
   bodyDesktopOffsetY,
+  bodyDesktopOffsetX,
   bodyMobileOffsetY,
+  bodyMobileOffsetX,
   bodyTabletOffsetY,
   bodyTabletOffsetX,
 }: HeritageOverlayTextProps) {
@@ -88,7 +100,9 @@ function HeritageOverlayText({
             {hasMobileTitle ? (
               <span
                 className="block md:hidden"
-                style={{ transform: `translateY(calc(${titleMobileOffsetY}% * var(--ms,1)))` }}
+                style={{
+                  transform: modelingCopyTranslatePercent(titleMobileOffsetX, titleMobileOffsetY),
+                }}
               >
                 <span className="block whitespace-pre-wrap text-right translate-y-[calc(2.75rem*var(--ms,1))] md:hidden">
                   {renderModelingTitleText(titleMobile)}
@@ -110,7 +124,9 @@ function HeritageOverlayText({
             {showLgTitle ? (
               <span
                 className="hidden lg:inline-block"
-                style={{ transform: `translateY(calc(${titleDesktopOffsetY}% * var(--ms,1)))` }}
+                style={{
+                  transform: modelingCopyTranslatePercent(titleDesktopOffsetX, titleDesktopOffsetY),
+                }}
               >
                 <span className="hidden whitespace-pre-wrap lg:inline-block">
                   {renderModelingTitleText(titleForLg)}
@@ -123,7 +139,11 @@ function HeritageOverlayText({
         descTabletLines.length > 0 ||
         linesForLgHeritage.length > 0 ? (
           <div>
-            <div style={{ transform: `translateY(calc(${bodyMobileOffsetY}% * var(--ms,1)))` }}>
+            <div
+              style={{
+                transform: modelingCopyTranslatePercent(bodyMobileOffsetX, bodyMobileOffsetY),
+              }}
+            >
               <p className="mt-[calc(3.5rem*var(--ms,1))] w-[calc(470px*var(--ms,1))] max-w-full font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden">
                 {descriptionLinesMobile.map((line, index) => (
                   <span key={`mobile-${index}`} className="block whitespace-nowrap">
@@ -145,7 +165,11 @@ function HeritageOverlayText({
                 ))}
               </p>
             </div>
-            <div style={{ transform: `translateY(calc(${bodyDesktopOffsetY}% * var(--ms,1)))` }}>
+            <div
+              style={{
+                transform: modelingCopyTranslatePercent(bodyDesktopOffsetX, bodyDesktopOffsetY),
+              }}
+            >
               <p className="mt-[calc(1rem*var(--ms,1))] hidden w-[calc(470px*var(--ms,1))] max-w-full font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black lg:block">
                 {linesForLgHeritage.map((line, index) => (
                   <span key={`desktop-${index}`} className="block whitespace-nowrap">
@@ -170,14 +194,18 @@ export function ModelingBlockHeritage({
   titleMobile,
   titleTablet,
   titleDesktopOffsetY,
+  titleDesktopOffsetX,
   titleMobileOffsetY,
+  titleMobileOffsetX,
   titleTabletOffsetY,
   titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
   descriptionLinesTablet,
   bodyDesktopOffsetY,
+  bodyDesktopOffsetX,
   bodyMobileOffsetY,
+  bodyMobileOffsetX,
   bodyTabletOffsetY,
   bodyTabletOffsetX,
 }: ModelingBlockHeritageProps) {
@@ -236,14 +264,18 @@ export function ModelingBlockHeritage({
         titleMobile={titleMobile}
         titleTablet={titleTablet}
         titleDesktopOffsetY={titleDesktopOffsetY}
+        titleDesktopOffsetX={titleDesktopOffsetX}
         titleMobileOffsetY={titleMobileOffsetY}
+        titleMobileOffsetX={titleMobileOffsetX}
         titleTabletOffsetY={titleTabletOffsetY}
         titleTabletOffsetX={titleTabletOffsetX}
         descriptionLinesDesktop={descriptionLinesDesktop}
         descriptionLinesMobile={descriptionLinesMobile}
         descriptionLinesTablet={descriptionLinesTablet}
         bodyDesktopOffsetY={bodyDesktopOffsetY}
+        bodyDesktopOffsetX={bodyDesktopOffsetX}
         bodyMobileOffsetY={bodyMobileOffsetY}
+        bodyMobileOffsetX={bodyMobileOffsetX}
         bodyTabletOffsetY={bodyTabletOffsetY}
         bodyTabletOffsetX={bodyTabletOffsetX}
       />

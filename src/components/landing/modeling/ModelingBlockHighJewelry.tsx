@@ -53,14 +53,18 @@ type ModelingBlockHighJewelryProps = {
   titleMobile: string;
   titleTablet: string;
   titleDesktopOffsetY: number;
+  titleDesktopOffsetX: number;
   titleMobileOffsetY: number;
+  titleMobileOffsetX: number;
   titleTabletOffsetY: number;
   titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
   descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
+  bodyDesktopOffsetX: number;
   bodyMobileOffsetY: number;
+  bodyMobileOffsetX: number;
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
   desktopLine1Emphasis: string;
@@ -76,14 +80,18 @@ export function ModelingBlockHighJewelry({
   titleMobile,
   titleTablet,
   titleDesktopOffsetY,
+  titleDesktopOffsetX,
   titleMobileOffsetY,
+  titleMobileOffsetX,
   titleTabletOffsetY,
   titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
   descriptionLinesTablet,
   bodyDesktopOffsetY,
+  bodyDesktopOffsetX,
   bodyMobileOffsetY,
+  bodyMobileOffsetX,
   bodyTabletOffsetY,
   bodyTabletOffsetX,
   desktopLine1Emphasis,
@@ -190,7 +198,9 @@ export function ModelingBlockHighJewelry({
             {titleMobile.trim().length > 0 ? (
               <span
                 className="inline-block whitespace-pre-wrap md:hidden"
-                style={{ transform: `translateY(calc(${titleMobileOffsetY}% * var(--ms,1)))` }}
+                style={{
+                  transform: modelingCopyTranslatePercent(titleMobileOffsetX, titleMobileOffsetY),
+                }}
               >
                 {renderModelingTitleText(titleMobile)}
               </span>
@@ -207,7 +217,9 @@ export function ModelingBlockHighJewelry({
             ) : null}
             <span
               className="hidden whitespace-pre-wrap lg:inline-block"
-              style={{ transform: `translateY(calc(${titleDesktopOffsetY}% * var(--ms,1)))` }}
+              style={{
+                transform: modelingCopyTranslatePercent(titleDesktopOffsetX, titleDesktopOffsetY),
+              }}
             >
               {renderModelingTitleText(titleForLg)}
             </span>
@@ -216,7 +228,9 @@ export function ModelingBlockHighJewelry({
         {descriptionLinesMobile.length > 0 ? (
           <p
             className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden"
-            style={{ transform: `translateY(calc(${bodyMobileOffsetY}% * var(--ms,1)))` }}
+            style={{
+              transform: modelingCopyTranslatePercent(bodyMobileOffsetX, bodyMobileOffsetY),
+            }}
           >
             <span className="block whitespace-nowrap">{renderModelingCopyLine(mobileLine1)}</span>
             {mobileRest.map((line, index) => (
@@ -261,7 +275,9 @@ export function ModelingBlockHighJewelry({
         {hasLgDescriptionCopy ? (
           <div
             className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 lg:block"
-            style={{ transform: `translateY(calc(${bodyDesktopOffsetY}% * var(--ms,1)))` }}
+            style={{
+              transform: modelingCopyTranslatePercent(bodyDesktopOffsetX, bodyDesktopOffsetY),
+            }}
           >
             {lgDescLine1.length > 0 ? (
               <span className="block whitespace-nowrap -translate-x-[calc(1.9rem*var(--ms,1))]">

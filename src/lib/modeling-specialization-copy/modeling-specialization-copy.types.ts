@@ -13,6 +13,12 @@ export type ModelingSpecializationCopyRow = {
   titleMobileOffsetY: number;
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
+  /** Desktop horizontal: translateX % of the text box (same clamp as tablet; separate storage). */
+  titleDesktopOffsetX: number;
+  bodyDesktopOffsetX: number;
+  /** Mobile horizontal: translateX % of the text box (same clamp as desktop X). */
+  titleMobileOffsetX: number;
+  bodyMobileOffsetX: number;
   /** Tablet vertical: translateY % of the text box; wider clamp than desktop (see modeling-specialization-copy-offset). */
   titleTabletOffsetY: number;
   bodyTabletOffsetY: number;
@@ -34,6 +40,10 @@ export type ModelingSpecializationCopyPayload = {
   titleMobileOffsetY: number;
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
+  titleDesktopOffsetX: number;
+  bodyDesktopOffsetX: number;
+  titleMobileOffsetX: number;
+  bodyMobileOffsetX: number;
   titleTabletOffsetY: number;
   bodyTabletOffsetY: number;
   titleTabletOffsetX: number;

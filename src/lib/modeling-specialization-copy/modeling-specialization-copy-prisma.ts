@@ -12,6 +12,10 @@ type ModelingSpecializationCopyDbRow = {
   titleMobileOffsetY: number | null;
   bodyDesktopOffsetY: number | null;
   bodyMobileOffsetY: number | null;
+  titleDesktopOffsetX: number | null;
+  bodyDesktopOffsetX: number | null;
+  titleMobileOffsetX: number | null;
+  bodyMobileOffsetX: number | null;
   titleTabletOffsetY: number | null;
   bodyTabletOffsetY: number | null;
   titleTabletOffsetX: number | null;

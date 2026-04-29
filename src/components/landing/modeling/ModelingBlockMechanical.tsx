@@ -34,14 +34,18 @@ type ModelingBlockMechanicalProps = {
   titleMobile: string;
   titleTablet: string;
   titleDesktopOffsetY: number;
+  titleDesktopOffsetX: number;
   titleMobileOffsetY: number;
+  titleMobileOffsetX: number;
   titleTabletOffsetY: number;
   titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
   descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
+  bodyDesktopOffsetX: number;
   bodyMobileOffsetY: number;
+  bodyMobileOffsetX: number;
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
   isAndroidViewport: boolean;
@@ -56,14 +60,18 @@ export function ModelingBlockMechanical({
   titleMobile,
   titleTablet,
   titleDesktopOffsetY,
+  titleDesktopOffsetX,
   titleMobileOffsetY,
+  titleMobileOffsetX,
   titleTabletOffsetY,
   titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
   descriptionLinesTablet,
   bodyDesktopOffsetY,
+  bodyDesktopOffsetX,
   bodyMobileOffsetY,
+  bodyMobileOffsetX,
   bodyTabletOffsetY,
   bodyTabletOffsetX,
   isAndroidViewport,
@@ -145,7 +153,9 @@ export function ModelingBlockMechanical({
               {hasMobileTitle ? (
                 <span
                   className={`block whitespace-pre-wrap md:hidden ${TITLE_LINE1_TABLET_NUDGE_UP_CLASS}`}
-                  style={{ transform: `translateY(calc(${titleMobileOffsetY}% * var(--ms,1)))` }}
+                  style={{
+                    transform: modelingCopyTranslatePercent(titleMobileOffsetX, titleMobileOffsetY),
+                  }}
                 >
                   {renderModelingTitleText(titleMobile)}
                 </span>
@@ -161,7 +171,12 @@ export function ModelingBlockMechanical({
                 </span>
               ) : null}
               {showLgTitle ? (
-                <span className="hidden lg:block" style={{ transform: `translateY(calc(${titleDesktopOffsetY}% * var(--ms,1)))` }}>
+                <span
+                  className="hidden lg:block"
+                  style={{
+                    transform: modelingCopyTranslatePercent(titleDesktopOffsetX, titleDesktopOffsetY),
+                  }}
+                >
                   <span className={`block whitespace-pre-wrap ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
                     {renderModelingTitleText(titleForLg)}
                   </span>
@@ -173,7 +188,9 @@ export function ModelingBlockMechanical({
         {descriptionLinesMobile.length > 0 ? (
           <p
             className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] md:hidden"
-            style={{ transform: `translateY(calc(${bodyMobileOffsetY}% * var(--ms,1)))` }}
+            style={{
+              transform: modelingCopyTranslatePercent(bodyMobileOffsetX, bodyMobileOffsetY),
+            }}
           >
             {descriptionLinesMobile.map((line, i) => (
               <span key={i} className="block">
@@ -198,7 +215,11 @@ export function ModelingBlockMechanical({
           </div>
         ) : null}
         {linesForLgBody.length > 0 ? (
-          <div style={{ transform: `translateY(calc(${bodyDesktopOffsetY}% * var(--ms,1)))` }}>
+          <div
+            style={{
+              transform: modelingCopyTranslatePercent(bodyDesktopOffsetX, bodyDesktopOffsetY),
+            }}
+          >
             <div
               className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] lg:block lg:-translate-y-[calc(1rem*var(--ms,1))]"
               style={{ overflow: "visible" }}

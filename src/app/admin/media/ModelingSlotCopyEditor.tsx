@@ -10,22 +10,34 @@ import {
 import {
   clampModelingCopyOffset,
   MODELING_COPY_OFFSET_NUDGE_PCT,
+  MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT,
+  MODELING_TABLET_COPY_OFFSET_MAX_PCT,
+  MODELING_TABLET_COPY_OFFSET_MIN_PCT,
+  MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT,
 } from "@/constants/modeling-specialization-copy-offset";
 import type { AdminModelingSlotRow } from "@/lib/site-media/get-site-media-admin";
 import { MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotFormMessages } from "./ModelingSlotFormMessages";
+import { ModelingWideRangePctOffsetStepper } from "./ModelingWideRangePctOffsetStepper";
 
 type ModelingSlotCopyEditorProps = {
   row: AdminModelingSlotRow;
 };
 
-type OffsetFieldKey =
+type VerticalOffsetFieldKey =
   | "titleDesktopOffsetY"
   | "titleMobileOffsetY"
   | "bodyDesktopOffsetY"
   | "bodyMobileOffsetY";
+
+type OffsetResetFieldKey =
+  | VerticalOffsetFieldKey
+  | "titleDesktopOffsetX"
+  | "bodyDesktopOffsetX"
+  | "titleMobileOffsetX"
+  | "bodyMobileOffsetX";
 
 type EditorDraft = {
   titleDesktop: string;
@@ -37,6 +49,10 @@ type EditorDraft = {
   titleMobileOffsetY: number;
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
+  titleDesktopOffsetX: number;
+  bodyDesktopOffsetX: number;
+  titleMobileOffsetX: number;
+  bodyMobileOffsetX: number;
 };
 
 function toInitialDraft(row: AdminModelingSlotRow): EditorDraft {
@@ -50,14 +66,22 @@ function toInitialDraft(row: AdminModelingSlotRow): EditorDraft {
     titleMobileOffsetY: row.titleMobileOffsetY,
     bodyDesktopOffsetY: row.bodyDesktopOffsetY,
     bodyMobileOffsetY: row.bodyMobileOffsetY,
+    titleDesktopOffsetX: row.titleDesktopOffsetX,
+    bodyDesktopOffsetX: row.bodyDesktopOffsetX,
+    titleMobileOffsetX: row.titleMobileOffsetX,
+    bodyMobileOffsetX: row.bodyMobileOffsetX,
   };
 }
 
-function offsetLabel(key: OffsetFieldKey): string {
-  if (key === "titleDesktopOffsetY") return "Desktop title";
-  if (key === "titleMobileOffsetY") return "Mobile title";
-  if (key === "bodyDesktopOffsetY") return "Desktop description";
-  return "Mobile description";
+function offsetLabel(key: OffsetResetFieldKey): string {
+  if (key === "titleDesktopOffsetY") return "Desktop title vertical";
+  if (key === "titleMobileOffsetY") return "Mobile title vertical";
+  if (key === "bodyDesktopOffsetY") return "Desktop description vertical";
+  if (key === "bodyMobileOffsetY") return "Mobile description vertical";
+  if (key === "titleDesktopOffsetX") return "Desktop title horizontal";
+  if (key === "bodyDesktopOffsetX") return "Desktop description horizontal";
+  if (key === "titleMobileOffsetX") return "Mobile title horizontal";
+  return "Mobile description horizontal";
 }
 
 export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
@@ -72,6 +96,10 @@ export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
     row.titleMobileOffsetY,
     row.bodyDesktopOffsetY,
     row.bodyMobileOffsetY,
+    row.titleDesktopOffsetX,
+    row.bodyDesktopOffsetX,
+    row.titleMobileOffsetX,
+    row.bodyMobileOffsetX,
   ].join("|");
   return <ModelingSlotCopyEditorContent key={draftResetKey} row={row} />;
 }
@@ -93,7 +121,7 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
   const isDialogVisible = isModalOpen && !state?.ok;
 
   const showEmphasisField = row.slotKey === MODELING_SLOT_KEYS.HIGH_JEWELRY;
-  const nudgeOffset = (field: OffsetFieldKey, delta: number) => {
+  const nudgeOffset = (field: VerticalOffsetFieldKey, delta: number) => {
     setDraft((prev) => ({
       ...prev,
       [field]: clampModelingCopyOffset(prev[field] + delta),
@@ -111,6 +139,10 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
       <input type="hidden" name="titleMobileOffsetY" value={draft.titleMobileOffsetY} />
       <input type="hidden" name="bodyDesktopOffsetY" value={draft.bodyDesktopOffsetY} />
       <input type="hidden" name="bodyMobileOffsetY" value={draft.bodyMobileOffsetY} />
+      <input type="hidden" name="titleDesktopOffsetX" value={String(draft.titleDesktopOffsetX)} />
+      <input type="hidden" name="bodyDesktopOffsetX" value={String(draft.bodyDesktopOffsetX)} />
+      <input type="hidden" name="titleMobileOffsetX" value={String(draft.titleMobileOffsetX)} />
+      <input type="hidden" name="bodyMobileOffsetX" value={String(draft.bodyMobileOffsetX)} />
       <div className="rounded-lg border border-slate-200 bg-slate-50/70">
         <button
           type="button"
@@ -185,6 +217,20 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                     </button>
                     <span className="text-xs text-slate-500">{draft.titleDesktopOffsetY}%</span>
                   </div>
+                  <div className="mt-3 flex flex-col gap-1">
+                    <span className="text-xs font-medium text-slate-700">
+                      Desktop title horizontal (%)
+                    </span>
+                    <ModelingWideRangePctOffsetStepper
+                      value={draft.titleDesktopOffsetX}
+                      disabled={isPending}
+                      variant="horizontal"
+                      numericInputId={`desktop-title-otx-${row.slotKey}`}
+                      onValueChange={(next) =>
+                        setDraft((prev) => ({ ...prev, titleDesktopOffsetX: next }))
+                      }
+                    />
+                  </div>
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className="text-sm font-medium text-slate-700">Mobile title</span>
@@ -214,6 +260,20 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                       Down
                     </button>
                     <span className="text-xs text-slate-500">{draft.titleMobileOffsetY}%</span>
+                  </div>
+                  <div className="mt-3 flex flex-col gap-1">
+                    <span className="text-xs font-medium text-slate-700">
+                      Mobile title horizontal (%)
+                    </span>
+                    <ModelingWideRangePctOffsetStepper
+                      value={draft.titleMobileOffsetX}
+                      disabled={isPending}
+                      variant="horizontal"
+                      numericInputId={`mobile-title-otx-${row.slotKey}`}
+                      onValueChange={(next) =>
+                        setDraft((prev) => ({ ...prev, titleMobileOffsetX: next }))
+                      }
+                    />
                   </div>
                 </label>
               </div>
@@ -248,6 +308,20 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                     </button>
                     <span className="text-xs text-slate-500">{draft.bodyDesktopOffsetY}%</span>
                   </div>
+                  <div className="mt-3 flex flex-col gap-1">
+                    <span className="text-xs font-medium text-slate-700">
+                      Desktop description horizontal (%)
+                    </span>
+                    <ModelingWideRangePctOffsetStepper
+                      value={draft.bodyDesktopOffsetX}
+                      disabled={isPending}
+                      variant="horizontal"
+                      numericInputId={`desktop-body-otx-${row.slotKey}`}
+                      onValueChange={(next) =>
+                        setDraft((prev) => ({ ...prev, bodyDesktopOffsetX: next }))
+                      }
+                    />
+                  </div>
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className="text-sm font-medium text-slate-700">Mobile description</span>
@@ -278,6 +352,20 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                     </button>
                     <span className="text-xs text-slate-500">{draft.bodyMobileOffsetY}%</span>
                   </div>
+                  <div className="mt-3 flex flex-col gap-1">
+                    <span className="text-xs font-medium text-slate-700">
+                      Mobile description horizontal (%)
+                    </span>
+                    <ModelingWideRangePctOffsetStepper
+                      value={draft.bodyMobileOffsetX}
+                      disabled={isPending}
+                      variant="horizontal"
+                      numericInputId={`mobile-body-otx-${row.slotKey}`}
+                      onValueChange={(next) =>
+                        setDraft((prev) => ({ ...prev, bodyMobileOffsetX: next }))
+                      }
+                    />
+                  </div>
                 </label>
               </div>
 
@@ -304,10 +392,19 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                 <input type="hidden" name="desktopLine1Emphasis" value="" />
               )}
 
+              <p className="mt-4 text-xs text-slate-600">
+                Desktop and mobile title/description horizontal offsets use the same % range and step
+                sizes as the Tablet tab ({MODELING_TABLET_COPY_OFFSET_MIN_PCT}…
+                {MODELING_TABLET_COPY_OFFSET_MAX_PCT}; ±{MODELING_COPY_OFFSET_NUDGE_PCT}, ±
+                {MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT}, ±{MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT}
+                ). Stored separately from tablet offsets.
+              </p>
+
               <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50/80 p-4">
                 <p className="text-sm font-semibold text-slate-900">Live position preview</p>
                 <p className="mt-1 text-xs text-slate-500">
-                  Up/Down moves text by {MODELING_COPY_OFFSET_NUDGE_PCT}% per click. Preview updates instantly.
+                  Up/Down moves vertical text by {MODELING_COPY_OFFSET_NUDGE_PCT}% per click. Horizontal
+                  uses the stepper above. Preview updates instantly.
                 </p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <div className="rounded-lg border border-slate-200 bg-white p-3">
@@ -318,7 +415,7 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                       <h4
                         className="whitespace-pre-wrap text-base font-semibold text-slate-900 transition-transform duration-150"
                         style={{
-                          transform: `translateY(${draft.titleDesktopOffsetY}%)`,
+                          transform: `translate(${draft.titleDesktopOffsetX}%, ${draft.titleDesktopOffsetY}%)`,
                         }}
                       >
                         {draft.titleDesktop || "Desktop title"}
@@ -326,7 +423,7 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                       <p
                         className="mt-2 whitespace-pre-wrap text-sm text-slate-700 transition-transform duration-150"
                         style={{
-                          transform: `translateY(${draft.bodyDesktopOffsetY}%)`,
+                          transform: `translate(${draft.bodyDesktopOffsetX}%, ${draft.bodyDesktopOffsetY}%)`,
                         }}
                       >
                         {draft.bodyDesktop || "Desktop description"}
@@ -341,7 +438,7 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                       <h4
                         className="whitespace-pre-wrap text-base font-semibold text-slate-900 transition-transform duration-150"
                         style={{
-                          transform: `translateY(${draft.titleMobileOffsetY}%)`,
+                          transform: `translate(${draft.titleMobileOffsetX}%, ${draft.titleMobileOffsetY}%)`,
                         }}
                       >
                         {draft.titleMobile || "Mobile title"}
@@ -349,7 +446,7 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                       <p
                         className="mt-2 whitespace-pre-wrap text-sm text-slate-700 transition-transform duration-150"
                         style={{
-                          transform: `translateY(${draft.bodyMobileOffsetY}%)`,
+                          transform: `translate(${draft.bodyMobileOffsetX}%, ${draft.bodyMobileOffsetY}%)`,
                         }}
                       >
                         {draft.bodyMobile || "Mobile description"}
@@ -364,7 +461,11 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                       "titleMobileOffsetY",
                       "bodyDesktopOffsetY",
                       "bodyMobileOffsetY",
-                    ] as OffsetFieldKey[]
+                      "titleDesktopOffsetX",
+                      "bodyDesktopOffsetX",
+                      "titleMobileOffsetX",
+                      "bodyMobileOffsetX",
+                    ] as OffsetResetFieldKey[]
                   ).map((field) => (
                     <button
                       key={field}

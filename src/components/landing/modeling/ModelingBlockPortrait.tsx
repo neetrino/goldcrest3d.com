@@ -15,14 +15,18 @@ type ModelingBlockPortraitProps = {
   titleMobile: string;
   titleTablet: string;
   titleDesktopOffsetY: number;
+  titleDesktopOffsetX: number;
   titleMobileOffsetY: number;
+  titleMobileOffsetX: number;
   titleTabletOffsetY: number;
   titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
   descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
+  bodyDesktopOffsetX: number;
   bodyMobileOffsetY: number;
+  bodyMobileOffsetX: number;
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
 };
@@ -36,14 +40,18 @@ export function ModelingBlockPortrait({
   titleMobile,
   titleTablet,
   titleDesktopOffsetY,
+  titleDesktopOffsetX,
   titleMobileOffsetY,
+  titleMobileOffsetX,
   titleTabletOffsetY,
   titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
   descriptionLinesTablet,
   bodyDesktopOffsetY,
+  bodyDesktopOffsetX,
   bodyMobileOffsetY,
+  bodyMobileOffsetX,
   bodyTabletOffsetY,
   bodyTabletOffsetX,
 }: ModelingBlockPortraitProps) {
@@ -58,7 +66,9 @@ export function ModelingBlockPortrait({
       titleMobile={titleMobile}
       titleTablet={titleTablet}
       titleOffsetYDesktop={titleDesktopOffsetY}
+      titleOffsetXDesktop={titleDesktopOffsetX}
       titleOffsetYMobile={titleMobileOffsetY}
+      titleOffsetXMobile={titleMobileOffsetX}
       titleOffsetYTablet={titleTabletOffsetY}
       titleOffsetXTablet={titleTabletOffsetX}
       description=""
@@ -66,7 +76,9 @@ export function ModelingBlockPortrait({
       descriptionLinesMobile={[...descriptionLinesMobile]}
       descriptionLinesTablet={[...descriptionLinesTablet]}
       descriptionOffsetYDesktop={bodyDesktopOffsetY}
+      descriptionOffsetXDesktop={bodyDesktopOffsetX}
       descriptionOffsetYMobile={bodyMobileOffsetY}
+      descriptionOffsetXMobile={bodyMobileOffsetX}
       descriptionOffsetYTablet={bodyTabletOffsetY}
       descriptionOffsetXTablet={bodyTabletOffsetX}
       imageSrc={imageUrlDesktop}

@@ -64,10 +64,14 @@ export type ModelingSlotResolvedMedia = {
   bodyTablet: string;
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
+  titleDesktopOffsetX: number;
+  titleMobileOffsetX: number;
   titleTabletOffsetY: number;
   titleTabletOffsetX: number;
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
+  bodyDesktopOffsetX: number;
+  bodyMobileOffsetX: number;
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
   desktopLine1Emphasis: string;
@@ -247,10 +251,14 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
             bodyTablet: row.bodyTablet ?? "",
             titleDesktopOffsetY: row.titleDesktopOffsetY ?? 0,
             titleMobileOffsetY: row.titleMobileOffsetY ?? 0,
+            titleDesktopOffsetX: row.titleDesktopOffsetX ?? 0,
+            titleMobileOffsetX: row.titleMobileOffsetX ?? 0,
             titleTabletOffsetY: row.titleTabletOffsetY ?? 0,
             titleTabletOffsetX: row.titleTabletOffsetX ?? 0,
             bodyDesktopOffsetY: row.bodyDesktopOffsetY ?? 0,
             bodyMobileOffsetY: row.bodyMobileOffsetY ?? 0,
+            bodyDesktopOffsetX: row.bodyDesktopOffsetX ?? 0,
+            bodyMobileOffsetX: row.bodyMobileOffsetX ?? 0,
             bodyTabletOffsetY: row.bodyTabletOffsetY ?? 0,
             bodyTabletOffsetX: row.bodyTabletOffsetX ?? 0,
             desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
@@ -276,10 +284,14 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
           bodyTablet: copy.bodyTablet,
           titleDesktopOffsetY: copy.titleDesktopOffsetY,
           titleMobileOffsetY: copy.titleMobileOffsetY,
+          titleDesktopOffsetX: copy.titleDesktopOffsetX,
+          titleMobileOffsetX: copy.titleMobileOffsetX,
           titleTabletOffsetY: copy.titleTabletOffsetY,
           titleTabletOffsetX: copy.titleTabletOffsetX,
           bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
           bodyMobileOffsetY: copy.bodyMobileOffsetY,
+          bodyDesktopOffsetX: copy.bodyDesktopOffsetX,
+          bodyMobileOffsetX: copy.bodyMobileOffsetX,
           bodyTabletOffsetY: copy.bodyTabletOffsetY,
           bodyTabletOffsetX: copy.bodyTabletOffsetX,
           desktopLine1Emphasis: copy.desktopLine1Emphasis,
@@ -304,10 +316,14 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
         bodyTablet: copy.bodyTablet,
         titleDesktopOffsetY: copy.titleDesktopOffsetY,
         titleMobileOffsetY: copy.titleMobileOffsetY,
+        titleDesktopOffsetX: copy.titleDesktopOffsetX,
+        titleMobileOffsetX: copy.titleMobileOffsetX,
         titleTabletOffsetY: copy.titleTabletOffsetY,
         titleTabletOffsetX: copy.titleTabletOffsetX,
         bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
         bodyMobileOffsetY: copy.bodyMobileOffsetY,
+        bodyDesktopOffsetX: copy.bodyDesktopOffsetX,
+        bodyMobileOffsetX: copy.bodyMobileOffsetX,
         bodyTabletOffsetY: copy.bodyTabletOffsetY,
         bodyTabletOffsetX: copy.bodyTabletOffsetX,
         desktopLine1Emphasis: copy.desktopLine1Emphasis,
@@ -400,10 +416,14 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
       bodyTablet: copy.bodyTablet,
       titleDesktopOffsetY: copy.titleDesktopOffsetY,
       titleMobileOffsetY: copy.titleMobileOffsetY,
+      titleDesktopOffsetX: copy.titleDesktopOffsetX,
+      titleMobileOffsetX: copy.titleMobileOffsetX,
       titleTabletOffsetY: copy.titleTabletOffsetY,
       titleTabletOffsetX: copy.titleTabletOffsetX,
       bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
       bodyMobileOffsetY: copy.bodyMobileOffsetY,
+      bodyDesktopOffsetX: copy.bodyDesktopOffsetX,
+      bodyMobileOffsetX: copy.bodyMobileOffsetX,
       bodyTabletOffsetY: copy.bodyTabletOffsetY,
       bodyTabletOffsetX: copy.bodyTabletOffsetX,
       desktopLine1Emphasis: copy.desktopLine1Emphasis,
