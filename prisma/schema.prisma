@@ -152,14 +152,20 @@ model ModelingSpecializationCopy {
   titleMobile           String?  @db.Text
   bodyDesktop           String?  @db.Text
   bodyMobile            String?  @db.Text
+  /// Copy vertical offsets (ints): CSS translateY percentage, typically -100…100.
   titleDesktopOffsetY   Int      @default(0)
   titleMobileOffsetY    Int      @default(0)
   bodyDesktopOffsetY    Int      @default(0)
   bodyMobileOffsetY     Int      @default(0)
   titleTablet           String?  @db.Text
   bodyTablet            String?  @db.Text
+  /// Tablet vertical shifts (translateY % of text box; app clamp typically -10000…10000).
   titleTabletOffsetY    Int      @default(0)
   bodyTabletOffsetY     Int      @default(0)
+  /// Tablet title horizontal shift (translateX % of text box; app clamp typically -10000…10000).
+  titleTabletOffsetX    Int      @default(0)
+  /// Tablet body horizontal shift (translateX % of text box; same clamp as titleTabletOffsetX).
+  bodyTabletOffsetX     Int      @default(0)
   /// Optional emphasized fragment for slots that require highlighted wording.
   desktopLine1Emphasis  String?  @db.Text
   tabletLine1Emphasis   String?  @db.Text

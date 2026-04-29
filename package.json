@@ -5,6 +5,7 @@
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "prisma generate && next dev",
+    "dev:fresh": "prisma generate && node -e \"try{require('fs').rmSync('.next',{recursive:true,force:true})}catch(e){}\" && next dev",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",

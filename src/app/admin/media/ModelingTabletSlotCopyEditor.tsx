@@ -7,28 +7,134 @@ import {
   updateModelingTabletSlotCopy,
   type SiteMediaActionResult,
 } from "@/app/actions/site-media";
+import {
+  clampModelingTabletCopyOffset,
+  MODELING_COPY_OFFSET_NUDGE_PCT,
+  MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT,
+  MODELING_TABLET_COPY_OFFSET_MAX_PCT,
+  MODELING_TABLET_COPY_OFFSET_MIN_PCT,
+  MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT,
+} from "@/constants/modeling-specialization-copy-offset";
 import type { AdminModelingSlotRow } from "@/lib/site-media/get-site-media-admin";
 import { MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotFormMessages } from "./ModelingSlotFormMessages";
 
-const MIN_OFFSET_Y = -300;
-const MAX_OFFSET_Y = 300;
-const NUDGE_STEP_Y = 4;
-
 type ModelingTabletSlotCopyEditorProps = {
   row: AdminModelingSlotRow;
 };
 
-function clampOffset(value: number): number {
-  return Math.min(MAX_OFFSET_Y, Math.max(MIN_OFFSET_Y, Math.round(value)));
+type TabletOffsetStepperProps = {
+  value: number;
+  disabled: boolean;
+  variant: "vertical" | "horizontal";
+  numericInputId: string;
+  onValueChange: (next: number) => void;
+};
+
+function TabletOffsetStepper({
+  value,
+  disabled,
+  variant,
+  numericInputId,
+  onValueChange,
+}: TabletOffsetStepperProps) {
+  const fineMinus = variant === "vertical" ? "−" : "Left";
+  const finePlus = variant === "vertical" ? "+" : "Right";
+  const btnClass = "rounded-lg border border-slate-200 px-2 py-1 text-sm";
+  const nudgeClass = `${btnClass} min-w-[2.35rem] text-xs font-medium`;
+  const applyDelta = (delta: number) => {
+    onValueChange(clampModelingTabletCopyOffset(value + delta));
+  };
+
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex flex-wrap items-center gap-1">
+        <button
+          type="button"
+          disabled={disabled}
+          className={nudgeClass}
+          onClick={() => applyDelta(-MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT)}
+        >
+          −{MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT}
+        </button>
+        <button
+          type="button"
+          disabled={disabled}
+          className={nudgeClass}
+          onClick={() => applyDelta(-MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT)}
+        >
+          −{MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT}
+        </button>
+        <button
+          type="button"
+          disabled={disabled}
+          className={btnClass}
+          onClick={() => applyDelta(-MODELING_COPY_OFFSET_NUDGE_PCT)}
+        >
+          {fineMinus}
+        </button>
+        <span className="min-w-[3.75rem] text-center text-sm tabular-nums">{value}%</span>
+        <button
+          type="button"
+          disabled={disabled}
+          className={btnClass}
+          onClick={() => applyDelta(MODELING_COPY_OFFSET_NUDGE_PCT)}
+        >
+          {finePlus}
+        </button>
+        <button
+          type="button"
+          disabled={disabled}
+          className={nudgeClass}
+          onClick={() => applyDelta(MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT)}
+        >
+          +{MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT}
+        </button>
+        <button
+          type="button"
+          disabled={disabled}
+          className={nudgeClass}
+          onClick={() => applyDelta(MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT)}
+        >
+          +{MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT}
+        </button>
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <label htmlFor={numericInputId} className="text-xs text-slate-600">
+          Number
+        </label>
+        <input
+          id={numericInputId}
+          key={value}
+          type="number"
+          disabled={disabled}
+          defaultValue={value}
+          min={MODELING_TABLET_COPY_OFFSET_MIN_PCT}
+          max={MODELING_TABLET_COPY_OFFSET_MAX_PCT}
+          step={1}
+          className="w-[6.5rem] rounded-lg border border-slate-200 px-2 py-1 text-sm tabular-nums"
+          onBlur={(e) => {
+            const n = e.currentTarget.valueAsNumber;
+            if (!Number.isFinite(n)) {
+              e.currentTarget.value = String(value);
+              return;
+            }
+            onValueChange(clampModelingTabletCopyOffset(Math.trunc(n)));
+          }}
+        />
+      </div>
+    </div>
+  );
 }
 
 export function ModelingTabletSlotCopyEditor({ row }: ModelingTabletSlotCopyEditorProps) {
   const router = useRouter();
   const [titleTabletOffsetY, setTitleTabletOffsetY] = useState(row.titleTabletOffsetY);
   const [bodyTabletOffsetY, setBodyTabletOffsetY] = useState(row.bodyTabletOffsetY);
+  const [titleTabletOffsetX, setTitleTabletOffsetX] = useState(row.titleTabletOffsetX);
+  const [bodyTabletOffsetX, setBodyTabletOffsetX] = useState(row.bodyTabletOffsetX);
   const [state, formAction, isPending] = useActionState<
     SiteMediaActionResult | null,
     FormData
@@ -40,6 +146,19 @@ export function ModelingTabletSlotCopyEditor({ row }: ModelingTabletSlotCopyEdit
     }
   }, [router, state?.ok]);
 
+  useEffect(() => {
+    setTitleTabletOffsetY(row.titleTabletOffsetY);
+    setBodyTabletOffsetY(row.bodyTabletOffsetY);
+    setTitleTabletOffsetX(row.titleTabletOffsetX);
+    setBodyTabletOffsetX(row.bodyTabletOffsetX);
+  }, [
+    row.slotKey,
+    row.titleTabletOffsetY,
+    row.bodyTabletOffsetY,
+    row.titleTabletOffsetX,
+    row.bodyTabletOffsetX,
+  ]);
+
   const showEmphasisField = row.slotKey === MODELING_SLOT_KEYS.HIGH_JEWELRY;
 
   return (
@@ -47,6 +166,8 @@ export function ModelingTabletSlotCopyEditor({ row }: ModelingTabletSlotCopyEdit
       <input type="hidden" name="slotKey" value={row.slotKey} />
       <input type="hidden" name="titleTabletOffsetY" value={String(titleTabletOffsetY)} />
       <input type="hidden" name="bodyTabletOffsetY" value={String(bodyTabletOffsetY)} />
+      <input type="hidden" name="titleTabletOffsetX" value={String(titleTabletOffsetX)} />
+      <input type="hidden" name="bodyTabletOffsetX" value={String(bodyTabletOffsetX)} />
 
       <div>
         <p className="text-sm font-semibold text-slate-900">Tablet copy</p>
@@ -103,58 +224,54 @@ export function ModelingTabletSlotCopyEditor({ row }: ModelingTabletSlotCopyEdit
         </div>
       ) : null}
 
-      <div className="flex flex-wrap gap-4">
+      <p className="text-xs text-slate-600">
+        Offsets use CSS <span className="font-mono">translate</span> in % of each text block’s own
+        width/height (not the full card). Allowed range {MODELING_TABLET_COPY_OFFSET_MIN_PCT}…
+        {MODELING_TABLET_COPY_OFFSET_MAX_PCT}. Steps: ±{MODELING_COPY_OFFSET_NUDGE_PCT}, ±
+        {MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT}, ±{MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT}, or
+        type a number and tab away. Horizontal: negative = left, positive = right.
+      </p>
+
+      <div className="flex flex-wrap gap-6">
         <div className="flex flex-col gap-1">
-          <span className="text-xs font-medium text-slate-700">Title offset (px)</span>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              disabled={isPending}
-              className="rounded-lg border border-slate-200 px-2 py-1 text-sm"
-              onClick={() =>
-                setTitleTabletOffsetY((v) => clampOffset(v - NUDGE_STEP_Y))
-              }
-            >
-              −
-            </button>
-            <span className="min-w-[3rem] text-center text-sm">{titleTabletOffsetY}</span>
-            <button
-              type="button"
-              disabled={isPending}
-              className="rounded-lg border border-slate-200 px-2 py-1 text-sm"
-              onClick={() =>
-                setTitleTabletOffsetY((v) => clampOffset(v + NUDGE_STEP_Y))
-              }
-            >
-              +
-            </button>
-          </div>
+          <span className="text-xs font-medium text-slate-700">Title vertical (%)</span>
+          <TabletOffsetStepper
+            value={titleTabletOffsetY}
+            disabled={isPending}
+            variant="vertical"
+            numericInputId={`tablet-oty-${row.slotKey}`}
+            onValueChange={setTitleTabletOffsetY}
+          />
         </div>
         <div className="flex flex-col gap-1">
-          <span className="text-xs font-medium text-slate-700">Body offset (px)</span>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              disabled={isPending}
-              className="rounded-lg border border-slate-200 px-2 py-1 text-sm"
-              onClick={() =>
-                setBodyTabletOffsetY((v) => clampOffset(v - NUDGE_STEP_Y))
-              }
-            >
-              −
-            </button>
-            <span className="min-w-[3rem] text-center text-sm">{bodyTabletOffsetY}</span>
-            <button
-              type="button"
-              disabled={isPending}
-              className="rounded-lg border border-slate-200 px-2 py-1 text-sm"
-              onClick={() =>
-                setBodyTabletOffsetY((v) => clampOffset(v + NUDGE_STEP_Y))
-              }
-            >
-              +
-            </button>
-          </div>
+          <span className="text-xs font-medium text-slate-700">Title horizontal (%)</span>
+          <TabletOffsetStepper
+            value={titleTabletOffsetX}
+            disabled={isPending}
+            variant="horizontal"
+            numericInputId={`tablet-otx-${row.slotKey}`}
+            onValueChange={setTitleTabletOffsetX}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className="text-xs font-medium text-slate-700">Body vertical (%)</span>
+          <TabletOffsetStepper
+            value={bodyTabletOffsetY}
+            disabled={isPending}
+            variant="vertical"
+            numericInputId={`tablet-oby-${row.slotKey}`}
+            onValueChange={setBodyTabletOffsetY}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className="text-xs font-medium text-slate-700">Body horizontal (%)</span>
+          <TabletOffsetStepper
+            value={bodyTabletOffsetX}
+            disabled={isPending}
+            variant="horizontal"
+            numericInputId={`tablet-obx-${row.slotKey}`}
+            onValueChange={setBodyTabletOffsetX}
+          />
         </div>
       </div>
 

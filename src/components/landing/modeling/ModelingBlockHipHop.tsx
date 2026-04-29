@@ -12,12 +12,14 @@ type ModelingBlockHipHopProps = {
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
   titleTabletOffsetY: number;
+  titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
   descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
   bodyTabletOffsetY: number;
+  bodyTabletOffsetX: number;
 };
 
 /** Hip-Hop Jewelry block — Figma background layer on image area. */
@@ -31,12 +33,14 @@ export function ModelingBlockHipHop({
   titleDesktopOffsetY,
   titleMobileOffsetY,
   titleTabletOffsetY,
+  titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
   descriptionLinesTablet,
   bodyDesktopOffsetY,
   bodyMobileOffsetY,
   bodyTabletOffsetY,
+  bodyTabletOffsetX,
 }: ModelingBlockHipHopProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
@@ -47,6 +51,7 @@ export function ModelingBlockHipHop({
       titleOffsetYDesktop={titleDesktopOffsetY}
       titleOffsetYMobile={titleMobileOffsetY}
       titleOffsetYTablet={titleTabletOffsetY}
+      titleOffsetXTablet={titleTabletOffsetX}
       description=""
       descriptionLines={descriptionLinesMobile}
       descriptionLinesDesktop={descriptionLinesDesktop}
@@ -54,6 +59,7 @@ export function ModelingBlockHipHop({
       descriptionOffsetYDesktop={bodyDesktopOffsetY}
       descriptionOffsetYMobile={bodyMobileOffsetY}
       descriptionOffsetYTablet={bodyTabletOffsetY}
+      descriptionOffsetXTablet={bodyTabletOffsetX}
       imageSrc={imageUrlDesktop}
       imageSrcMobile={imageUrlMobile}
       imageSrcTablet={imageUrlTablet}

@@ -3,7 +3,12 @@ import Image from "next/image";
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
-import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
+import {
+  MODELING_CARD_FRAME_MOBILE_CLASSES,
+  modelingBodyLinesForLgViewport,
+  modelingCopyTranslatePercent,
+  modelingTitleForLgViewport,
+} from "./modeling-card.constants";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
 type ModelingBlockHeritageProps = {
@@ -16,12 +21,14 @@ type ModelingBlockHeritageProps = {
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
   titleTabletOffsetY: number;
+  titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
   descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
   bodyTabletOffsetY: number;
+  bodyTabletOffsetX: number;
 };
 
 type HeritageOverlayTextProps = {
@@ -31,12 +38,14 @@ type HeritageOverlayTextProps = {
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
   titleTabletOffsetY: number;
+  titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
   descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
   bodyTabletOffsetY: number;
+  bodyTabletOffsetX: number;
 };
 
 function HeritageOverlayText({
@@ -46,12 +55,14 @@ function HeritageOverlayText({
   titleDesktopOffsetY,
   titleMobileOffsetY,
   titleTabletOffsetY,
+  titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
   descriptionLinesTablet,
   bodyDesktopOffsetY,
   bodyMobileOffsetY,
   bodyTabletOffsetY,
+  bodyTabletOffsetX,
 }: HeritageOverlayTextProps) {
   const titleTabletResolved = titleTablet.trim();
   const descTabletLines = descriptionLinesTablet.some((l) => l.trim().length > 0)
@@ -61,6 +72,13 @@ function HeritageOverlayText({
   const hasMobileTitle = titleMobile.trim().length > 0;
   const hasDesktopTitle = titleDesktop.trim().length > 0;
   const hasTabletTitle = titleTabletResolved.length > 0;
+  const titleForLg = modelingTitleForLgViewport(titleDesktop, titleTabletResolved, titleMobile);
+  const showLgTitle = titleForLg.length > 0;
+  const linesForLgHeritage = modelingBodyLinesForLgViewport(
+    descriptionLinesDesktop,
+    descTabletLines,
+    descriptionLinesMobile,
+  );
 
   return (
     <div className="absolute inset-0 z-10 flex items-start justify-end px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))]">
@@ -70,7 +88,7 @@ function HeritageOverlayText({
             {hasMobileTitle ? (
               <span
                 className="block md:hidden"
-                style={{ transform: `translateY(calc(${titleMobileOffsetY}px * var(--ms,1)))` }}
+                style={{ transform: `translateY(calc(${titleMobileOffsetY}% * var(--ms,1)))` }}
               >
                 <span className="block whitespace-pre-wrap text-right translate-y-[calc(2.75rem*var(--ms,1))] md:hidden">
                   {renderModelingTitleText(titleMobile)}
@@ -80,20 +98,22 @@ function HeritageOverlayText({
             {hasTabletTitle ? (
               <span
                 className="hidden md:inline-block lg:hidden"
-                style={{ transform: `translateY(calc(${titleTabletOffsetY}px * var(--ms,1)))` }}
+                style={{
+                  transform: modelingCopyTranslatePercent(titleTabletOffsetX, titleTabletOffsetY),
+                }}
               >
                 <span className="hidden whitespace-pre-wrap md:inline-block lg:hidden">
                   {renderModelingTitleText(titleTabletResolved)}
                 </span>
               </span>
             ) : null}
-            {hasDesktopTitle ? (
+            {showLgTitle ? (
               <span
                 className="hidden lg:inline-block"
-                style={{ transform: `translateY(calc(${titleDesktopOffsetY}px * var(--ms,1)))` }}
+                style={{ transform: `translateY(calc(${titleDesktopOffsetY}% * var(--ms,1)))` }}
               >
                 <span className="hidden whitespace-pre-wrap lg:inline-block">
-                  {renderModelingTitleText(titleDesktop)}
+                  {renderModelingTitleText(titleForLg)}
                 </span>
               </span>
             ) : null}
@@ -101,9 +121,9 @@ function HeritageOverlayText({
         ) : null}
         {descriptionLinesMobile.length > 0 ||
         descTabletLines.length > 0 ||
-        descriptionLinesDesktop.length > 0 ? (
+        linesForLgHeritage.length > 0 ? (
           <div>
-            <div style={{ transform: `translateY(calc(${bodyMobileOffsetY}px * var(--ms,1)))` }}>
+            <div style={{ transform: `translateY(calc(${bodyMobileOffsetY}% * var(--ms,1)))` }}>
               <p className="mt-[calc(3.5rem*var(--ms,1))] w-[calc(470px*var(--ms,1))] max-w-full font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden">
                 {descriptionLinesMobile.map((line, index) => (
                   <span key={`mobile-${index}`} className="block whitespace-nowrap">
@@ -112,7 +132,11 @@ function HeritageOverlayText({
                 ))}
               </p>
             </div>
-            <div style={{ transform: `translateY(calc(${bodyTabletOffsetY}px * var(--ms,1)))` }}>
+            <div
+              style={{
+                transform: modelingCopyTranslatePercent(bodyTabletOffsetX, bodyTabletOffsetY),
+              }}
+            >
               <p className="mt-[calc(3.5rem*var(--ms,1))] hidden w-[calc(470px*var(--ms,1))] max-w-full font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black md:block lg:hidden">
                 {descTabletLines.map((line, index) => (
                   <span key={`tablet-${index}`} className="block whitespace-nowrap">
@@ -121,9 +145,9 @@ function HeritageOverlayText({
                 ))}
               </p>
             </div>
-            <div style={{ transform: `translateY(calc(${bodyDesktopOffsetY}px * var(--ms,1)))` }}>
+            <div style={{ transform: `translateY(calc(${bodyDesktopOffsetY}% * var(--ms,1)))` }}>
               <p className="mt-[calc(1rem*var(--ms,1))] hidden w-[calc(470px*var(--ms,1))] max-w-full font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black lg:block">
-                {descriptionLinesDesktop.map((line, index) => (
+                {linesForLgHeritage.map((line, index) => (
                   <span key={`desktop-${index}`} className="block whitespace-nowrap">
                     {renderModelingCopyLine(line)}
                   </span>
@@ -148,12 +172,14 @@ export function ModelingBlockHeritage({
   titleDesktopOffsetY,
   titleMobileOffsetY,
   titleTabletOffsetY,
+  titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
   descriptionLinesTablet,
   bodyDesktopOffsetY,
   bodyMobileOffsetY,
   bodyTabletOffsetY,
+  bodyTabletOffsetX,
 }: ModelingBlockHeritageProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile && imageUrlDesktop === imageUrlTablet;
   return (
@@ -212,12 +238,14 @@ export function ModelingBlockHeritage({
         titleDesktopOffsetY={titleDesktopOffsetY}
         titleMobileOffsetY={titleMobileOffsetY}
         titleTabletOffsetY={titleTabletOffsetY}
+        titleTabletOffsetX={titleTabletOffsetX}
         descriptionLinesDesktop={descriptionLinesDesktop}
         descriptionLinesMobile={descriptionLinesMobile}
         descriptionLinesTablet={descriptionLinesTablet}
         bodyDesktopOffsetY={bodyDesktopOffsetY}
         bodyMobileOffsetY={bodyMobileOffsetY}
         bodyTabletOffsetY={bodyTabletOffsetY}
+        bodyTabletOffsetX={bodyTabletOffsetX}
       />
     </article>
   );

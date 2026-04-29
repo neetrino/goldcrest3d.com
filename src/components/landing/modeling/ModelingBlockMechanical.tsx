@@ -6,7 +6,12 @@ import { useState } from "react";
 
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
-import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
+import {
+  MODELING_CARD_FRAME_MOBILE_CLASSES,
+  modelingBodyLinesForLgViewport,
+  modelingCopyTranslatePercent,
+  modelingTitleForLgViewport,
+} from "./modeling-card.constants";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
 /** Mobile-only overlay nudge down (`max-sm:translate-y`); paired with `--mechanical-overlay-ty`. */
@@ -31,12 +36,14 @@ type ModelingBlockMechanicalProps = {
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
   titleTabletOffsetY: number;
+  titleTabletOffsetX: number;
   descriptionLinesDesktop: string[];
   descriptionLinesMobile: string[];
   descriptionLinesTablet: string[];
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
   bodyTabletOffsetY: number;
+  bodyTabletOffsetX: number;
   isAndroidViewport: boolean;
 };
 
@@ -51,12 +58,14 @@ export function ModelingBlockMechanical({
   titleDesktopOffsetY,
   titleMobileOffsetY,
   titleTabletOffsetY,
+  titleTabletOffsetX,
   descriptionLinesDesktop,
   descriptionLinesMobile,
   descriptionLinesTablet,
   bodyDesktopOffsetY,
   bodyMobileOffsetY,
   bodyTabletOffsetY,
+  bodyTabletOffsetX,
   isAndroidViewport,
 }: ModelingBlockMechanicalProps) {
   const [isAndroidClient] = useState(() => {
@@ -73,6 +82,13 @@ export function ModelingBlockMechanical({
   const hasDesktopTitle = titleDesktop.trim().length > 0;
   const hasMobileTitle = titleMobile.trim().length > 0;
   const hasTabletTitle = titleTablet.trim().length > 0;
+  const titleForLg = modelingTitleForLgViewport(titleDesktop, titleTablet, titleMobile);
+  const showLgTitle = titleForLg.length > 0;
+  const linesForLgBody = modelingBodyLinesForLgViewport(
+    descriptionLinesDesktop,
+    descriptionLinesTablet,
+    descriptionLinesMobile,
+  );
 
   const isAndroidResolved = isAndroidViewport || isAndroidClient;
   const mobileOverlayTranslateYPx = isAndroidResolved
@@ -129,7 +145,7 @@ export function ModelingBlockMechanical({
               {hasMobileTitle ? (
                 <span
                   className={`block whitespace-pre-wrap md:hidden ${TITLE_LINE1_TABLET_NUDGE_UP_CLASS}`}
-                  style={{ transform: `translateY(calc(${titleMobileOffsetY}px * var(--ms,1)))` }}
+                  style={{ transform: `translateY(calc(${titleMobileOffsetY}% * var(--ms,1)))` }}
                 >
                   {renderModelingTitleText(titleMobile)}
                 </span>
@@ -137,15 +153,17 @@ export function ModelingBlockMechanical({
               {hasTabletTitle ? (
                 <span
                   className={`hidden whitespace-pre-wrap md:block lg:hidden ${TITLE_LINE1_TABLET_NUDGE_UP_CLASS}`}
-                  style={{ transform: `translateY(calc(${titleTabletOffsetY}px * var(--ms,1)))` }}
+                  style={{
+                    transform: modelingCopyTranslatePercent(titleTabletOffsetX, titleTabletOffsetY),
+                  }}
                 >
                   {renderModelingTitleText(titleTablet)}
                 </span>
               ) : null}
-              {hasDesktopTitle ? (
-                <span className="hidden lg:block" style={{ transform: `translateY(calc(${titleDesktopOffsetY}px * var(--ms,1)))` }}>
+              {showLgTitle ? (
+                <span className="hidden lg:block" style={{ transform: `translateY(calc(${titleDesktopOffsetY}% * var(--ms,1)))` }}>
                   <span className={`block whitespace-pre-wrap ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
-                    {renderModelingTitleText(titleDesktop)}
+                    {renderModelingTitleText(titleForLg)}
                   </span>
                 </span>
               ) : null}
@@ -155,7 +173,7 @@ export function ModelingBlockMechanical({
         {descriptionLinesMobile.length > 0 ? (
           <p
             className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] md:hidden"
-            style={{ transform: `translateY(calc(${bodyMobileOffsetY}px * var(--ms,1)))` }}
+            style={{ transform: `translateY(calc(${bodyMobileOffsetY}% * var(--ms,1)))` }}
           >
             {descriptionLinesMobile.map((line, i) => (
               <span key={i} className="block">
@@ -165,7 +183,11 @@ export function ModelingBlockMechanical({
           </p>
         ) : null}
         {descriptionLinesTablet.length > 0 ? (
-          <div style={{ transform: `translateY(calc(${bodyTabletOffsetY}px * var(--ms,1)))` }}>
+          <div
+            style={{
+              transform: modelingCopyTranslatePercent(bodyTabletOffsetX, bodyTabletOffsetY),
+            }}
+          >
             <p className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] md:max-lg:block lg:hidden">
               {descriptionLinesTablet.map((line, i) => (
                 <span key={`t-${i}`} className="block whitespace-nowrap">
@@ -175,13 +197,13 @@ export function ModelingBlockMechanical({
             </p>
           </div>
         ) : null}
-        {descriptionLinesDesktop.length > 0 ? (
-          <div style={{ transform: `translateY(calc(${bodyDesktopOffsetY}px * var(--ms,1)))` }}>
+        {linesForLgBody.length > 0 ? (
+          <div style={{ transform: `translateY(calc(${bodyDesktopOffsetY}% * var(--ms,1)))` }}>
             <div
               className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] lg:block lg:-translate-y-[calc(1rem*var(--ms,1))]"
               style={{ overflow: "visible" }}
             >
-              {descriptionLinesDesktop.map((line, i) => (
+              {linesForLgBody.map((line, i) => (
                 <span key={i} className="block whitespace-nowrap">
                   {renderModelingCopyLine(line)}
                 </span>

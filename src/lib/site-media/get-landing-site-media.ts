@@ -54,6 +54,8 @@ export type ModelingSlotResolvedMedia = {
   desktop: string;
   mobile: string;
   tablet: string;
+  /** True when `r2ObjectKeyTablet` is set in DB (vs default placeholder URL only). */
+  hasTabletR2Upload: boolean;
   titleDesktop: string;
   titleMobile: string;
   titleTablet: string;
@@ -63,9 +65,11 @@ export type ModelingSlotResolvedMedia = {
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
   titleTabletOffsetY: number;
+  titleTabletOffsetX: number;
   bodyDesktopOffsetY: number;
   bodyMobileOffsetY: number;
   bodyTabletOffsetY: number;
+  bodyTabletOffsetX: number;
   desktopLine1Emphasis: string;
   tabletLine1Emphasis: string;
 };
@@ -244,9 +248,11 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
             titleDesktopOffsetY: row.titleDesktopOffsetY ?? 0,
             titleMobileOffsetY: row.titleMobileOffsetY ?? 0,
             titleTabletOffsetY: row.titleTabletOffsetY ?? 0,
+            titleTabletOffsetX: row.titleTabletOffsetX ?? 0,
             bodyDesktopOffsetY: row.bodyDesktopOffsetY ?? 0,
             bodyMobileOffsetY: row.bodyMobileOffsetY ?? 0,
             bodyTabletOffsetY: row.bodyTabletOffsetY ?? 0,
+            bodyTabletOffsetX: row.bodyTabletOffsetX ?? 0,
             desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
             tabletLine1Emphasis: row.tabletLine1Emphasis ?? "",
           }),
@@ -261,6 +267,7 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
           desktop: mergeModelingUrl(slot, undefined),
           mobile: mergeModelingUrl(slot, undefined),
           tablet: mergeModelingTabletUrl(slot, undefined),
+          hasTabletR2Upload: false,
           titleDesktop: copy.titleDesktop,
           titleMobile: copy.titleMobile,
           titleTablet: copy.titleTablet,
@@ -270,9 +277,11 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
           titleDesktopOffsetY: copy.titleDesktopOffsetY,
           titleMobileOffsetY: copy.titleMobileOffsetY,
           titleTabletOffsetY: copy.titleTabletOffsetY,
+          titleTabletOffsetX: copy.titleTabletOffsetX,
           bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
           bodyMobileOffsetY: copy.bodyMobileOffsetY,
           bodyTabletOffsetY: copy.bodyTabletOffsetY,
+          bodyTabletOffsetX: copy.bodyTabletOffsetX,
           desktopLine1Emphasis: copy.desktopLine1Emphasis,
           tabletLine1Emphasis: copy.tabletLine1Emphasis,
         };
@@ -286,6 +295,7 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
         desktop: desktopUrl,
         mobile: mobileUrl,
         tablet: tabletUrl,
+        hasTabletR2Upload: Boolean(row.tablet),
         titleDesktop: copy.titleDesktop,
         titleMobile: copy.titleMobile,
         titleTablet: copy.titleTablet,
@@ -295,9 +305,11 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
         titleDesktopOffsetY: copy.titleDesktopOffsetY,
         titleMobileOffsetY: copy.titleMobileOffsetY,
         titleTabletOffsetY: copy.titleTabletOffsetY,
+        titleTabletOffsetX: copy.titleTabletOffsetX,
         bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
         bodyMobileOffsetY: copy.bodyMobileOffsetY,
         bodyTabletOffsetY: copy.bodyTabletOffsetY,
+        bodyTabletOffsetX: copy.bodyTabletOffsetX,
         desktopLine1Emphasis: copy.desktopLine1Emphasis,
         tabletLine1Emphasis: copy.tabletLine1Emphasis,
       };
@@ -379,6 +391,7 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
       desktop: url,
       mobile: url,
       tablet: url,
+      hasTabletR2Upload: false,
       titleDesktop: copy.titleDesktop,
       titleMobile: copy.titleMobile,
       titleTablet: copy.titleTablet,
@@ -388,9 +401,11 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
       titleDesktopOffsetY: copy.titleDesktopOffsetY,
       titleMobileOffsetY: copy.titleMobileOffsetY,
       titleTabletOffsetY: copy.titleTabletOffsetY,
+      titleTabletOffsetX: copy.titleTabletOffsetX,
       bodyDesktopOffsetY: copy.bodyDesktopOffsetY,
       bodyMobileOffsetY: copy.bodyMobileOffsetY,
       bodyTabletOffsetY: copy.bodyTabletOffsetY,
+      bodyTabletOffsetX: copy.bodyTabletOffsetX,
       desktopLine1Emphasis: copy.desktopLine1Emphasis,
       tabletLine1Emphasis: copy.tabletLine1Emphasis,
     };

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { modelingBodyLinesForLgViewport } from "./modeling-card.constants";
 import {
   HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX,
   HIPHOP_TABLET_DESCRIPTION_CLASS,
@@ -9,12 +10,31 @@ import { renderModelingCopyLine } from "./modeling-copy-line";
 
 const HIPHOP_MOBILE_FORCE_SINGLE_LINE_TEXTS = new Set<string>([
   "High-mass, fully iced-out structures engineered for",
+  "High-mass, fully iced-out structures engineered",
   "structural durability and controlled weight distribution.",
 ]);
 const HIPHOP_MOBILE_SHIFT_LEFT_LINES = new Set<string>([
   "High-mass, fully iced-out structures engineered for",
+  "High-mass, fully iced-out structures engineered",
   "structural durability and controlled weight distribution.",
 ]);
+
+/** When CMS puts "engineered" alone on its own line, join it onto the previous line. */
+function mergeHipHopLonelyEngineeredLine(lines: string[]): string[] {
+  const out: string[] = [];
+  let i = 0;
+  while (i < lines.length) {
+    const next = lines[i + 1]?.trim();
+    if (next != null && /^engineered\.?$/i.test(next)) {
+      out.push(`${lines[i].trimEnd()} ${next}`);
+      i += 2;
+    } else {
+      out.push(lines[i]);
+      i += 1;
+    }
+  }
+  return out;
+}
 
 export type ModelingCardDescriptionContentParams = Pick<
   ModelingCardProps,
@@ -47,7 +67,8 @@ function renderHipHopBreakpointDesktopLines(
   keyPrefix: string,
   continuationGapClass = "sm:mt-[calc(0.375rem*var(--ms,1))]",
 ): ReactNode {
-  return lines.map((line, i) => (
+  const merged = mergeHipHopLonelyEngineeredLine(lines);
+  return merged.map((line, i) => (
     <span
       key={`${keyPrefix}-${i}`}
       className={`block text-center ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i > 0 ? continuationGapClass : ""}`}
@@ -158,11 +179,18 @@ export function renderModelingCardDescriptionContent(
                 {bridalDesktopStack(tabletStackLines, "bridal-tablet-stack")}
               </div>
             ) : null}
-            {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
-              <div className="hidden w-full min-w-0 flex-col items-start lg:flex lg:-translate-x-[calc(-0.1rem*var(--ms,1))]">
-                {bridalDesktopStack(descriptionLinesDesktop, "bridal-desktop-stack")}
-              </div>
-            ) : null}
+            {(() => {
+              const linesForLg = modelingBodyLinesForLgViewport(
+                descriptionLinesDesktop ?? [],
+                tabletStackLines,
+                descriptionLinesMobile ?? [],
+              );
+              return linesForLg.length > 0 ? (
+                <div className="hidden w-full min-w-0 flex-col items-start lg:flex lg:-translate-x-[calc(-0.1rem*var(--ms,1))]">
+                  {bridalDesktopStack(linesForLg, "bridal-desktop-stack")}
+                </div>
+              ) : null;
+            })()}
           </>
         );
       }
@@ -232,11 +260,12 @@ export function renderModelingCardDescriptionContent(
         : [];
 
     if (modelingTabletTierEnabled && descriptionLinesTablet != null) {
+      const mobileLinesMerged = mergeHipHopLonelyEngineeredLine(descriptionLines);
       return (
         <>
-          {descriptionLines.length > 0 ? (
+          {mobileLinesMerged.length > 0 ? (
             <div className="md:hidden">
-              {descriptionLines.map((line, i) => {
+              {mobileLinesMerged.map((line, i) => {
                 const forceSingleLineOnMobile =
                   HIPHOP_MOBILE_FORCE_SINGLE_LINE_TEXTS.has(line.trim());
                 const shiftLeftOnMobile = HIPHOP_MOBILE_SHIFT_LEFT_LINES.has(
@@ -264,20 +293,28 @@ export function renderModelingCardDescriptionContent(
               )}
             </div>
           ) : null}
-          {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
-            <div className="hidden min-w-0 flex-col items-center lg:flex lg:gap-0">
-              {renderHipHopBreakpointDesktopLines(descriptionLinesDesktop, "hiphop-desktop")}
-            </div>
-          ) : null}
+          {(() => {
+            const linesForLg = modelingBodyLinesForLgViewport(
+              descriptionLinesDesktop ?? [],
+              tabletHipHopLines,
+              descriptionLines,
+            );
+            return linesForLg.length > 0 ? (
+              <div className="hidden min-w-0 flex-col items-center lg:flex lg:gap-0">
+                {renderHipHopBreakpointDesktopLines(linesForLg, "hiphop-desktop")}
+              </div>
+            ) : null;
+          })()}
         </>
       );
     }
 
+    const mobileLinesMergedNoTablet = mergeHipHopLonelyEngineeredLine(descriptionLines);
     return (
       <>
-        {descriptionLines.length > 0 ? (
+        {mobileLinesMergedNoTablet.length > 0 ? (
           <div className="sm:hidden">
-            {descriptionLines.map((line, i) => {
+            {mobileLinesMergedNoTablet.map((line, i) => {
               const forceSingleLineOnMobile =
                 HIPHOP_MOBILE_FORCE_SINGLE_LINE_TEXTS.has(line.trim());
               const shiftLeftOnMobile = HIPHOP_MOBILE_SHIFT_LEFT_LINES.has(

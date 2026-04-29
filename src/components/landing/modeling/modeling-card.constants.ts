@@ -27,3 +27,41 @@ export const MODELING_CARD_FRAME_MOBILE_CLASSES =
 export function getModelingCardWidthStyle(): Pick<CSSProperties, "width"> {
   return { width: "100%" };
 }
+
+/** CMS copy offsets as % of element box, scaled with section `--ms`. */
+export function modelingCopyTranslatePercent(offsetXPct: number, offsetYPct: number): string {
+  return `translateX(calc(${offsetXPct}% * var(--ms,1))) translateY(calc(${offsetYPct}% * var(--ms,1)))`;
+}
+
+function linesHaveContent(lines: readonly string[]): boolean {
+  return lines.some((l) => l.trim().length > 0);
+}
+
+/**
+ * Large-viewport body lines when desktop rows are empty (e.g. only tablet tier filled in CMS).
+ * Order: desktop → tablet → mobile. Desktop typography/offsets stay unchanged; only the string source varies.
+ */
+export function modelingBodyLinesForLgViewport(
+  linesDesktop: readonly string[],
+  linesTablet: readonly string[],
+  linesMobile: readonly string[],
+): string[] {
+  if (linesHaveContent(linesDesktop)) return [...linesDesktop];
+  if (linesHaveContent(linesTablet)) return [...linesTablet];
+  return [...linesMobile];
+}
+
+/**
+ * Large-viewport title when `titleDesktop` is empty. Order: desktop → tablet → mobile.
+ */
+export function modelingTitleForLgViewport(
+  titleDesktop: string,
+  titleTablet: string,
+  titleMobile: string,
+): string {
+  const d = titleDesktop.trim();
+  if (d.length > 0) return titleDesktop;
+  const t = titleTablet.trim();
+  if (t.length > 0) return titleTablet;
+  return titleMobile.trim();
+}

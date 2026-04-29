@@ -49,6 +49,7 @@ export function SectionModeling({
             titleDesktopOffsetY={modeling[MODELING_SLOT_KEYS.HIP_HOP].titleDesktopOffsetY}
             titleMobileOffsetY={modeling[MODELING_SLOT_KEYS.HIP_HOP].titleMobileOffsetY}
             titleTabletOffsetY={modeling[MODELING_SLOT_KEYS.HIP_HOP].titleTabletOffsetY}
+            titleTabletOffsetX={modeling[MODELING_SLOT_KEYS.HIP_HOP].titleTabletOffsetX}
             descriptionLinesDesktop={toCopyLines(
               modeling[MODELING_SLOT_KEYS.HIP_HOP].bodyDesktop,
             )}
@@ -61,6 +62,7 @@ export function SectionModeling({
             bodyDesktopOffsetY={modeling[MODELING_SLOT_KEYS.HIP_HOP].bodyDesktopOffsetY}
             bodyMobileOffsetY={modeling[MODELING_SLOT_KEYS.HIP_HOP].bodyMobileOffsetY}
             bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.HIP_HOP].bodyTabletOffsetY}
+            bodyTabletOffsetX={modeling[MODELING_SLOT_KEYS.HIP_HOP].bodyTabletOffsetX}
           />
           <ModelingBlockBridal
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.BRIDAL].desktop}
@@ -72,6 +74,7 @@ export function SectionModeling({
             titleDesktopOffsetY={modeling[MODELING_SLOT_KEYS.BRIDAL].titleDesktopOffsetY}
             titleMobileOffsetY={modeling[MODELING_SLOT_KEYS.BRIDAL].titleMobileOffsetY}
             titleTabletOffsetY={modeling[MODELING_SLOT_KEYS.BRIDAL].titleTabletOffsetY}
+            titleTabletOffsetX={modeling[MODELING_SLOT_KEYS.BRIDAL].titleTabletOffsetX}
             descriptionLinesDesktop={toCopyLines(
               modeling[MODELING_SLOT_KEYS.BRIDAL].bodyDesktop,
             )}
@@ -84,22 +87,33 @@ export function SectionModeling({
             bodyDesktopOffsetY={modeling[MODELING_SLOT_KEYS.BRIDAL].bodyDesktopOffsetY}
             bodyMobileOffsetY={modeling[MODELING_SLOT_KEYS.BRIDAL].bodyMobileOffsetY}
             bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.BRIDAL].bodyTabletOffsetY}
+            bodyTabletOffsetX={modeling[MODELING_SLOT_KEYS.BRIDAL].bodyTabletOffsetX}
           />
           <ModelingBlockPortrait
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.PORTRAIT].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.PORTRAIT].mobile}
+            imageUrlTablet={modeling[MODELING_SLOT_KEYS.PORTRAIT].tablet}
+            tabletAssetPresent={modeling[MODELING_SLOT_KEYS.PORTRAIT].hasTabletR2Upload}
             titleDesktop={modeling[MODELING_SLOT_KEYS.PORTRAIT].titleDesktop}
             titleMobile={modeling[MODELING_SLOT_KEYS.PORTRAIT].titleMobile}
+            titleTablet={modeling[MODELING_SLOT_KEYS.PORTRAIT].titleTablet}
             titleDesktopOffsetY={modeling[MODELING_SLOT_KEYS.PORTRAIT].titleDesktopOffsetY}
             titleMobileOffsetY={modeling[MODELING_SLOT_KEYS.PORTRAIT].titleMobileOffsetY}
+            titleTabletOffsetY={modeling[MODELING_SLOT_KEYS.PORTRAIT].titleTabletOffsetY}
+            titleTabletOffsetX={modeling[MODELING_SLOT_KEYS.PORTRAIT].titleTabletOffsetX}
             descriptionLinesDesktop={toCopyLines(
               modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyDesktop,
             )}
             descriptionLinesMobile={toCopyLines(
               modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyMobile,
             )}
+            descriptionLinesTablet={toCopyLines(
+              modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyTablet,
+            )}
             bodyDesktopOffsetY={modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyDesktopOffsetY}
             bodyMobileOffsetY={modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyMobileOffsetY}
+            bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyTabletOffsetY}
+            bodyTabletOffsetX={modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyTabletOffsetX}
           />
           <ModelingBlockMechanical
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.MECHANICAL].desktop}
@@ -111,6 +125,7 @@ export function SectionModeling({
             titleDesktopOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleDesktopOffsetY}
             titleMobileOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleMobileOffsetY}
             titleTabletOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleTabletOffsetY}
+            titleTabletOffsetX={modeling[MODELING_SLOT_KEYS.MECHANICAL].titleTabletOffsetX}
             descriptionLinesDesktop={toCopyLines(
               modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyDesktop,
             )}
@@ -123,6 +138,7 @@ export function SectionModeling({
             bodyDesktopOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyDesktopOffsetY}
             bodyMobileOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyMobileOffsetY}
             bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyTabletOffsetY}
+            bodyTabletOffsetX={modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyTabletOffsetX}
             isAndroidViewport={isAndroidViewport}
           />
           <ModelingBlockHeritage
@@ -135,6 +151,7 @@ export function SectionModeling({
             titleDesktopOffsetY={modeling[MODELING_SLOT_KEYS.HERITAGE].titleDesktopOffsetY}
             titleMobileOffsetY={modeling[MODELING_SLOT_KEYS.HERITAGE].titleMobileOffsetY}
             titleTabletOffsetY={modeling[MODELING_SLOT_KEYS.HERITAGE].titleTabletOffsetY}
+            titleTabletOffsetX={modeling[MODELING_SLOT_KEYS.HERITAGE].titleTabletOffsetX}
             descriptionLinesDesktop={toCopyLines(
               modeling[MODELING_SLOT_KEYS.HERITAGE].bodyDesktop,
             )}
@@ -147,6 +164,7 @@ export function SectionModeling({
             bodyDesktopOffsetY={modeling[MODELING_SLOT_KEYS.HERITAGE].bodyDesktopOffsetY}
             bodyMobileOffsetY={modeling[MODELING_SLOT_KEYS.HERITAGE].bodyMobileOffsetY}
             bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.HERITAGE].bodyTabletOffsetY}
+            bodyTabletOffsetX={modeling[MODELING_SLOT_KEYS.HERITAGE].bodyTabletOffsetX}
           />
           <ModelingBlockHighJewelry
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].desktop}
@@ -158,6 +176,7 @@ export function SectionModeling({
             titleDesktopOffsetY={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].titleDesktopOffsetY}
             titleMobileOffsetY={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].titleMobileOffsetY}
             titleTabletOffsetY={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].titleTabletOffsetY}
+            titleTabletOffsetX={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].titleTabletOffsetX}
             descriptionLinesDesktop={toCopyLines(
               modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].bodyDesktop,
             )}
@@ -170,6 +189,7 @@ export function SectionModeling({
             bodyDesktopOffsetY={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].bodyDesktopOffsetY}
             bodyMobileOffsetY={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].bodyMobileOffsetY}
             bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].bodyTabletOffsetY}
+            bodyTabletOffsetX={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].bodyTabletOffsetX}
             desktopLine1Emphasis={
               modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].desktopLine1Emphasis
             }

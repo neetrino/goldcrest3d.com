@@ -7,15 +7,15 @@ import {
   updateModelingSlotCopy,
   type SiteMediaActionResult,
 } from "@/app/actions/site-media";
+import {
+  clampModelingCopyOffset,
+  MODELING_COPY_OFFSET_NUDGE_PCT,
+} from "@/constants/modeling-specialization-copy-offset";
 import type { AdminModelingSlotRow } from "@/lib/site-media/get-site-media-admin";
 import { MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
 import { ModelingSlotFormMessages } from "./ModelingSlotFormMessages";
-
-const MIN_OFFSET_Y = -300;
-const MAX_OFFSET_Y = 300;
-const NUDGE_STEP_Y = 4;
 
 type ModelingSlotCopyEditorProps = {
   row: AdminModelingSlotRow;
@@ -51,10 +51,6 @@ function toInitialDraft(row: AdminModelingSlotRow): EditorDraft {
     bodyDesktopOffsetY: row.bodyDesktopOffsetY,
     bodyMobileOffsetY: row.bodyMobileOffsetY,
   };
-}
-
-function clampOffset(value: number): number {
-  return Math.min(MAX_OFFSET_Y, Math.max(MIN_OFFSET_Y, Math.round(value)));
 }
 
 function offsetLabel(key: OffsetFieldKey): string {
@@ -100,7 +96,7 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
   const nudgeOffset = (field: OffsetFieldKey, delta: number) => {
     setDraft((prev) => ({
       ...prev,
-      [field]: clampOffset(prev[field] + delta),
+      [field]: clampModelingCopyOffset(prev[field] + delta),
     }));
   };
 
@@ -175,19 +171,19 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => nudgeOffset("titleDesktopOffsetY", -NUDGE_STEP_Y)}
+                      onClick={() => nudgeOffset("titleDesktopOffsetY", -MODELING_COPY_OFFSET_NUDGE_PCT)}
                       className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                     >
                       Up
                     </button>
                     <button
                       type="button"
-                      onClick={() => nudgeOffset("titleDesktopOffsetY", NUDGE_STEP_Y)}
+                      onClick={() => nudgeOffset("titleDesktopOffsetY", MODELING_COPY_OFFSET_NUDGE_PCT)}
                       className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                     >
                       Down
                     </button>
-                    <span className="text-xs text-slate-500">{draft.titleDesktopOffsetY}px</span>
+                    <span className="text-xs text-slate-500">{draft.titleDesktopOffsetY}%</span>
                   </div>
                 </label>
                 <label className="flex flex-col gap-1.5">
@@ -205,19 +201,19 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => nudgeOffset("titleMobileOffsetY", -NUDGE_STEP_Y)}
+                      onClick={() => nudgeOffset("titleMobileOffsetY", -MODELING_COPY_OFFSET_NUDGE_PCT)}
                       className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                     >
                       Up
                     </button>
                     <button
                       type="button"
-                      onClick={() => nudgeOffset("titleMobileOffsetY", NUDGE_STEP_Y)}
+                      onClick={() => nudgeOffset("titleMobileOffsetY", MODELING_COPY_OFFSET_NUDGE_PCT)}
                       className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                     >
                       Down
                     </button>
-                    <span className="text-xs text-slate-500">{draft.titleMobileOffsetY}px</span>
+                    <span className="text-xs text-slate-500">{draft.titleMobileOffsetY}%</span>
                   </div>
                 </label>
               </div>
@@ -238,19 +234,19 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => nudgeOffset("bodyDesktopOffsetY", -NUDGE_STEP_Y)}
+                      onClick={() => nudgeOffset("bodyDesktopOffsetY", -MODELING_COPY_OFFSET_NUDGE_PCT)}
                       className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                     >
                       Up
                     </button>
                     <button
                       type="button"
-                      onClick={() => nudgeOffset("bodyDesktopOffsetY", NUDGE_STEP_Y)}
+                      onClick={() => nudgeOffset("bodyDesktopOffsetY", MODELING_COPY_OFFSET_NUDGE_PCT)}
                       className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                     >
                       Down
                     </button>
-                    <span className="text-xs text-slate-500">{draft.bodyDesktopOffsetY}px</span>
+                    <span className="text-xs text-slate-500">{draft.bodyDesktopOffsetY}%</span>
                   </div>
                 </label>
                 <label className="flex flex-col gap-1.5">
@@ -268,19 +264,19 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => nudgeOffset("bodyMobileOffsetY", -NUDGE_STEP_Y)}
+                      onClick={() => nudgeOffset("bodyMobileOffsetY", -MODELING_COPY_OFFSET_NUDGE_PCT)}
                       className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                     >
                       Up
                     </button>
                     <button
                       type="button"
-                      onClick={() => nudgeOffset("bodyMobileOffsetY", NUDGE_STEP_Y)}
+                      onClick={() => nudgeOffset("bodyMobileOffsetY", MODELING_COPY_OFFSET_NUDGE_PCT)}
                       className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                     >
                       Down
                     </button>
-                    <span className="text-xs text-slate-500">{draft.bodyMobileOffsetY}px</span>
+                    <span className="text-xs text-slate-500">{draft.bodyMobileOffsetY}%</span>
                   </div>
                 </label>
               </div>
@@ -311,7 +307,7 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
               <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50/80 p-4">
                 <p className="text-sm font-semibold text-slate-900">Live position preview</p>
                 <p className="mt-1 text-xs text-slate-500">
-                  Up/Down moves text by {NUDGE_STEP_Y}px per click. Preview updates instantly.
+                  Up/Down moves text by {MODELING_COPY_OFFSET_NUDGE_PCT}% per click. Preview updates instantly.
                 </p>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <div className="rounded-lg border border-slate-200 bg-white p-3">
@@ -322,7 +318,7 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                       <h4
                         className="whitespace-pre-wrap text-base font-semibold text-slate-900 transition-transform duration-150"
                         style={{
-                          transform: `translateY(${draft.titleDesktopOffsetY}px)`,
+                          transform: `translateY(${draft.titleDesktopOffsetY}%)`,
                         }}
                       >
                         {draft.titleDesktop || "Desktop title"}
@@ -330,7 +326,7 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                       <p
                         className="mt-2 whitespace-pre-wrap text-sm text-slate-700 transition-transform duration-150"
                         style={{
-                          transform: `translateY(${draft.bodyDesktopOffsetY}px)`,
+                          transform: `translateY(${draft.bodyDesktopOffsetY}%)`,
                         }}
                       >
                         {draft.bodyDesktop || "Desktop description"}
@@ -345,7 +341,7 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                       <h4
                         className="whitespace-pre-wrap text-base font-semibold text-slate-900 transition-transform duration-150"
                         style={{
-                          transform: `translateY(${draft.titleMobileOffsetY}px)`,
+                          transform: `translateY(${draft.titleMobileOffsetY}%)`,
                         }}
                       >
                         {draft.titleMobile || "Mobile title"}
@@ -353,7 +349,7 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                       <p
                         className="mt-2 whitespace-pre-wrap text-sm text-slate-700 transition-transform duration-150"
                         style={{
-                          transform: `translateY(${draft.bodyMobileOffsetY}px)`,
+                          transform: `translateY(${draft.bodyMobileOffsetY}%)`,
                         }}
                       >
                         {draft.bodyMobile || "Mobile description"}

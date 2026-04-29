@@ -2,8 +2,12 @@ import { renderModelingCardDescriptionContent } from "./ModelingCardDescriptionC
 import { ModelingCardFullBleed } from "./ModelingCardFullBleed";
 import { ModelingCardGradientLayout } from "./ModelingCardGradientLayout";
 import { getModelingCardWidthStyle } from "./modeling-card.constants";
-import { DEFAULT_IMAGE_POSITION } from "./modeling-card.typography-layout.constants";
+import {
+  DEFAULT_IMAGE_POSITION,
+  PORTRAIT_MOBILE_OVERLAY_DESC_CLASS,
+} from "./modeling-card.typography-layout.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
+import { renderModelingCopyLine } from "./modeling-copy-line";
 
 export type { ModelingCardProps } from "./modeling-card.types";
 
@@ -44,6 +48,7 @@ export function ModelingCard({
   titleOffsetYDesktop = 0,
   titleOffsetYMobile = 0,
   titleOffsetYTablet = 0,
+  titleOffsetXTablet = 0,
   titleMarginTopCompensate,
   textBlockMarginLeft,
   textBlockMarginTop,
@@ -51,6 +56,7 @@ export function ModelingCard({
   descriptionOffsetYDesktop = 0,
   descriptionOffsetYMobile = 0,
   descriptionOffsetYTablet = 0,
+  descriptionOffsetXTablet = 0,
   firstDescriptionLineId,
   firstDescriptionLineMarginRight,
   firstDescriptionLineTranslateX,
@@ -89,6 +95,11 @@ export function ModelingCard({
     mobilePortraitTypography &&
     hasLines &&
     independentTitleDescription;
+  const hasTabletDescriptionLines = hasNonEmptyLines(descriptionLinesTablet);
+  const tabletImageColumnEnabled =
+    imagePairBreakpoint === "md" &&
+    (modelingTabletTierEnabled || portraitMobileLayout) &&
+    (Boolean(imageSrcTablet) || imageLayerBackgroundTablet != null);
   const textColor = textDark ? "text-black" : "text-white";
   const descriptionColor = textDark
     ? descriptionMuted
@@ -111,6 +122,19 @@ export function ModelingCard({
     ? "max-sm:!m-0 max-sm:!translate-x-0 max-sm:block max-sm:w-[calc(291px*var(--ms,1))] max-sm:max-w-full max-sm:text-left max-sm:font-sans max-sm:text-[calc(12px*var(--ms,1)*var(--mt,1))] max-sm:font-light max-sm:!leading-[calc(1rem*var(--ms,1)*var(--mt,1))] max-sm:text-[#364153] sm:inline"
     : "";
   const bridalRowSpanClassDesktop = `${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""}`;
+
+  const portraitTabletDescriptionContent =
+    portraitMobileLayout &&
+    descriptionLinesTablet != null &&
+    hasTabletDescriptionLines ? (
+      <div className={PORTRAIT_MOBILE_OVERLAY_DESC_CLASS}>
+        {descriptionLinesTablet.map((line, i) => (
+          <span key={`portrait-tablet-desc-${i}`} className="block">
+            {renderModelingCopyLine(line)}
+          </span>
+        ))}
+      </div>
+    ) : undefined;
 
   const descriptionContent = renderModelingCardDescriptionContent({
     description,
@@ -155,13 +179,12 @@ export function ModelingCard({
     imagePairBreakpoint === "md"
       ? "absolute inset-0 md:hidden"
       : "absolute inset-0 sm:hidden";
-  const imgTabletWrapperClass =
-    modelingTabletTierEnabled && imagePairBreakpoint === "md"
-      ? "absolute inset-0 hidden md:block lg:hidden"
-      : "";
+  const imgTabletWrapperClass = tabletImageColumnEnabled
+    ? "absolute inset-0 hidden md:block lg:hidden"
+    : "";
   const imgDesktopWrapperClass =
     imagePairBreakpoint === "md"
-      ? modelingTabletTierEnabled
+      ? tabletImageColumnEnabled
         ? "absolute inset-0 hidden lg:block"
         : "absolute inset-0 hidden md:block"
       : "absolute inset-0 hidden sm:block";
@@ -229,6 +252,7 @@ export function ModelingCard({
         imageFillClassNameDesktop={imageFillClassNameDesktop}
         modelingTabletTierEnabled={modelingTabletTierEnabled}
         imgTabletWrapperClass={imgTabletWrapperClass}
+        portraitTabletDescriptionContent={portraitTabletDescriptionContent}
         independentTitleDescription={independentTitleDescription}
         textAlign={textAlign}
         titleBlockTop={titleBlockTop}
@@ -244,11 +268,13 @@ export function ModelingCard({
         titleOffsetYDesktop={titleOffsetYDesktop}
         titleOffsetYMobile={titleOffsetYMobile}
         titleOffsetYTablet={titleOffsetYTablet}
+        titleOffsetXTablet={titleOffsetXTablet}
         titleMarginTopCompensate={titleMarginTopCompensate}
         descriptionMarginTop={descriptionMarginTop}
         descriptionOffsetYDesktop={descriptionOffsetYDesktop}
         descriptionOffsetYMobile={descriptionOffsetYMobile}
         descriptionOffsetYTablet={descriptionOffsetYTablet}
+        descriptionOffsetXTablet={descriptionOffsetXTablet}
         descriptionLinesMobile={descriptionLinesMobile}
         textColor={textColor}
         hipHopMobileLayout={hipHopMobileLayout}

@@ -1,5 +1,6 @@
 -- Sync Neon columns with prisma/schema.prisma when migrate deploy cannot run (e.g. failed
--- migration in _prisma_migrations). Applies the same ALTERs as tablet + XY offset migrations.
+-- migration in _prisma_migrations). Applies the same ALTERs as tablet + XY offset migrations
+-- (including ModelingSpecializationCopy tablet horizontal offsets).
 --
 -- Run locally (uses DIRECT_URL / DATABASE_URL from prisma.config.ts + .env):
 --   pnpm db:repair-schema
@@ -35,3 +36,7 @@ WHERE p."viewport" = 'mobile'
 ALTER TABLE "PowerBannerCopy" ADD COLUMN IF NOT EXISTS "titleOffsetX" INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE "PowerBannerCopy" ADD COLUMN IF NOT EXISTS "bodyOffsetX" INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE "PowerBannerCopy" ADD COLUMN IF NOT EXISTS "ctaOffsetX" INTEGER NOT NULL DEFAULT 0;
+
+-- --- Modeling tablet copy horizontal offsets (migration 20260429180000_modeling_tablet_copy_offset_x) ---
+ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "titleTabletOffsetX" INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "bodyTabletOffsetX" INTEGER NOT NULL DEFAULT 0;

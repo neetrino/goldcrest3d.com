@@ -69,6 +69,8 @@ export type AdminModelingSlotRow = {
   bodyMobileOffsetY: number;
   titleTabletOffsetY: number;
   bodyTabletOffsetY: number;
+  titleTabletOffsetX: number;
+  bodyTabletOffsetX: number;
   desktopLine1Emphasis: string;
   tabletLine1Emphasis: string;
 };
@@ -232,6 +234,8 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
         bodyMobileOffsetY: row.bodyMobileOffsetY ?? 0,
         titleTabletOffsetY: row.titleTabletOffsetY ?? 0,
         bodyTabletOffsetY: row.bodyTabletOffsetY ?? 0,
+        titleTabletOffsetX: row.titleTabletOffsetX ?? 0,
+        bodyTabletOffsetX: row.bodyTabletOffsetX ?? 0,
         desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
         tabletLine1Emphasis: row.tabletLine1Emphasis ?? "",
       }),

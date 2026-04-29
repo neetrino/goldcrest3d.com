@@ -26,10 +26,14 @@ export type ModelingCardProps = {
   imageSrcTablet?: string;
   /** CSS background for tablet tier (Portrait block). */
   imageLayerBackgroundTablet?: Pick<CSSProperties, "background">;
-  /** Additional tablet title vertical offset (px). */
+  /** Additional tablet title vertical offset (translateY %). */
   titleOffsetYTablet?: number;
-  /** Additional tablet description vertical offset (px). */
+  /** Additional tablet title horizontal offset (translateX %). */
+  titleOffsetXTablet?: number;
+  /** Additional tablet description vertical offset (translateY %). */
   descriptionOffsetYTablet?: number;
+  /** Additional tablet description horizontal offset (translateX %). */
+  descriptionOffsetXTablet?: number;
   /** When omitted, card shows gradient + text only (no image column). */
   imageSrc?: string;
   /** data-landing-image id for this card's image (section-by-section replacement). */
@@ -81,9 +85,9 @@ export type ModelingCardProps = {
   titleMarginRight?: string;
   /** Optional margin-top on the title only (pushes title down). */
   titleMarginTop?: string;
-  /** Additional desktop title vertical offset in px (positive = down). */
+  /** Additional desktop title vertical offset as translateY % (positive = down). */
   titleOffsetYDesktop?: number;
-  /** Additional mobile title vertical offset in px (positive = down). */
+  /** Additional mobile title vertical offset as translateY % (positive = down). */
   titleOffsetYMobile?: number;
   /** When true and titleMarginTop is set, description gets negative margin so it stays in place. */
   titleMarginTopCompensate?: boolean;
@@ -93,9 +97,9 @@ export type ModelingCardProps = {
   textBlockMarginTop?: string;
   /** Margin-top on the description only (moves description down, title unchanged). */
   descriptionMarginTop?: string;
-  /** Additional desktop description vertical offset in px (positive = down). */
+  /** Additional desktop description vertical offset as translateY % (positive = down). */
   descriptionOffsetYDesktop?: number;
-  /** Additional mobile description vertical offset in px (positive = down). */
+  /** Additional mobile description vertical offset as translateY % (positive = down). */
   descriptionOffsetYMobile?: number;
   /** Id for the first description line only (when descriptionLines + row); isolates it for styling. */
   firstDescriptionLineId?: string;

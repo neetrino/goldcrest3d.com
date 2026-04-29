@@ -288,6 +288,8 @@ export async function updateModelingTabletSlotCopy(
     bodyTablet: formData.get("bodyTablet"),
     titleTabletOffsetY: formData.get("titleTabletOffsetY"),
     bodyTabletOffsetY: formData.get("bodyTabletOffsetY"),
+    titleTabletOffsetX: formData.get("titleTabletOffsetX"),
+    bodyTabletOffsetX: formData.get("bodyTabletOffsetX"),
     tabletLine1Emphasis: formData.get("tabletLine1Emphasis"),
   });
   if (!parsed.success) {
@@ -300,6 +302,8 @@ export async function updateModelingTabletSlotCopy(
         fieldErrors.bodyTablet?.[0] ??
         fieldErrors.titleTabletOffsetY?.[0] ??
         fieldErrors.bodyTabletOffsetY?.[0] ??
+        fieldErrors.titleTabletOffsetX?.[0] ??
+        fieldErrors.bodyTabletOffsetX?.[0] ??
         fieldErrors.tabletLine1Emphasis?.[0] ??
         "Invalid input.",
     };
@@ -312,6 +316,8 @@ export async function updateModelingTabletSlotCopy(
     bodyTablet: parsed.data.bodyTablet,
     titleTabletOffsetY: parsed.data.titleTabletOffsetY,
     bodyTabletOffsetY: parsed.data.bodyTabletOffsetY,
+    titleTabletOffsetX: parsed.data.titleTabletOffsetX,
+    bodyTabletOffsetX: parsed.data.bodyTabletOffsetX,
     tabletLine1Emphasis: parsed.data.tabletLine1Emphasis,
   });
 
@@ -327,6 +333,8 @@ export async function updateModelingTabletSlotCopy(
         bodyTablet: tabletPayload.bodyTablet,
         titleTabletOffsetY: tabletPayload.titleTabletOffsetY,
         bodyTabletOffsetY: tabletPayload.bodyTabletOffsetY,
+        titleTabletOffsetX: tabletPayload.titleTabletOffsetX,
+        bodyTabletOffsetX: tabletPayload.bodyTabletOffsetX,
         tabletLine1Emphasis: tabletPayload.tabletLine1Emphasis,
       },
     });

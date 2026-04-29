@@ -3,7 +3,11 @@ import Image from "next/image";
 
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
-import { MODELING_CARD_FRAME_MOBILE_CLASSES } from "./modeling-card.constants";
+import {
+  MODELING_CARD_FRAME_MOBILE_CLASSES,
+  modelingCopyTranslatePercent,
+  modelingTitleForLgViewport,
+} from "./modeling-card.constants";
 import {
   PORTRAIT_MOBILE_OVERLAY_DESC_CLASS,
   PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS,
@@ -41,11 +45,13 @@ export type ModelingCardFullBleedProps = Pick<
   | "titleOffsetYDesktop"
   | "titleOffsetYMobile"
   | "titleOffsetYTablet"
+  | "titleOffsetXTablet"
   | "titleMarginTopCompensate"
   | "descriptionMarginTop"
   | "descriptionOffsetYDesktop"
   | "descriptionOffsetYMobile"
   | "descriptionOffsetYTablet"
+  | "descriptionOffsetXTablet"
   | "descriptionLinesMobile"
 > & {
   textColor: string;
@@ -53,6 +59,8 @@ export type ModelingCardFullBleedProps = Pick<
   bridalMobileLayout: boolean;
   portraitMobileLayout: boolean;
   modelingTabletTierEnabled?: boolean;
+  /** 3D Portrait: tablet-only description lines (md–lg) when CMS tablet body is set. */
+  portraitTabletDescriptionContent?: ReactNode;
   imgMobileWrapperClass: string;
   imgTabletWrapperClass?: string;
   imgDesktopWrapperClass: string;
@@ -70,11 +78,16 @@ export type ModelingCardFullBleedProps = Pick<
   DescriptionTag: "div" | "p";
 };
 
+const OFFSET_TRANSFORM_YX =
+  "translateX(calc(var(--offset-x-active) * var(--ms,1))) translateY(calc(var(--offset-y-active) * var(--ms,1)))";
+
 function buildResponsiveOffsetStyle(mobileOffsetY: number, desktopOffsetY: number): CSSProperties {
   return {
-    ["--offset-y-mobile" as string]: `${mobileOffsetY}px`,
-    ["--offset-y-desktop" as string]: `${desktopOffsetY}px`,
-    transform: "translateY(calc(var(--offset-y-active) * var(--ms,1)))",
+    ["--offset-y-mobile" as string]: `${mobileOffsetY}%`,
+    ["--offset-y-desktop" as string]: `${desktopOffsetY}%`,
+    ["--offset-x-mobile" as string]: "0%",
+    ["--offset-x-desktop" as string]: "0%",
+    transform: OFFSET_TRANSFORM_YX,
   };
 }
 
@@ -82,12 +95,50 @@ function buildTripleOffsetStyle(
   mobileOffsetY: number,
   tabletOffsetY: number,
   desktopOffsetY: number,
+  tabletOffsetX = 0,
 ): CSSProperties {
   return {
-    ["--offset-y-mobile" as string]: `${mobileOffsetY}px`,
-    ["--offset-y-tablet" as string]: `${tabletOffsetY}px`,
-    ["--offset-y-desktop" as string]: `${desktopOffsetY}px`,
-    transform: "translateY(calc(var(--offset-y-active) * var(--ms,1)))",
+    ["--offset-y-mobile" as string]: `${mobileOffsetY}%`,
+    ["--offset-y-tablet" as string]: `${tabletOffsetY}%`,
+    ["--offset-y-desktop" as string]: `${desktopOffsetY}%`,
+    ["--offset-x-mobile" as string]: "0%",
+    ["--offset-x-tablet" as string]: `${tabletOffsetX}%`,
+    ["--offset-x-desktop" as string]: "0%",
+    transform: OFFSET_TRANSFORM_YX,
+  };
+}
+
+function offsetActiveClassTriple(): string {
+  return "[--offset-y-active:var(--offset-y-mobile)] md:[--offset-y-active:var(--offset-y-tablet)] lg:[--offset-y-active:var(--offset-y-desktop)] [--offset-x-active:var(--offset-x-mobile)] md:[--offset-x-active:var(--offset-x-tablet)] lg:[--offset-x-active:var(--offset-x-desktop)]";
+}
+
+function offsetActiveClassDual(): string {
+  return "[--offset-y-active:var(--offset-y-mobile)] sm:[--offset-y-active:var(--offset-y-desktop)] [--offset-x-active:var(--offset-x-mobile)] sm:[--offset-x-active:var(--offset-x-desktop)]";
+}
+
+/** CSS vars only — use when combining with other transforms on the same node (e.g. Hip-Hop description). */
+function tripleOffsetCssVarsOnly(
+  mobileOffsetY: number,
+  tabletOffsetY: number,
+  desktopOffsetY: number,
+  tabletOffsetX = 0,
+): CSSProperties {
+  return {
+    ["--offset-y-mobile" as string]: `${mobileOffsetY}%`,
+    ["--offset-y-tablet" as string]: `${tabletOffsetY}%`,
+    ["--offset-y-desktop" as string]: `${desktopOffsetY}%`,
+    ["--offset-x-mobile" as string]: "0%",
+    ["--offset-x-tablet" as string]: `${tabletOffsetX}%`,
+    ["--offset-x-desktop" as string]: "0%",
+  };
+}
+
+function responsiveOffsetCssVarsOnly(mobileOffsetY: number, desktopOffsetY: number): CSSProperties {
+  return {
+    ["--offset-y-mobile" as string]: `${mobileOffsetY}%`,
+    ["--offset-y-desktop" as string]: `${desktopOffsetY}%`,
+    ["--offset-x-mobile" as string]: "0%",
+    ["--offset-x-desktop" as string]: "0%",
   };
 }
 
@@ -124,6 +175,7 @@ export function ModelingCardFullBleed({
   imageFillClassName = "object-cover object-center",
   imageFillClassNameDesktop = "object-contain",
   modelingTabletTierEnabled = false,
+  portraitTabletDescriptionContent,
   independentTitleDescription = false,
   textAlign,
   titleBlockTop,
@@ -139,11 +191,13 @@ export function ModelingCardFullBleed({
   titleOffsetYDesktop = 0,
   titleOffsetYMobile = 0,
   titleOffsetYTablet = 0,
+  titleOffsetXTablet = 0,
   titleMarginTopCompensate,
   descriptionMarginTop,
   descriptionOffsetYDesktop = 0,
   descriptionOffsetYMobile = 0,
   descriptionOffsetYTablet = 0,
+  descriptionOffsetXTablet = 0,
   descriptionLinesMobile,
   textColor,
   hipHopMobileLayout,
@@ -170,15 +224,31 @@ export function ModelingCardFullBleed({
   const hasDesktopTitle = title.trim().length > 0;
   const hasMobileTitle = (titleMobile ?? "").trim().length > 0;
   const hasTabletTitle = modelingTabletTierEnabled && titleTabletResolved.length > 0;
+  const hasPortraitTabletTitle = portraitMobileLayout && titleTabletResolved.length > 0;
+  const showPortraitTabletText =
+    portraitMobileLayout &&
+    (hasPortraitTabletTitle || portraitTabletDescriptionContent != null);
+  const lgViewportTitleText = modelingTitleForLgViewport(
+    title,
+    titleTabletResolved,
+    titleMobile ?? "",
+  );
+  const showLgViewportTitle = modelingTabletTierEnabled && lgViewportTitleText.length > 0;
   const hasHipHopMobileMultilineTitle = hipHopMobileLayout && (titleMobile ?? "").includes("\n");
   const responsiveTitleOffsetStyle = modelingTabletTierEnabled
-    ? buildTripleOffsetStyle(titleOffsetYMobile, titleOffsetYTablet, titleOffsetYDesktop)
+    ? buildTripleOffsetStyle(
+        titleOffsetYMobile,
+        titleOffsetYTablet,
+        titleOffsetYDesktop,
+        titleOffsetXTablet,
+      )
     : buildResponsiveOffsetStyle(titleOffsetYMobile, titleOffsetYDesktop);
   const responsiveDescriptionOffsetStyle = modelingTabletTierEnabled
     ? buildTripleOffsetStyle(
         descriptionOffsetYMobile,
         descriptionOffsetYTablet,
         descriptionOffsetYDesktop,
+        descriptionOffsetXTablet,
       )
     : buildResponsiveOffsetStyle(descriptionOffsetYMobile, descriptionOffsetYDesktop);
 
@@ -186,9 +256,7 @@ export function ModelingCardFullBleed({
     <article className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}>
       <div className="absolute inset-0" data-landing-image={imageId}>
         {imageLayerBackground && imageLayerBackgroundMobile ? (
-          modelingTabletTierEnabled &&
-          imgTabletWrapperClass.length > 0 &&
-          imageLayerBackgroundTablet != null ? (
+          imgTabletWrapperClass.length > 0 && imageLayerBackgroundTablet != null ? (
             <>
               <div className={imgMobileWrapperClass} style={imageLayerBackgroundMobile} />
               <div className={imgTabletWrapperClass} style={imageLayerBackgroundTablet} />
@@ -211,7 +279,7 @@ export function ModelingCardFullBleed({
         )}
         {!imageLayerBackground && imageSrc ? (
           imageSrcMobile != null ? (
-            modelingTabletTierEnabled && imgTabletWrapperClass.length > 0 ? (
+            imgTabletWrapperClass.length > 0 ? (
               <>
                 <div className={imgMobileWrapperClass}>
                   <Image
@@ -289,7 +357,7 @@ export function ModelingCardFullBleed({
           portraitMobileLayout ? (
             <>
               <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] md:hidden">
-                <div style={{ transform: `translateY(calc(${titleOffsetYMobile}px * var(--ms,1)))` }}>
+                <div style={{ transform: `translateY(calc(${titleOffsetYMobile}% * var(--ms,1)))` }}>
                   <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
                     {(titleMobile ?? title) === PORTRAIT_MOBILE_TITLE_FULL ? (
                       <>
@@ -301,7 +369,7 @@ export function ModelingCardFullBleed({
                     )}
                   </h3>
                 </div>
-                <div style={{ transform: `translateY(calc(${descriptionOffsetYMobile}px * var(--ms,1)))` }}>
+                <div style={{ transform: `translateY(calc(${descriptionOffsetYMobile}% * var(--ms,1)))` }}>
                   <div className={PORTRAIT_MOBILE_OVERLAY_DESC_CLASS}>
                     {descriptionLinesMobile!.map((line, i) => (
                       <span key={`portrait-mobile-${i}`} className="block">
@@ -311,6 +379,38 @@ export function ModelingCardFullBleed({
                   </div>
                 </div>
               </div>
+              {showPortraitTabletText ? (
+                <div className="absolute inset-0 z-20 hidden -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] md:flex lg:hidden">
+                  {hasPortraitTabletTitle ? (
+                    <div
+                      style={{
+                        transform: modelingCopyTranslatePercent(
+                          titleOffsetXTablet,
+                          titleOffsetYTablet,
+                        ),
+                      }}
+                    >
+                      <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
+                        <span className="whitespace-pre-wrap">
+                          {renderModelingTitleText(titleTabletResolved)}
+                        </span>
+                      </h3>
+                    </div>
+                  ) : null}
+                  {portraitTabletDescriptionContent != null ? (
+                    <div
+                      style={{
+                        transform: modelingCopyTranslatePercent(
+                          descriptionOffsetXTablet,
+                          descriptionOffsetYTablet,
+                        ),
+                      }}
+                    >
+                      {portraitTabletDescriptionContent}
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
               <div className={`absolute inset-0 hidden lg:block ${desktopOverlayShiftClassName ?? ""}`}>
                 {hasDesktopTitle ? (
                   <div
@@ -320,7 +420,7 @@ export function ModelingCardFullBleed({
                       top: titleBlockTop ?? "20%",
                       left: titleBlockLeft ?? "8%",
                       right: textAlign === "left" ? undefined : "8%",
-                      transform: `translateY(calc(${titleOffsetYDesktop}px * var(--ms,1)))`,
+                      transform: `translateY(calc(${titleOffsetYDesktop}% * var(--ms,1)))`,
                     }}
                   >
                     <h3 className={`${titleClassName} whitespace-pre-wrap ${titleShiftClassName ?? ""}`}>
@@ -337,7 +437,7 @@ export function ModelingCardFullBleed({
                       left: descriptionBlockLeft ?? "14%",
                       right:
                         descriptionAlign === "right" ? "8%" : textAlign === "left" ? undefined : "8%",
-                      transform: `translateY(calc(${descriptionOffsetYDesktop}px * var(--ms,1)))`,
+                      transform: `translateY(calc(${descriptionOffsetYDesktop}% * var(--ms,1)))`,
                     }}
                   >
                     <DescriptionTag className={descriptionClassName}>{descriptionContent}</DescriptionTag>
@@ -355,7 +455,7 @@ export function ModelingCardFullBleed({
                     top: titleBlockTop ?? "20%",
                     left: titleBlockLeft ?? "8%",
                     right: textAlign === "left" ? undefined : "8%",
-                    transform: `translateY(calc(${titleOffsetYDesktop}px * var(--ms,1)))`,
+                    transform: `translateY(calc(${titleOffsetYDesktop}% * var(--ms,1)))`,
                   }}
                 >
                   <h3 className={`${titleClassName} whitespace-pre-wrap ${titleShiftClassName ?? ""}`}>
@@ -372,7 +472,7 @@ export function ModelingCardFullBleed({
                     left: descriptionBlockLeft ?? "14%",
                     right:
                       descriptionAlign === "right" ? "8%" : textAlign === "left" ? undefined : "8%",
-                    transform: `translateY(calc(${descriptionOffsetYDesktop}px * var(--ms,1)))`,
+                    transform: `translateY(calc(${descriptionOffsetYDesktop}% * var(--ms,1)))`,
                   }}
                 >
                   <DescriptionTag className={descriptionClassName}>{descriptionContent}</DescriptionTag>
@@ -386,8 +486,8 @@ export function ModelingCardFullBleed({
               <div
                 className={
                   modelingTabletTierEnabled
-                    ? "w-full [--offset-y-active:var(--offset-y-mobile)] md:[--offset-y-active:var(--offset-y-tablet)] lg:[--offset-y-active:var(--offset-y-desktop)]"
-                    : "w-full [--offset-y-active:var(--offset-y-mobile)] sm:[--offset-y-active:var(--offset-y-desktop)]"
+                    ? `w-full ${offsetActiveClassTriple()}`
+                    : `w-full ${offsetActiveClassDual()}`
                 }
                 style={responsiveTitleOffsetStyle}
               >
@@ -410,9 +510,9 @@ export function ModelingCardFullBleed({
                           {renderModelingTitleText(titleTabletResolved)}
                         </span>
                       ) : null}
-                      {hasDesktopTitle ? (
+                      {showLgViewportTitle ? (
                         <span className="hidden whitespace-pre-wrap lg:inline">
-                          {renderModelingTitleText(title)}
+                          {renderModelingTitleText(lgViewportTitleText)}
                         </span>
                       ) : null}
                     </>
@@ -430,25 +530,39 @@ export function ModelingCardFullBleed({
               </div>
             ) : null}
             {hasDescriptionContent ? (
-              <div
-                className={
-                  modelingTabletTierEnabled
-                    ? "[--offset-y-active:var(--offset-y-mobile)] md:[--offset-y-active:var(--offset-y-tablet)] lg:[--offset-y-active:var(--offset-y-desktop)]"
-                    : "[--offset-y-active:var(--offset-y-mobile)] sm:[--offset-y-active:var(--offset-y-desktop)]"
-                }
-                style={responsiveDescriptionOffsetStyle}
-              >
-                <DescriptionTag
-                  className={`${descriptionClassName}${hipHopMobileLayout ? " max-sm:mt-[calc(1rem*var(--ms,1))] max-sm:w-[min(100%,calc(280px*var(--ms,1)))] max-sm:max-w-full sm:absolute sm:bottom-[calc(4rem*var(--ms,1))] sm:left-1/2 sm:mt-0 sm:w-[min(100%,calc(560px*var(--ms,1)))] sm:-translate-x-1/2 sm:translate-y-[calc(1.2rem*var(--ms,1))]" : ""}${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
-                  style={buildDescriptionMarginStyle(
+              <DescriptionTag
+                className={`${descriptionClassName}${
+                  hipHopMobileLayout
+                    ? ` max-sm:mt-[calc(1rem*var(--ms,1))] max-sm:w-[min(100%,calc(280px*var(--ms,1)))] max-sm:max-w-full sm:absolute sm:bottom-[calc(4rem*var(--ms,1))] sm:left-1/2 sm:mt-0 sm:w-[min(100%,calc(560px*var(--ms,1)))] ${
+                        modelingTabletTierEnabled
+                          ? `${offsetActiveClassTriple()} max-sm:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`
+                          : `${offsetActiveClassDual()} max-sm:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`
+                      }`
+                    : ` ${modelingTabletTierEnabled ? offsetActiveClassTriple() : offsetActiveClassDual()}`
+                }${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                style={{
+                  ...(hipHopMobileLayout
+                    ? modelingTabletTierEnabled
+                      ? tripleOffsetCssVarsOnly(
+                          descriptionOffsetYMobile,
+                          descriptionOffsetYTablet,
+                          descriptionOffsetYDesktop,
+                          descriptionOffsetXTablet,
+                        )
+                      : responsiveOffsetCssVarsOnly(
+                          descriptionOffsetYMobile,
+                          descriptionOffsetYDesktop,
+                        )
+                    : responsiveDescriptionOffsetStyle),
+                  ...buildDescriptionMarginStyle(
                     titleMarginTopCompensate,
                     titleMarginTop,
                     descriptionMarginTop,
-                  )}
-                >
-                  {descriptionContent}
-                </DescriptionTag>
-              </div>
+                  ),
+                }}
+              >
+                {descriptionContent}
+              </DescriptionTag>
             ) : null}
           </>
         )}
