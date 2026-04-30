@@ -306,10 +306,10 @@ export function LandingFooter({ socialLinks }: LandingFooterProps) {
                 >
                   <span className={FOOTER_CONTACT_ITEM_LABEL_CLASS}>Email: </span>
                   <a
-                    href="mailto:studio@goldcrestcad.com"
+                    href="mailto:info@goldcrest3d.com"
                     className="text-inherit transition-colors hover:text-[var(--foreground)]"
                   >
-                    studio@goldcrestcad.com
+                    info@goldcrest3d.com
                   </a>
                 </p>
               </div>
