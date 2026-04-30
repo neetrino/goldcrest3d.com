@@ -90,7 +90,7 @@ src/app/admin/
 - **replyToLeadAction** (Lead): body → Zod (leadReplySchema) → `sendReplyToLead({ to: lead.email, body })` (Resend)
 - Subject: «Goldcrest 3D — reply to your request»
 
-**Env.** Resend: `RESEND_API_KEY`, `RESEND_FROM_EMAIL`. Նոր հայտի ծանուցում ադմինին (ոչ պարտադիր): `ADMIN_NOTIFY_EMAIL`.
+**Env.** Resend: `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `RESEND_REPLY_TO_EMAILS` (comma-separated customer Reply-To). Նոր հայտի ծանուցում ադմինին (ոչ պարտադիր): `ADMIN_NOTIFY_EMAIL`.
 
 ---
 
@@ -150,7 +150,7 @@ src/app/admin/
 | **Ֆայլեր (R2)** | Lead attachments, order product image |
 | R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME, R2_PUBLIC_URL | |
 | **Email (Resend)** | Reply to leads, payment link email |
-| RESEND_API_KEY, RESEND_FROM_EMAIL | |
+| RESEND_API_KEY, RESEND_FROM_EMAIL, RESEND_REPLY_TO_EMAILS | |
 | ADMIN_NOTIFY_EMAIL | Նոր lead-ի ծանուցում ադմինին (ոչ պարտադիր) |
 | **Stripe (client payment)** | |
 | STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET | Payment link / checkout |

@@ -104,7 +104,7 @@
 
 | # | Պարամետր | Որոշում | Ստատուս | Նշում |
 |---|----------|---------|---------|-------|
-| 7.1 | Email / mailings | Resend | ✅ | reply to leads, payment link email; env: RESEND_API_KEY, RESEND_FROM_EMAIL, optional ADMIN_NOTIFY_EMAIL |
+| 7.1 | Email / mailings | Resend | ✅ | reply to leads, payment link email; env: RESEND_API_KEY, RESEND_FROM_EMAIL, RESEND_REPLY_TO_EMAILS (customer Reply-To), optional ADMIN_NOTIFY_EMAIL |
 | 7.2 | Վճարումներ | Stripe | ⬜ | payment links, Full / 50-50 |
 | 7.3 | Անալիտիկա | պետք չէ | ➖ | կամ Vercel Analytics |
 | 7.4 | Error tracking | պետք չէ / Sentry | ⬜ | ադապտիվ |

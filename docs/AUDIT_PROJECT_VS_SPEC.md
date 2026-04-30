@@ -65,7 +65,7 @@
   - Auth.js (next-auth v5), Credentials provider, JWT. Admin layout. `auth()` — no session → `AdminSignInGate` (sign-in form).  
 
 - **Email**  
-  - Resend. New lead notification (admin), reply to lead (client), payment link (client). Env: RESEND_API_KEY, RESEND_FROM_EMAIL, ADMIN_NOTIFY_EMAIL.  
+  - Resend. New lead notification (admin), reply to lead (client), payment link (client). Env: RESEND_API_KEY, RESEND_FROM_EMAIL, RESEND_REPLY_TO_EMAILS, ADMIN_NOTIFY_EMAIL.  
 
 - **Validations**  
   - `quoteFormSchema`, `orderFormSchema`, `leadReplySchema` (Zod).  
