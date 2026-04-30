@@ -144,7 +144,7 @@ export async function sendReplyToLead({
 }
 
 /**
- * Absolute site origin for assets in HTML email (logo, footer link). AUTH_URL, then VERCEL_URL.
+ * Absolute site origin for assets in HTML email (logo). AUTH_URL, then VERCEL_URL.
  */
 function resolvePublicBaseUrl(): string {
   const auth = process.env.AUTH_URL?.trim();
@@ -157,6 +157,18 @@ function resolvePublicBaseUrl(): string {
     return normalized.startsWith("http") ? normalized : `https://${normalized}`;
   }
   return "http://localhost:3000";
+}
+
+/**
+ * Public URL for the "Visit our website" footer link. Optional `EMAIL_WEBSITE_URL` overrides
+ * (e.g. production domain while AUTH_URL is a preview host).
+ */
+function resolveEmailWebsiteLinkUrl(): string {
+  const explicit = process.env.EMAIL_WEBSITE_URL?.trim();
+  if (explicit) {
+    return explicit.replace(/\/$/, "");
+  }
+  return resolvePublicBaseUrl();
 }
 
 function leadReplyBodyToHtmlParagraphs(plain: string): string {
@@ -203,10 +215,9 @@ function buildLeadReplyFooterRow(baseUrl: string): string {
  * Branded HTML for lead replies: header, logo, readable body, footer link.
  */
 function buildLeadReplyBrandedHtml(plainBody: string, logoImgSrc: string): string {
-  const baseUrl = resolvePublicBaseUrl();
   const bodyHtml = leadReplyBodyToHtmlParagraphs(plainBody);
   const headerRow = buildLeadReplyHeaderRow(logoImgSrc);
-  const footerRow = buildLeadReplyFooterRow(baseUrl);
+  const footerRow = buildLeadReplyFooterRow(resolveEmailWebsiteLinkUrl());
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
