@@ -1,14 +1,16 @@
 /**
- * Resend outbound identity: `from` and default customer `replyTo` from env.
+ * Resend outbound identity: `from` and customer `replyTo` from env (with inbox default).
  */
-
-import { logger } from "@/lib/logger";
 
 const DEFAULT_FROM_DISPLAY_NAME = "GoldCrest";
 
 const DEV_FALLBACK_FROM = `${DEFAULT_FROM_DISPLAY_NAME} <onboarding@resend.dev>`;
 
-let warnedMissingReplyTo = false;
+/**
+ * When `RESEND_REPLY_TO_EMAILS` is unset or empty, customer-facing mail uses this Reply-To
+ * so the mail client "Reply" targets the team inbox (independent of `RESEND_FROM_EMAIL`).
+ */
+const DEFAULT_CUSTOMER_REPLY_TO_EMAIL = "info@goldcrest3d.com";
 
 /** Resend `from`: use full "Name <addr>" from env, or wrap plain email with display name. */
 export function getResendFromHeader(): string {
@@ -35,19 +37,13 @@ export function parseResendReplyToList(): string[] {
 }
 
 /**
- * Resend `replyTo` for customer-facing mail. Omit when env has no addresses
- * (email still sends; clients typically reply to From).
+ * Resend `replyTo` for customer-facing mail. Uses `RESEND_REPLY_TO_EMAILS` when set;
+ * otherwise `info@goldcrest3d.com` so "Reply" does not follow a legacy `From`.
  */
-export function getCustomerReplyTo(): string | string[] | undefined {
+export function getCustomerReplyTo(): string | string[] {
   const list = parseResendReplyToList();
   if (list.length === 0) {
-    if (process.env.NODE_ENV === "development" && !warnedMissingReplyTo) {
-      warnedMissingReplyTo = true;
-      logger.info(
-        "Resend: RESEND_REPLY_TO_EMAILS is unset; customer emails are sent without an explicit Reply-To header. Set RESEND_REPLY_TO_EMAILS (comma-separated) so replies go to the intended inboxes.",
-      );
-    }
-    return undefined;
+    return DEFAULT_CUSTOMER_REPLY_TO_EMAIL;
   }
   if (list.length === 1) {
     return list[0];

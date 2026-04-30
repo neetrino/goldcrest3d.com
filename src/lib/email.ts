@@ -66,7 +66,7 @@ export async function sendEmail({
       text: textContent,
       html: htmlContent,
       ...(attachments?.length ? { attachments } : {}),
-      ...(replyTo !== undefined ? { replyTo } : {}),
+      ...(skipDefaultReplyTo ? {} : { replyTo }),
     });
     if (error) {
       return { success: false, error: error.message };
