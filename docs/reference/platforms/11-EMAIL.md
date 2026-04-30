@@ -103,8 +103,12 @@ export const resend = new Resend(process.env.RESEND_API_KEY);
 
 ```bash
 RESEND_API_KEY=re_xxx
-EMAIL_FROM=noreply@mail.example.com
+RESEND_FROM_EMAIL="GoldCrest <noreply@mail.example.com>"
+# Comma-separated Reply-To for customer mail (Reply in the client targets all addresses).
+RESEND_REPLY_TO_EMAILS="noreply@mail.example.com,studio@example.com"
 ```
+
+In this project, `src/lib/resendEmailConfig.ts` reads `RESEND_FROM_EMAIL` and `RESEND_REPLY_TO_EMAILS`; customer-facing sends pass `replyTo` to the Resend SDK (`replyTo` in code → `reply_to` in the API).
 
 ### Отправка письма:
 

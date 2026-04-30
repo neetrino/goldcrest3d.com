@@ -9,8 +9,7 @@ import {
   LEAD_REPLY_LOGO_PATH,
   loadLeadReplyLogoAttachment,
 } from "@/lib/emailLeadReplyLogo";
-
-const FROM_DISPLAY_NAME = "Goldcrest 3D";
+import { getCustomerReplyTo, getResendFromHeader } from "@/lib/resendEmailConfig";
 
 /** Email template — dark header matches `public/images/email-logo-mark.png` (gold on black). */
 const EMAIL_HEADER_BG = "#000000";
@@ -21,18 +20,6 @@ const EMAIL_FOOTER_TEXT = "#64748b";
 const EMAIL_ACCENT = "#b45309";
 
 const apiKey = process.env.RESEND_API_KEY;
-
-/** Resend `from`: verified domain address, optionally "Name <addr>" if already in env. */
-function getFromHeader(): string {
-  const raw = process.env.RESEND_FROM_EMAIL?.trim();
-  if (!raw) {
-    return `${FROM_DISPLAY_NAME} <onboarding@resend.dev>`;
-  }
-  if (raw.includes("<") && raw.includes(">")) {
-    return raw;
-  }
-  return `${FROM_DISPLAY_NAME} <${raw}>`;
-}
 
 const resend = apiKey ? new Resend(apiKey) : null;
 
@@ -49,12 +36,15 @@ export async function sendEmail({
   text,
   html,
   attachments,
+  /** When true, do not set Resend `replyTo` (e.g. internal admin notifications). */
+  skipDefaultReplyTo,
 }: {
   to: string | string[];
   subject: string;
   text?: string;
   html?: string;
   attachments?: Attachment[];
+  skipDefaultReplyTo?: boolean;
 }): Promise<SendEmailResult> {
   if (!resend) {
     return { success: false, error: "Email is not configured (RESEND_API_KEY)." };
@@ -66,14 +56,17 @@ export async function sendEmail({
   const htmlContent = html ?? (text ? escapeHtml(text).replace(/\n/g, "<br>") : "<p></p>");
   const textContent = text ?? (html ? stripHtml(html) : "");
 
+  const replyTo = skipDefaultReplyTo ? undefined : getCustomerReplyTo();
+
   try {
     const { data, error } = await resend.emails.send({
-      from: getFromHeader(),
+      from: getResendFromHeader(),
       to: toList,
       subject,
       text: textContent,
       html: htmlContent,
       ...(attachments?.length ? { attachments } : {}),
+      ...(replyTo !== undefined ? { replyTo } : {}),
     });
     if (error) {
       return { success: false, error: error.message };
@@ -114,7 +107,13 @@ export async function sendNewLeadNotificationToAdmin({
     .filter(Boolean)
     .join("\n");
   const html = `<p>${escapeHtml(text).replace(/\n/g, "</p><p>")}</p>`;
-  return sendEmail({ to: to.trim(), subject, text, html });
+  return sendEmail({
+    to: to.trim(),
+    subject,
+    text,
+    html,
+    skipDefaultReplyTo: true,
+  });
 }
 
 /**

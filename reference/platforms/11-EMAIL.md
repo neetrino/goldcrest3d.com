@@ -103,7 +103,8 @@ export const resend = new Resend(process.env.RESEND_API_KEY);
 
 ```bash
 RESEND_API_KEY=re_xxx
-EMAIL_FROM=noreply@mail.example.com
+RESEND_FROM_EMAIL="GoldCrest <noreply@mail.example.com>"
+RESEND_REPLY_TO_EMAILS="noreply@mail.example.com,studio@example.com"
 ```
 
 ### Отправка письма:
