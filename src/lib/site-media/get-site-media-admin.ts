@@ -27,6 +27,10 @@ import {
 } from "@/lib/manufacturing-intelligence/manufacturing-intelligence-mobile-content";
 import { manufacturingIntelligenceCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy-prisma";
 import { manufacturingIntelligenceMobileCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-mobile-copy-prisma";
+import {
+  MODELING_MOBILE_PREVIEW_BODY_FONT_PX_DEFAULT,
+  MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
+} from "@/constants/modeling-specialization-mobile-preview-font";
 import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
 import {
   emptyModelingSpecializationCopyRow,
@@ -77,6 +81,8 @@ export type AdminModelingSlotRow = {
   bodyTabletOffsetX: number;
   desktopLine1Emphasis: string;
   tabletLine1Emphasis: string;
+  mobilePreviewTitleFontPx: number;
+  mobilePreviewBodyFontPx: number;
 };
 
 export type AdminOrderedItemRow = {
@@ -246,6 +252,10 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
         bodyTabletOffsetX: row.bodyTabletOffsetX ?? 0,
         desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
         tabletLine1Emphasis: row.tabletLine1Emphasis ?? "",
+        mobilePreviewTitleFontPx:
+          row.mobilePreviewTitleFontPx ?? MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
+        mobilePreviewBodyFontPx:
+          row.mobilePreviewBodyFontPx ?? MODELING_MOBILE_PREVIEW_BODY_FONT_PX_DEFAULT,
       }),
     }));
     manufacturingCopyRows = manufacturingRows.map((row) => ({

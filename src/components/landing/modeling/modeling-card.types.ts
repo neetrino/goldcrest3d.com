@@ -152,4 +152,10 @@ export type ModelingCardProps = {
   imageFillClassName?: string;
   /** lg+ image layer when using `imageSrc` pairs (often `object-contain` for product framing). */
   imageFillClassNameDesktop?: string;
+  /**
+   * CMS: mobile title font size (viewport below `md`) in px; scales with section --ms/--mt.
+   */
+  mobilePreviewTitleFontPx?: number;
+  /** CMS: mobile description font size (viewport below `md`) in px; scales with section --ms/--mt. */
+  mobilePreviewBodyFontPx?: number;
 };

@@ -19,10 +19,22 @@ export const PORTRAIT_TABLET_OVERLAY_TITLE_CLASS =
 export const PORTRAIT_MOBILE_TITLE_FULL = "3D Portrait Jewelry";
 
 export const PORTRAIT_MOBILE_OVERLAY_DESC_CLASS =
-  "w-[calc(155px*var(--ms,1))] max-w-full text-right font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153]";
+  "w-[calc(155px*var(--ms,1))] max-w-full text-right font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(0.8125rem*var(--ms,1)*var(--mt,1))] text-[#364153]";
 
 /** md–lg portrait slot body: wider than mobile overlay so tablet lines match design copy (not 155px reflow). */
 export const PORTRAIT_TABLET_OVERLAY_DESC_CLASS =
   "w-[min(100%,calc(300px*var(--ms,1)))] max-w-full text-right font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70";
+
+/** Default bridal CMS second paragraph; extra top margin separates it from the first block. */
+export const BRIDAL_DESCRIPTION_SECURE_PRONG_LINE =
+  "Secure prong architecture developed for long-term wear.";
+
+/** Mobile (< md): light gap before the secure-prong line (subsection). */
+export const BRIDAL_MOBILE_SECURE_PRONG_MARGIN_TOP_CLASS =
+  "mt-[calc(0.45rem*var(--ms,1))]";
+
+/** Tablet/desktop bridal stack: larger gap before the secure-prong line. */
+export const BRIDAL_STACK_SECURE_PRONG_MARGIN_TOP_CLASS =
+  "mt-[calc(0.875rem*var(--ms,1))]";
 
 export const DEFAULT_IMAGE_POSITION = "center center";

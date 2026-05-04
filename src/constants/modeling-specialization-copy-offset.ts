@@ -1,6 +1,6 @@
-/** Stored DB values and admin: desktop/mobile vertical copy offset as CSS translateY % (-100…100). */
-export const MODELING_COPY_OFFSET_Y_MIN_PCT = -100;
-export const MODELING_COPY_OFFSET_Y_MAX_PCT = 100;
+/** Stored DB values and admin: desktop/mobile vertical copy offset as CSS translateY % (-500…500). */
+export const MODELING_COPY_OFFSET_Y_MIN_PCT = -500;
+export const MODELING_COPY_OFFSET_Y_MAX_PCT = 500;
 /** Admin Up/Down nudge step (percentage points). */
 export const MODELING_COPY_OFFSET_NUDGE_PCT = 1;
 

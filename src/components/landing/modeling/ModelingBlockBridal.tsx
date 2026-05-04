@@ -24,6 +24,8 @@ type ModelingBlockBridalProps = {
   bodyMobileOffsetX: number;
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
+  mobilePreviewTitleFontPx: number;
+  mobilePreviewBodyFontPx: number;
 };
 
 /** Bridal & Engagement block. Engagement ring lower-middle; anchor so stone stays visible. */
@@ -49,6 +51,8 @@ export function ModelingBlockBridal({
   bodyMobileOffsetX,
   bodyTabletOffsetY,
   bodyTabletOffsetX,
+  mobilePreviewTitleFontPx,
+  mobilePreviewBodyFontPx,
 }: ModelingBlockBridalProps) {
   return (
     <ModelingCard
@@ -98,6 +102,8 @@ export function ModelingBlockBridal({
       textBlockMarginTop="0"
       descriptionLayout="row"
       mobileBridalTypography
+      mobilePreviewTitleFontPx={mobilePreviewTitleFontPx}
+      mobilePreviewBodyFontPx={mobilePreviewBodyFontPx}
     />
   );
 }

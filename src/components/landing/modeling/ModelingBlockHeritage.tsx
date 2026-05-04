@@ -9,6 +9,10 @@ import {
   modelingCopyTranslatePercent,
   modelingTitleForLgViewport,
 } from "./modeling-card.constants";
+import {
+  modelingCmsMobileBodyFontStyle,
+  modelingCmsMobileTitleFontStyle,
+} from "./modeling-cms-mobile-font-style";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
 type ModelingBlockHeritageProps = {
@@ -33,6 +37,8 @@ type ModelingBlockHeritageProps = {
   bodyMobileOffsetX: number;
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
+  mobilePreviewTitleFontPx: number;
+  mobilePreviewBodyFontPx: number;
 };
 
 type HeritageOverlayTextProps = {
@@ -54,6 +60,8 @@ type HeritageOverlayTextProps = {
   bodyMobileOffsetX: number;
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
+  mobilePreviewTitleFontPx: number;
+  mobilePreviewBodyFontPx: number;
 };
 
 function HeritageOverlayText({
@@ -75,6 +83,8 @@ function HeritageOverlayText({
   bodyMobileOffsetX,
   bodyTabletOffsetY,
   bodyTabletOffsetX,
+  mobilePreviewTitleFontPx,
+  mobilePreviewBodyFontPx,
 }: HeritageOverlayTextProps) {
   const titleTabletResolved = titleTablet.trim();
   const descTabletLines = descriptionLinesTablet.some((l) => l.trim().length > 0)
@@ -104,7 +114,10 @@ function HeritageOverlayText({
                   transform: modelingCopyTranslatePercent(titleMobileOffsetX, titleMobileOffsetY),
                 }}
               >
-                <span className="block whitespace-pre-wrap text-right translate-y-[calc(2.75rem*var(--ms,1))] md:hidden">
+                <span
+                  className="block whitespace-pre-wrap text-right translate-y-[calc(2.75rem*var(--ms,1))] md:hidden"
+                  style={modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx)}
+                >
                   {renderModelingTitleText(titleMobile)}
                 </span>
               </span>
@@ -144,7 +157,10 @@ function HeritageOverlayText({
                 transform: modelingCopyTranslatePercent(bodyMobileOffsetX, bodyMobileOffsetY),
               }}
             >
-              <p className="mt-[calc(3.5rem*var(--ms,1))] w-[calc(470px*var(--ms,1))] max-w-full font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden">
+              <p
+                className="mt-[calc(3.5rem*var(--ms,1))] w-[calc(470px*var(--ms,1))] max-w-full font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(0.8125rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden"
+                style={modelingCmsMobileBodyFontStyle(mobilePreviewBodyFontPx)}
+              >
                 {descriptionLinesMobile.map((line, index) => (
                   <span key={`mobile-${index}`} className="block whitespace-nowrap">
                     {renderModelingCopyLine(line)}
@@ -208,6 +224,8 @@ export function ModelingBlockHeritage({
   bodyMobileOffsetX,
   bodyTabletOffsetY,
   bodyTabletOffsetX,
+  mobilePreviewTitleFontPx,
+  mobilePreviewBodyFontPx,
 }: ModelingBlockHeritageProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile && imageUrlDesktop === imageUrlTablet;
   return (
@@ -278,6 +296,8 @@ export function ModelingBlockHeritage({
         bodyMobileOffsetX={bodyMobileOffsetX}
         bodyTabletOffsetY={bodyTabletOffsetY}
         bodyTabletOffsetX={bodyTabletOffsetX}
+        mobilePreviewTitleFontPx={mobilePreviewTitleFontPx}
+        mobilePreviewBodyFontPx={mobilePreviewBodyFontPx}
       />
     </article>
   );

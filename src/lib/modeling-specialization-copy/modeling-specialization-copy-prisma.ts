@@ -22,6 +22,8 @@ type ModelingSpecializationCopyDbRow = {
   bodyTabletOffsetX: number | null;
   desktopLine1Emphasis: string | null;
   tabletLine1Emphasis: string | null;
+  mobilePreviewTitleFontPx: number | null;
+  mobilePreviewBodyFontPx: number | null;
   updatedAt: Date;
 };
 

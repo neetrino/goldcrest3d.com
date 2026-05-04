@@ -2,6 +2,9 @@ import type { ReactNode } from "react";
 
 import { modelingBodyLinesForLgViewport } from "./modeling-card.constants";
 import {
+  BRIDAL_DESCRIPTION_SECURE_PRONG_LINE,
+  BRIDAL_MOBILE_SECURE_PRONG_MARGIN_TOP_CLASS,
+  BRIDAL_STACK_SECURE_PRONG_MARGIN_TOP_CLASS,
   HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX,
   HIPHOP_TABLET_DESCRIPTION_CLASS,
 } from "./modeling-card.typography-layout.constants";
@@ -136,8 +139,8 @@ export function renderModelingCardDescriptionContent(
               key={`${keyPrefix}-${i}`}
               id={i === 0 ? firstDescriptionLineId : undefined}
               className={`block font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black ${
-                line.trim() === "Secure prong architecture developed for long-term wear."
-                  ? "mt-[calc(0.875rem*var(--ms,1))]"
+                line.trim() === BRIDAL_DESCRIPTION_SECURE_PRONG_LINE
+                  ? BRIDAL_STACK_SECURE_PRONG_MARGIN_TOP_CLASS
                   : ""
               }`}
             >
@@ -163,11 +166,11 @@ export function renderModelingCardDescriptionContent(
         return (
           <>
             {descriptionLinesMobile != null && descriptionLinesMobile.length > 0 ? (
-              <div className="flex w-full flex-col items-start gap-0.5 md:hidden">
+              <div className="flex w-full flex-col items-start gap-0 md:hidden">
                 {descriptionLinesMobile.map((line, i) => (
                   <span
                     key={`bridal-mobile-${i}`}
-                    className={`${bridalRowSpanClass} ${lineWrapClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
+                    className={`${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""} ${line.trim() === BRIDAL_DESCRIPTION_SECURE_PRONG_LINE ? BRIDAL_MOBILE_SECURE_PRONG_MARGIN_TOP_CLASS : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
                   >
                     {renderModelingCopyLine(line)}
                   </span>
@@ -198,11 +201,11 @@ export function renderModelingCardDescriptionContent(
       return (
         <>
           {descriptionLinesMobile != null && descriptionLinesMobile.length > 0 ? (
-            <div className="flex w-full flex-col items-start gap-0.5 sm:hidden">
+            <div className="flex w-full flex-col items-start gap-0 sm:hidden">
               {descriptionLinesMobile.map((line, i) => (
                 <span
                   key={`bridal-mobile-${i}`}
-                  className={`${bridalRowSpanClass} ${lineWrapClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
+                  className={`${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""} ${line.trim() === BRIDAL_DESCRIPTION_SECURE_PRONG_LINE ? BRIDAL_MOBILE_SECURE_PRONG_MARGIN_TOP_CLASS : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
                 >
                   {renderModelingCopyLine(line)}
                 </span>

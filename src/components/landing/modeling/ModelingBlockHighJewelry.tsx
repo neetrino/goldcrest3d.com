@@ -9,6 +9,11 @@ import {
   modelingCopyTranslatePercent,
   modelingTitleForLgViewport,
 } from "./modeling-card.constants";
+import {
+  mergeCssProperties,
+  modelingCmsMobileBodyFontStyle,
+  modelingCmsMobileTitleFontStyle,
+} from "./modeling-cms-mobile-font-style";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
 function reduceHighJewelryLines(lines: readonly string[]): string[] {
@@ -69,6 +74,8 @@ type ModelingBlockHighJewelryProps = {
   bodyTabletOffsetX: number;
   desktopLine1Emphasis: string;
   tabletLine1Emphasis: string;
+  mobilePreviewTitleFontPx: number;
+  mobilePreviewBodyFontPx: number;
 };
 
 /** High Jewelry — full-bleed; mobile / tablet / desktop assets and copy tiers. */
@@ -96,6 +103,8 @@ export function ModelingBlockHighJewelry({
   bodyTabletOffsetX,
   desktopLine1Emphasis,
   tabletLine1Emphasis,
+  mobilePreviewTitleFontPx,
+  mobilePreviewBodyFontPx,
 }: ModelingBlockHighJewelryProps) {
   const oneImage =
     imageUrlDesktop === imageUrlMobile && imageUrlMobile === imageUrlTablet;
@@ -198,9 +207,12 @@ export function ModelingBlockHighJewelry({
             {titleMobile.trim().length > 0 ? (
               <span
                 className="inline-block whitespace-pre-wrap md:hidden"
-                style={{
-                  transform: modelingCopyTranslatePercent(titleMobileOffsetX, titleMobileOffsetY),
-                }}
+                style={mergeCssProperties(
+                  {
+                    transform: modelingCopyTranslatePercent(titleMobileOffsetX, titleMobileOffsetY),
+                  },
+                  modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx),
+                )}
               >
                 {renderModelingTitleText(titleMobile)}
               </span>
@@ -227,16 +239,19 @@ export function ModelingBlockHighJewelry({
         ) : null}
         {descriptionLinesMobile.length > 0 ? (
           <p
-            className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden"
-            style={{
-              transform: modelingCopyTranslatePercent(bodyMobileOffsetX, bodyMobileOffsetY),
-            }}
+            className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(0.8125rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden"
+            style={mergeCssProperties(
+              {
+                transform: modelingCopyTranslatePercent(bodyMobileOffsetX, bodyMobileOffsetY),
+              },
+              modelingCmsMobileBodyFontStyle(mobilePreviewBodyFontPx),
+            )}
           >
             <span className="block whitespace-nowrap">{renderModelingCopyLine(mobileLine1)}</span>
             {mobileRest.map((line, index) => (
               <span
                 key={`mobile-desc-${line}-${index}`}
-                className={index === 0 ? "mt-[calc(0.25rem*var(--ms,1))] block" : "block"}
+                className={index === 0 ? "mt-0 block" : "block"}
               >
                 {renderModelingCopyLine(line)}
               </span>

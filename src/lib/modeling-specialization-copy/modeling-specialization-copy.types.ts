@@ -8,7 +8,7 @@ export type ModelingSpecializationCopyRow = {
   bodyMobile: string;
   titleTablet: string;
   bodyTablet: string;
-  /** Vertical offsets: CSS translateY % (-100…100), scaled with section --ms on the landing page. */
+  /** Vertical offsets: CSS translateY % (-500…500), scaled with section --ms on the landing page. */
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
   bodyDesktopOffsetY: number;
@@ -27,6 +27,10 @@ export type ModelingSpecializationCopyRow = {
   bodyTabletOffsetX: number;
   desktopLine1Emphasis: string;
   tabletLine1Emphasis: string;
+  /** Mobile title size (px, below `md` on landing + admin preview); scales with section --ms/--mt. */
+  mobilePreviewTitleFontPx: number;
+  /** Mobile description size (px, below `md` on landing + admin preview); scales with section --ms/--mt. */
+  mobilePreviewBodyFontPx: number;
 };
 
 export type ModelingSpecializationCopyPayload = {
@@ -50,4 +54,6 @@ export type ModelingSpecializationCopyPayload = {
   bodyTabletOffsetX: number;
   desktopLine1Emphasis: string;
   tabletLine1Emphasis: string;
+  mobilePreviewTitleFontPx: number;
+  mobilePreviewBodyFontPx: number;
 };

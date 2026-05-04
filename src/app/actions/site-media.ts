@@ -217,6 +217,8 @@ export async function updateModelingSlotCopy(
     titleMobileOffsetX: formData.get("titleMobileOffsetX"),
     bodyMobileOffsetX: formData.get("bodyMobileOffsetX"),
     desktopLine1Emphasis: formData.get("desktopLine1Emphasis"),
+    mobilePreviewTitleFontPx: formData.get("mobilePreviewTitleFontPx"),
+    mobilePreviewBodyFontPx: formData.get("mobilePreviewBodyFontPx"),
   });
   if (!parsed.success) {
     const fieldErrors = parsed.error.flatten().fieldErrors;
@@ -237,6 +239,8 @@ export async function updateModelingSlotCopy(
         fieldErrors.titleMobileOffsetX?.[0] ??
         fieldErrors.bodyMobileOffsetX?.[0] ??
         fieldErrors.desktopLine1Emphasis?.[0] ??
+        fieldErrors.mobilePreviewTitleFontPx?.[0] ??
+        fieldErrors.mobilePreviewBodyFontPx?.[0] ??
         "Invalid input.",
     };
   }
@@ -257,6 +261,8 @@ export async function updateModelingSlotCopy(
     titleMobileOffsetX: parsed.data.titleMobileOffsetX,
     bodyMobileOffsetX: parsed.data.bodyMobileOffsetX,
     desktopLine1Emphasis: parsed.data.desktopLine1Emphasis,
+    mobilePreviewTitleFontPx: parsed.data.mobilePreviewTitleFontPx,
+    mobilePreviewBodyFontPx: parsed.data.mobilePreviewBodyFontPx,
   });
 
   try {
@@ -280,6 +286,8 @@ export async function updateModelingSlotCopy(
         titleMobileOffsetX: payload.titleMobileOffsetX,
         bodyMobileOffsetX: payload.bodyMobileOffsetX,
         desktopLine1Emphasis: payload.desktopLine1Emphasis,
+        mobilePreviewTitleFontPx: payload.mobilePreviewTitleFontPx,
+        mobilePreviewBodyFontPx: payload.mobilePreviewBodyFontPx,
       },
     });
   } catch (e) {
