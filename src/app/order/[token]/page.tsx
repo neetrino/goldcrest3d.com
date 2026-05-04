@@ -99,9 +99,7 @@ export default async function OrderPaymentPage({ params, searchParams }: Props) 
         <h1 className="text-xl font-semibold text-neutral-900">
           {order.productTitle}
         </h1>
-        <p className="mt-1 text-sm text-neutral-500">
-          Goldcrest 3D — order #{order.token}
-        </p>
+        <p className="mt-1 text-sm text-neutral-500">Goldcrest 3D</p>
 
         <dl className="mt-6 space-y-3">
           <div className="flex justify-between text-sm">
