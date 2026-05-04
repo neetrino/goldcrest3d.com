@@ -152,7 +152,7 @@ model ModelingSpecializationCopy {
   titleMobile           String?  @db.Text
   bodyDesktop           String?  @db.Text
   bodyMobile            String?  @db.Text
-  /// Copy vertical offsets (ints): CSS translateY percentage, typically -100…100.
+  /// Copy vertical offsets (ints): CSS translateY percentage, typically -1500…1500.
   titleDesktopOffsetY   Int      @default(0)
   titleMobileOffsetY    Int      @default(0)
   bodyDesktopOffsetY    Int      @default(0)
@@ -177,6 +177,10 @@ model ModelingSpecializationCopy {
   /// Optional emphasized fragment for slots that require highlighted wording.
   desktopLine1Emphasis  String?  @db.Text
   tabletLine1Emphasis   String?  @db.Text
+  /// Mobile title size (px, viewport below md) on landing + admin preview; scales with section --ms/--mt.
+  mobilePreviewTitleFontPx Int @default(16)
+  /// Mobile description size (px, viewport below md) on landing + admin preview; scales with section --ms/--mt.
+  mobilePreviewBodyFontPx  Int @default(14)
   updatedAt             DateTime @updatedAt
 }
 

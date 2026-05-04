@@ -24,6 +24,8 @@ type ModelingBlockHipHopProps = {
   bodyMobileOffsetX: number;
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
+  mobilePreviewTitleFontPx: number;
+  mobilePreviewBodyFontPx: number;
 };
 
 /** Hip-Hop Jewelry block — Figma background layer on image area. */
@@ -49,6 +51,8 @@ export function ModelingBlockHipHop({
   bodyMobileOffsetX,
   bodyTabletOffsetY,
   bodyTabletOffsetX,
+  mobilePreviewTitleFontPx,
+  mobilePreviewBodyFontPx,
 }: ModelingBlockHipHopProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   return (
@@ -87,6 +91,8 @@ export function ModelingBlockHipHop({
       }
       imagePairBreakpoint="md"
       mobileHipHopTypography
+      mobilePreviewTitleFontPx={mobilePreviewTitleFontPx}
+      mobilePreviewBodyFontPx={mobilePreviewBodyFontPx}
     />
   );
 }

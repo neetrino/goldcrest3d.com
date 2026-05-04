@@ -15,6 +15,11 @@ import {
   PORTRAIT_TABLET_OVERLAY_TITLE_CLASS,
 } from "./modeling-card.typography-layout.constants";
 import type { ModelingCardProps } from "./modeling-card.types";
+import {
+  MODELING_CMS_MOBILE_BODY_FONT_OVERRIDE_CLASS,
+  modelingCmsMobileBodyFontStyle,
+  modelingCmsMobileTitleFontStyle,
+} from "./modeling-cms-mobile-font-style";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
 export type ModelingCardFullBleedProps = Pick<
@@ -58,6 +63,8 @@ export type ModelingCardFullBleedProps = Pick<
   | "descriptionOffsetYTablet"
   | "descriptionOffsetXTablet"
   | "descriptionLinesMobile"
+  | "mobilePreviewTitleFontPx"
+  | "mobilePreviewBodyFontPx"
 > & {
   textColor: string;
   hipHopMobileLayout: boolean;
@@ -222,6 +229,8 @@ export function ModelingCardFullBleed({
   descriptionOffsetYTablet = 0,
   descriptionOffsetXTablet = 0,
   descriptionLinesMobile,
+  mobilePreviewTitleFontPx,
+  mobilePreviewBodyFontPx,
   textColor,
   hipHopMobileLayout,
   bridalMobileLayout,
@@ -399,7 +408,14 @@ export function ModelingCardFullBleed({
                     transform: modelingCopyTranslatePercent(titleOffsetXMobile, titleOffsetYMobile),
                   }}
                 >
-                  <h3 className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}>
+                  <h3
+                    className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}
+                    style={
+                      mobilePreviewTitleFontPx != null
+                        ? modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx)
+                        : undefined
+                    }
+                  >
                     {(titleMobile ?? title) === PORTRAIT_MOBILE_TITLE_FULL ? (
                       <>
                         <span className="block whitespace-nowrap">3D Portrait</span>
@@ -418,7 +434,14 @@ export function ModelingCardFullBleed({
                     ),
                   }}
                 >
-                  <div className={PORTRAIT_MOBILE_OVERLAY_DESC_CLASS}>
+                  <div
+                    className={PORTRAIT_MOBILE_OVERLAY_DESC_CLASS}
+                    style={
+                      mobilePreviewBodyFontPx != null
+                        ? modelingCmsMobileBodyFontStyle(mobilePreviewBodyFontPx)
+                        : undefined
+                    }
+                  >
                     {descriptionLinesMobile!.map((line, i) => (
                       <span key={`portrait-mobile-${i}`} className="block">
                         {renderModelingCopyLine(line)}
@@ -555,7 +578,14 @@ export function ModelingCardFullBleed({
                   {modelingTabletTierEnabled ? (
                     <>
                       {hasMobileTitle ? (
-                        <span className="whitespace-pre-wrap md:hidden">
+                        <span
+                          className="whitespace-pre-wrap md:hidden"
+                          style={
+                            mobilePreviewTitleFontPx != null
+                              ? modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx)
+                              : undefined
+                          }
+                        >
                           {renderModelingTitleText(titleMobile ?? "")}
                         </span>
                       ) : null}
@@ -573,7 +603,16 @@ export function ModelingCardFullBleed({
                   ) : (
                     <>
                       {hasMobileTitle ? (
-                        <span className="whitespace-pre-wrap sm:hidden">{renderModelingTitleText(titleMobile ?? "")}</span>
+                        <span
+                          className="whitespace-pre-wrap sm:hidden"
+                          style={
+                            mobilePreviewTitleFontPx != null
+                              ? modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx)
+                              : undefined
+                          }
+                        >
+                          {renderModelingTitleText(titleMobile ?? "")}
+                        </span>
                       ) : null}
                       {hasDesktopTitle ? (
                         <span className="hidden whitespace-pre-wrap sm:inline">{renderModelingTitleText(title)}</span>
@@ -586,8 +625,16 @@ export function ModelingCardFullBleed({
             {hasDescriptionContent ? (
               <DescriptionTag
                 className={`${descriptionClassName}${
+                  mobilePreviewBodyFontPx != null
+                    ? ` ${MODELING_CMS_MOBILE_BODY_FONT_OVERRIDE_CLASS}`
+                    : ""
+                }${
                   hipHopMobileLayout
-                    ? ` max-sm:mt-[calc(1rem*var(--ms,1))] max-sm:w-[min(100%,calc(280px*var(--ms,1)))] max-sm:max-w-full sm:absolute sm:bottom-[calc(4rem*var(--ms,1))] sm:left-1/2 sm:mt-0 sm:w-[min(100%,calc(560px*var(--ms,1)))] ${
+                    ? ` max-sm:mt-[calc(1rem*var(--ms,1))] ${
+                        mobilePreviewBodyFontPx != null
+                          ? "max-sm:w-[min(100%,calc(560px*var(--ms,1)))] max-sm:max-w-full max-sm:overflow-x-auto"
+                          : "max-sm:w-[min(100%,calc(280px*var(--ms,1)))] max-sm:max-w-full"
+                      } sm:absolute sm:bottom-[calc(4rem*var(--ms,1))] sm:left-1/2 sm:mt-0 sm:w-[min(100%,calc(560px*var(--ms,1)))] ${
                         modelingTabletTierEnabled
                           ? `${offsetActiveClassTriple()} max-sm:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`
                           : `${offsetActiveClassDual()} max-sm:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`
@@ -595,6 +642,11 @@ export function ModelingCardFullBleed({
                     : ` ${modelingTabletTierEnabled ? offsetActiveClassTriple() : offsetActiveClassDual()}`
                 }${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                 style={{
+                  ...(mobilePreviewBodyFontPx != null
+                    ? {
+                        ["--modeling-cms-body-px" as string]: String(mobilePreviewBodyFontPx),
+                      }
+                    : {}),
                   ...(hipHopMobileLayout
                     ? modelingTabletTierEnabled
                       ? tripleOffsetCssVarsOnly(

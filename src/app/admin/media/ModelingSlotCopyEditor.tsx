@@ -10,15 +10,22 @@ import {
 import {
   clampModelingCopyOffset,
   MODELING_COPY_OFFSET_NUDGE_PCT,
+  MODELING_COPY_OFFSET_Y_MAX_PCT,
+  MODELING_COPY_OFFSET_Y_MIN_PCT,
   MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT,
   MODELING_TABLET_COPY_OFFSET_MAX_PCT,
   MODELING_TABLET_COPY_OFFSET_MIN_PCT,
   MODELING_TABLET_COPY_OFFSET_XL_NUDGE_PCT,
 } from "@/constants/modeling-specialization-copy-offset";
+import {
+  clampModelingMobilePreviewBodyFontPx,
+  clampModelingMobilePreviewTitleFontPx,
+} from "@/constants/modeling-specialization-mobile-preview-font";
 import type { AdminModelingSlotRow } from "@/lib/site-media/get-site-media-admin";
 import { MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 
 import { MediaFormSubmitButton } from "./MediaFormSubmitButton";
+import { ModelingMobilePreviewFontControls } from "./ModelingMobilePreviewFontControls";
 import { ModelingSlotFormMessages } from "./ModelingSlotFormMessages";
 import { ModelingWideRangePctOffsetStepper } from "./ModelingWideRangePctOffsetStepper";
 
@@ -53,6 +60,8 @@ type EditorDraft = {
   bodyDesktopOffsetX: number;
   titleMobileOffsetX: number;
   bodyMobileOffsetX: number;
+  mobilePreviewTitleFontPx: number;
+  mobilePreviewBodyFontPx: number;
 };
 
 function toInitialDraft(row: AdminModelingSlotRow): EditorDraft {
@@ -70,6 +79,8 @@ function toInitialDraft(row: AdminModelingSlotRow): EditorDraft {
     bodyDesktopOffsetX: row.bodyDesktopOffsetX,
     titleMobileOffsetX: row.titleMobileOffsetX,
     bodyMobileOffsetX: row.bodyMobileOffsetX,
+    mobilePreviewTitleFontPx: row.mobilePreviewTitleFontPx,
+    mobilePreviewBodyFontPx: row.mobilePreviewBodyFontPx,
   };
 }
 
@@ -100,6 +111,8 @@ export function ModelingSlotCopyEditor({ row }: ModelingSlotCopyEditorProps) {
     row.bodyDesktopOffsetX,
     row.titleMobileOffsetX,
     row.bodyMobileOffsetX,
+    row.mobilePreviewTitleFontPx,
+    row.mobilePreviewBodyFontPx,
   ].join("|");
   return <ModelingSlotCopyEditorContent key={draftResetKey} row={row} />;
 }
@@ -143,6 +156,16 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
       <input type="hidden" name="bodyDesktopOffsetX" value={String(draft.bodyDesktopOffsetX)} />
       <input type="hidden" name="titleMobileOffsetX" value={String(draft.titleMobileOffsetX)} />
       <input type="hidden" name="bodyMobileOffsetX" value={String(draft.bodyMobileOffsetX)} />
+      <input
+        type="hidden"
+        name="mobilePreviewTitleFontPx"
+        value={String(draft.mobilePreviewTitleFontPx)}
+      />
+      <input
+        type="hidden"
+        name="mobilePreviewBodyFontPx"
+        value={String(draft.mobilePreviewBodyFontPx)}
+      />
       <div className="rounded-lg border border-slate-200 bg-slate-50/70">
         <button
           type="button"
@@ -403,9 +426,29 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
               <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50/80 p-4">
                 <p className="text-sm font-semibold text-slate-900">Live position preview</p>
                 <p className="mt-1 text-xs text-slate-500">
-                  Up/Down moves vertical text by {MODELING_COPY_OFFSET_NUDGE_PCT}% per click. Horizontal
-                  uses the stepper above. Preview updates instantly.
+                  Up/Down moves vertical text by {MODELING_COPY_OFFSET_NUDGE_PCT}% per click (clamped to{" "}
+                  {MODELING_COPY_OFFSET_Y_MIN_PCT}…{MODELING_COPY_OFFSET_Y_MAX_PCT}%). Horizontal uses the
+                  stepper above. Preview updates instantly.
                 </p>
+                <div className="mt-3">
+                  <ModelingMobilePreviewFontControls
+                    titleFontPx={draft.mobilePreviewTitleFontPx}
+                    bodyFontPx={draft.mobilePreviewBodyFontPx}
+                    disabled={isPending}
+                    onTitleFontPxChange={(next) =>
+                      setDraft((prev) => ({
+                        ...prev,
+                        mobilePreviewTitleFontPx: clampModelingMobilePreviewTitleFontPx(next),
+                      }))
+                    }
+                    onBodyFontPxChange={(next) =>
+                      setDraft((prev) => ({
+                        ...prev,
+                        mobilePreviewBodyFontPx: clampModelingMobilePreviewBodyFontPx(next),
+                      }))
+                    }
+                  />
+                </div>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   <div className="rounded-lg border border-slate-200 bg-white p-3">
                     <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
@@ -436,17 +479,21 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                     </p>
                     <div className="relative mt-2 min-h-[180px] overflow-hidden rounded-md border border-slate-100 bg-slate-50 p-3">
                       <h4
-                        className="whitespace-pre-wrap text-base font-semibold text-slate-900 transition-transform duration-150"
+                        className="whitespace-pre-wrap font-semibold text-slate-900 transition-transform duration-150"
                         style={{
                           transform: `translate(${draft.titleMobileOffsetX}%, ${draft.titleMobileOffsetY}%)`,
+                          fontSize: `${draft.mobilePreviewTitleFontPx}px`,
+                          lineHeight: 1.3,
                         }}
                       >
                         {draft.titleMobile || "Mobile title"}
                       </h4>
                       <p
-                        className="mt-2 whitespace-pre-wrap text-sm text-slate-700 transition-transform duration-150"
+                        className="mt-2 whitespace-pre-wrap text-slate-700 transition-transform duration-150"
                         style={{
                           transform: `translate(${draft.bodyMobileOffsetX}%, ${draft.bodyMobileOffsetY}%)`,
+                          fontSize: `${draft.mobilePreviewBodyFontPx}px`,
+                          lineHeight: 1.35,
                         }}
                       >
                         {draft.bodyMobile || "Mobile description"}

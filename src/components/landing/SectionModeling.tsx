@@ -12,6 +12,7 @@ import {
   ModelingBlockHeritage,
 } from "./modeling";
 
+import "./modeling/modeling-cms-mobile-font.css";
 import "./modeling/modeling-section-scale.css";
 
 type SectionModelingProps = {
@@ -67,6 +68,12 @@ export function SectionModeling({
             bodyMobileOffsetX={modeling[MODELING_SLOT_KEYS.HIP_HOP].bodyMobileOffsetX}
             bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.HIP_HOP].bodyTabletOffsetY}
             bodyTabletOffsetX={modeling[MODELING_SLOT_KEYS.HIP_HOP].bodyTabletOffsetX}
+            mobilePreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.HIP_HOP].mobilePreviewTitleFontPx
+            }
+            mobilePreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.HIP_HOP].mobilePreviewBodyFontPx
+            }
           />
           <ModelingBlockBridal
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.BRIDAL].desktop}
@@ -96,6 +103,12 @@ export function SectionModeling({
             bodyMobileOffsetX={modeling[MODELING_SLOT_KEYS.BRIDAL].bodyMobileOffsetX}
             bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.BRIDAL].bodyTabletOffsetY}
             bodyTabletOffsetX={modeling[MODELING_SLOT_KEYS.BRIDAL].bodyTabletOffsetX}
+            mobilePreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.BRIDAL].mobilePreviewTitleFontPx
+            }
+            mobilePreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.BRIDAL].mobilePreviewBodyFontPx
+            }
           />
           <ModelingBlockPortrait
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.PORTRAIT].desktop}
@@ -126,6 +139,12 @@ export function SectionModeling({
             bodyMobileOffsetX={modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyMobileOffsetX}
             bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyTabletOffsetY}
             bodyTabletOffsetX={modeling[MODELING_SLOT_KEYS.PORTRAIT].bodyTabletOffsetX}
+            mobilePreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.PORTRAIT].mobilePreviewTitleFontPx
+            }
+            mobilePreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.PORTRAIT].mobilePreviewBodyFontPx
+            }
           />
           <ModelingBlockMechanical
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.MECHANICAL].desktop}
@@ -156,6 +175,12 @@ export function SectionModeling({
             bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyTabletOffsetY}
             bodyTabletOffsetX={modeling[MODELING_SLOT_KEYS.MECHANICAL].bodyTabletOffsetX}
             isAndroidViewport={isAndroidViewport}
+            mobilePreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.MECHANICAL].mobilePreviewTitleFontPx
+            }
+            mobilePreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.MECHANICAL].mobilePreviewBodyFontPx
+            }
           />
           <ModelingBlockHeritage
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HERITAGE].desktop}
@@ -185,6 +210,12 @@ export function SectionModeling({
             bodyMobileOffsetX={modeling[MODELING_SLOT_KEYS.HERITAGE].bodyMobileOffsetX}
             bodyTabletOffsetY={modeling[MODELING_SLOT_KEYS.HERITAGE].bodyTabletOffsetY}
             bodyTabletOffsetX={modeling[MODELING_SLOT_KEYS.HERITAGE].bodyTabletOffsetX}
+            mobilePreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.HERITAGE].mobilePreviewTitleFontPx
+            }
+            mobilePreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.HERITAGE].mobilePreviewBodyFontPx
+            }
           />
           <ModelingBlockHighJewelry
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].desktop}
@@ -219,6 +250,12 @@ export function SectionModeling({
             }
             tabletLine1Emphasis={
               modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].tabletLine1Emphasis
+            }
+            mobilePreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].mobilePreviewTitleFontPx
+            }
+            mobilePreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].mobilePreviewBodyFontPx
             }
           />
           </div>

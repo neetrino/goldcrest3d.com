@@ -78,6 +78,8 @@ export function ModelingCard({
   mobilePortraitTypography = false,
   imageFillClassName = "object-cover object-center",
   imageFillClassNameDesktop = "object-contain",
+  mobilePreviewTitleFontPx,
+  mobilePreviewBodyFontPx,
 }: ModelingCardProps) {
   const hasNonEmptyLines = (lines: string[] | undefined): boolean =>
     Boolean(lines?.some((line) => line.trim().length > 0));
@@ -116,14 +118,14 @@ export function ModelingCard({
     ? "leading-[calc(22px*var(--ms,1)*var(--mt,1))]"
     : "leading-[calc(22px*var(--ms,1)*var(--mt,1))] whitespace-nowrap";
   const hipHopMobileLineClass =
-    "block whitespace-normal leading-[calc(16px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
+    "block whitespace-normal leading-[calc(13px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
   const hipHopMobileLineSingleLineClass =
-    "block max-sm:whitespace-nowrap leading-[calc(16px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
+    "block max-sm:whitespace-nowrap leading-[calc(13px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
   const bridalRowWrapperClass = bridalMobileLayout
     ? "flex w-full flex-col items-end gap-2 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-4 sm:gap-y-1"
     : "flex flex-wrap items-baseline gap-x-4 gap-y-1";
   const bridalRowSpanClass = bridalMobileLayout
-    ? "max-sm:!m-0 max-sm:!translate-x-0 max-sm:block max-sm:w-[calc(291px*var(--ms,1))] max-sm:max-w-full max-sm:text-left max-sm:font-sans max-sm:text-[calc(12px*var(--ms,1)*var(--mt,1))] max-sm:font-light max-sm:!leading-[calc(1rem*var(--ms,1)*var(--mt,1))] max-sm:text-[#364153] sm:inline"
+    ? "max-sm:!m-0 max-sm:!translate-x-0 max-sm:block max-sm:w-[calc(291px*var(--ms,1))] max-sm:max-w-full max-sm:text-left max-sm:font-sans max-sm:text-[calc(12px*var(--ms,1)*var(--mt,1))] max-sm:font-light max-sm:text-[#364153] sm:inline"
     : "";
   const bridalRowSpanClassDesktop = `${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""}`;
 
@@ -161,6 +163,8 @@ export function ModelingCard({
     bridalRowWrapperClass,
     bridalRowSpanClass,
     bridalRowSpanClassDesktop,
+    hipHopMobileCmsNoWrapLines:
+      hipHopMobileLayout && mobilePreviewBodyFontPx != null,
   });
 
   const DescriptionTag = hasLines ? "div" : "p";
@@ -302,6 +306,8 @@ export function ModelingCard({
         descriptionContent={descriptionContent}
         hasDescriptionContent={hasDescriptionContent}
         DescriptionTag={DescriptionTag}
+        mobilePreviewTitleFontPx={mobilePreviewTitleFontPx}
+        mobilePreviewBodyFontPx={mobilePreviewBodyFontPx}
       />
     );
   }

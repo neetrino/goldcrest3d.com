@@ -6,6 +6,12 @@ import {
   MODELING_TABLET_COPY_OFFSET_MAX_PCT,
   MODELING_TABLET_COPY_OFFSET_MIN_PCT,
 } from "@/constants/modeling-specialization-copy-offset";
+import {
+  MODELING_MOBILE_PREVIEW_BODY_FONT_PX_MAX,
+  MODELING_MOBILE_PREVIEW_BODY_FONT_PX_MIN,
+  MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_MAX,
+  MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_MIN,
+} from "@/constants/modeling-specialization-mobile-preview-font";
 import { MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 
 const MAX_TITLE_LEN = 280;
@@ -31,6 +37,30 @@ const wideRangeCopyOffsetXField = z.coerce
     `Offset must be <= ${MODELING_TABLET_COPY_OFFSET_MAX_PCT}`,
   );
 
+const mobilePreviewTitleFontPxField = z.coerce
+  .number()
+  .int("Title size must be an integer.")
+  .min(
+    MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_MIN,
+    `Title size must be >= ${MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_MIN}px`,
+  )
+  .max(
+    MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_MAX,
+    `Title size must be <= ${MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_MAX}px`,
+  );
+
+const mobilePreviewBodyFontPxField = z.coerce
+  .number()
+  .int("Description size must be an integer.")
+  .min(
+    MODELING_MOBILE_PREVIEW_BODY_FONT_PX_MIN,
+    `Description size must be >= ${MODELING_MOBILE_PREVIEW_BODY_FONT_PX_MIN}px`,
+  )
+  .max(
+    MODELING_MOBILE_PREVIEW_BODY_FONT_PX_MAX,
+    `Description size must be <= ${MODELING_MOBILE_PREVIEW_BODY_FONT_PX_MAX}px`,
+  );
+
 export const modelingSpecializationCopyFormSchema = z.object({
   slotKey: z
     .string()
@@ -50,4 +80,6 @@ export const modelingSpecializationCopyFormSchema = z.object({
   desktopLine1Emphasis: z
     .string()
     .max(MAX_TITLE_LEN, `Desktop emphasized fragment max ${MAX_TITLE_LEN} chars`),
+  mobilePreviewTitleFontPx: mobilePreviewTitleFontPxField,
+  mobilePreviewBodyFontPx: mobilePreviewBodyFontPxField,
 });

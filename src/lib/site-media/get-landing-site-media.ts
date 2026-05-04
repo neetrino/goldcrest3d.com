@@ -1,5 +1,9 @@
 import { LANDING_IMAGE_IDS } from "@/constants";
 import {
+  MODELING_MOBILE_PREVIEW_BODY_FONT_PX_DEFAULT,
+  MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
+} from "@/constants/modeling-specialization-mobile-preview-font";
+import {
   EMPTY_FOOTER_SOCIAL_LINKS,
   FOOTER_SOCIAL_KEYS,
   type FooterSocialLinks,
@@ -76,6 +80,9 @@ export type ModelingSlotResolvedMedia = {
   bodyTabletOffsetX: number;
   desktopLine1Emphasis: string;
   tabletLine1Emphasis: string;
+  /** Mobile (< md) title/body font sizes from CMS; scales with section --ms/--mt. */
+  mobilePreviewTitleFontPx: number;
+  mobilePreviewBodyFontPx: number;
 };
 
 export type LandingModelingMedia = Record<ModelingSlotKey, ModelingSlotResolvedMedia>;
@@ -267,6 +274,10 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
             bodyTabletOffsetX: row.bodyTabletOffsetX ?? 0,
             desktopLine1Emphasis: row.desktopLine1Emphasis ?? "",
             tabletLine1Emphasis: row.tabletLine1Emphasis ?? "",
+            mobilePreviewTitleFontPx:
+              row.mobilePreviewTitleFontPx ?? MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
+            mobilePreviewBodyFontPx:
+              row.mobilePreviewBodyFontPx ?? MODELING_MOBILE_PREVIEW_BODY_FONT_PX_DEFAULT,
           }),
         },
       ]),
@@ -300,6 +311,8 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
           bodyTabletOffsetX: copy.bodyTabletOffsetX,
           desktopLine1Emphasis: copy.desktopLine1Emphasis,
           tabletLine1Emphasis: copy.tabletLine1Emphasis,
+          mobilePreviewTitleFontPx: copy.mobilePreviewTitleFontPx,
+          mobilePreviewBodyFontPx: copy.mobilePreviewBodyFontPx,
         };
         continue;
       }
@@ -332,6 +345,8 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
         bodyTabletOffsetX: copy.bodyTabletOffsetX,
         desktopLine1Emphasis: copy.desktopLine1Emphasis,
         tabletLine1Emphasis: copy.tabletLine1Emphasis,
+        mobilePreviewTitleFontPx: copy.mobilePreviewTitleFontPx,
+        mobilePreviewBodyFontPx: copy.mobilePreviewBodyFontPx,
       };
     }
     const manufacturingDesktop = buildManufacturingIntelligenceContent(
@@ -432,6 +447,8 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
       bodyTabletOffsetX: copy.bodyTabletOffsetX,
       desktopLine1Emphasis: copy.desktopLine1Emphasis,
       tabletLine1Emphasis: copy.tabletLine1Emphasis,
+      mobilePreviewTitleFontPx: copy.mobilePreviewTitleFontPx,
+      mobilePreviewBodyFontPx: copy.mobilePreviewBodyFontPx,
     };
   }
   const manufacturingDesktop = buildManufacturingIntelligenceContent([], []);

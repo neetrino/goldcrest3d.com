@@ -2,6 +2,8 @@
  * Shared constants.
  */
 
+export { CUSTOMER_SUPPORT_INBOX_EMAIL } from "./customer-support-inbox";
+
 /** Landing section IDs — used for nav scroll anchors and section id attributes */
 export const LANDING_SECTION_IDS = {
   HERO: "hero",

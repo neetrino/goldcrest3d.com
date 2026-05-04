@@ -2,6 +2,12 @@ import {
   clampModelingCopyOffset,
   clampModelingTabletCopyOffset,
 } from "@/constants/modeling-specialization-copy-offset";
+import {
+  clampModelingMobilePreviewBodyFontPx,
+  clampModelingMobilePreviewTitleFontPx,
+  MODELING_MOBILE_PREVIEW_BODY_FONT_PX_DEFAULT,
+  MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
+} from "@/constants/modeling-specialization-mobile-preview-font";
 
 import type {
   ModelingSpecializationCopyPayload,
@@ -40,6 +46,12 @@ export function normalizeModelingSpecializationCopyPayload(
     bodyTabletOffsetX: clampModelingTabletCopyOffset(payload.bodyTabletOffsetX),
     desktopLine1Emphasis: normalizeSingleLineValue(payload.desktopLine1Emphasis),
     tabletLine1Emphasis: normalizeSingleLineValue(payload.tabletLine1Emphasis),
+    mobilePreviewTitleFontPx: clampModelingMobilePreviewTitleFontPx(
+      payload.mobilePreviewTitleFontPx,
+    ),
+    mobilePreviewBodyFontPx: clampModelingMobilePreviewBodyFontPx(
+      payload.mobilePreviewBodyFontPx,
+    ),
   };
 }
 
@@ -76,5 +88,7 @@ export function emptyModelingSpecializationCopyRow(
     bodyTabletOffsetX: 0,
     desktopLine1Emphasis: "",
     tabletLine1Emphasis: "",
+    mobilePreviewTitleFontPx: MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
+    mobilePreviewBodyFontPx: MODELING_MOBILE_PREVIEW_BODY_FONT_PX_DEFAULT,
   };
 }

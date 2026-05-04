@@ -12,6 +12,11 @@ import {
   modelingCopyTranslatePercent,
   modelingTitleForLgViewport,
 } from "./modeling-card.constants";
+import {
+  mergeCssProperties,
+  modelingCmsMobileBodyFontStyle,
+  modelingCmsMobileTitleFontStyle,
+} from "./modeling-cms-mobile-font-style";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
 /** Mobile-only overlay nudge down (`max-sm:translate-y`); paired with `--mechanical-overlay-ty`. */
@@ -49,6 +54,8 @@ type ModelingBlockMechanicalProps = {
   bodyTabletOffsetY: number;
   bodyTabletOffsetX: number;
   isAndroidViewport: boolean;
+  mobilePreviewTitleFontPx: number;
+  mobilePreviewBodyFontPx: number;
 };
 
 /** Mechanical & Lock Systems block. Full-bleed image with title and description overlay. */
@@ -75,6 +82,8 @@ export function ModelingBlockMechanical({
   bodyTabletOffsetY,
   bodyTabletOffsetX,
   isAndroidViewport,
+  mobilePreviewTitleFontPx,
+  mobilePreviewBodyFontPx,
 }: ModelingBlockMechanicalProps) {
   const [isAndroidClient] = useState(() => {
     if (typeof navigator === "undefined") {
@@ -153,9 +162,12 @@ export function ModelingBlockMechanical({
               {hasMobileTitle ? (
                 <span
                   className={`block whitespace-pre-wrap md:hidden ${TITLE_LINE1_TABLET_NUDGE_UP_CLASS}`}
-                  style={{
-                    transform: modelingCopyTranslatePercent(titleMobileOffsetX, titleMobileOffsetY),
-                  }}
+                  style={mergeCssProperties(
+                    {
+                      transform: modelingCopyTranslatePercent(titleMobileOffsetX, titleMobileOffsetY),
+                    },
+                    modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx),
+                  )}
                 >
                   {renderModelingTitleText(titleMobile)}
                 </span>
@@ -187,10 +199,13 @@ export function ModelingBlockMechanical({
         ) : null}
         {descriptionLinesMobile.length > 0 ? (
           <p
-            className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(1rem*var(--ms,1)*var(--mt,1))] md:hidden"
-            style={{
-              transform: modelingCopyTranslatePercent(bodyMobileOffsetX, bodyMobileOffsetY),
-            }}
+            className="w-[calc(283px*var(--ms,1))] max-w-full shrink-0 text-left font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(0.8125rem*var(--ms,1)*var(--mt,1))] md:hidden"
+            style={mergeCssProperties(
+              {
+                transform: modelingCopyTranslatePercent(bodyMobileOffsetX, bodyMobileOffsetY),
+              },
+              modelingCmsMobileBodyFontStyle(mobilePreviewBodyFontPx),
+            )}
           >
             {descriptionLinesMobile.map((line, i) => (
               <span key={i} className="block">
