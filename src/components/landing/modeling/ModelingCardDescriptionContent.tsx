@@ -63,6 +63,11 @@ export type ModelingCardDescriptionContentParams = Pick<
   bridalRowWrapperClass: string;
   bridalRowSpanClass: string;
   bridalRowSpanClassDesktop: string;
+  /**
+   * When CMS mobile body size is active on Hip-Hop: avoid soft-wrapping inside each line
+   * (narrow 280px column + `whitespace-normal` forced extra breaks when font is large).
+   */
+  hipHopMobileCmsNoWrapLines?: boolean;
 };
 
 function renderHipHopBreakpointDesktopLines(
@@ -118,6 +123,7 @@ export function renderModelingCardDescriptionContent(
     hipHopMobileLineSingleLineClass,
     bridalRowWrapperClass,
     bridalRowSpanClass,
+    hipHopMobileCmsNoWrapLines = false,
   } = p;
 
   if (!hasLines || !descriptionLines) {
@@ -277,7 +283,7 @@ export function renderModelingCardDescriptionContent(
                 return (
                   <span
                     key={i}
-                    className={`${hipHopMobileLineClass} ${forceSingleLineOnMobile ? "max-md:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-md:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
+                    className={`${hipHopMobileLineClass} ${hipHopMobileCmsNoWrapLines ? "!whitespace-nowrap" : ""} ${forceSingleLineOnMobile ? "max-md:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-md:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
                   >
                     {renderModelingCopyLine(line)}
                   </span>
@@ -326,7 +332,7 @@ export function renderModelingCardDescriptionContent(
               return (
                 <span
                   key={i}
-                  className={`${hipHopMobileLineClass} ${forceSingleLineOnMobile ? "max-sm:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-sm:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
+                  className={`${hipHopMobileLineClass} ${hipHopMobileCmsNoWrapLines ? "!whitespace-nowrap" : ""} ${forceSingleLineOnMobile ? "max-sm:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-sm:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
                 >
                   {renderModelingCopyLine(line)}
                 </span>

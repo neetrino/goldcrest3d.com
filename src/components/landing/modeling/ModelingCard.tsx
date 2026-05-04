@@ -163,6 +163,8 @@ export function ModelingCard({
     bridalRowWrapperClass,
     bridalRowSpanClass,
     bridalRowSpanClassDesktop,
+    hipHopMobileCmsNoWrapLines:
+      hipHopMobileLayout && mobilePreviewBodyFontPx != null,
   });
 
   const DescriptionTag = hasLines ? "div" : "p";

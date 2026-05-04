@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { R2_PREFIXES } from "@/constants";
+import { CUSTOMER_SUPPORT_INBOX_EMAIL, R2_PREFIXES } from "@/constants";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { getAppOrigin, getOrderPaymentUrl } from "@/lib/appUrl";
@@ -398,6 +398,7 @@ function buildPaymentLinkEmailPayload(
   const siteLinkHref = siteOrigin || `https://${siteHostname}`;
   const { clientName, productTitle } = order;
   const productQuoted = `"${productTitle}"`;
+  const contactEmail = CUSTOMER_SUPPORT_INBOX_EMAIL;
 
   const text = [
     `Hello ${clientName},`,
@@ -412,6 +413,7 @@ function buildPaymentLinkEmailPayload(
     `• Total Amount: ${priceLabel}`,
     "",
     "If you have any questions regarding your order, feel free to reply to this email.",
+    contactEmail,
     "",
     "Best regards,",
     "The Goldcrest 3D Team",
@@ -425,7 +427,7 @@ function buildPaymentLinkEmailPayload(
     `<p><a href="${escapeHtml(paymentUrl)}">Pay Now</a></p>`,
     `<p>Order Details:</p>`,
     `<p>• Product: ${escapeHtml(productTitle)}<br>• Total Amount: ${escapeHtml(priceLabel)}</p>`,
-    `<p>If you have any questions regarding your order, feel free to reply to this email.</p>`,
+    `<p>If you have any questions regarding your order, feel free to reply to this email.<br><a href="mailto:${escapeHtml(contactEmail)}">${escapeHtml(contactEmail)}</a></p>`,
     `<p>Best regards,<br>The Goldcrest 3D Team<br><a href="${escapeHtml(siteLinkHref)}">${escapeHtml(siteHostname)}</a></p>`,
   ].join("");
 

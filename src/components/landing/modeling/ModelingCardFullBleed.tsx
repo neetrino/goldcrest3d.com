@@ -630,7 +630,11 @@ export function ModelingCardFullBleed({
                     : ""
                 }${
                   hipHopMobileLayout
-                    ? ` max-sm:mt-[calc(1rem*var(--ms,1))] max-sm:w-[min(100%,calc(280px*var(--ms,1)))] max-sm:max-w-full sm:absolute sm:bottom-[calc(4rem*var(--ms,1))] sm:left-1/2 sm:mt-0 sm:w-[min(100%,calc(560px*var(--ms,1)))] ${
+                    ? ` max-sm:mt-[calc(1rem*var(--ms,1))] ${
+                        mobilePreviewBodyFontPx != null
+                          ? "max-sm:w-[min(100%,calc(560px*var(--ms,1)))] max-sm:max-w-full max-sm:overflow-x-auto"
+                          : "max-sm:w-[min(100%,calc(280px*var(--ms,1)))] max-sm:max-w-full"
+                      } sm:absolute sm:bottom-[calc(4rem*var(--ms,1))] sm:left-1/2 sm:mt-0 sm:w-[min(100%,calc(560px*var(--ms,1)))] ${
                         modelingTabletTierEnabled
                           ? `${offsetActiveClassTriple()} max-sm:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`
                           : `${offsetActiveClassDual()} max-sm:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`

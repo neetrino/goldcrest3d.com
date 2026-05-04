@@ -2,6 +2,8 @@
  * Resend outbound identity: `from` and customer `replyTo` from env (with inbox default).
  */
 
+import { CUSTOMER_SUPPORT_INBOX_EMAIL } from "@/constants/customer-support-inbox";
+
 const DEFAULT_FROM_DISPLAY_NAME = "GoldCrest";
 
 const DEV_FALLBACK_FROM = `${DEFAULT_FROM_DISPLAY_NAME} <onboarding@resend.dev>`;
@@ -10,7 +12,7 @@ const DEV_FALLBACK_FROM = `${DEFAULT_FROM_DISPLAY_NAME} <onboarding@resend.dev>`
  * When `RESEND_REPLY_TO_EMAILS` is unset or empty, customer-facing mail uses this Reply-To
  * so the mail client "Reply" targets the team inbox (independent of `RESEND_FROM_EMAIL`).
  */
-const DEFAULT_CUSTOMER_REPLY_TO_EMAIL = "info@goldcrest3d.com";
+const DEFAULT_CUSTOMER_REPLY_TO_EMAIL = CUSTOMER_SUPPORT_INBOX_EMAIL;
 
 /** Resend `from`: use full "Name <addr>" from env, or wrap plain email with display name. */
 export function getResendFromHeader(): string {

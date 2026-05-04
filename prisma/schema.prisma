@@ -152,7 +152,7 @@ model ModelingSpecializationCopy {
   titleMobile           String?  @db.Text
   bodyDesktop           String?  @db.Text
   bodyMobile            String?  @db.Text
-  /// Copy vertical offsets (ints): CSS translateY percentage, typically -500…500.
+  /// Copy vertical offsets (ints): CSS translateY percentage, typically -1500…1500.
   titleDesktopOffsetY   Int      @default(0)
   titleMobileOffsetY    Int      @default(0)
   bodyDesktopOffsetY    Int      @default(0)
