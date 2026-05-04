@@ -115,7 +115,7 @@ export function OrderNewForm({ leadEmails = [] }: OrderNewFormProps) {
           htmlFor="order-priceCents"
           className="block text-sm font-medium text-[var(--foreground)]"
         >
-          Price (AMD)
+          Price ($)
         </label>
         <input
           id="order-priceCents"

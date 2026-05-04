@@ -4,7 +4,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
 import { getR2PublicUrl } from "@/lib/storage";
-import { formatPriceAmd } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatPrice";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
 import {
   ADMIN_ORDER_PAYMENT_BADGE_KIND,
@@ -86,10 +86,10 @@ export default async function AdminOrderDetailPage({ params }: Props) {
               Price
             </dt>
             <dd className="mt-0.5 font-medium">
-              {formatPriceAmd(order.priceCents)} AMD
+              {formatPrice(order.priceCents)}
               {order.paidCents > 0 && (
                 <span className="ml-2 text-sm font-normal text-neutral-500">
-                  (Paid: {formatPriceAmd(order.paidCents)} AMD)
+                  (Paid: {formatPrice(order.paidCents)})
                 </span>
               )}
             </dd>

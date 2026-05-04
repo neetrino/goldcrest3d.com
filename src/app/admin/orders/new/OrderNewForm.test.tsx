@@ -26,7 +26,7 @@ describe("OrderNewForm", () => {
     expect(screen.getByLabelText(/client email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/product title/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/product image \(optional\)/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/price \(amd\)/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/price \(\$\)/i)).toBeInTheDocument();
     expect(screen.getByRole("radio", { name: /full-only link/i })).toBeChecked();
     expect(
       screen.getByRole("radio", { name: /50\/50-enabled link/i }),

@@ -5,7 +5,7 @@ import {
   completeMockPayment,
   type MockPaymentOutcome,
 } from "@/app/actions/mock-payment";
-import { formatPriceAmd } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatPrice";
 
 type Props = {
   orderId: string;
@@ -59,7 +59,7 @@ export function MockPaymentClient({
         <h2 className="text-lg font-semibold text-neutral-900">{productTitle}</h2>
         <p className="mt-1 text-sm text-neutral-600">
           Amount for this step:{" "}
-          <span className="font-medium text-neutral-900">{formatPriceAmd(amountCents)} AMD</span>
+          <span className="font-medium text-neutral-900">{formatPrice(amountCents)}</span>
         </p>
       </div>
 

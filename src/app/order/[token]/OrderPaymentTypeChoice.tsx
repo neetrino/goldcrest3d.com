@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { setOrderPaymentTypeByToken } from "@/app/actions/orderPaymentChoice";
-import { formatPriceAmd } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatPrice";
 
 type Props = {
   token: string;
@@ -52,7 +52,7 @@ export function OrderPaymentTypeChoice({ token, totalCents }: Props) {
         >
           <span className="font-medium text-neutral-900">Pay in full</span>
           <span className="mt-0.5 text-sm text-neutral-600">
-            Pay {formatPriceAmd(totalCents)} AMD in one payment.
+            Pay {formatPrice(totalCents)} in one payment.
           </span>
         </button>
         <button
@@ -65,8 +65,8 @@ export function OrderPaymentTypeChoice({ token, totalCents }: Props) {
             Pay 50% now / split payment
           </span>
           <span className="mt-0.5 text-sm text-neutral-600">
-            Pay {formatPriceAmd(half)} AMD now, then {formatPriceAmd(totalCents - half)}{" "}
-            AMD for the remainder.
+            Pay {formatPrice(half)} now, then {formatPrice(totalCents - half)} for the
+            remainder.
           </span>
         </button>
       </div>

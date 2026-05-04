@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/db";
 import { getR2PublicUrl } from "@/lib/storage";
-import { formatPriceAmd } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatPrice";
 import { ORDER_STATUS } from "@/constants/order-status";
 import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
@@ -104,17 +104,17 @@ export default async function OrderPaymentPage({ params, searchParams }: Props) 
         <dl className="mt-6 space-y-3">
           <div className="flex justify-between text-sm">
             <dt className="text-neutral-500">Total</dt>
-            <dd className="font-medium">{formatPriceAmd(total)} AMD</dd>
+            <dd className="font-medium">{formatPrice(total)}</dd>
           </div>
           <div className="flex justify-between text-sm">
             <dt className="text-neutral-500">Paid</dt>
-            <dd className="font-medium text-green-600">{formatPriceAmd(paid)} AMD</dd>
+            <dd className="font-medium text-green-600">{formatPrice(paid)}</dd>
           </div>
           {!isPaid && (
             <div className="flex justify-between text-sm">
               <dt className="text-neutral-500">Remaining</dt>
               <dd className="font-medium text-amber-600">
-                {formatPriceAmd(remaining)} AMD
+                {formatPrice(remaining)}
               </dd>
             </div>
           )}

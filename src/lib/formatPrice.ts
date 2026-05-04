@@ -1,10 +1,12 @@
 /**
- * Format an AMD amount stored as whole drams (integer in DB / UI).
+ * Format a whole-unit amount for display (same integer scale as DB `priceCents` / `paidCents`).
+ * Uses a dollar sign; numeric value is unchanged.
  */
-export function formatPriceAmd(amountAmd: number): string {
-  return new Intl.NumberFormat("en-GB", {
-    style: "decimal",
+export function formatPrice(amountWholeUnits: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(Math.round(amountAmd));
+  }).format(Math.round(amountWholeUnits));
 }

@@ -12,7 +12,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane Doe",
       clientEmail: "jane@example.com",
       productTitle: "Custom bracket",
-      priceAmd: 15000,
+      priceAmount: 15000,
       paymentType: "FULL",
     });
     expect(result.success).toBe(true);
@@ -23,7 +23,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane Doe",
       clientEmail: "jane@example.com",
       productTitle: "Custom bracket",
-      priceAmd: 20000,
+      priceAmount: 20000,
       paymentType: "SPLIT",
     });
     expect(result.success).toBe(true);
@@ -34,7 +34,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Sample",
-      priceAmd: 0,
+      priceAmount: 0,
       paymentType: "FULL",
     });
     expect(result.success).toBe(true);
@@ -45,7 +45,7 @@ describe("orderFormSchema", () => {
       clientName: "",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmd: 100,
+      priceAmount: 100,
       paymentType: "FULL",
     });
     expect(result.success).toBe(false);
@@ -56,29 +56,29 @@ describe("orderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "invalid",
       productTitle: "Product",
-      priceAmd: 100,
+      priceAmount: 100,
       paymentType: "FULL",
     });
     expect(result.success).toBe(false);
   });
 
-  it("rejects negative priceAmd", () => {
+  it("rejects negative priceAmount", () => {
     const result = orderFormSchema.safeParse({
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmd: -100,
+      priceAmount: -100,
       paymentType: "FULL",
     });
     expect(result.success).toBe(false);
   });
 
-  it("rejects non-integer priceAmd", () => {
+  it("rejects non-integer priceAmount", () => {
     const result = orderFormSchema.safeParse({
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmd: 99.5,
+      priceAmount: 99.5,
       paymentType: "FULL",
     });
     expect(result.success).toBe(false);
@@ -89,7 +89,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmd: 100,
+      priceAmount: 100,
       paymentType: "HALF",
     });
     expect(result.success).toBe(false);
@@ -100,7 +100,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmd: 100,
+      priceAmount: 100,
     });
     expect(result.success).toBe(false);
   });
@@ -112,7 +112,7 @@ describe("createOrderFormSchema", () => {
       clientName: "Jane Doe",
       clientEmail: "jane@example.com",
       productTitle: "Custom bracket",
-      priceAmd: 15000,
+      priceAmount: 15000,
       paymentLinkMode: "FULL_ONLY",
     });
     expect(result.success).toBe(true);
@@ -123,7 +123,7 @@ describe("createOrderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "invalid",
       productTitle: "Product",
-      priceAmd: 100,
+      priceAmount: 100,
       paymentLinkMode: "SPLIT_ENABLED",
     });
     expect(result.success).toBe(false);
@@ -134,7 +134,7 @@ describe("createOrderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmd: 100,
+      priceAmount: 100,
     });
     expect(result.success).toBe(false);
   });

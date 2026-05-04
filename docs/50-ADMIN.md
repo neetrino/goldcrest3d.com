@@ -98,7 +98,7 @@ src/app/admin/
 
 ### 5.1 Ցանկ (`/admin/orders`)
 - `prisma.order.findMany({ orderBy: { createdAt: 'desc' } })`
-- Յուրաքանչյուր order: clientName, clientEmail, productTitle, priceCents (AMD), paymentType, status (PAID/Pending), createdAt
+- Յուրաքանչյուր order: clientName, clientEmail, productTitle, priceCents (whole units, UI-ում $), paymentType, status (PAID/Pending), createdAt
 - Կոճակ «New order» → `/admin/orders/new`
 
 ### 5.2 Նոր պատվեր (`/admin/orders/new`)
