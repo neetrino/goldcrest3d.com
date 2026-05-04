@@ -87,10 +87,10 @@ model Order {
   clientEmail   String
   productTitle  String
   productImageKey String? // R2 key
-  priceCents    Int      // order total in whole AMD (legacy column name)
+  priceCents    Int      // order total in whole major units (legacy column name)
   paymentLinkMode String @default("FULL_ONLY") // FULL_ONLY | SPLIT_ENABLED (admin-controlled link options)
   paymentType   String   // FULL | SPLIT | UNSET (UNSET until client chooses)
-  paidCents     Int      @default(0) // paid total in whole AMD (Stripe minor → /100)
+  paidCents     Int      @default(0) // paid total in whole major units (Stripe minor ÷ factor)
   status        String   @default("PENDING") // PENDING | PAYMENT_PROCESSING | PAID
   /// Set when the payment link email was successfully sent (admin action).
   paymentLinkSentAt DateTime?

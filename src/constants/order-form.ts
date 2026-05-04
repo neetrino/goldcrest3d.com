@@ -5,6 +5,7 @@
 export const FORM_FIELD_PRODUCT_IMAGE = "productImage";
 
 /**
- * Stripe AMD amounts use minor units (1 dram = 100). DB `priceCents` / `paidCents` use whole drams.
+ * Stripe minor units per major unit for the checkout currency (e.g. 100).
+ * DB `priceCents` / `paidCents` store whole major units.
  */
-export const AMD_MINOR_UNITS_PER_DRAM = 100;
+export const STRIPE_MINOR_UNITS_PER_MAJOR_UNIT = 100;

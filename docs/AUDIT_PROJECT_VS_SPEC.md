@@ -36,7 +36,7 @@
 
 - **Admin — Orders module (4)**  
   - Orders list. `admin/orders` + «New order» link.  
-  - Add New Order. `admin/orders/new` + `OrderNewForm`: Client name, Client email, Product title, Product image (upload), Custom price (AMD), Payment type (FULL / SPLIT). Save → Prisma `Order` create, redirect to order detail.  
+  - Add New Order. `admin/orders/new` + `OrderNewForm`: Client name, Client email, Product title, Product image (upload), Custom price ($), Payment type (FULL / SPLIT). Save → Prisma `Order` create, redirect to order detail.  
   - Order detail. `admin/orders/[id]` — ցուցադրում է order-ի բոլոր դաշտերը + product image link.  
   - Edit order. `OrderEditForm` — update նույն դաշտերով.  
   - Delete. `DeleteOrderButton` + `deleteOrder` action.  
@@ -109,8 +109,8 @@
   - Admin protection. **Աշխատում է** layout-ի միջոցով (`auth()`, `AdminSignInGate`).  
   - Quote rate limiting. **Չի աշխատում** — POST `/` rate limit-ը never runs. Անհրաժեշտության դեպքում ավելացնել `middleware.ts`, որ default export-ը կանչի `proxy`.  
 
-- **Stripe currency `amd`**  
-  `lib/stripe.ts`-ում `currency: "amd"` (Armenian Dram). Stripe-ը AMD support ունի; production-ում պետք է հաստատել, որ Stripe account-ը AMD ակտիվացրած է.  
+- **Stripe checkout currency**  
+  `STRIPE_CHECKOUT_CURRENCY_ISO` (env) — Stripe Checkout ISO 4217 կոդը; պետք է համընկնի հաշվի settlement արժույթի հետ (`lib/stripe.ts`):  
 
 - **Payment success redirect**  
   Checkout `success_url` — `${baseUrl}?session_id=...&paid=1`. Client page-ը status-ը կարդում է DB-ից (order.paidCents, order.status). Webhook-ը թարմացնում է DB-ն, այդ պատճառով redirect-ից հետո refresh/revisit-ում արդեն «Order is fully paid» կերևա. Եթե webhook-ը delay ունենա, օգտատերը կարճ ժամանակ կարող է դեռ «Pay» տեսնել — ընդունելի trade-off.  
@@ -119,7 +119,7 @@
   `getR2PublicUrl` վերադարձնում է `null`, եթե `R2_PUBLIC_URL` չկա. Lead attachments և order product image links-ը այդ դեպքում աշխատել չեն (link չի բացվի). Env-ը պետք է կարգավորված լինի (R2 public bucket or custom domain).  
 
 - **Price display**  
-  `formatPriceAmd` — արժեքը պահվում է cents-ով, ցուցադրում `cents/100` (AMD whole numbers). Doc-ը «Custom price (manual price input)» — իրականացված է price in AMD (integer), UI-ում «Price (AMD)».  
+  `formatPrice` — DB-ում ամբողջ թվով գին (`priceCents` / `paidCents`), UI-ում dollar նշանով (`en-US` currency style). Admin ձևում «Price ($)»:  
 
 ---
 

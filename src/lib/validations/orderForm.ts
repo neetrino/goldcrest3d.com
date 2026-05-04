@@ -10,10 +10,10 @@ const adminOrderBase = {
   clientName: z.string().min(1, "Client name is required").max(120),
   clientEmail: z.string().email("Valid email address"),
   productTitle: z.string().min(1, "Product title is required").max(200),
-  /** Whole AMD drams from admin forms (same scale as DB `priceCents`). */
-  priceAmd: z
+  /** Whole-unit price from admin forms (same scale as DB `priceCents`). */
+  priceAmount: z
     .number()
-    .int("Price must be a whole number (AMD)")
+    .int("Price must be a whole number")
     .min(0, "Price cannot be negative"),
 };
 

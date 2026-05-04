@@ -3,7 +3,8 @@
  */
 
 import Stripe from "stripe";
-import { AMD_MINOR_UNITS_PER_DRAM } from "@/constants/order-form";
+import { STRIPE_MINOR_UNITS_PER_MAJOR_UNIT } from "@/constants/order-form";
+import { getStripeCheckoutCurrencyIso } from "@/constants/stripe-checkout";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
 import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 
@@ -26,12 +27,12 @@ export type CreateCheckoutSessionResult =
 /**
  * Creates a Stripe Checkout Session for an order (full or partial amount).
  * @param order - Order record (id, token, priceCents, productTitle, paymentType, paidCents)
- * @param amountWholeAmd - Amount to charge in whole AMD (Stripe gets minor units)
+ * @param amountWholeUnits - Amount in whole major units (same scale as `priceCents`; Stripe receives minor units)
  * @param paymentIndex - For SPLIT: 0 = first 50%, 1 = second 50%. For FULL: undefined
  */
 export async function createCheckoutSession(
   order: OrderForCheckout,
-  amountWholeAmd: number,
+  amountWholeUnits: number,
   paymentIndex?: 0 | 1,
 ): Promise<CreateCheckoutSessionResult> {
   if (isSimulatedPaymentFlow()) {
@@ -44,11 +45,14 @@ export async function createCheckoutSession(
   if (!stripe) {
     return { success: false, error: "Stripe is not configured (STRIPE_SECRET_KEY)." };
   }
-  if (amountWholeAmd <= 0) {
+  if (amountWholeUnits <= 0) {
     return { success: false, error: "Amount must be greater than 0." };
   }
 
-  const unitAmountMinor = Math.round(amountWholeAmd * AMD_MINOR_UNITS_PER_DRAM);
+  const checkoutCurrency = getStripeCheckoutCurrencyIso();
+  const unitAmountMinor = Math.round(
+    amountWholeUnits * STRIPE_MINOR_UNITS_PER_MAJOR_UNIT,
+  );
 
   const baseUrl = getOrderPaymentUrl(order.token);
   if (!baseUrl) {
@@ -65,12 +69,12 @@ export async function createCheckoutSession(
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      currency: "amd",
+      currency: checkoutCurrency,
       line_items: [
         {
           quantity: 1,
           price_data: {
-            currency: "amd",
+            currency: checkoutCurrency,
             unit_amount: unitAmountMinor,
             product_data: {
               name: label,

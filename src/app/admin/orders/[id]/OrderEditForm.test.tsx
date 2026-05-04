@@ -54,7 +54,7 @@ describe("OrderEditForm", () => {
       "client@example.com"
     );
     expect(screen.getByLabelText(/product title/i)).toHaveValue("Custom model");
-    expect(screen.getByLabelText(/price \(amd\)/i)).toHaveValue(25000);
+    expect(screen.getByLabelText(/price \(\$\)/i)).toHaveValue(25000);
   });
 
   it("shows Update button", () => {

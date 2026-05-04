@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { R2_PREFIXES } from "@/constants";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
-import { getOrderPaymentUrl } from "@/lib/appUrl";
+import { getAppOrigin, getOrderPaymentUrl } from "@/lib/appUrl";
 import { sendEmail } from "@/lib/email";
 import { uploadToR2 } from "@/lib/storage";
 import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
@@ -12,6 +12,7 @@ import {
   createOrderFormSchema,
 } from "@/lib/validations/orderForm";
 import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
+import { formatPrice } from "@/lib/formatPrice";
 import { logger } from "@/lib/logger";
 import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
 import { ORDER_STATUS } from "@/constants/order-status";
@@ -42,20 +43,20 @@ export async function createOrder(
   const clientName = formData.get("clientName");
   const clientEmail = formData.get("clientEmail");
   const productTitle = formData.get("productTitle");
-  const priceAmdRaw = formData.get("priceCents");
+  const priceRaw = formData.get("priceCents");
   const paymentLinkModeRaw = formData.get("paymentLinkMode");
   const file = formData.get(FORM_FIELD_PRODUCT_IMAGE);
 
-  const priceAmdParsed =
-    typeof priceAmdRaw === "string" && priceAmdRaw.trim() !== ""
-      ? parseInt(priceAmdRaw.trim(), 10)
+  const priceParsed =
+    typeof priceRaw === "string" && priceRaw.trim() !== ""
+      ? parseInt(priceRaw.trim(), 10)
       : NaN;
 
   const parsed = createOrderFormSchema.safeParse({
     clientName: typeof clientName === "string" ? clientName : "",
     clientEmail: typeof clientEmail === "string" ? clientEmail : "",
     productTitle: typeof productTitle === "string" ? productTitle : "",
-    priceAmd: Number.isNaN(priceAmdParsed) ? 0 : priceAmdParsed,
+    priceAmount: Number.isNaN(priceParsed) ? 0 : priceParsed,
     paymentLinkMode:
       paymentLinkModeRaw === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
         ? ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
@@ -68,7 +69,7 @@ export async function createOrder(
       first.clientName?.[0] ??
       first.clientEmail?.[0] ??
       first.productTitle?.[0] ??
-      first.priceAmd?.[0] ??
+      first.priceAmount?.[0] ??
       first.paymentLinkMode?.[0] ??
       "Invalid data";
     return { success: false, error: msg };
@@ -89,7 +90,7 @@ export async function createOrder(
         clientEmail: parsed.data.clientEmail,
         productTitle: parsed.data.productTitle,
         productImageKey,
-        priceCents: parsed.data.priceAmd,
+        priceCents: parsed.data.priceAmount,
         paymentType: ORDER_PAYMENT_TYPE.UNSET,
         paymentLinkMode: parsed.data.paymentLinkMode,
       },
@@ -117,13 +118,13 @@ export async function updateOrder(
   const clientName = formData.get("clientName");
   const clientEmail = formData.get("clientEmail");
   const productTitle = formData.get("productTitle");
-  const priceAmdRaw = formData.get("priceCents");
+  const priceRaw = formData.get("priceCents");
   const paymentLinkModeRaw = formData.get("paymentLinkMode");
   const file = formData.get(FORM_FIELD_PRODUCT_IMAGE);
 
-  const priceAmdParsed =
-    typeof priceAmdRaw === "string" && priceAmdRaw.trim() !== ""
-      ? parseInt(priceAmdRaw.trim(), 10)
+  const priceParsed =
+    typeof priceRaw === "string" && priceRaw.trim() !== ""
+      ? parseInt(priceRaw.trim(), 10)
       : NaN;
 
   const paymentLinkModeFromForm =
@@ -139,7 +140,7 @@ export async function updateOrder(
     clientName: typeof clientName === "string" ? clientName : "",
     clientEmail: typeof clientEmail === "string" ? clientEmail : "",
     productTitle: typeof productTitle === "string" ? productTitle : "",
-    priceAmd: Number.isNaN(priceAmdParsed) ? existing.priceCents : priceAmdParsed,
+    priceAmount: Number.isNaN(priceParsed) ? existing.priceCents : priceParsed,
     paymentLinkMode: paymentLinkModeFromForm,
   });
 
@@ -149,7 +150,7 @@ export async function updateOrder(
       first.clientName?.[0] ??
       first.clientEmail?.[0] ??
       first.productTitle?.[0] ??
-      first.priceAmd?.[0] ??
+      first.priceAmount?.[0] ??
       "Invalid data";
     return { error: msg };
   }
@@ -185,7 +186,7 @@ export async function updateOrder(
         clientName: parsed.data.clientName,
         clientEmail: parsed.data.clientEmail,
         productTitle: parsed.data.productTitle,
-        priceCents: parsed.data.priceAmd,
+        priceCents: parsed.data.priceAmount,
         paymentLinkMode: parsed.data.paymentLinkMode,
         paymentType: nextPaymentType,
         ...(productImageKey != null && { productImageKey }),
@@ -265,10 +266,14 @@ export async function sendPaymentLink(
   const paymentUrl = getOrderPaymentUrl(order.token);
   if (!paymentUrl) return { success: false, error: "Site URL is not configured (AUTH_URL)." };
 
-  const subject = "Goldcrest 3D — payment link";
-  const priceAmd = String(order.priceCents);
-  const text = `Hello ${order.clientName},\n\nYour order payment link.\n\n${paymentUrl}\n\nProduct: ${order.productTitle}\nPrice: ${priceAmd} AMD`;
-  const html = `<p>Hello ${escapeHtml(order.clientName)},</p><p>Your order payment link.</p><p><a href="${escapeHtml(paymentUrl)}">${escapeHtml(paymentUrl)}</a></p><p>Product: ${escapeHtml(order.productTitle)}<br>Price: ${escapeHtml(priceAmd)} AMD</p>`;
+  const siteOrigin = getAppOrigin();
+  const priceLabel = formatPrice(order.priceCents);
+  const { subject, text, html } = buildPaymentLinkEmailPayload(
+    order,
+    priceLabel,
+    paymentUrl,
+    siteOrigin,
+  );
 
   const result = await sendEmail({
     to: order.clientEmail,
@@ -367,4 +372,62 @@ function escapeHtml(s: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+type OrderEmailFields = {
+  id: string;
+  clientName: string;
+  productTitle: string;
+};
+
+function buildPaymentLinkEmailPayload(
+  order: OrderEmailFields,
+  priceLabel: string,
+  paymentUrl: string,
+  siteOrigin: string,
+): { subject: string; text: string; html: string } {
+  const subject = `Complete your purchase at Goldcrest 3D — Order #${order.id}`;
+  let siteHostname = "goldcrest3d.com";
+  try {
+    if (siteOrigin) {
+      siteHostname = new URL(siteOrigin).hostname;
+    }
+  } catch {
+    // keep default
+  }
+  const siteLinkHref = siteOrigin || `https://${siteHostname}`;
+  const { clientName, productTitle } = order;
+  const productQuoted = `"${productTitle}"`;
+
+  const text = [
+    `Hello ${clientName},`,
+    "",
+    `Thank you for choosing Goldcrest 3D. Your order for the ${productQuoted} is ready for payment.`,
+    "Please use the secure link below to complete your transaction:",
+    "",
+    `Pay Now: ${paymentUrl}`,
+    "",
+    "Order Details:",
+    `• Product: ${productTitle}`,
+    `• Total Amount: ${priceLabel}`,
+    "",
+    "If you have any questions regarding your order, feel free to reply to this email.",
+    "",
+    "Best regards,",
+    "The Goldcrest 3D Team",
+    siteHostname,
+  ].join("\n");
+
+  const html = [
+    `<p>Hello ${escapeHtml(clientName)},</p>`,
+    `<p>Thank you for choosing Goldcrest 3D. Your order for the ${escapeHtml(productQuoted)} is ready for payment.</p>`,
+    `<p>Please use the secure link below to complete your transaction:</p>`,
+    `<p><a href="${escapeHtml(paymentUrl)}">Pay Now</a></p>`,
+    `<p>Order Details:</p>`,
+    `<p>• Product: ${escapeHtml(productTitle)}<br>• Total Amount: ${escapeHtml(priceLabel)}</p>`,
+    `<p>If you have any questions regarding your order, feel free to reply to this email.</p>`,
+    `<p>Best regards,<br>The Goldcrest 3D Team<br><a href="${escapeHtml(siteLinkHref)}">${escapeHtml(siteHostname)}</a></p>`,
+  ].join("");
+
+  return { subject, text, html };
 }

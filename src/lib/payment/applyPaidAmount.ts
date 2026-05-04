@@ -7,14 +7,14 @@ import { ORDER_STATUS } from "@/constants/order-status";
  */
 export async function applyPaidAmountToOrder(
   orderId: string,
-  amountPaidAmd: number,
+  amountPaidWhole: number,
 ): Promise<void> {
-  if (amountPaidAmd <= 0) return;
+  if (amountPaidWhole <= 0) return;
 
   const order = await prisma.order.findUnique({ where: { id: orderId } });
   if (!order) return;
 
-  const newPaidCents = order.paidCents + amountPaidAmd;
+  const newPaidCents = order.paidCents + amountPaidWhole;
   const isFullyPaid = newPaidCents >= order.priceCents;
 
   await prisma.order.update({

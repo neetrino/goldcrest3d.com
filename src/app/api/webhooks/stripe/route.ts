@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { AMD_MINOR_UNITS_PER_DRAM } from "@/constants/order-form";
+import { STRIPE_MINOR_UNITS_PER_MAJOR_UNIT } from "@/constants/order-form";
 import { applyPaidAmountToOrder } from "@/lib/payment/applyPaidAmount";
 import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 
@@ -53,8 +53,10 @@ export async function POST(request: NextRequest) {
     const order = await prisma.order.findUnique({ where: { id: orderId } });
     if (!order) return new Response("OK", { status: 200 });
 
-    const paidDeltaAmd = Math.round(amountTotalMinor / AMD_MINOR_UNITS_PER_DRAM);
-    await applyPaidAmountToOrder(orderId, paidDeltaAmd);
+    const paidDeltaWhole = Math.round(
+      amountTotalMinor / STRIPE_MINOR_UNITS_PER_MAJOR_UNIT,
+    );
+    await applyPaidAmountToOrder(orderId, paidDeltaWhole);
   } catch (err) {
     logger.error("Stripe webhook: order update failed", err);
     return new Response("Database error", { status: 500 });

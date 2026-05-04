@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getOrderPaymentUrl } from "@/lib/appUrl";
-import { formatPriceAmd } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatPrice";
 import { formatOrderPaymentTypeLabel } from "@/lib/payment/paymentTypeLabels";
 import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
 import { OrderEditPencilIcon } from "@/components/admin/OrderEditPencilIcon";
@@ -88,8 +88,9 @@ export default async function AdminOrdersPage() {
                         Total
                       </p>
                       <p className="mt-0.5 whitespace-nowrap text-lg font-semibold tabular-nums tracking-tight text-[var(--foreground)]">
-                        {formatPriceAmd(order.priceCents)}{" "}
-                        <span className="font-medium text-neutral-600">AMD</span>
+                        <span className="font-medium text-neutral-600">
+                          {formatPrice(order.priceCents)}
+                        </span>
                       </p>
                     </div>
                   </div>
