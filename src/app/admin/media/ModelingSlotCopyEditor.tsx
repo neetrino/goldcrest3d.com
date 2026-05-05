@@ -10,6 +10,7 @@ import {
 import {
   clampModelingCopyOffset,
   MODELING_COPY_OFFSET_NUDGE_PCT,
+  MODELING_COPY_OFFSET_VERTICAL_QUICK_DELTAS_PCT,
   MODELING_COPY_OFFSET_Y_MAX_PCT,
   MODELING_COPY_OFFSET_Y_MIN_PCT,
   MODELING_TABLET_COPY_OFFSET_COARSE_NUDGE_PCT,
@@ -82,6 +83,55 @@ function toInitialDraft(row: AdminModelingSlotRow): EditorDraft {
     mobilePreviewTitleFontPx: row.mobilePreviewTitleFontPx,
     mobilePreviewBodyFontPx: row.mobilePreviewBodyFontPx,
   };
+}
+
+type ModelingCopyVerticalOffsetControlsProps = {
+  field: VerticalOffsetFieldKey;
+  valuePct: number;
+  disabled: boolean;
+  onNudge: (delta: number) => void;
+};
+
+function ModelingCopyVerticalOffsetControls({
+  field,
+  valuePct,
+  disabled,
+  onNudge,
+}: ModelingCopyVerticalOffsetControlsProps) {
+  const stepperClassName =
+    "rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50";
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => onNudge(-MODELING_COPY_OFFSET_NUDGE_PCT)}
+        className={stepperClassName}
+      >
+        Up
+      </button>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => onNudge(MODELING_COPY_OFFSET_NUDGE_PCT)}
+        className={stepperClassName}
+      >
+        Down
+      </button>
+      {MODELING_COPY_OFFSET_VERTICAL_QUICK_DELTAS_PCT.map((delta) => (
+        <button
+          key={`${field}-${delta}`}
+          type="button"
+          disabled={disabled}
+          onClick={() => onNudge(delta)}
+          className={stepperClassName}
+        >
+          {String(delta)}
+        </button>
+      ))}
+      <span className="text-xs text-slate-500">{valuePct}%</span>
+    </div>
+  );
 }
 
 function offsetLabel(key: OffsetResetFieldKey): string {
@@ -223,23 +273,12 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                     disabled={isPending}
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
                   />
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => nudgeOffset("titleDesktopOffsetY", -MODELING_COPY_OFFSET_NUDGE_PCT)}
-                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                    >
-                      Up
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => nudgeOffset("titleDesktopOffsetY", MODELING_COPY_OFFSET_NUDGE_PCT)}
-                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                    >
-                      Down
-                    </button>
-                    <span className="text-xs text-slate-500">{draft.titleDesktopOffsetY}%</span>
-                  </div>
+                  <ModelingCopyVerticalOffsetControls
+                    field="titleDesktopOffsetY"
+                    valuePct={draft.titleDesktopOffsetY}
+                    disabled={isPending}
+                    onNudge={(delta) => nudgeOffset("titleDesktopOffsetY", delta)}
+                  />
                   <div className="mt-3 flex flex-col gap-1">
                     <span className="text-xs font-medium text-slate-700">
                       Desktop title horizontal (%)
@@ -267,23 +306,12 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                     disabled={isPending}
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
                   />
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => nudgeOffset("titleMobileOffsetY", -MODELING_COPY_OFFSET_NUDGE_PCT)}
-                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                    >
-                      Up
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => nudgeOffset("titleMobileOffsetY", MODELING_COPY_OFFSET_NUDGE_PCT)}
-                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                    >
-                      Down
-                    </button>
-                    <span className="text-xs text-slate-500">{draft.titleMobileOffsetY}%</span>
-                  </div>
+                  <ModelingCopyVerticalOffsetControls
+                    field="titleMobileOffsetY"
+                    valuePct={draft.titleMobileOffsetY}
+                    disabled={isPending}
+                    onNudge={(delta) => nudgeOffset("titleMobileOffsetY", delta)}
+                  />
                   <div className="mt-3 flex flex-col gap-1">
                     <span className="text-xs font-medium text-slate-700">
                       Mobile title horizontal (%)
@@ -314,23 +342,12 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                     disabled={isPending}
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
                   />
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => nudgeOffset("bodyDesktopOffsetY", -MODELING_COPY_OFFSET_NUDGE_PCT)}
-                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                    >
-                      Up
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => nudgeOffset("bodyDesktopOffsetY", MODELING_COPY_OFFSET_NUDGE_PCT)}
-                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                    >
-                      Down
-                    </button>
-                    <span className="text-xs text-slate-500">{draft.bodyDesktopOffsetY}%</span>
-                  </div>
+                  <ModelingCopyVerticalOffsetControls
+                    field="bodyDesktopOffsetY"
+                    valuePct={draft.bodyDesktopOffsetY}
+                    disabled={isPending}
+                    onNudge={(delta) => nudgeOffset("bodyDesktopOffsetY", delta)}
+                  />
                   <div className="mt-3 flex flex-col gap-1">
                     <span className="text-xs font-medium text-slate-700">
                       Desktop description horizontal (%)
@@ -358,23 +375,12 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
                     disabled={isPending}
                     className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-base text-slate-900 shadow-sm outline-none focus:border-slate-300 focus:ring-2 focus:ring-slate-200/80"
                   />
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => nudgeOffset("bodyMobileOffsetY", -MODELING_COPY_OFFSET_NUDGE_PCT)}
-                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                    >
-                      Up
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => nudgeOffset("bodyMobileOffsetY", MODELING_COPY_OFFSET_NUDGE_PCT)}
-                      className="rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                    >
-                      Down
-                    </button>
-                    <span className="text-xs text-slate-500">{draft.bodyMobileOffsetY}%</span>
-                  </div>
+                  <ModelingCopyVerticalOffsetControls
+                    field="bodyMobileOffsetY"
+                    valuePct={draft.bodyMobileOffsetY}
+                    disabled={isPending}
+                    onNudge={(delta) => nudgeOffset("bodyMobileOffsetY", delta)}
+                  />
                   <div className="mt-3 flex flex-col gap-1">
                     <span className="text-xs font-medium text-slate-700">
                       Mobile description horizontal (%)
@@ -426,9 +432,10 @@ function ModelingSlotCopyEditorContent({ row }: ModelingSlotCopyEditorProps) {
               <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50/80 p-4">
                 <p className="text-sm font-semibold text-slate-900">Live position preview</p>
                 <p className="mt-1 text-xs text-slate-500">
-                  Up/Down moves vertical text by {MODELING_COPY_OFFSET_NUDGE_PCT}% per click (clamped to{" "}
-                  {MODELING_COPY_OFFSET_Y_MIN_PCT}…{MODELING_COPY_OFFSET_Y_MAX_PCT}%). Horizontal uses the
-                  stepper above. Preview updates instantly.
+                  Up/Down moves vertical text by {MODELING_COPY_OFFSET_NUDGE_PCT}% per click; shortcut buttons
+                  add that many percentage points (clamped to {MODELING_COPY_OFFSET_Y_MIN_PCT}…
+                  {MODELING_COPY_OFFSET_Y_MAX_PCT}%). Horizontal uses the stepper above. Preview updates
+                  instantly.
                 </p>
                 <div className="mt-3">
                   <ModelingMobilePreviewFontControls
