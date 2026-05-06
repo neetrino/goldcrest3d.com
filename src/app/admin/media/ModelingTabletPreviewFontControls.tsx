@@ -26,7 +26,7 @@ export function ModelingTabletPreviewFontControls({
 }: ModelingTabletPreviewFontControlsProps) {
   return (
     <div className="rounded-lg border border-slate-200 bg-slate-50/90 px-3 py-3">
-      <p className="text-xs font-medium text-slate-800">Tablet text size (640px–1023px)</p>
+      <p className="text-xs font-medium text-slate-800">Tablet text size (755px–1023px)</p>
       <p className="mt-1 text-[11px] leading-snug text-slate-500">
         Adjusts the live site between the <span className="font-medium">md</span> and{" "}
         <span className="font-medium">lg</span> breakpoints for this slot. Mobile and desktop

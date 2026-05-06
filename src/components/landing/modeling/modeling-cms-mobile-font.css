@@ -1,11 +1,11 @@
 /**
  * CMS-driven mobile copy font sizes (Modeling Specialization).
- * Matches `sm:hidden` mobile title/description tier (viewport < 640px).
+ * Matches `min-[755px]:hidden` mobile title/description tier (viewport ≤ 754px).
  *
  * Unitless line-height scales with the CMS px above — avoids fixed `leading-[22px]`-style
  * utilities leaving huge gaps when the slider uses a very small body size.
  */
-@media (max-width: 639.98px) {
+@media (max-width: 754.98px) {
   /**
    * Bridal / Hip-Hop mobile lines set font-size on inner `span`s (`bridalRowSpanClass`,
    * `hipHopMobileLineClass`). Parent `!important` alone does not override those utilities.

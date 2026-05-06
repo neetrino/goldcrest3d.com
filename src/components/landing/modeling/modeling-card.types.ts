@@ -10,19 +10,19 @@ export type ModelingCardProps = {
   /** When set, description is rendered as one block per line (e.g. Hip-Hop). */
   descriptionLines?: string[];
   /**
-   * Hip-Hop: with `mobileHipHopTypography`, `sm+` uses these lines instead of `descriptionLines` (mobile unchanged).
-   * Bridal: with `mobileBridalTypography` + row layout, `sm+` can use these as a right-aligned stack instead of the two-line row.
+   * Hip-Hop: with `mobileHipHopTypography`, 755px+ uses these lines instead of `descriptionLines` (mobile unchanged).
+   * Bridal: with `mobileBridalTypography` + row layout, 755px+ can use these as a right-aligned stack instead of the two-line row.
    */
   descriptionLinesDesktop?: string[];
   /**
-   * With `mobileBridalTypography`: below `sm`, these lines replace `descriptionLines` (e.g. split first paragraph); `sm+` still uses `descriptionLines`.
+   * With `mobileBridalTypography`: ≤754px, these lines replace `descriptionLines` (e.g. split first paragraph); 755px+ still uses `descriptionLines`.
    */
   descriptionLinesMobile?: string[];
-  /** Tablet tier copy (640px–1023px); shown when set with dual image cards using `imagePairBreakpoint="md"`. */
+  /** Tablet tier copy (755px–1023px); shown when set with dual image cards using `imagePairBreakpoint="md"`. */
   descriptionLinesTablet?: string[];
-  /** Tablet-only title (640px–1023px); empty hides title on tablet unless desktop/mobile fallback applies in shared card. */
+  /** Tablet-only title (755px–1023px); empty hides title on tablet unless desktop/mobile fallback applies in shared card. */
   titleTablet?: string;
-  /** Tablet image URL (640px–1023px); optional layer between mobile and desktop. */
+  /** Tablet image URL (755px–1023px); optional layer between mobile and desktop. */
   imageSrcTablet?: string;
   /** CSS background for tablet tier (Portrait block). */
   imageLayerBackgroundTablet?: Pick<CSSProperties, "background">;
@@ -56,14 +56,14 @@ export type ModelingCardProps = {
   /** Second full-bleed background for small viewports when set (with `imageLayerBackground` for `md+`). */
   imageLayerBackgroundMobile?: Pick<CSSProperties, "background">;
   /**
-   * Below `sm`: this URL (static asset); `sm+`: `imageSrc` (CMS / default).
+   * ≤754px: this URL (static asset); 755px+: `imageSrc` (CMS / default).
    * Only with `imageSrc` and without `imageLayerBackground`.
    */
   imageSrcMobile?: string;
   /**
    * When `imageSrc` + `imageSrcMobile` or dual layer backgrounds: width at which the desktop asset applies.
-   * `md`: three-tier layout — mobile below 640px, tablet 640–1023px, desktop 1024px+, with optional `imageSrcTablet`.
-   * `sm`: two-tier — mobile below `sm`, desktop at `sm+`.
+   * `md`: three-tier layout — mobile ≤754px, tablet 755–1023px, desktop 1024px+, with optional `imageSrcTablet`.
+   * `sm`: two-tier — mobile ≤754px, desktop 755px+.
    */
   imagePairBreakpoint?: "sm" | "md";
   /** When true, title and description use black text (e.g. Bridal on light background). */
@@ -135,15 +135,15 @@ export type ModelingCardProps = {
   /** When set, overrides textAlign for the description block only (e.g. right-aligned lines for flush-right typography). */
   descriptionAlign?: "left" | "right";
   /**
-   * Hip-Hop block only: below `sm`, Inter title/body (Figma); `sm+` restores default Manrope layout.
+   * Hip-Hop block only: ≤754px, Inter title/body (Figma); 755px+ restores default Manrope layout.
    */
   mobileHipHopTypography?: boolean;
   /**
-   * Bridal block only: below `sm`, Inter title + body (Figma); requires `fluidTextLayout` + `descriptionLayout="row"`.
+   * Bridal block only: ≤754px, Inter title + body (Figma); requires `fluidTextLayout` + `descriptionLayout="row"`.
    */
   mobileBridalTypography?: boolean;
   /**
-   * 3D Portrait block only: below `sm`, `descriptionLinesMobile` copy; `sm+` keeps absolute title/description + `descriptionLines`.
+   * 3D Portrait block only: ≤754px, `descriptionLinesMobile` copy; 755px+ keeps absolute title/description + `descriptionLines`.
    */
   mobilePortraitTypography?: boolean;
   /**

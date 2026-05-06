@@ -63,13 +63,13 @@ export function ModelingCardGradientLayout({
   );
   return (
     <article
-      className={`${MODELING_CARD_INLINE_SIZE_CONTAINER_CLASS} flex min-h-[calc(320px*var(--ms,1))] min-w-0 w-full flex-col overflow-hidden max-sm:min-h-[calc(400px*var(--ms,1))] sm:min-h-0 sm:flex-row sm:items-stretch sm:aspect-[83/43]`}
+      className={`${MODELING_CARD_INLINE_SIZE_CONTAINER_CLASS} flex min-h-[calc(320px*var(--ms,1))] min-w-0 w-full flex-col overflow-hidden max-[754px]:min-h-[calc(400px*var(--ms,1))] min-[755px]:min-h-0 min-[755px]:flex-row min-[755px]:items-stretch min-[755px]:aspect-[83/43]`}
       style={gradientFrameStyle}
     >
       {imageOnLeft && hasImage ? (
         <>
           <div
-            className="relative order-2 h-[calc(240px*var(--ms,1))] shrink-0 overflow-hidden sm:order-1 sm:h-full sm:min-h-0 sm:w-1/2"
+            className="relative order-2 h-[calc(240px*var(--ms,1))] shrink-0 overflow-hidden min-[755px]:order-1 min-[755px]:h-full min-[755px]:min-h-0 min-[755px]:w-1/2"
             data-landing-image={imageId}
             style={{
               ...(imageLayerBackground ?? undefined),
@@ -83,12 +83,12 @@ export function ModelingCardGradientLayout({
                 fill
                 className={imageFillClassName}
                 style={imageStyle}
-                sizes="(max-width: 639px) 100vw, 50vw"
+                sizes="(max-width: 754px) 100vw, 50vw"
               />
             ) : null}
           </div>
           <div
-            className={`order-1 flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white sm:order-2 sm:w-1/2 sm:px-[calc(2rem*var(--ms,1))] sm:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
+            className={`order-1 flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white min-[755px]:order-2 min-[755px]:w-1/2 min-[755px]:px-[calc(2rem*var(--ms,1))] min-[755px]:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
           >
             <h3
               className={`font-manrope whitespace-pre-wrap text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible" : ""} ${
@@ -111,7 +111,7 @@ export function ModelingCardGradientLayout({
       ) : hasImage ? (
         <>
           <div
-            className={`flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white sm:w-1/2 sm:px-[calc(2rem*var(--ms,1))] sm:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
+            className={`flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white min-[755px]:w-1/2 min-[755px]:px-[calc(2rem*var(--ms,1))] min-[755px]:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
           >
             <h3
               className={`font-manrope whitespace-pre-wrap text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible" : ""} ${
@@ -131,7 +131,7 @@ export function ModelingCardGradientLayout({
             ) : null}
           </div>
           <div
-            className="relative h-[calc(240px*var(--ms,1))] shrink-0 overflow-hidden sm:h-full sm:min-h-0 sm:w-1/2"
+            className="relative h-[calc(240px*var(--ms,1))] shrink-0 overflow-hidden min-[755px]:h-full min-[755px]:min-h-0 min-[755px]:w-1/2"
             data-landing-image={imageId}
             style={{
               ...(imageLayerBackground ?? undefined),
@@ -145,14 +145,14 @@ export function ModelingCardGradientLayout({
                 fill
                 className={imageFillClassName}
                 style={imageStyle}
-                sizes="(max-width: 639px) 100vw, 50vw"
+                sizes="(max-width: 754px) 100vw, 50vw"
               />
             ) : null}
           </div>
         </>
       ) : (
         <div
-          className={`flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white sm:w-full sm:px-[calc(2rem*var(--ms,1))] sm:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
+          className={`flex flex-col justify-center gap-[calc(1.5rem*var(--ms,1))] px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] text-white min-[755px]:w-full min-[755px]:px-[calc(2rem*var(--ms,1))] min-[755px]:py-[calc(2.5rem*var(--ms,1))] ${textAlignClass}`}
         >
           <h3
             className={`font-manrope whitespace-pre-wrap text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))] ${hasDescriptionContent ? "h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible" : ""} ${

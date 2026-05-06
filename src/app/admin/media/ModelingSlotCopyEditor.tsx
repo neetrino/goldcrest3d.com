@@ -246,7 +246,7 @@ function ModelingSlotCopyEditorContent({
   const saveButtonLabel = tabletOnly ? "Save tablet copy" : "Save text content";
   const triggerTitle = tabletOnly ? "Tablet text content" : "Text content";
   const triggerSubtitle = tabletOnly
-    ? "Tablet viewport (640px–1023px). Click to open editor."
+    ? "Tablet viewport (755px–1023px). Click to open editor."
     : "Click to open editor in full screen.";
 
   return (
@@ -348,7 +348,7 @@ function ModelingSlotCopyEditorContent({
             <div className="p-4 sm:p-6">
               <p className="mb-4 text-sm text-slate-600">
                 {tabletOnly
-                  ? "Tablet tier only (640px–1023px). Each line break is a new line. Empty fields hide text on tablet. Desktop and mobile copy are unchanged."
+                  ? "Tablet tier only (755px–1023px). Each line break is a new line. Empty fields hide text on tablet. Desktop and mobile copy are unchanged."
                   : "Each line break creates a new visual line. Leave fields empty to hide text on the site."}
               </p>
 

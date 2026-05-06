@@ -22,7 +22,7 @@ export function RenderingHeroSlideTitle({
 
   if (surface === "mobile-only") {
     return (
-      <h1 className="relative inline-block max-w-full -translate-y-2.5 whitespace-normal text-balance text-left text-white md:hidden">
+      <h1 className="relative inline-block max-w-full -translate-y-2.5 whitespace-normal text-balance text-center text-white min-[755px]:hidden">
         <span className="inline-block" style={innerShiftStyle}>
           {mobileTitle}
         </span>
@@ -32,7 +32,7 @@ export function RenderingHeroSlideTitle({
 
   if (surface === "tablet-only") {
     return (
-      <h1 className="relative hidden max-w-full -translate-y-2.5 whitespace-normal text-balance text-left text-white md:inline-block md:whitespace-nowrap lg:hidden">
+      <h1 className="relative hidden max-w-full -translate-y-2.5 whitespace-normal text-balance text-left text-white min-[755px]:inline-block min-[755px]:whitespace-nowrap lg:hidden">
         <span className="inline-block" style={innerShiftStyle}>
           {tabletTitle ?? ""}
         </span>
@@ -53,8 +53,8 @@ export function RenderingHeroSlideTitle({
   return (
     <h1 className="relative inline-block max-w-full -translate-y-2.5 whitespace-normal text-balance text-left text-white lg:-translate-y-2.5 lg:whitespace-nowrap">
       <span className="inline-block" style={innerShiftStyle}>
-        <span className="md:hidden">{mobileTitle}</span>
-        <span className="hidden md:inline lg:hidden">{tabletTitle ?? ""}</span>
+        <span className="min-[755px]:hidden">{mobileTitle}</span>
+        <span className="hidden min-[755px]:inline lg:hidden">{tabletTitle ?? ""}</span>
         <span className="hidden lg:inline">{desktopTitle}</span>
       </span>
     </h1>

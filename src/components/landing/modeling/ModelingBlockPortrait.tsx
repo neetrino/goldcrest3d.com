@@ -107,7 +107,7 @@ export function ModelingBlockPortrait({
       independentTitleDescription
       titleBlockTop="34%"
       titleBlockLeft="7%"
-      titleShiftClassName="sm:translate-x-[calc(2.25rem*var(--ms,1))] lg:translate-x-0"
+      titleShiftClassName="min-[755px]:translate-x-[calc(2.25rem*var(--ms,1))] lg:translate-x-0"
       descriptionBlockTop="42%"
       descriptionBlockLeft="-13%"
       desktopOverlayShiftClassName="lg:translate-x-[calc(2rem*var(--ms,1))] lg:translate-y-[calc(2.25rem*var(--ms,1))]"

@@ -127,7 +127,7 @@
   overflow: hidden;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 755px) {
   /**
    * Same viewport-anchored strip as section1 (.power-banners-section1-image-strip):
    * width scales with 100vw so shrinking the window crops the hero consistently.
@@ -147,7 +147,7 @@
   transform: translateX(var(--section2-text-cluster-nudge-mobile, 0px));
 }
 
-@media (min-width: 768px) {
+@media (min-width: 755px) {
   .power-banners-section2-text-cluster {
     transform: translateX(
       calc(

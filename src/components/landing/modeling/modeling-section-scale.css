@@ -1,18 +1,33 @@
 /**
- * Modeling Specialization — section shell does not shrink `--ms` with viewport width.
- * Each card uses `.modeling-specialization-card-cq` + `100cqi` so overlay copy tracks the card column;
- * narrower viewports eat horizontal margin (section padding) before text scales down sharply.
+ * Modeling Specialization — typography scale `--ms`.
+ *
+ * - Per-card `100cqi / 720px` keeps copy tied to column width once the grid is two-up.
+ * - `--ms-viewport` restores the legacy 1920px-shell shrink so laptop widths do not keep `--ms` pinned at 1
+ *   (that made desktop copy read larger than the older `100cqw / 1920px` section scale).
  */
 .modeling-specialization-scale {
   width: 100%;
+  --modeling-ms-viewport-min: 0.5;
+  --modeling-typography-shell-px: 1920px;
+  --ms-viewport: 1;
   --ms: 1;
-  /* sm+ vertical rhythm: full top padding, tighter bottom before Manufacturing */
+  /* Tablet+ vertical rhythm: full top padding, tighter bottom before Manufacturing */
   --modeling-scale-padding-y-md: 67px;
   --modeling-scale-padding-b-md: 0px;
 }
 
+@media (min-width: 755px) {
+  .modeling-specialization-scale {
+    --ms-viewport: max(
+      var(--modeling-ms-viewport-min),
+      min(1, calc(min(100vw, var(--modeling-typography-shell-px)) / var(--modeling-typography-shell-px)))
+    );
+    --ms: var(--ms-viewport);
+  }
+}
+
 /**
- * Per-card container: `--ms` matches this card’s column width vs ~half of a 1920px two-up row.
+ * Per-card container: column-based scale, capped by the viewport shell (inherited `--ms-viewport`).
  * 720px ≈ one column at full desktop grid — keeps typography stable until the column itself narrows.
  */
 .modeling-specialization-card-cq {
@@ -21,15 +36,18 @@
   --ms: 1;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 755px) {
   .modeling-specialization-card-cq {
-    --ms: clamp(0.52, calc(100cqi / 720px), 1);
+    --ms: min(
+      clamp(0.52, calc(100cqi / 720px), 1),
+      var(--ms-viewport)
+    );
   }
 }
 
 /**
- * Below `sm` (640px): keep card column width fixed to Figma mobile artboard; center in viewport
- * so wider phones get white gutters. At `sm+`, layout uses full section width again.
+ * Mobile (≤754px): keep card column width fixed to Figma mobile artboard; center in viewport
+ * so wider phones get white gutters. From 755px, layout uses full section width again.
  */
 .modeling-specialization-mobile-fixed-column {
   --modeling-specialization-mobile-artboard-px: 390px;
@@ -40,7 +58,7 @@
   margin-right: auto;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 755px) {
   .modeling-specialization-mobile-fixed-column {
     max-width: none;
   }
@@ -54,8 +72,8 @@
   --mt: 1.1;
 }
 
-/* Tablet (640px–1023px): overlay copy a bit smaller than narrow mobile in the same grid column. */
-@media (min-width: 640px) and (max-width: 1023px) {
+/* Tablet (755px–1023px): overlay copy a bit smaller than narrow mobile in the same grid column. */
+@media (min-width: 755px) and (max-width: 1023px) {
   .modeling-specialization-card-text-scale {
     --mt: 0.96;
   }

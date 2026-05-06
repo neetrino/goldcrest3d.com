@@ -22,7 +22,7 @@ export function RenderingHeroSubtitleLines({
     return (
       <p
         id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
-        className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] self-start text-left md:hidden"
+        className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] self-center text-center min-[755px]:hidden"
       >
         {mobileLines.map((line, i) => (
           <span key={i} className="block whitespace-nowrap">
@@ -35,9 +35,9 @@ export function RenderingHeroSubtitleLines({
 
   if (surface === "tablet-only") {
     return (
-      <p className="hero-primary-subtitle-typography relative hidden w-full max-w-[433px] self-start text-left md:inline-block lg:hidden">
+      <p className="hero-primary-subtitle-typography relative hidden w-full max-w-[433px] self-start text-left min-[755px]:inline-block lg:hidden">
         {tabletLines.map((line, i) => (
-          <span key={i} className="block md:whitespace-nowrap">
+          <span key={i} className="block min-[755px]:whitespace-nowrap">
             {line.length > 0 ? line : "\u00A0"}
           </span>
         ))}
@@ -62,16 +62,16 @@ export function RenderingHeroSubtitleLines({
       id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
       className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] self-start text-left"
     >
-      <span className="md:hidden">
+      <span className="min-[755px]:hidden">
         {mobileLines.map((line, i) => (
           <span key={i} className="block whitespace-nowrap">
             {line.length > 0 ? line : "\u00A0"}
           </span>
         ))}
       </span>
-      <span className="hidden md:block lg:hidden">
+      <span className="hidden min-[755px]:block lg:hidden">
         {tabletLines.map((line, i) => (
-          <span key={i} className="block md:whitespace-nowrap">
+          <span key={i} className="block min-[755px]:whitespace-nowrap">
             {line.length > 0 ? line : "\u00A0"}
           </span>
         ))}

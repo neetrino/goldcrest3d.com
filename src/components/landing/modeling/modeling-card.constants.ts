@@ -12,17 +12,17 @@ import {
  */
 export const MODELING_CARD_ASPECT_RATIO = "83 / 43";
 
-/** Mobile (< sm): Figma ֆիքս չափ — grid-ը մեկ սյուն է (server mobile uploads crop to this aspect). */
+/** Mobile (≤754px): Figma ֆիքս չափ — grid-ը մեկ սյուն է (server mobile uploads crop to this aspect). */
 export const MODELING_CARD_MOBILE_WIDTH_PX = MODELING_MOBILE_ASPECT_WIDTH;
 export const MODELING_CARD_MOBILE_HEIGHT_PX = MODELING_MOBILE_ASPECT_HEIGHT;
 
 /**
- * Քարտի արտաքին frame — միայն max-sm.
+ * Քարտի արտաքին frame — միայն max-[754px].
  * Լայնությունը `w-full` — grid-ի սյունը ամբողջությամբ; բարձրությունը aspect-ից (Figma 360×259)։
- * sm+ — լրիվ լայնություն + 83/43։
+ * 755px+ — լրիվ լայնություն + 83/43։
  */
 export const MODELING_CARD_FRAME_MOBILE_CLASSES =
-  `${MODELING_CARD_INLINE_SIZE_CONTAINER_CLASS} mx-auto w-full max-w-full min-h-0 aspect-[360/259] sm:mx-0 sm:h-auto sm:w-full sm:aspect-[83/43]` as const;
+  `${MODELING_CARD_INLINE_SIZE_CONTAINER_CLASS} mx-auto w-full max-w-full min-h-0 aspect-[360/259] min-[755px]:mx-0 min-[755px]:h-auto min-[755px]:w-full min-[755px]:aspect-[83/43]` as const;
 
 /** Քարտը լրիվ լցնում է grid-ի սյունը — ավելի մեծ և ավելի մոտ իրար block-ներ։ */
 export function getModelingCardWidthStyle(): Pick<CSSProperties, "width"> {
@@ -68,7 +68,7 @@ export function modelingTitleForLgViewport(
 }
 
 /**
- * Tablet tier (640px–1023px): prefer dedicated tablet copy, then desktop, then mobile.
+ * Tablet tier (755px–1023px): prefer dedicated tablet copy, then desktop, then mobile.
  * Matches CMS when tablet fields are left empty — desktop copy still shows on tablet width.
  */
 export function modelingTitleForTabletViewport(

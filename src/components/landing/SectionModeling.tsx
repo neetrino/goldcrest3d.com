@@ -31,17 +31,17 @@ export function SectionModeling({
   return (
     <section
       id={LANDING_SECTION_IDS.SPECIALIZATIONS}
-      className="bg-white px-2 sm:px-3 md:px-4 lg:px-5"
+      className="bg-white px-2 min-[755px]:px-3 md:px-4 lg:px-5"
       aria-labelledby="modeling-specialization"
     >
       <div className="mx-auto w-full max-w-[1920px]">
-        <div className="modeling-specialization-scale py-6 sm:pt-[calc(var(--modeling-scale-padding-y-md)*var(--ms,1))] sm:pb-[calc(var(--modeling-scale-padding-b-md)*var(--ms,1))]">
+        <div className="modeling-specialization-scale py-6 min-[755px]:pt-[calc(var(--modeling-scale-padding-y-md)*var(--ms,1))] min-[755px]:pb-[calc(var(--modeling-scale-padding-b-md)*var(--ms,1))]">
           <div className="modeling-specialization-mobile-fixed-column">
-            <div className="flex min-h-[calc(140px*var(--ms,1))] w-full min-w-0 flex-col items-center justify-center overflow-visible py-6 sm:min-h-[calc(200px*var(--ms,1))] sm:justify-center sm:overflow-hidden sm:py-0">
+            <div className="flex min-h-[calc(140px*var(--ms,1))] w-full min-w-0 flex-col items-center justify-center overflow-visible py-6 min-[755px]:min-h-[calc(200px*var(--ms,1))] min-[755px]:justify-center min-[755px]:overflow-hidden min-[755px]:py-0">
               <ModelingSpecializationTitle />
             </div>
 
-            <div className="modeling-specialization-card-text-scale grid min-w-0 grid-cols-1 gap-[calc(0.625rem*var(--ms,1))] sm:grid-cols-2 lg:gap-[calc(0.5rem*var(--ms,1))]">
+            <div className="modeling-specialization-card-text-scale grid min-w-0 grid-cols-1 gap-[calc(0.625rem*var(--ms,1))] min-[755px]:grid-cols-2 lg:gap-[calc(0.5rem*var(--ms,1))]">
           <ModelingBlockHipHop
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIP_HOP].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.HIP_HOP].mobile}

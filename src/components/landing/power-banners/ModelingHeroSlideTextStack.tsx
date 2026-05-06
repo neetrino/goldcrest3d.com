@@ -15,6 +15,7 @@ import {
 import {
   SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX,
   SECTION1_HERO_TEXT_NUDGE_DOWN_PX,
+  SECTION1_MODELING_TEXT_CLUSTER_INNER_CLASSES,
   SECTION1_MODELING_TITLE_NUDGE_UP_PX,
 } from "./power-banners-layout.constants";
 
@@ -44,9 +45,10 @@ export function ModelingHeroSlideTextStack({
   return (
     <div
       id={LANDING_ELEMENT_IDS.HERO_MODELING_TEXT_GROUP}
-      className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center px-6 pb-10 pt-8 text-center max-md:translate-y-[var(--section1-modeling-text-nudge-y-mobile)] lg:translate-y-[var(--section1-modeling-text-nudge-y-desktop)] lg:pb-16 lg:pt-12 md:max-lg:translate-y-[var(--section1-modeling-text-nudge-y-desktop)] md:max-lg:pb-16 md:max-lg:pt-12"
+      className="absolute inset-x-0 bottom-0 z-10 flex flex-col items-center px-5 pb-10 pt-8 text-center sm:px-8 max-md:translate-y-[var(--section1-modeling-text-nudge-y-mobile)] lg:translate-y-[var(--section1-modeling-text-nudge-y-desktop)] lg:pb-16 lg:pt-12 md:max-lg:translate-y-[var(--section1-modeling-text-nudge-y-desktop)] md:max-lg:pb-16 md:max-lg:pt-12"
       style={clusterStyle}
     >
+      <div className={SECTION1_MODELING_TEXT_CLUSTER_INNER_CLASSES}>
       <div className="flex w-full flex-col items-center md:hidden">
         <h1
           className="inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance"
@@ -158,6 +160,7 @@ export function ModelingHeroSlideTextStack({
       >
         <GetAQuoteButton variant="gold" />
       </span>
+      </div>
     </div>
   );
 }

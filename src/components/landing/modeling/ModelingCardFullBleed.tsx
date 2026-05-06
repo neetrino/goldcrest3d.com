@@ -133,11 +133,11 @@ function buildTripleOffsetStyle(
 }
 
 function offsetActiveClassTriple(): string {
-  return "[--offset-y-active:var(--offset-y-mobile)] sm:[--offset-y-active:var(--offset-y-tablet)] lg:[--offset-y-active:var(--offset-y-desktop)] [--offset-x-active:var(--offset-x-mobile)] sm:[--offset-x-active:var(--offset-x-tablet)] lg:[--offset-x-active:var(--offset-x-desktop)]";
+  return "[--offset-y-active:var(--offset-y-mobile)] min-[755px]:[--offset-y-active:var(--offset-y-tablet)] lg:[--offset-y-active:var(--offset-y-desktop)] [--offset-x-active:var(--offset-x-mobile)] min-[755px]:[--offset-x-active:var(--offset-x-tablet)] lg:[--offset-x-active:var(--offset-x-desktop)]";
 }
 
 function offsetActiveClassDual(): string {
-  return "[--offset-y-active:var(--offset-y-mobile)] sm:[--offset-y-active:var(--offset-y-desktop)] [--offset-x-active:var(--offset-x-mobile)] sm:[--offset-x-active:var(--offset-x-desktop)]";
+  return "[--offset-y-active:var(--offset-y-mobile)] min-[755px]:[--offset-y-active:var(--offset-y-desktop)] [--offset-x-active:var(--offset-x-mobile)] min-[755px]:[--offset-x-active:var(--offset-x-desktop)]";
 }
 
 /** CSS vars only — use when combining with other transforms on the same node (e.g. Hip-Hop description). */
@@ -348,7 +348,7 @@ export function ModelingCardFullBleed({
                     fill
                     className={`min-h-0 min-w-0 ${imageFillClassName}`}
                     style={imageStyle}
-                    sizes="(max-width: 639px) 100vw, 0px"
+                    sizes="(max-width: 754px) 100vw, 0px"
                   />
                 </div>
                 <div className={imgTabletWrapperClass}>
@@ -358,7 +358,7 @@ export function ModelingCardFullBleed({
                     fill
                     className={`min-h-0 min-w-0 ${imageFillClassName}`}
                     style={imageStyle}
-                    sizes="(min-width: 640px) and (max-width: 1023px) 50vw, 0px"
+                    sizes="(min-width: 755px) and (max-width: 1023px) 50vw, 0px"
                   />
                 </div>
                 <div className={imgDesktopWrapperClass}>
@@ -381,7 +381,7 @@ export function ModelingCardFullBleed({
                     fill
                     className={`min-h-0 min-w-0 ${imageFillClassName}`}
                     style={imageStyle}
-                    sizes="(max-width: 639px) 100vw, 0px"
+                    sizes="(max-width: 754px) 100vw, 0px"
                   />
                 </div>
                 <div className={imgDesktopWrapperClass}>
@@ -391,7 +391,7 @@ export function ModelingCardFullBleed({
                     fill
                     className={imageFillClassNameDesktop}
                     style={imageStyle}
-                    sizes="(max-width: 639px) 100vw, 50vw"
+                    sizes="(max-width: 754px) 100vw, 50vw"
                   />
                 </div>
               </>
@@ -403,20 +403,20 @@ export function ModelingCardFullBleed({
               fill
               className={imageFillClassName}
               style={imageStyle}
-              sizes="(max-width: 639px) 100vw, 50vw"
+              sizes="(max-width: 754px) 100vw, 50vw"
             />
           )
         ) : null}
       </div>
 
       <div
-        className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] max-sm:translate-y-[calc(-0.3rem*var(--ms,1))] text-center sm:gap-[calc(1.5rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:pb-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(1.6rem*var(--ms,1))]" : bridalMobileLayout ? "justify-center max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-x-[calc(0.6rem*var(--ms,1))] max-sm:translate-y-[calc(6rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(7.5rem*var(--ms,1)),16vw)] sm:-translate-y-[min(calc(7rem*var(--ms,1)),18vh)] sm:items-start sm:text-left" : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
+        className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] min-[755px]:px-[calc(2rem*var(--ms,1))] min-[755px]:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] max-[754px]:translate-y-[calc(-0.3rem*var(--ms,1))] text-center min-[755px]:gap-[calc(1.5rem*var(--ms,1))] min-[755px]:px-[calc(2rem*var(--ms,1))] min-[755px]:pb-[calc(0.5rem*var(--ms,1))] min-[755px]:translate-y-[calc(1.6rem*var(--ms,1))]" : bridalMobileLayout ? "justify-center max-[754px]:!ml-0 max-[754px]:!mt-0 max-[754px]:translate-x-[calc(0.6rem*var(--ms,1))] max-[754px]:translate-y-[calc(6rem*var(--ms,1))] max-[754px]:gap-[calc(0.75rem*var(--ms,1))] max-[754px]:px-[calc(1rem*var(--ms,1))] max-[754px]:items-start max-[754px]:text-left min-[755px]:-translate-x-[min(calc(7.5rem*var(--ms,1)),16vw)] min-[755px]:-translate-y-[min(calc(7rem*var(--ms,1)),18vh)] min-[755px]:items-start min-[755px]:text-left" : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
         style={overlayTextContainerStyle}
       >
         {independentTitleDescription ? (
           portraitMobileLayout ? (
             <>
-              <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:hidden">
+              <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] min-[755px]:hidden">
                 <div
                   style={{
                     transform: modelingCopyTranslatePercent(titleOffsetXMobile, titleOffsetYMobile),
@@ -465,7 +465,7 @@ export function ModelingCardFullBleed({
                 </div>
               </div>
               {showPortraitTabletText ? (
-                <div className="absolute inset-0 z-20 hidden -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:flex lg:hidden">
+                <div className="absolute inset-0 z-20 hidden -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] min-[755px]:flex lg:hidden">
                   {hasPortraitTabletTitle ? (
                     <div
                       style={{
@@ -590,7 +590,7 @@ export function ModelingCardFullBleed({
                 style={responsiveTitleOffsetStyle}
               >
                 <h3
-                  className={`${titleClassNameResolved} ${hasDescriptionContent ? `h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible ${modelingTabletTierEnabled ? "sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] lg:h-[calc(24px*var(--ms,1)*var(--mt,1))]" : "sm:h-[calc(24px*var(--ms,1)*var(--mt,1))]"}` : ""} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center max-sm:-translate-y-[calc(3rem*var(--ms,1))] sm:-translate-y-[calc(6rem*var(--ms,1))]" : ""} ${hasHipHopMobileMultilineTitle ? "max-sm:leading-[calc(1.22rem*var(--ms,1)*var(--mt,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                  className={`${titleClassNameResolved} ${hasDescriptionContent ? `h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible ${modelingTabletTierEnabled ? "min-[755px]:h-[calc(24px*var(--ms,1)*var(--mt,1))] lg:h-[calc(24px*var(--ms,1)*var(--mt,1))]" : "min-[755px]:h-[calc(24px*var(--ms,1)*var(--mt,1))]"}` : ""} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center max-[754px]:-translate-y-[calc(3rem*var(--ms,1))] min-[755px]:-translate-y-[calc(6rem*var(--ms,1))]" : ""} ${hasHipHopMobileMultilineTitle ? "max-[754px]:leading-[calc(1.22rem*var(--ms,1)*var(--mt,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-[754px]:!mr-0 max-[754px]:!mt-[calc(0.5rem*var(--ms,1))] max-[754px]:!self-start max-[754px]:!text-left min-[755px]:!self-start min-[755px]:!text-left min-[755px]:!mr-0 min-[755px]:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                   style={{
                     ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                     ...(titleMarginTop != null && { marginTop: titleMarginTop }),
@@ -600,7 +600,7 @@ export function ModelingCardFullBleed({
                     <>
                       {hasMobileTitle ? (
                         <span
-                          className="whitespace-pre-wrap sm:hidden"
+                          className="whitespace-pre-wrap min-[755px]:hidden"
                           style={
                             mobilePreviewTitleFontPx != null
                               ? modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx)
@@ -612,7 +612,7 @@ export function ModelingCardFullBleed({
                       ) : null}
                       {showMdTabletTitleLine ? (
                         <span
-                          className="hidden whitespace-pre-wrap sm:inline lg:hidden"
+                          className="hidden whitespace-pre-wrap min-[755px]:inline lg:hidden"
                           style={
                             tabletPreviewTitleFontPx != null
                               ? modelingCmsTabletTitleFontStyle(tabletPreviewTitleFontPx)
@@ -632,7 +632,7 @@ export function ModelingCardFullBleed({
                     <>
                       {hasMobileTitle ? (
                         <span
-                          className="whitespace-pre-wrap sm:hidden"
+                          className="whitespace-pre-wrap min-[755px]:hidden"
                           style={
                             mobilePreviewTitleFontPx != null
                               ? modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx)
@@ -643,7 +643,7 @@ export function ModelingCardFullBleed({
                         </span>
                       ) : null}
                       {hasDesktopTitle ? (
-                        <span className="hidden whitespace-pre-wrap sm:inline">{renderModelingTitleText(title)}</span>
+                        <span className="hidden whitespace-pre-wrap min-[755px]:inline">{renderModelingTitleText(title)}</span>
                       ) : null}
                     </>
                   )}
@@ -662,17 +662,17 @@ export function ModelingCardFullBleed({
                     : ""
                 }${
                   hipHopMobileLayout
-                    ? ` max-sm:mt-[calc(1rem*var(--ms,1))] ${
+                    ? ` max-[754px]:mt-[calc(1rem*var(--ms,1))] ${
                         mobilePreviewBodyFontPx != null
-                          ? "max-sm:w-[min(100%,calc(560px*var(--ms,1)))] max-sm:max-w-full max-sm:overflow-x-auto"
-                          : "max-sm:w-[min(100%,calc(280px*var(--ms,1)))] max-sm:max-w-full"
-                      } sm:absolute sm:bottom-[calc(4rem*var(--ms,1))] sm:left-1/2 sm:mt-0 sm:w-[min(100%,calc(560px*var(--ms,1)))] ${
+                          ? "max-[754px]:w-[min(100%,calc(560px*var(--ms,1)))] max-[754px]:max-w-full max-[754px]:overflow-x-auto"
+                          : "max-[754px]:w-[min(100%,calc(280px*var(--ms,1)))] max-[754px]:max-w-full"
+                      } min-[755px]:absolute min-[755px]:bottom-[calc(4rem*var(--ms,1))] min-[755px]:left-1/2 min-[755px]:mt-0 min-[755px]:w-[min(100%,calc(560px*var(--ms,1)))] ${
                         modelingTabletTierEnabled
-                          ? `${offsetActiveClassTriple()} max-sm:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`
-                          : `${offsetActiveClassDual()} max-sm:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`
+                          ? `${offsetActiveClassTriple()} max-[754px]:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] min-[755px]:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`
+                          : `${offsetActiveClassDual()} max-[754px]:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] min-[755px]:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`
                       }`
                     : ` ${modelingTabletTierEnabled ? offsetActiveClassTriple() : offsetActiveClassDual()}`
-                }${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                }${bridalMobileLayout ? " max-[754px]:!-mt-[calc(0.5rem*var(--ms,1))] max-[754px]:w-full min-[755px]:w-auto min-[755px]:self-start min-[755px]:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                 style={{
                   ...(mobilePreviewBodyFontPx != null
                     ? {

@@ -154,7 +154,7 @@ export function ModelingBlockHighJewelry({
   const hasLgDescriptionCopy = rawLinesForLg.some((l) => l.trim().length > 0);
 
   const objectClassName =
-    "h-full w-full object-cover max-sm:object-right sm:object-[center_48%_center]";
+    "h-full w-full object-cover max-[754px]:object-right min-[755px]:object-[center_48%_center]";
   return (
     <article
       className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
@@ -170,26 +170,26 @@ export function ModelingBlockHighJewelry({
             alt=""
             fill
             className={objectClassName}
-            sizes="(max-width: 639px) 100vw, 50vw"
+            sizes="(max-width: 754px) 100vw, 50vw"
           />
         ) : (
           <>
-            <div className="absolute inset-0 sm:hidden">
+            <div className="absolute inset-0 min-[755px]:hidden">
               <Image
                 src={imageUrlMobile}
                 alt=""
                 fill
                 className="min-h-0 min-w-0 h-full w-full object-cover object-right"
-                sizes="(max-width: 639px) 100vw, 0px"
+                sizes="(max-width: 754px) 100vw, 0px"
               />
             </div>
-            <div className="absolute inset-0 hidden sm:block lg:hidden">
+            <div className="absolute inset-0 hidden min-[755px]:block lg:hidden">
               <Image
                 src={imageUrlTablet}
                 alt=""
                 fill
                 className="h-full w-full object-cover object-[center_48%_center]"
-                sizes="(min-width: 640px) and (max-width: 1023px) 50vw, 0px"
+                sizes="(min-width: 755px) and (max-width: 1023px) 50vw, 0px"
               />
             </div>
             <div className="absolute inset-0 hidden lg:block">
@@ -205,14 +205,14 @@ export function ModelingBlockHighJewelry({
         )}
       </div>
       <div
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-sm:translate-y-[calc(144px*var(--ms,1))]"
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-[754px]:translate-y-[calc(144px*var(--ms,1))]"
         style={{ marginTop: "-33%" }}
       >
         {titleForLg.length > 0 ? (
-          <h3 className="h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-extrabold sm:scale-x-105 sm:origin-center lg:font-manrope lg:font-extrabold">
+          <h3 className="h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-[754px]:translate-y-[calc(0.75rem*var(--ms,1))] min-[755px]:h-[calc(24px*var(--ms,1)*var(--mt,1))] min-[755px]:font-manrope min-[755px]:text-[calc(32px*var(--ms,1)*var(--mt,1))] min-[755px]:leading-[calc(24px*var(--ms,1)*var(--mt,1))] min-[755px]:tracking-normal min-[755px]:font-extrabold min-[755px]:scale-x-105 min-[755px]:origin-center lg:font-manrope lg:font-extrabold">
             {titleMobile.trim().length > 0 ? (
               <span
-                className="inline-block whitespace-pre-wrap sm:hidden"
+                className="inline-block whitespace-pre-wrap min-[755px]:hidden"
                 style={mergeCssProperties(
                   {
                     transform: modelingCopyTranslatePercent(titleMobileOffsetX, titleMobileOffsetY),
@@ -225,7 +225,7 @@ export function ModelingBlockHighJewelry({
             ) : null}
             {titleTabletDisplay.length > 0 ? (
               <span
-                className="hidden whitespace-pre-wrap sm:inline-block lg:hidden"
+                className="hidden whitespace-pre-wrap min-[755px]:inline-block lg:hidden"
                 style={mergeCssProperties(
                   {
                     transform: modelingCopyTranslatePercent(titleTabletOffsetX, titleTabletOffsetY),
@@ -248,7 +248,7 @@ export function ModelingBlockHighJewelry({
         ) : null}
         {descriptionLinesMobile.length > 0 ? (
           <p
-            className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(0.8125rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden"
+            className="mt-[calc(1rem*var(--ms,1))] block w-[min(100%,calc(280px*var(--ms,1)))] max-w-full shrink-0 text-center font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(0.8125rem*var(--ms,1)*var(--mt,1))] text-[#364153] min-[755px]:hidden"
             style={mergeCssProperties(
               {
                 transform: modelingCopyTranslatePercent(bodyMobileOffsetX, bodyMobileOffsetY),
@@ -269,7 +269,7 @@ export function ModelingBlockHighJewelry({
         ) : null}
         {hasTabletDescriptionCopy ? (
           <div
-            className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 sm:block lg:hidden"
+            className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 min-[755px]:block lg:hidden"
             style={mergeCssProperties(
               {
                 transform: modelingCopyTranslatePercent(bodyTabletOffsetX, bodyTabletOffsetY),

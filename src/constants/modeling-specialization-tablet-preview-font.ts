@@ -1,4 +1,4 @@
-/** Admin Media Manager + landing: tablet tier (640px–1023px) modeling card copy. */
+/** Admin Media Manager + landing: tablet tier (755px–1023px) modeling card copy. */
 export const MODELING_TABLET_PREVIEW_TITLE_FONT_PX_DEFAULT = 32;
 export const MODELING_TABLET_PREVIEW_BODY_FONT_PX_DEFAULT = 14;
 

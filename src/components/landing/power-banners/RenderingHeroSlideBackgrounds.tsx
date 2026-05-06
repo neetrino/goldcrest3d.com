@@ -5,8 +5,8 @@ import {
   type ManufacturingImageTransform,
 } from "@/lib/manufacturing-intelligence/manufacturing-image-transform";
 import {
-  HERO_DESKTOP_IMAGE_SIZES,
-  HERO_MOBILE_IMAGE_SIZES,
+  RENDERING_HERO_DESKTOP_IMAGE_SIZES,
+  RENDERING_HERO_MOBILE_IMAGE_SIZES,
 } from "./power-banners-layout.constants";
 
 type RenderingHeroSlideBackgroundsProps = {
@@ -29,7 +29,7 @@ export function RenderingHeroSlideBackgrounds({
   return (
     <>
       <div
-        className="pointer-events-none absolute inset-0 z-0 md:hidden"
+        className="pointer-events-none absolute inset-0 z-0 min-[755px]:hidden"
         aria-hidden
       >
         <div
@@ -46,13 +46,13 @@ export function RenderingHeroSlideBackgrounds({
             alt=""
             fill
             unoptimized
-            sizes={HERO_MOBILE_IMAGE_SIZES}
+            sizes={RENDERING_HERO_MOBILE_IMAGE_SIZES}
             className="object-cover object-left"
           />
         </div>
       </div>
       <div
-        className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden md:block lg:hidden"
+        className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden min-[755px]:block lg:hidden"
         aria-hidden
       >
         <div
@@ -68,7 +68,7 @@ export function RenderingHeroSlideBackgrounds({
             src={tabletBgSrc}
             alt=""
             fill
-            sizes={HERO_DESKTOP_IMAGE_SIZES}
+            sizes={RENDERING_HERO_DESKTOP_IMAGE_SIZES}
             className="object-cover object-center"
           />
         </div>
@@ -90,7 +90,7 @@ export function RenderingHeroSlideBackgrounds({
             src={desktopBgSrc}
             alt=""
             fill
-            sizes={HERO_DESKTOP_IMAGE_SIZES}
+            sizes={RENDERING_HERO_DESKTOP_IMAGE_SIZES}
             className="object-cover object-center"
           />
         </div>
