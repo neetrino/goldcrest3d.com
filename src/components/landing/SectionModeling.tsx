@@ -39,7 +39,7 @@ export function SectionModeling({
             <ModelingSpecializationTitle />
           </div>
 
-          <div className="modeling-specialization-card-text-scale grid min-w-0 grid-cols-1 justify-items-center gap-[calc(0.625rem*var(--ms,1))] sm:grid-cols-2 lg:gap-[calc(0.5rem*var(--ms,1))]">
+          <div className="modeling-specialization-card-text-scale grid min-w-0 grid-cols-1 gap-[calc(0.625rem*var(--ms,1))] sm:grid-cols-2 lg:gap-[calc(0.5rem*var(--ms,1))]">
           <ModelingBlockHipHop
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIP_HOP].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.HIP_HOP].mobile}
