@@ -9,9 +9,8 @@ import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/
 import {
   MODELING_CARD_ARTICLE_SHELL_CLASSES,
   MODELING_CARD_FRAME_MOBILE_CLASSES,
-  modelingBodyLinesForLgViewport,
+  modelingCopyBodyLinesDesktopOnly,
   modelingCopyTranslatePercent,
-  modelingTitleForLgViewport,
 } from "./modeling-card.constants";
 import {
   mergeCssProperties,
@@ -100,13 +99,9 @@ export function ModelingBlockMechanical({
   const hasDesktopTitle = titleDesktop.trim().length > 0;
   const hasMobileTitle = titleMobile.trim().length > 0;
   const hasTabletTitle = titleTablet.trim().length > 0;
-  const titleForLg = modelingTitleForLgViewport(titleDesktop, titleTablet, titleMobile);
-  const showLgTitle = titleForLg.length > 0;
-  const linesForLgBody = modelingBodyLinesForLgViewport(
-    descriptionLinesDesktop,
-    descriptionLinesTablet,
-    descriptionLinesMobile,
-  );
+  const showLgTitle = hasDesktopTitle;
+  const linesForLgBody =
+    modelingCopyBodyLinesDesktopOnly(descriptionLinesDesktop);
 
   const isAndroidResolved = isAndroidViewport || isAndroidClient;
   const mobileOverlayTranslateYPx = isAndroidResolved
@@ -191,7 +186,7 @@ export function ModelingBlockMechanical({
                   }}
                 >
                   <span className={`block whitespace-pre-wrap ${TITLE_LINE1_DESKTOP_NUDGE_UP_CLASS}`}>
-                    {renderModelingTitleText(titleForLg)}
+                    {renderModelingTitleText(titleDesktop)}
                   </span>
                 </span>
               ) : null}

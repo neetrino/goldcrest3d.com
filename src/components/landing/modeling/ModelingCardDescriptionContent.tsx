@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { modelingBodyLinesForLgViewport } from "./modeling-card.constants";
+import { modelingCopyBodyLinesDesktopOnly } from "./modeling-card.constants";
 import {
   BRIDAL_DESCRIPTION_SECURE_PRONG_LINE,
   BRIDAL_MOBILE_SECURE_PRONG_MARGIN_TOP_CLASS,
@@ -189,10 +189,8 @@ export function renderModelingCardDescriptionContent(
               </div>
             ) : null}
             {(() => {
-              const linesForLg = modelingBodyLinesForLgViewport(
+              const linesForLg = modelingCopyBodyLinesDesktopOnly(
                 descriptionLinesDesktop ?? [],
-                tabletStackLines,
-                descriptionLinesMobile ?? [],
               );
               return linesForLg.length > 0 ? (
                 <div className="hidden w-full min-w-0 flex-col items-start lg:flex lg:-translate-x-[calc(-0.1rem*var(--ms,1))]">
@@ -303,10 +301,8 @@ export function renderModelingCardDescriptionContent(
             </div>
           ) : null}
           {(() => {
-            const linesForLg = modelingBodyLinesForLgViewport(
+            const linesForLg = modelingCopyBodyLinesDesktopOnly(
               descriptionLinesDesktop ?? [],
-              tabletHipHopLines,
-              descriptionLines,
             );
             return linesForLg.length > 0 ? (
               <div className="hidden min-w-0 flex-col items-center lg:flex lg:gap-0">

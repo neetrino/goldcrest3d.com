@@ -54,30 +54,18 @@ function linesHaveContent(lines: readonly string[]): boolean {
 }
 
 /**
- * Large-viewport body lines when desktop rows are empty (e.g. only tablet tier filled in CMS).
- * Order: desktop → tablet → mobile. Desktop typography/offsets stay unchanged; only the string source varies.
+ * Desktop (lg+) modeling copy: only `bodyDesktop` from CMS. Empty desktop body → no lines (no tablet/mobile fallback).
  */
-export function modelingBodyLinesForLgViewport(
+export function modelingCopyBodyLinesDesktopOnly(
   linesDesktop: readonly string[],
-  linesTablet: readonly string[],
-  linesMobile: readonly string[],
 ): string[] {
-  if (linesHaveContent(linesDesktop)) return [...linesDesktop];
-  if (linesHaveContent(linesTablet)) return [...linesTablet];
-  return [...linesMobile];
+  if (!linesHaveContent(linesDesktop)) {
+    return [];
+  }
+  return [...linesDesktop];
 }
 
-/**
- * Large-viewport title when `titleDesktop` is empty. Order: desktop → tablet → mobile.
- */
-export function modelingTitleForLgViewport(
-  titleDesktop: string,
-  titleTablet: string,
-  titleMobile: string,
-): string {
-  const d = titleDesktop.trim();
-  if (d.length > 0) return titleDesktop;
-  const t = titleTablet.trim();
-  if (t.length > 0) return titleTablet;
-  return titleMobile.trim();
+/** Desktop (lg+) title: only `titleDesktop` from CMS (trimmed). No tablet/mobile fallback. */
+export function modelingCopyTitleDesktopOnly(titleDesktop: string): string {
+  return titleDesktop.trim();
 }

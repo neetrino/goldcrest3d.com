@@ -6,8 +6,8 @@ import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/
 import {
   MODELING_CARD_ARTICLE_SHELL_CLASSES,
   MODELING_CARD_FRAME_MOBILE_CLASSES,
+  modelingCopyTitleDesktopOnly,
   modelingCopyTranslatePercent,
-  modelingTitleForLgViewport,
 } from "./modeling-card.constants";
 import {
   PORTRAIT_MOBILE_OVERLAY_DESC_CLASS,
@@ -266,12 +266,9 @@ export function ModelingCardFullBleed({
   const showPortraitTabletText =
     portraitMobileLayout &&
     (hasPortraitTabletTitle || portraitTabletDescriptionContent != null);
-  const lgViewportTitleText = modelingTitleForLgViewport(
-    title,
-    titleTabletResolved,
-    titleMobile ?? "",
-  );
-  const showLgViewportTitle = modelingTabletTierEnabled && lgViewportTitleText.length > 0;
+  const lgViewportTitleText = modelingCopyTitleDesktopOnly(title);
+  const showLgViewportTitle =
+    modelingTabletTierEnabled && lgViewportTitleText.length > 0;
   const hasHipHopMobileMultilineTitle = hipHopMobileLayout && (titleMobile ?? "").includes("\n");
   const responsiveTitleOffsetStyle = modelingTabletTierEnabled
     ? buildTripleOffsetStyle(

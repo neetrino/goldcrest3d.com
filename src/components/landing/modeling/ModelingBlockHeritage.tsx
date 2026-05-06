@@ -6,9 +6,8 @@ import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/
 import {
   MODELING_CARD_ARTICLE_SHELL_CLASSES,
   MODELING_CARD_FRAME_MOBILE_CLASSES,
-  modelingBodyLinesForLgViewport,
+  modelingCopyBodyLinesDesktopOnly,
   modelingCopyTranslatePercent,
-  modelingTitleForLgViewport,
 } from "./modeling-card.constants";
 import {
   modelingCmsMobileBodyFontStyle,
@@ -95,13 +94,9 @@ function HeritageOverlayText({
   const hasMobileTitle = titleMobile.trim().length > 0;
   const hasDesktopTitle = titleDesktop.trim().length > 0;
   const hasTabletTitle = titleTabletResolved.length > 0;
-  const titleForLg = modelingTitleForLgViewport(titleDesktop, titleTabletResolved, titleMobile);
-  const showLgTitle = titleForLg.length > 0;
-  const linesForLgHeritage = modelingBodyLinesForLgViewport(
-    descriptionLinesDesktop,
-    descTabletLines,
-    descriptionLinesMobile,
-  );
+  const showLgTitle = hasDesktopTitle;
+  const linesForLgHeritage =
+    modelingCopyBodyLinesDesktopOnly(descriptionLinesDesktop);
 
   return (
     <div className="absolute inset-0 z-10 flex items-start justify-end px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))]">
@@ -143,7 +138,7 @@ function HeritageOverlayText({
                 }}
               >
                 <span className="hidden whitespace-pre-wrap lg:inline-block">
-                  {renderModelingTitleText(titleForLg)}
+                  {renderModelingTitleText(titleDesktop)}
                 </span>
               </span>
             ) : null}

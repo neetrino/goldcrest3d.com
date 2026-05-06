@@ -6,9 +6,8 @@ import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/
 import {
   MODELING_CARD_ARTICLE_SHELL_CLASSES,
   MODELING_CARD_FRAME_MOBILE_CLASSES,
-  modelingBodyLinesForLgViewport,
+  modelingCopyBodyLinesDesktopOnly,
   modelingCopyTranslatePercent,
-  modelingTitleForLgViewport,
 } from "./modeling-card.constants";
 import {
   mergeCssProperties,
@@ -122,30 +121,23 @@ export function ModelingBlockHighJewelry({
   const mobileRest = descriptionLinesMobile.slice(1);
 
   const titleTabletDisplay = titleTablet.trim();
-  const titleForLg = modelingTitleForLgViewport(titleDesktop, titleTablet, titleMobile);
+  const hasDesktopTitle = titleDesktop.trim().length > 0;
+  const hasMobileTitle = titleMobile.trim().length > 0;
+  const hasTabletTitle = titleTabletDisplay.length > 0;
+  const hasAnyTitle = hasMobileTitle || hasTabletTitle || hasDesktopTitle;
   const hasTabletDescriptionCopy = descriptionLinesTablet.some(
     (line) => line.trim().length > 0,
   );
 
-  const rawLinesForLg = modelingBodyLinesForLgViewport(
-    descriptionLinesDesktop,
-    descriptionLinesTablet,
-    descriptionLinesMobile,
-  );
-  const lgUsesDesktopCopy = descriptionLinesDesktop.some((l) => l.trim().length > 0);
-  const lgUsesTabletCopy =
-    !lgUsesDesktopCopy && descriptionLinesTablet.some((l) => l.trim().length > 0);
+  const rawLinesForLg = modelingCopyBodyLinesDesktopOnly(descriptionLinesDesktop);
+  const lgUsesDesktopCopy = rawLinesForLg.length > 0;
   const normalizedLgDescLines = reduceHighJewelryLines(rawLinesForLg);
   const lgDescLinesNoBreak = normalizedLgDescLines.map((line) =>
     line.replace(/\bprecise digital\b/gi, "precise\u00A0digital"),
   );
   const lgDescLine1 = lgDescLinesNoBreak[0] ?? "";
   const lgDescRest = lgDescLinesNoBreak.slice(1);
-  const lgDescLine1Emphasis = lgUsesDesktopCopy
-    ? desktopLine1Emphasis
-    : lgUsesTabletCopy
-      ? tabletLine1Emphasis
-      : "";
+  const lgDescLine1Emphasis = lgUsesDesktopCopy ? desktopLine1Emphasis : "";
   const hasLgDescriptionCopy = rawLinesForLg.some((l) => l.trim().length > 0);
 
   const objectClassName =
@@ -203,9 +195,9 @@ export function ModelingBlockHighJewelry({
         className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center text-black max-sm:translate-y-[calc(144px*var(--ms,1))]"
         style={{ marginTop: "-33%" }}
       >
-        {titleForLg.length > 0 ? (
+        {hasAnyTitle ? (
           <h3 className="h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black max-sm:translate-y-[calc(0.75rem*var(--ms,1))] sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:tracking-normal sm:font-extrabold sm:scale-x-105 sm:origin-center lg:font-manrope lg:font-extrabold">
-            {titleMobile.trim().length > 0 ? (
+            {hasMobileTitle ? (
               <span
                 className="inline-block whitespace-pre-wrap md:hidden"
                 style={mergeCssProperties(
@@ -228,14 +220,16 @@ export function ModelingBlockHighJewelry({
                 {renderModelingTitleText(titleTabletDisplay)}
               </span>
             ) : null}
-            <span
-              className="hidden whitespace-pre-wrap lg:inline-block"
-              style={{
-                transform: modelingCopyTranslatePercent(titleDesktopOffsetX, titleDesktopOffsetY),
-              }}
-            >
-              {renderModelingTitleText(titleForLg)}
-            </span>
+            {hasDesktopTitle ? (
+              <span
+                className="hidden whitespace-pre-wrap lg:inline-block"
+                style={{
+                  transform: modelingCopyTranslatePercent(titleDesktopOffsetX, titleDesktopOffsetY),
+                }}
+              >
+                {renderModelingTitleText(titleDesktop)}
+              </span>
+            ) : null}
           </h3>
         ) : null}
         {descriptionLinesMobile.length > 0 ? (
