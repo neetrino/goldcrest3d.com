@@ -4,6 +4,7 @@ import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
 import {
+  MODELING_CARD_ARTICLE_SHELL_CLASSES,
   MODELING_CARD_FRAME_MOBILE_CLASSES,
   modelingBodyLinesForLgViewport,
   modelingCopyTranslatePercent,
@@ -230,7 +231,7 @@ export function ModelingBlockHeritage({
   const sameUrl = imageUrlDesktop === imageUrlMobile && imageUrlDesktop === imageUrlTablet;
   return (
     <article
-      className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
+      className={`${MODELING_CARD_ARTICLE_SHELL_CLASSES} ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
     >
       <div
         className="absolute inset-0"

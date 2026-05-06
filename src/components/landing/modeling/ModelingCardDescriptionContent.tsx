@@ -79,7 +79,7 @@ function renderHipHopBreakpointDesktopLines(
   return merged.map((line, i) => (
     <span
       key={`${keyPrefix}-${i}`}
-      className={`block text-center ${i < 2 ? "whitespace-nowrap" : "whitespace-normal"} ${i > 0 ? continuationGapClass : ""}`}
+      className={`block max-w-full text-center [overflow-wrap:anywhere] ${i < 2 ? "max-sm:whitespace-normal max-sm:break-words sm:whitespace-nowrap" : "whitespace-normal"} ${i > 0 ? continuationGapClass : ""}`}
     >
       {line.includes(" performance.")
         ? (

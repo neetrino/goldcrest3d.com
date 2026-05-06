@@ -4,8 +4,10 @@ import Image from "next/image";
 import { LANDING_MEDIA_CONTAIN_FRAME_BG_FULL_BLEED } from "@/components/landing/landing-media-frame.constants";
 
 import {
+  MODELING_CARD_ARTICLE_SHELL_CLASSES,
   MODELING_CARD_FRAME_MOBILE_CLASSES,
   modelingCopyTranslatePercent,
+  modelingCopyTranslatePercentFixed,
   modelingTitleForLgViewport,
 } from "./modeling-card.constants";
 import {
@@ -90,8 +92,13 @@ export type ModelingCardFullBleedProps = Pick<
   DescriptionTag: "div" | "p";
 };
 
+/**
+ * Offsets are unitless integers in CSS vars; `* 1%` is relative to the transformed element’s box.
+ * Title wrapper uses `flex-1` (Hip-Hop) so % is a meaningful share of the card, not ~one line height.
+ * Hip-Hop desktop description mixes -50% centering with the same vars — unitless vars avoid invalid `calc(-50% + 5)`.
+ */
 const OFFSET_TRANSFORM_YX =
-  "translateX(calc(var(--offset-x-active) * var(--ms,1))) translateY(calc(var(--offset-y-active) * var(--ms,1)))";
+  "translateX(calc(var(--offset-x-active) * 1% * var(--ms,1))) translateY(calc(var(--offset-y-active) * 1% * var(--ms,1)))";
 
 function buildResponsiveOffsetStyle(
   mobileOffsetY: number,
@@ -100,10 +107,10 @@ function buildResponsiveOffsetStyle(
   desktopOffsetX = 0,
 ): CSSProperties {
   return {
-    ["--offset-y-mobile" as string]: `${mobileOffsetY}%`,
-    ["--offset-y-desktop" as string]: `${desktopOffsetY}%`,
-    ["--offset-x-mobile" as string]: `${mobileOffsetX}%`,
-    ["--offset-x-desktop" as string]: `${desktopOffsetX}%`,
+    ["--offset-y-mobile" as string]: String(mobileOffsetY),
+    ["--offset-y-desktop" as string]: String(desktopOffsetY),
+    ["--offset-x-mobile" as string]: String(mobileOffsetX),
+    ["--offset-x-desktop" as string]: String(desktopOffsetX),
     transform: OFFSET_TRANSFORM_YX,
   };
 }
@@ -117,12 +124,12 @@ function buildTripleOffsetStyle(
   desktopOffsetX = 0,
 ): CSSProperties {
   return {
-    ["--offset-y-mobile" as string]: `${mobileOffsetY}%`,
-    ["--offset-y-tablet" as string]: `${tabletOffsetY}%`,
-    ["--offset-y-desktop" as string]: `${desktopOffsetY}%`,
-    ["--offset-x-mobile" as string]: `${mobileOffsetX}%`,
-    ["--offset-x-tablet" as string]: `${tabletOffsetX}%`,
-    ["--offset-x-desktop" as string]: `${desktopOffsetX}%`,
+    ["--offset-y-mobile" as string]: String(mobileOffsetY),
+    ["--offset-y-tablet" as string]: String(tabletOffsetY),
+    ["--offset-y-desktop" as string]: String(desktopOffsetY),
+    ["--offset-x-mobile" as string]: String(mobileOffsetX),
+    ["--offset-x-tablet" as string]: String(tabletOffsetX),
+    ["--offset-x-desktop" as string]: String(desktopOffsetX),
     transform: OFFSET_TRANSFORM_YX,
   };
 }
@@ -145,12 +152,12 @@ function tripleOffsetCssVarsOnly(
   desktopOffsetX = 0,
 ): CSSProperties {
   return {
-    ["--offset-y-mobile" as string]: `${mobileOffsetY}%`,
-    ["--offset-y-tablet" as string]: `${tabletOffsetY}%`,
-    ["--offset-y-desktop" as string]: `${desktopOffsetY}%`,
-    ["--offset-x-mobile" as string]: `${mobileOffsetX}%`,
-    ["--offset-x-tablet" as string]: `${tabletOffsetX}%`,
-    ["--offset-x-desktop" as string]: `${desktopOffsetX}%`,
+    ["--offset-y-mobile" as string]: String(mobileOffsetY),
+    ["--offset-y-tablet" as string]: String(tabletOffsetY),
+    ["--offset-y-desktop" as string]: String(desktopOffsetY),
+    ["--offset-x-mobile" as string]: String(mobileOffsetX),
+    ["--offset-x-tablet" as string]: String(tabletOffsetX),
+    ["--offset-x-desktop" as string]: String(desktopOffsetX),
   };
 }
 
@@ -161,10 +168,10 @@ function responsiveOffsetCssVarsOnly(
   desktopOffsetX = 0,
 ): CSSProperties {
   return {
-    ["--offset-y-mobile" as string]: `${mobileOffsetY}%`,
-    ["--offset-y-desktop" as string]: `${desktopOffsetY}%`,
-    ["--offset-x-mobile" as string]: `${mobileOffsetX}%`,
-    ["--offset-x-desktop" as string]: `${desktopOffsetX}%`,
+    ["--offset-y-mobile" as string]: String(mobileOffsetY),
+    ["--offset-y-desktop" as string]: String(desktopOffsetY),
+    ["--offset-x-mobile" as string]: String(mobileOffsetX),
+    ["--offset-x-desktop" as string]: String(desktopOffsetX),
   };
 }
 
@@ -299,8 +306,10 @@ export function ModelingCardFullBleed({
       );
 
   return (
-    <article className={`relative min-w-0 overflow-hidden ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}>
-      <div className="absolute inset-0" data-landing-image={imageId}>
+    <article
+      className={`${MODELING_CARD_ARTICLE_SHELL_CLASSES} ${MODELING_CARD_FRAME_MOBILE_CLASSES}`}
+    >
+      <div className="absolute inset-0 z-0" data-landing-image={imageId}>
         {imageLayerBackground && imageLayerBackgroundMobile ? (
           imgTabletWrapperClass.length > 0 && imageLayerBackgroundTablet != null ? (
             <>
@@ -396,20 +405,22 @@ export function ModelingCardFullBleed({
       </div>
 
       <div
-        className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] max-sm:translate-y-[calc(-0.3rem*var(--ms,1))] text-center sm:gap-[calc(1.5rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:pb-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(1.6rem*var(--ms,1))]" : bridalMobileLayout ? "justify-center max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-x-[calc(0.6rem*var(--ms,1))] max-sm:translate-y-[calc(6rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(7.5rem*var(--ms,1)),16vw)] sm:-translate-y-[min(calc(7rem*var(--ms,1)),18vh)] sm:items-start sm:text-left" : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
+        className={`absolute inset-0 z-10 min-h-0 overflow-visible [overflow-wrap:anywhere] max-sm:px-4 max-sm:py-4 sm:px-[calc(1.5rem*var(--ms,1))] sm:py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "items-center justify-end max-sm:gap-3 max-sm:px-4 max-sm:pb-1 max-sm:-translate-y-[0.3rem] text-center sm:gap-[calc(1.5rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:pb-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(1.6rem*var(--ms,1))]" : bridalMobileLayout ? "justify-center max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-x-[0.6rem] max-sm:translate-y-[6rem] max-sm:gap-3 max-sm:px-4 max-sm:items-start max-sm:text-left sm:-translate-x-[7.5rem] sm:-translate-y-[7rem] sm:items-start sm:text-left" : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
         style={overlayTextContainerStyle}
       >
         {independentTitleDescription ? (
           portraitMobileLayout ? (
             <>
-              <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] md:hidden">
+              {/* Portrait X shift: literal 162px — MODELING_PORTRAIT_OVERLAY_SHIFT_X_MOBILE_PX (no vw) */}
+              <div className="absolute inset-0 z-20 flex min-h-0 min-w-0 max-sm:-translate-x-[162px] sm:max-md:-translate-x-[min(12.5rem,200px)] -translate-y-[3rem] flex-col items-end justify-end max-sm:gap-3 sm:gap-[calc(0.75rem*var(--ms,1))] overflow-hidden max-sm:px-4 max-sm:pb-8 sm:px-[calc(1rem*var(--ms,1))] sm:pb-[calc(2rem*var(--ms,1))] [overflow-wrap:anywhere] md:hidden">
                 <div
+                  className="min-w-0 max-w-full"
                   style={{
-                    transform: modelingCopyTranslatePercent(titleOffsetXMobile, titleOffsetYMobile),
+                    transform: modelingCopyTranslatePercentFixed(titleOffsetXMobile, titleOffsetYMobile),
                   }}
                 >
                   <h3
-                    className={PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}
+                    className={`max-w-full break-words ${PORTRAIT_MOBILE_OVERLAY_TITLE_CLASS}`}
                     style={
                       mobilePreviewTitleFontPx != null
                         ? modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx)
@@ -427,8 +438,9 @@ export function ModelingCardFullBleed({
                   </h3>
                 </div>
                 <div
+                  className="min-w-0 max-w-full"
                   style={{
-                    transform: modelingCopyTranslatePercent(
+                    transform: modelingCopyTranslatePercentFixed(
                       descriptionOffsetXMobile,
                       descriptionOffsetYMobile,
                     ),
@@ -451,17 +463,18 @@ export function ModelingCardFullBleed({
                 </div>
               </div>
               {showPortraitTabletText ? (
-                <div className="absolute inset-0 z-20 hidden -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] md:flex lg:hidden">
+                <div className="absolute inset-0 z-20 hidden min-h-0 min-w-0 -translate-x-[min(12.5rem,200px)] -translate-y-[3rem] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] overflow-hidden px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] [overflow-wrap:anywhere] md:flex lg:hidden">
                   {hasPortraitTabletTitle ? (
                     <div
+                      className="min-w-0 max-w-full"
                       style={{
-                        transform: modelingCopyTranslatePercent(
+                        transform: modelingCopyTranslatePercentFixed(
                           titleOffsetXTablet,
                           titleOffsetYTablet,
                         ),
                       }}
                     >
-                      <h3 className={PORTRAIT_TABLET_OVERLAY_TITLE_CLASS}>
+                      <h3 className={`max-w-full break-words ${PORTRAIT_TABLET_OVERLAY_TITLE_CLASS}`}>
                         <span className="whitespace-pre-wrap">
                           {renderModelingTitleText(titleTabletResolved)}
                         </span>
@@ -470,8 +483,9 @@ export function ModelingCardFullBleed({
                   ) : null}
                   {portraitTabletDescriptionContent != null ? (
                     <div
+                      className="min-w-0 max-w-full"
                       style={{
-                        transform: modelingCopyTranslatePercent(
+                        transform: modelingCopyTranslatePercentFixed(
                           descriptionOffsetXTablet,
                           descriptionOffsetYTablet,
                         ),
@@ -482,10 +496,12 @@ export function ModelingCardFullBleed({
                   ) : null}
                 </div>
               ) : null}
-              <div className={`absolute inset-0 hidden lg:block ${desktopOverlayShiftClassName ?? ""}`}>
+              <div
+                className={`absolute inset-0 hidden min-h-0 min-w-0 overflow-hidden lg:block [overflow-wrap:anywhere] ${desktopOverlayShiftClassName ?? ""}`}
+              >
                 {hasDesktopTitle ? (
                   <div
-                    className={textAlignClass}
+                    className={`${textAlignClass} max-w-full`}
                     style={{
                       position: "absolute",
                       top: titleBlockTop ?? "20%",
@@ -494,14 +510,16 @@ export function ModelingCardFullBleed({
                       transform: modelingCopyTranslatePercent(titleOffsetXDesktop, titleOffsetYDesktop),
                     }}
                   >
-                    <h3 className={`${titleClassName} whitespace-pre-wrap ${titleShiftClassName ?? ""}`}>
+                    <h3
+                      className={`${titleClassName} max-w-full break-words whitespace-pre-wrap ${titleShiftClassName ?? ""}`}
+                    >
                       {renderModelingTitleText(title)}
                     </h3>
                   </div>
                 ) : null}
                 {hasDescriptionContent ? (
                   <div
-                    className={`max-w-[calc(407px*var(--ms,1))] ${descriptionBlockAlignClass}`}
+                    className={`min-w-0 max-w-[min(100%,calc(407px*var(--ms,1)))] overflow-hidden ${descriptionBlockAlignClass}`}
                     style={{
                       position: "absolute",
                       top: descriptionBlockTop ?? "32%",
@@ -514,7 +532,9 @@ export function ModelingCardFullBleed({
                       ),
                     }}
                   >
-                    <DescriptionTag className={descriptionClassName}>{descriptionContent}</DescriptionTag>
+                    <DescriptionTag className={`max-w-full break-words ${descriptionClassName}`}>
+                      {descriptionContent}
+                    </DescriptionTag>
                   </div>
                 ) : null}
               </div>
@@ -523,7 +543,7 @@ export function ModelingCardFullBleed({
             <>
               {hasDesktopTitle ? (
                 <div
-                  className={textAlignClass}
+                  className={`${textAlignClass} max-w-full`}
                   style={{
                     position: "absolute",
                     top: titleBlockTop ?? "20%",
@@ -532,14 +552,16 @@ export function ModelingCardFullBleed({
                     transform: modelingCopyTranslatePercent(titleOffsetXDesktop, titleOffsetYDesktop),
                   }}
                 >
-                  <h3 className={`${titleClassName} whitespace-pre-wrap ${titleShiftClassName ?? ""}`}>
+                  <h3
+                    className={`${titleClassName} max-w-full break-words whitespace-pre-wrap ${titleShiftClassName ?? ""}`}
+                  >
                     {renderModelingTitleText(title)}
                   </h3>
                 </div>
               ) : null}
               {hasDescriptionContent ? (
                 <div
-                  className={`max-w-[calc(407px*var(--ms,1))] ${descriptionBlockAlignClass}`}
+                  className={`min-w-0 max-w-[min(100%,calc(407px*var(--ms,1)))] overflow-hidden ${descriptionBlockAlignClass}`}
                   style={{
                     position: "absolute",
                     top: descriptionBlockTop ?? "32%",
@@ -552,7 +574,9 @@ export function ModelingCardFullBleed({
                     ),
                   }}
                 >
-                  <DescriptionTag className={descriptionClassName}>{descriptionContent}</DescriptionTag>
+                  <DescriptionTag className={`max-w-full break-words ${descriptionClassName}`}>
+                    {descriptionContent}
+                  </DescriptionTag>
                 </div>
               ) : null}
             </>
@@ -563,13 +587,23 @@ export function ModelingCardFullBleed({
               <div
                 className={
                   modelingTabletTierEnabled
-                    ? `w-full ${offsetActiveClassTriple()}`
-                    : `w-full ${offsetActiveClassDual()}`
+                    ? `min-w-0 max-w-full w-full ${hipHopMobileLayout && hasDescriptionContent ? "flex min-h-0 flex-1 flex-col justify-end" : ""} ${offsetActiveClassTriple()}`
+                    : `min-w-0 max-w-full w-full ${hipHopMobileLayout && hasDescriptionContent ? "flex min-h-0 flex-1 flex-col justify-end" : ""} ${offsetActiveClassDual()}`
                 }
                 style={responsiveTitleOffsetStyle}
               >
                 <h3
-                  className={`${titleClassNameResolved} ${hasDescriptionContent ? `h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible ${modelingTabletTierEnabled ? "md:h-[calc(24px*var(--ms,1)*var(--mt,1))] lg:h-[calc(24px*var(--ms,1)*var(--mt,1))]" : "sm:h-[calc(24px*var(--ms,1)*var(--mt,1))]"}` : ""} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center max-sm:-translate-y-[calc(3rem*var(--ms,1))] sm:-translate-y-[calc(6rem*var(--ms,1))]" : ""} ${hasHipHopMobileMultilineTitle ? "max-sm:leading-[calc(1.22rem*var(--ms,1)*var(--mt,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                  className={`max-w-full shrink-0 break-words ${titleClassNameResolved} ${
+                    hasDescriptionContent && !hipHopMobileLayout
+                      ? bridalMobileLayout
+                        ? "overflow-visible"
+                        : `h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-hidden ${
+                            modelingTabletTierEnabled
+                              ? "md:h-[calc(24px*var(--ms,1)*var(--mt,1))] lg:h-[calc(24px*var(--ms,1)*var(--mt,1))]"
+                              : "sm:h-[calc(24px*var(--ms,1)*var(--mt,1))]"
+                          }`
+                      : ""
+                  } ${hipHopMobileLayout ? "relative z-0 self-center text-center" : ""} ${hasHipHopMobileMultilineTitle ? "max-sm:leading-[1.22rem]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-2 max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                   style={{
                     ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                     ...(titleMarginTop != null && { marginTop: titleMarginTop }),
@@ -579,7 +613,7 @@ export function ModelingCardFullBleed({
                     <>
                       {hasMobileTitle ? (
                         <span
-                          className="whitespace-pre-wrap md:hidden"
+                          className="max-w-full whitespace-pre-wrap md:hidden"
                           style={
                             mobilePreviewTitleFontPx != null
                               ? modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx)
@@ -590,12 +624,12 @@ export function ModelingCardFullBleed({
                         </span>
                       ) : null}
                       {hasTabletTitle ? (
-                        <span className="hidden whitespace-pre-wrap md:inline lg:hidden">
+                        <span className="hidden max-w-full whitespace-pre-wrap md:inline lg:hidden">
                           {renderModelingTitleText(titleTabletResolved)}
                         </span>
                       ) : null}
                       {showLgViewportTitle ? (
-                        <span className="hidden whitespace-pre-wrap lg:inline">
+                        <span className="hidden max-w-full whitespace-pre-wrap lg:inline">
                           {renderModelingTitleText(lgViewportTitleText)}
                         </span>
                       ) : null}
@@ -604,7 +638,7 @@ export function ModelingCardFullBleed({
                     <>
                       {hasMobileTitle ? (
                         <span
-                          className="whitespace-pre-wrap sm:hidden"
+                          className="max-w-full whitespace-pre-wrap sm:hidden"
                           style={
                             mobilePreviewTitleFontPx != null
                               ? modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx)
@@ -615,7 +649,9 @@ export function ModelingCardFullBleed({
                         </span>
                       ) : null}
                       {hasDesktopTitle ? (
-                        <span className="hidden whitespace-pre-wrap sm:inline">{renderModelingTitleText(title)}</span>
+                        <span className="hidden max-w-full whitespace-pre-wrap sm:inline">
+                          {renderModelingTitleText(title)}
+                        </span>
                       ) : null}
                     </>
                   )}
@@ -624,23 +660,23 @@ export function ModelingCardFullBleed({
             ) : null}
             {hasDescriptionContent ? (
               <DescriptionTag
-                className={`${descriptionClassName}${
+                className={`min-w-0 max-w-full break-words ${descriptionClassName}${
                   mobilePreviewBodyFontPx != null
                     ? ` ${MODELING_CMS_MOBILE_BODY_FONT_OVERRIDE_CLASS}`
                     : ""
                 }${
                   hipHopMobileLayout
-                    ? ` max-sm:mt-[calc(1rem*var(--ms,1))] ${
+                    ? ` max-sm:mt-4 ${
                         mobilePreviewBodyFontPx != null
-                          ? "max-sm:w-[min(100%,calc(560px*var(--ms,1)))] max-sm:max-w-full max-sm:overflow-x-auto"
-                          : "max-sm:w-[min(100%,calc(280px*var(--ms,1)))] max-sm:max-w-full"
+                          ? "max-sm:min-w-0 max-sm:w-full max-sm:max-w-full"
+                          : "max-sm:min-w-0 max-sm:w-full max-sm:max-w-full"
                       } sm:absolute sm:bottom-[calc(4rem*var(--ms,1))] sm:left-1/2 sm:mt-0 sm:w-[min(100%,calc(560px*var(--ms,1)))] ${
                         modelingTabletTierEnabled
-                          ? `${offsetActiveClassTriple()} max-sm:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`
-                          : `${offsetActiveClassDual()} max-sm:[transform:translateX(calc(var(--offset-x-active)*var(--ms,1)))_translateY(calc(var(--offset-y-active)*var(--ms,1)))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*var(--ms,1)))]`
+                          ? `${offsetActiveClassTriple()} max-sm:[transform:translateX(calc(var(--offset-x-active)*1%))_translateY(calc(var(--offset-y-active)*1%))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*1%*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*1%*var(--ms,1)))]`
+                          : `${offsetActiveClassDual()} max-sm:[transform:translateX(calc(var(--offset-x-active)*1%))_translateY(calc(var(--offset-y-active)*1%))] sm:[transform:translateX(calc(-50%_+_var(--offset-x-active)*1%*var(--ms,1)))_translateY(calc(1.2rem*var(--ms,1)+var(--offset-y-active)*1%*var(--ms,1)))]`
                       }`
                     : ` ${modelingTabletTierEnabled ? offsetActiveClassTriple() : offsetActiveClassDual()}`
-                }${bridalMobileLayout ? " max-sm:!-mt-[calc(0.5rem*var(--ms,1))] max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                }${bridalMobileLayout ? " max-sm:!-mt-2 max-sm:w-full sm:w-auto sm:self-start sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                 style={{
                   ...(mobilePreviewBodyFontPx != null
                     ? {

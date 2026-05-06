@@ -19,11 +19,11 @@ export const PORTRAIT_TABLET_OVERLAY_TITLE_CLASS =
 export const PORTRAIT_MOBILE_TITLE_FULL = "3D Portrait Jewelry";
 
 export const PORTRAIT_MOBILE_OVERLAY_DESC_CLASS =
-  "w-[calc(155px*var(--ms,1))] max-w-full text-right font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(0.8125rem*var(--ms,1)*var(--mt,1))] text-[#364153]";
+  "w-full max-w-[min(100%,calc(155px*var(--ms,1)))] min-w-0 break-words text-right font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(0.8125rem*var(--ms,1)*var(--mt,1))] text-[#364153] [overflow-wrap:anywhere]";
 
 /** md–lg portrait slot body: wider than mobile overlay so tablet lines match design copy (not 155px reflow). */
 export const PORTRAIT_TABLET_OVERLAY_DESC_CLASS =
-  "w-[min(100%,calc(300px*var(--ms,1)))] max-w-full text-right font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70";
+  "w-[min(100%,calc(300px*var(--ms,1)))] max-w-full min-w-0 break-words text-right font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 [overflow-wrap:anywhere]";
 
 /** Default bridal CMS second paragraph; extra top margin separates it from the first block. */
 export const BRIDAL_DESCRIPTION_SECURE_PRONG_LINE =

@@ -14,5 +14,7 @@
   .modeling-cms-mobile-body-font-override * {
     font-size: calc(var(--modeling-cms-body-px) * 1px * var(--ms, 1) * var(--mt, 1)) !important;
     line-height: 1.2 !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
   }
 }

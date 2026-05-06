@@ -115,17 +115,17 @@ export function ModelingCard({
       ? "text-white/60"
       : "text-white";
   const lineWrapClass = noDescriptionMaxWidth
-    ? "leading-[calc(22px*var(--ms,1)*var(--mt,1))]"
-    : "leading-[calc(22px*var(--ms,1)*var(--mt,1))] whitespace-nowrap";
+    ? "leading-[calc(22px*var(--ms,1)*var(--mt,1))] break-words [overflow-wrap:anywhere]"
+    : "leading-[calc(22px*var(--ms,1)*var(--mt,1))] break-words [overflow-wrap:anywhere] max-sm:whitespace-normal sm:whitespace-nowrap";
   const hipHopMobileLineClass =
-    "block whitespace-normal leading-[calc(13px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
+    "block max-w-full whitespace-normal leading-[calc(13px*var(--ms,1)*var(--mt,1))] [overflow-wrap:anywhere] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
   const hipHopMobileLineSingleLineClass =
-    "block max-sm:whitespace-nowrap leading-[calc(13px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
+    "block max-w-full max-sm:whitespace-normal max-sm:break-words leading-[calc(13px*var(--ms,1)*var(--mt,1))] [overflow-wrap:anywhere] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
   const bridalRowWrapperClass = bridalMobileLayout
     ? "flex w-full flex-col items-end gap-2 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-4 sm:gap-y-1"
     : "flex flex-wrap items-baseline gap-x-4 gap-y-1";
   const bridalRowSpanClass = bridalMobileLayout
-    ? "max-sm:!m-0 max-sm:!translate-x-0 max-sm:block max-sm:w-[calc(291px*var(--ms,1))] max-sm:max-w-full max-sm:text-left max-sm:font-sans max-sm:text-[calc(12px*var(--ms,1)*var(--mt,1))] max-sm:font-light max-sm:text-[#364153] sm:inline"
+    ? "max-sm:!m-0 max-sm:!translate-x-0 max-sm:block max-sm:w-full max-sm:max-w-[min(100%,calc(291px*var(--ms,1)))] max-sm:break-words max-sm:text-left max-sm:font-sans max-sm:text-[calc(12px*var(--ms,1)*var(--mt,1))] max-sm:font-light max-sm:text-[#364153] sm:inline"
     : "";
   const bridalRowSpanClassDesktop = `${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""}`;
 
@@ -240,7 +240,7 @@ export function ModelingCard({
         : undefined;
   const overlayTranslateClass =
     hasLines && !fluidTextLayout
-      ? "translate-x-[calc(1.5rem*var(--ms,1))] translate-y-[calc(6rem*var(--ms,1))]"
+      ? "max-sm:translate-x-[1.5rem] max-sm:translate-y-[6rem] sm:translate-x-[calc(1.5rem*var(--ms,1))] sm:translate-y-[calc(6rem*var(--ms,1))]"
       : "";
 
   if (!gradient) {

@@ -8,7 +8,7 @@ export type ModelingSpecializationCopyRow = {
   bodyMobile: string;
   titleTablet: string;
   bodyTablet: string;
-  /** Vertical offsets: CSS translateY % (-1500…1500), scaled with section --ms on the landing page. */
+  /** Vertical offsets: integer % for translateY (same wide clamp as tablet/X), scaled with section --ms. */
   titleDesktopOffsetY: number;
   titleMobileOffsetY: number;
   bodyDesktopOffsetY: number;

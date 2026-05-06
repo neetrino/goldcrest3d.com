@@ -16,21 +16,50 @@ export const MODELING_CARD_MOBILE_WIDTH_PX = MODELING_MOBILE_ASPECT_WIDTH;
 export const MODELING_CARD_MOBILE_HEIGHT_PX = MODELING_MOBILE_ASPECT_HEIGHT;
 
 /**
- * Քարտի արտաքին frame — միայն max-sm.
- * Լայնությունը `w-full` — grid-ի սյունը ամբողջությամբ; բարձրությունը aspect-ից (Figma 360×259)։
- * sm+ — լրիվ լայնություն + 83/43։
+ * sm+ grid: card does not grow past this width; extra space stays as side margins (grid `justify-items-center`).
+ */
+export const MODELING_CARD_GRID_MAX_INLINE_PX = 800;
+
+/**
+ * Portrait mobile overlay horizontal shift (px). Replaces `min(12.5rem, 45vw)` — `45vw` tracked the viewport; this pins to ~45% of the 360px Figma card.
+ * Keep in sync with `max-sm:-translate-x-[162px]` in `ModelingCardFullBleed`.
+ */
+export const MODELING_PORTRAIT_OVERLAY_SHIFT_X_MOBILE_PX = 162;
+
+/**
+ * Article shell: below `sm`, keep a solid min width so grid/flex cannot squash the card.
+ *
+ * **Tailwind:** arbitrary utilities must appear as complete literals in source (no `${px}` interpolation),
+ * otherwise the compiler will not emit the classes. Keep `360` in sync with `MODELING_MOBILE_ASPECT_WIDTH`.
+ */
+export const MODELING_CARD_ARTICLE_SHELL_CLASSES =
+  "relative overflow-hidden max-sm:min-w-[360px] sm:min-w-0" as const;
+
+/**
+ * Card frame — mobile: fixed Figma width + min-height fallback (content is absolutely positioned; avoids 0-height rows).
+ * Centering: grid `justify-items-center` in SectionModeling.
+ *
+ * **Tailwind:** use literal `360`, `259`, `800` in class strings (see `MODELING_CARD_ARTICLE_SHELL_CLASSES` note).
+ * Sync: `MODELING_MOBILE_ASPECT_WIDTH` / `MODELING_MOBILE_ASPECT_HEIGHT` / `MODELING_CARD_GRID_MAX_INLINE_PX`.
  */
 export const MODELING_CARD_FRAME_MOBILE_CLASSES =
-  "mx-auto w-full max-w-full min-h-0 aspect-[360/259] sm:mx-0 sm:h-auto sm:w-full sm:aspect-[83/43]" as const;
+  "min-h-0 max-sm:w-[360px] max-sm:max-w-none max-sm:shrink-0 max-sm:min-h-[259px] aspect-[360/259] sm:h-auto sm:w-[min(100%,800px)] sm:aspect-[83/43]" as const;
 
 /** Քարտը լրիվ լցնում է grid-ի սյունը — ավելի մեծ և ավելի մոտ իրար block-ներ։ */
 export function getModelingCardWidthStyle(): Pick<CSSProperties, "width"> {
   return { width: "100%" };
 }
 
-/** CMS copy offsets as % of element box, scaled with section `--ms`. */
+/** CMS copy offsets: integer % of the element’s own box, scaled with section `--ms` (matches ModelingCardFullBleed). */
 export function modelingCopyTranslatePercent(offsetXPct: number, offsetYPct: number): string {
-  return `translateX(calc(${offsetXPct}% * var(--ms,1))) translateY(calc(${offsetYPct}% * var(--ms,1)))`;
+  return `translateX(calc(${offsetXPct} * 1% * var(--ms,1))) translateY(calc(${offsetYPct} * 1% * var(--ms,1)))`;
+}
+
+/**
+ * Same as {@link modelingCopyTranslatePercent} but without `--ms` — keeps overlay copy pinned on mobile/tablet portrait tiers.
+ */
+export function modelingCopyTranslatePercentFixed(offsetXPct: number, offsetYPct: number): string {
+  return `translateX(calc(${offsetXPct} * 1%)) translateY(calc(${offsetYPct} * 1%))`;
 }
 
 function linesHaveContent(lines: readonly string[]): boolean {

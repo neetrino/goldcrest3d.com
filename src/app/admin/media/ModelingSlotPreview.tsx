@@ -15,15 +15,15 @@ export function ModelingSlotPreview({ row }: ModelingSlotPreviewProps) {
         <PreviewPane
           label="Desktop / tablet preview"
           url={row.displayUrl}
-          emptyMessage="No desktop image â€” default asset on site"
+          emptyMessage="No desktop image — default asset on site"
         />
         <PreviewPane
           label="Mobile preview"
           url={row.displayUrlMobile ?? row.displayUrl}
           emptyMessage={
             row.displayUrl
-              ? "No separate mobile â€” falls back to desktop"
-              : "No mobile image â€” default asset on site"
+              ? "No separate mobile — falls back to desktop"
+              : "No mobile image — default asset on site"
           }
           isFallback={!row.displayUrlMobile && Boolean(row.displayUrl)}
         />
