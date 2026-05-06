@@ -133,7 +133,7 @@ function buildTripleOffsetStyle(
 }
 
 function offsetActiveClassTriple(): string {
-  return "[--offset-y-active:var(--offset-y-mobile)] md:[--offset-y-active:var(--offset-y-tablet)] lg:[--offset-y-active:var(--offset-y-desktop)] [--offset-x-active:var(--offset-x-mobile)] md:[--offset-x-active:var(--offset-x-tablet)] lg:[--offset-x-active:var(--offset-x-desktop)]";
+  return "[--offset-y-active:var(--offset-y-mobile)] sm:[--offset-y-active:var(--offset-y-tablet)] lg:[--offset-y-active:var(--offset-y-desktop)] [--offset-x-active:var(--offset-x-mobile)] sm:[--offset-x-active:var(--offset-x-tablet)] lg:[--offset-x-active:var(--offset-x-desktop)]";
 }
 
 function offsetActiveClassDual(): string {
@@ -348,7 +348,7 @@ export function ModelingCardFullBleed({
                     fill
                     className={`min-h-0 min-w-0 ${imageFillClassName}`}
                     style={imageStyle}
-                    sizes="(max-width: 767px) 100vw, 0px"
+                    sizes="(max-width: 639px) 100vw, 0px"
                   />
                 </div>
                 <div className={imgTabletWrapperClass}>
@@ -358,7 +358,7 @@ export function ModelingCardFullBleed({
                     fill
                     className={`min-h-0 min-w-0 ${imageFillClassName}`}
                     style={imageStyle}
-                    sizes="(max-width: 1023px) 50vw, 0px"
+                    sizes="(min-width: 640px) and (max-width: 1023px) 50vw, 0px"
                   />
                 </div>
                 <div className={imgDesktopWrapperClass}>
@@ -381,7 +381,7 @@ export function ModelingCardFullBleed({
                     fill
                     className={`min-h-0 min-w-0 ${imageFillClassName}`}
                     style={imageStyle}
-                    sizes="(max-width: 767px) 100vw, 0px"
+                    sizes="(max-width: 639px) 100vw, 0px"
                   />
                 </div>
                 <div className={imgDesktopWrapperClass}>
@@ -391,7 +391,7 @@ export function ModelingCardFullBleed({
                     fill
                     className={imageFillClassNameDesktop}
                     style={imageStyle}
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    sizes="(max-width: 639px) 100vw, 50vw"
                   />
                 </div>
               </>
@@ -403,20 +403,20 @@ export function ModelingCardFullBleed({
               fill
               className={imageFillClassName}
               style={imageStyle}
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 639px) 100vw, 50vw"
             />
           )
         ) : null}
       </div>
 
       <div
-        className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] max-sm:translate-y-[calc(-0.3rem*var(--ms,1))] text-center sm:gap-[calc(1.5rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:pb-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(1.6rem*var(--ms,1))]" : bridalMobileLayout ? "justify-center max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-x-[calc(0.6rem*var(--ms,1))] max-sm:translate-y-[calc(6rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(7.5rem*var(--ms,1)),16vw)] sm:-translate-y-[min(calc(7rem*var(--ms,1)),18vh)] sm:items-start sm:text-left" : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
+        className={`absolute inset-0 z-10 px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:py-[calc(2.5rem*var(--ms,1))] ${textColor} ${!independentTitleDescription ? `flex flex-col gap-[calc(1.5rem*var(--ms,1))] ${hipHopMobileLayout ? "items-center justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(0.25rem*var(--ms,1))] max-sm:translate-y-[calc(-0.3rem*var(--ms,1))] text-center sm:gap-[calc(1.5rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:pb-[calc(0.5rem*var(--ms,1))] sm:translate-y-[calc(1.6rem*var(--ms,1))]" : bridalMobileLayout ? "justify-center max-sm:!ml-0 max-sm:!mt-0 max-sm:translate-x-[calc(0.6rem*var(--ms,1))] max-sm:translate-y-[calc(6rem*var(--ms,1))] max-sm:gap-[calc(0.75rem*var(--ms,1))] max-sm:px-[calc(1rem*var(--ms,1))] max-sm:items-start max-sm:text-left sm:-translate-x-[min(calc(7.5rem*var(--ms,1)),16vw)] sm:-translate-y-[min(calc(7rem*var(--ms,1)),18vh)] sm:items-start sm:text-left" : `justify-center ${overlayTextContainerClass} ${overlayTranslateClass} ${textAlignClass}`}` : ""}`}
         style={overlayTextContainerStyle}
       >
         {independentTitleDescription ? (
           portraitMobileLayout ? (
             <>
-              <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] md:hidden">
+              <div className="absolute inset-0 z-20 flex -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:hidden">
                 <div
                   style={{
                     transform: modelingCopyTranslatePercent(titleOffsetXMobile, titleOffsetYMobile),
@@ -465,7 +465,7 @@ export function ModelingCardFullBleed({
                 </div>
               </div>
               {showPortraitTabletText ? (
-                <div className="absolute inset-0 z-20 hidden -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] md:flex lg:hidden">
+                <div className="absolute inset-0 z-20 hidden -translate-x-[min(calc(12.5rem*var(--ms,1)),45vw)] -translate-y-[calc(3rem*var(--ms,1))] flex-col items-end justify-end gap-[calc(0.75rem*var(--ms,1))] px-[calc(1rem*var(--ms,1))] pb-[calc(2rem*var(--ms,1))] sm:flex lg:hidden">
                   {hasPortraitTabletTitle ? (
                     <div
                       style={{
@@ -590,7 +590,7 @@ export function ModelingCardFullBleed({
                 style={responsiveTitleOffsetStyle}
               >
                 <h3
-                  className={`${titleClassNameResolved} ${hasDescriptionContent ? `h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible ${modelingTabletTierEnabled ? "md:h-[calc(24px*var(--ms,1)*var(--mt,1))] lg:h-[calc(24px*var(--ms,1)*var(--mt,1))]" : "sm:h-[calc(24px*var(--ms,1)*var(--mt,1))]"}` : ""} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center max-sm:-translate-y-[calc(3rem*var(--ms,1))] sm:-translate-y-[calc(6rem*var(--ms,1))]" : ""} ${hasHipHopMobileMultilineTitle ? "max-sm:leading-[calc(1.22rem*var(--ms,1)*var(--mt,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
+                  className={`${titleClassNameResolved} ${hasDescriptionContent ? `h-[calc(28px*var(--ms,1)*var(--mt,1))] overflow-visible ${modelingTabletTierEnabled ? "sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] lg:h-[calc(24px*var(--ms,1)*var(--mt,1))]" : "sm:h-[calc(24px*var(--ms,1)*var(--mt,1))]"}` : ""} ${hipHopMobileLayout ? "mt-[calc(0.5rem*var(--ms,1))] self-center text-center max-sm:-translate-y-[calc(3rem*var(--ms,1))] sm:-translate-y-[calc(6rem*var(--ms,1))]" : ""} ${hasHipHopMobileMultilineTitle ? "max-sm:leading-[calc(1.22rem*var(--ms,1)*var(--mt,1))]" : ""} ${titleAlignSelf === "start" ? "self-start text-left" : titleAlignSelf === "end" ? "self-end text-right" : ""} ${bridalMobileLayout ? "max-sm:!mr-0 max-sm:!mt-[calc(0.5rem*var(--ms,1))] max-sm:!self-start max-sm:!text-left sm:!self-start sm:!text-left sm:!mr-0 sm:ml-[calc(7rem*var(--ms,1))]" : ""}`}
                   style={{
                     ...(titleMarginRight != null && { marginRight: titleMarginRight }),
                     ...(titleMarginTop != null && { marginTop: titleMarginTop }),
@@ -600,7 +600,7 @@ export function ModelingCardFullBleed({
                     <>
                       {hasMobileTitle ? (
                         <span
-                          className="whitespace-pre-wrap md:hidden"
+                          className="whitespace-pre-wrap sm:hidden"
                           style={
                             mobilePreviewTitleFontPx != null
                               ? modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx)
@@ -612,7 +612,7 @@ export function ModelingCardFullBleed({
                       ) : null}
                       {showMdTabletTitleLine ? (
                         <span
-                          className="hidden whitespace-pre-wrap md:inline lg:hidden"
+                          className="hidden whitespace-pre-wrap sm:inline lg:hidden"
                           style={
                             tabletPreviewTitleFontPx != null
                               ? modelingCmsTabletTitleFontStyle(tabletPreviewTitleFontPx)

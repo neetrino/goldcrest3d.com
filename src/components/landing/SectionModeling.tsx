@@ -31,13 +31,13 @@ export function SectionModeling({
   return (
     <section
       id={LANDING_SECTION_IDS.SPECIALIZATIONS}
-      className="bg-white px-3 md:px-5"
+      className="bg-white px-2 sm:px-3 md:px-4 lg:px-5"
       aria-labelledby="modeling-specialization"
     >
-      <div className="modeling-specialization-cq mx-auto w-full max-w-[1920px]">
-        <div className="modeling-specialization-scale py-6 md:pt-[calc(var(--modeling-scale-padding-y-md)*var(--ms,1))] md:pb-[calc(var(--modeling-scale-padding-b-md)*var(--ms,1))]">
+      <div className="mx-auto w-full max-w-[1920px]">
+        <div className="modeling-specialization-scale py-6 sm:pt-[calc(var(--modeling-scale-padding-y-md)*var(--ms,1))] sm:pb-[calc(var(--modeling-scale-padding-b-md)*var(--ms,1))]">
           <div className="modeling-specialization-mobile-fixed-column">
-            <div className="flex min-h-[calc(140px*var(--ms,1))] w-full min-w-0 flex-col items-center justify-center overflow-visible py-6 md:min-h-[calc(200px*var(--ms,1))] md:justify-center md:overflow-hidden md:py-0">
+            <div className="flex min-h-[calc(140px*var(--ms,1))] w-full min-w-0 flex-col items-center justify-center overflow-visible py-6 sm:min-h-[calc(200px*var(--ms,1))] sm:justify-center sm:overflow-hidden sm:py-0">
               <ModelingSpecializationTitle />
             </div>
 

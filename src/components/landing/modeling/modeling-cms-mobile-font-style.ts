@@ -1,9 +1,9 @@
 import type { CSSProperties } from "react";
 
-/** Matches `modeling-cms-mobile-font.css` for viewports below the `md` breakpoint. */
+/** Matches `modeling-cms-mobile-font.css` for viewports below the `sm` breakpoint (mobile tier). */
 export const MODELING_CMS_MOBILE_BODY_FONT_OVERRIDE_CLASS = "modeling-cms-mobile-body-font-override";
 
-/** Matches `modeling-cms-tablet-font.css` for viewports `md`–`lg`. */
+/** Matches `modeling-cms-tablet-font.css` for viewports `sm`–below `lg` (640px–1023px). */
 export const MODELING_CMS_TABLET_BODY_FONT_OVERRIDE_CLASS = "modeling-cms-tablet-body-font-override";
 
 /** Mobile CMS title size — scales with section `--ms` / `--mt` like fixed Tailwind sizes. */
@@ -22,7 +22,7 @@ export function modelingCmsMobileBodyFontStyle(previewBodyFontPx: number): CSSPr
   };
 }
 
-/** Tablet CMS title size (768px–1023px) — same scaling as mobile tier. */
+/** Tablet CMS title size (640px–1023px) — same scaling as mobile tier. */
 export function modelingCmsTabletTitleFontStyle(previewTitleFontPx: number): CSSProperties {
   return modelingCmsMobileTitleFontStyle(previewTitleFontPx);
 }

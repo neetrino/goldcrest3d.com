@@ -18,11 +18,11 @@ export type ModelingCardProps = {
    * With `mobileBridalTypography`: below `sm`, these lines replace `descriptionLines` (e.g. split first paragraph); `sm+` still uses `descriptionLines`.
    */
   descriptionLinesMobile?: string[];
-  /** Tablet tier copy (768px–1023px); shown when set with dual image cards using `imagePairBreakpoint="md"`. */
+  /** Tablet tier copy (640px–1023px); shown when set with dual image cards using `imagePairBreakpoint="md"`. */
   descriptionLinesTablet?: string[];
-  /** Tablet-only title (md–lg); empty hides title on tablet — no desktop fallback. */
+  /** Tablet-only title (640px–1023px); empty hides title on tablet unless desktop/mobile fallback applies in shared card. */
   titleTablet?: string;
-  /** Tablet image URL (768px–1023px); optional layer between mobile and desktop. */
+  /** Tablet image URL (640px–1023px); optional layer between mobile and desktop. */
   imageSrcTablet?: string;
   /** CSS background for tablet tier (Portrait block). */
   imageLayerBackgroundTablet?: Pick<CSSProperties, "background">;
@@ -62,7 +62,8 @@ export type ModelingCardProps = {
   imageSrcMobile?: string;
   /**
    * When `imageSrc` + `imageSrcMobile` or dual layer backgrounds: width at which the desktop asset applies.
-   * Use `md` for CMS desktop/mobile pairs so tablets use the desktop file.
+   * `md`: three-tier layout — mobile below 640px, tablet 640–1023px, desktop 1024px+, with optional `imageSrcTablet`.
+   * `sm`: two-tier — mobile below `sm`, desktop at `sm+`.
    */
   imagePairBreakpoint?: "sm" | "md";
   /** When true, title and description use black text (e.g. Bridal on light background). */

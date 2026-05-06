@@ -180,7 +180,7 @@ export function renderModelingCardDescriptionContent(
         return (
           <>
             {descriptionLinesMobile != null && descriptionLinesMobile.length > 0 ? (
-              <div className="flex w-full flex-col items-start gap-0 md:hidden">
+              <div className="flex w-full flex-col items-start gap-0 sm:hidden">
                 {descriptionLinesMobile.map((line, i) => (
                   <span
                     key={`bridal-mobile-${i}`}
@@ -193,7 +193,7 @@ export function renderModelingCardDescriptionContent(
             ) : null}
             {tabletViewportStackLines.length > 0 &&
             tabletViewportStackLines.some((l) => l.trim().length > 0) ? (
-              <div className="hidden w-full min-w-0 flex-col items-start md:flex lg:hidden md:-translate-x-[calc(-0.1rem*var(--ms,1))]">
+              <div className="hidden w-full min-w-0 flex-col items-start sm:flex lg:hidden sm:-translate-x-[calc(-0.1rem*var(--ms,1))]">
                 {bridalDesktopStack(tabletViewportStackLines, "bridal-tablet-stack")}
               </div>
             ) : null}
@@ -287,7 +287,7 @@ export function renderModelingCardDescriptionContent(
       return (
         <>
           {mobileLinesMerged.length > 0 ? (
-            <div className="md:hidden">
+            <div className="sm:hidden">
               {mobileLinesMerged.map((line, i) => {
                 const forceSingleLineOnMobile =
                   HIPHOP_MOBILE_FORCE_SINGLE_LINE_TEXTS.has(line.trim());
@@ -297,7 +297,7 @@ export function renderModelingCardDescriptionContent(
                 return (
                   <span
                     key={i}
-                    className={`${hipHopMobileLineClass} ${hipHopMobileCmsNoWrapLines ? "!whitespace-nowrap" : ""} ${forceSingleLineOnMobile ? "max-md:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-md:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
+                    className={`${hipHopMobileLineClass} ${hipHopMobileCmsNoWrapLines ? "!whitespace-nowrap" : ""} ${forceSingleLineOnMobile ? "max-sm:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-sm:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
                   >
                     {renderModelingCopyLine(line)}
                   </span>
@@ -308,12 +308,12 @@ export function renderModelingCardDescriptionContent(
           {tabletViewportHipHopLines.length > 0 &&
           tabletViewportHipHopLines.some((l) => l.trim().length > 0) ? (
             <div
-              className={`hidden min-w-0 flex-col items-center md:flex lg:hidden md:gap-0 ${HIPHOP_TABLET_DESCRIPTION_CLASS}`}
+              className={`hidden min-w-0 flex-col items-center sm:flex lg:hidden sm:gap-0 ${HIPHOP_TABLET_DESCRIPTION_CLASS}`}
             >
               {renderHipHopBreakpointDesktopLines(
                 tabletViewportHipHopLines,
                 "hiphop-tablet",
-                "md:mt-[calc(0.375rem*var(--ms,1))]",
+                "sm:mt-[calc(0.375rem*var(--ms,1))]",
               )}
             </div>
           ) : null}

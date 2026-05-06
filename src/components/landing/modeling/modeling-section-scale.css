@@ -1,19 +1,30 @@
 /**
- * Modeling Specialization — proportional scale vs 1920px-wide content shell.
- * At max-width 1920px, --ms = 1 (matches 2560×1600 centered layout baseline).
- * Below sm, --ms stays 1 so existing mobile Figma typography wins.
+ * Modeling Specialization — section shell does not shrink `--ms` with viewport width.
+ * Each card uses `.modeling-specialization-card-cq` + `100cqi` so overlay copy tracks the card column;
+ * narrower viewports eat horizontal margin (section padding) before text scales down sharply.
  */
-.modeling-specialization-cq {
-  container-type: inline-size;
-  container-name: modeling;
-}
-
 .modeling-specialization-scale {
   width: 100%;
   --ms: 1;
-  /* md+ vertical rhythm: full top padding, tighter bottom before Manufacturing */
+  /* sm+ vertical rhythm: full top padding, tighter bottom before Manufacturing */
   --modeling-scale-padding-y-md: 67px;
   --modeling-scale-padding-b-md: 0px;
+}
+
+/**
+ * Per-card container: `--ms` matches this card’s column width vs ~half of a 1920px two-up row.
+ * 720px ≈ one column at full desktop grid — keeps typography stable until the column itself narrows.
+ */
+.modeling-specialization-card-cq {
+  container-type: inline-size;
+  container-name: modeling-card;
+  --ms: 1;
+}
+
+@media (min-width: 640px) {
+  .modeling-specialization-card-cq {
+    --ms: clamp(0.52, calc(100cqi / 720px), 1);
+  }
 }
 
 /**
@@ -33,10 +44,6 @@
   .modeling-specialization-mobile-fixed-column {
     max-width: none;
   }
-
-  .modeling-specialization-scale {
-    --ms: min(1, max(0.5, calc(100cqw / 1920px)));
-  }
 }
 
 /**
@@ -47,8 +54,8 @@
   --mt: 1.1;
 }
 
-/* Tablet (md–lg): overlay copy a bit smaller than sm in the same grid column (tighter than 1.04). */
-@media (min-width: 768px) and (max-width: 1023px) {
+/* Tablet (640px–1023px): overlay copy a bit smaller than narrow mobile in the same grid column. */
+@media (min-width: 640px) and (max-width: 1023px) {
   .modeling-specialization-card-text-scale {
     --mt: 0.96;
   }

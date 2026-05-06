@@ -111,19 +111,19 @@ function HeritageOverlayText({
   );
 
   return (
-    <div className="absolute inset-0 z-10 flex items-start justify-end px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] md:px-[calc(2rem*var(--ms,1))] md:py-[calc(2.5rem*var(--ms,1))]">
-      <div className="-translate-x-[calc(0.3rem*var(--ms,1))] -translate-y-[calc(0rem*var(--ms,1))] max-w-[calc(540px*var(--ms,1))] text-right text-black md:-translate-x-[calc(1.5rem*var(--ms,1))] md:mt-[calc(12.7rem*var(--ms,1))] md:-translate-y-[calc(4.15rem*var(--ms,1))]">
+    <div className="absolute inset-0 z-10 flex items-start justify-end px-[calc(1.5rem*var(--ms,1))] py-[calc(2rem*var(--ms,1))] sm:px-[calc(2rem*var(--ms,1))] sm:py-[calc(2.5rem*var(--ms,1))]">
+      <div className="-translate-x-[calc(0.3rem*var(--ms,1))] -translate-y-[calc(0rem*var(--ms,1))] max-w-[calc(540px*var(--ms,1))] text-right text-black sm:-translate-x-[calc(1.5rem*var(--ms,1))] sm:mt-[calc(12.7rem*var(--ms,1))] sm:-translate-y-[calc(4.15rem*var(--ms,1))]">
         {hasDesktopTitle || hasMobileTitle || hasTabletTitle ? (
-          <h3 className="mt-[calc(2.25rem*var(--ms,1))] h-[calc(20px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(20px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] md:mt-0 md:h-[calc(24px*var(--ms,1)*var(--mt,1))] md:font-manrope md:text-[calc(32px*var(--ms,1)*var(--mt,1))] md:leading-[calc(24px*var(--ms,1)*var(--mt,1))] md:scale-x-105 md:origin-right md:tracking-normal md:font-extrabold lg:font-manrope">
+          <h3 className="mt-[calc(2.25rem*var(--ms,1))] h-[calc(20px*var(--ms,1)*var(--mt,1))] overflow-visible font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(20px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] sm:mt-0 sm:h-[calc(24px*var(--ms,1)*var(--mt,1))] sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-right sm:tracking-normal sm:font-extrabold lg:font-manrope">
             {hasMobileTitle ? (
               <span
-                className="block md:hidden"
+                className="block sm:hidden"
                 style={{
                   transform: modelingCopyTranslatePercent(titleMobileOffsetX, titleMobileOffsetY),
                 }}
               >
                 <span
-                  className="block whitespace-pre-wrap text-right translate-y-[calc(2.75rem*var(--ms,1))] md:hidden"
+                  className="block whitespace-pre-wrap text-right translate-y-[calc(2.75rem*var(--ms,1))] sm:hidden"
                   style={modelingCmsMobileTitleFontStyle(mobilePreviewTitleFontPx)}
                 >
                   {renderModelingTitleText(titleMobile)}
@@ -132,13 +132,13 @@ function HeritageOverlayText({
             ) : null}
             {hasTabletTitle ? (
               <span
-                className="hidden md:inline-block lg:hidden"
+                className="hidden sm:inline-block lg:hidden"
                 style={{
                   transform: modelingCopyTranslatePercent(titleTabletOffsetX, titleTabletOffsetY),
                 }}
               >
                 <span
-                  className="hidden whitespace-pre-wrap md:inline-block lg:hidden"
+                  className="hidden whitespace-pre-wrap sm:inline-block lg:hidden"
                   style={modelingCmsTabletTitleFontStyle(tabletPreviewTitleFontPx)}
                 >
                   {renderModelingTitleText(titleTabletResolved)}
@@ -169,7 +169,7 @@ function HeritageOverlayText({
               }}
             >
               <p
-                className="mt-[calc(3.5rem*var(--ms,1))] w-[calc(470px*var(--ms,1))] max-w-full font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(0.8125rem*var(--ms,1)*var(--mt,1))] text-[#364153] md:hidden"
+                className="mt-[calc(3.5rem*var(--ms,1))] w-[calc(470px*var(--ms,1))] max-w-full font-sans text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(0.8125rem*var(--ms,1)*var(--mt,1))] text-[#364153] sm:hidden"
                 style={modelingCmsMobileBodyFontStyle(mobilePreviewBodyFontPx)}
               >
                 {descriptionLinesMobile.map((line, index) => (
@@ -185,7 +185,7 @@ function HeritageOverlayText({
               }}
             >
               <p
-                className="mt-[calc(3.5rem*var(--ms,1))] hidden w-[calc(470px*var(--ms,1))] max-w-full font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black md:block lg:hidden"
+                className="mt-[calc(3.5rem*var(--ms,1))] hidden w-[calc(470px*var(--ms,1))] max-w-full font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black sm:block lg:hidden"
                 style={modelingCmsTabletBodyFontStyle(tabletPreviewBodyFontPx)}
               >
                 {descTabletLines.map((line, index) => (
@@ -259,26 +259,26 @@ export function ModelingBlockHeritage({
             alt=""
             fill
             className="h-full w-full object-cover object-center"
-            sizes="(max-width: 767px) 100vw, 50vw"
+            sizes="(max-width: 639px) 100vw, 50vw"
           />
         ) : (
           <>
-            <div className="absolute inset-0 md:hidden">
+            <div className="absolute inset-0 sm:hidden">
               <Image
                 src={imageUrlMobile}
                 alt=""
                 fill
                 className="min-h-0 min-w-0 h-full w-full object-cover object-center"
-                sizes="(max-width: 767px) 100vw, 0px"
+                sizes="(max-width: 639px) 100vw, 0px"
               />
             </div>
-            <div className="absolute inset-0 hidden md:block lg:hidden">
+            <div className="absolute inset-0 hidden sm:block lg:hidden">
               <Image
                 src={imageUrlTablet}
                 alt=""
                 fill
                 className="h-full w-full object-cover object-center"
-                sizes="(max-width: 1023px) 50vw, 0px"
+                sizes="(min-width: 640px) and (max-width: 1023px) 50vw, 0px"
               />
             </div>
             <div className="absolute inset-0 hidden lg:block">

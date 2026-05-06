@@ -62,7 +62,7 @@ export function ModelingTabletMediaSection({
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">{description}</p>
         <p className="mt-3 text-sm text-slate-500">
           Upload tablet-only images below. <span className="font-medium">Tablet text content</span>{" "}
-          opens a tablet-only editor (768px–1023px). For desktop and mobile copy, use{" "}
+          opens a tablet-only editor (640px–1023px). For desktop and mobile copy, use{" "}
           <span className="font-medium">Text content</span> on the main Modeling Specialization tab.
           Tablet images do not fall back to other breakpoints at runtime.
         </p>

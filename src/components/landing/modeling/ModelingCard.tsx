@@ -201,16 +201,16 @@ export function ModelingCard({
   const imageStyle = { objectPosition: imagePosition };
   const imgMobileWrapperClass =
     imagePairBreakpoint === "md"
-      ? "absolute inset-0 md:hidden"
+      ? "absolute inset-0 sm:hidden"
       : "absolute inset-0 sm:hidden";
   const imgTabletWrapperClass = tabletImageColumnEnabled
-    ? "absolute inset-0 hidden md:block lg:hidden"
+    ? "absolute inset-0 hidden sm:block lg:hidden"
     : "";
   const imgDesktopWrapperClass =
     imagePairBreakpoint === "md"
       ? tabletImageColumnEnabled
         ? "absolute inset-0 hidden lg:block"
-        : "absolute inset-0 hidden md:block"
+        : "absolute inset-0 hidden sm:block"
       : "absolute inset-0 hidden sm:block";
   const textAlignClass =
     textAlign === "center"

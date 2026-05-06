@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 
+import { MODELING_CARD_INLINE_SIZE_CONTAINER_CLASS } from "@/constants/modeling-specialization-section-layout";
 import {
   MODELING_MOBILE_ASPECT_HEIGHT,
   MODELING_MOBILE_ASPECT_WIDTH,
@@ -21,14 +22,14 @@ export const MODELING_CARD_MOBILE_HEIGHT_PX = MODELING_MOBILE_ASPECT_HEIGHT;
  * sm+ — լրիվ լայնություն + 83/43։
  */
 export const MODELING_CARD_FRAME_MOBILE_CLASSES =
-  "mx-auto w-full max-w-full min-h-0 aspect-[360/259] sm:mx-0 sm:h-auto sm:w-full sm:aspect-[83/43]" as const;
+  `${MODELING_CARD_INLINE_SIZE_CONTAINER_CLASS} mx-auto w-full max-w-full min-h-0 aspect-[360/259] sm:mx-0 sm:h-auto sm:w-full sm:aspect-[83/43]` as const;
 
 /** Քարտը լրիվ լցնում է grid-ի սյունը — ավելի մեծ և ավելի մոտ իրար block-ներ։ */
 export function getModelingCardWidthStyle(): Pick<CSSProperties, "width"> {
   return { width: "100%" };
 }
 
-/** CMS copy offsets as % of element box, scaled with section `--ms`. */
+/** CMS copy offsets as % of element box, scaled with the card’s `--ms` (container inline-size). */
 export function modelingCopyTranslatePercent(offsetXPct: number, offsetYPct: number): string {
   return `translateX(calc(${offsetXPct}% * var(--ms,1))) translateY(calc(${offsetYPct}% * var(--ms,1)))`;
 }
@@ -67,7 +68,7 @@ export function modelingTitleForLgViewport(
 }
 
 /**
- * md tier (768px–1023px): prefer dedicated tablet copy, then desktop, then mobile.
+ * Tablet tier (640px–1023px): prefer dedicated tablet copy, then desktop, then mobile.
  * Matches CMS when tablet fields are left empty — desktop copy still shows on tablet width.
  */
 export function modelingTitleForTabletViewport(
