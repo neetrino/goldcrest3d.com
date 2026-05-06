@@ -8,6 +8,12 @@ import {
   MODELING_MOBILE_PREVIEW_BODY_FONT_PX_DEFAULT,
   MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
 } from "@/constants/modeling-specialization-mobile-preview-font";
+import {
+  clampModelingTabletPreviewBodyFontPx,
+  clampModelingTabletPreviewTitleFontPx,
+  MODELING_TABLET_PREVIEW_BODY_FONT_PX_DEFAULT,
+  MODELING_TABLET_PREVIEW_TITLE_FONT_PX_DEFAULT,
+} from "@/constants/modeling-specialization-tablet-preview-font";
 
 import type {
   ModelingSpecializationCopyPayload,
@@ -52,6 +58,12 @@ export function normalizeModelingSpecializationCopyPayload(
     mobilePreviewBodyFontPx: clampModelingMobilePreviewBodyFontPx(
       payload.mobilePreviewBodyFontPx,
     ),
+    tabletPreviewTitleFontPx: clampModelingTabletPreviewTitleFontPx(
+      payload.tabletPreviewTitleFontPx,
+    ),
+    tabletPreviewBodyFontPx: clampModelingTabletPreviewBodyFontPx(
+      payload.tabletPreviewBodyFontPx,
+    ),
   };
 }
 
@@ -90,5 +102,7 @@ export function emptyModelingSpecializationCopyRow(
     tabletLine1Emphasis: "",
     mobilePreviewTitleFontPx: MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
     mobilePreviewBodyFontPx: MODELING_MOBILE_PREVIEW_BODY_FONT_PX_DEFAULT,
+    tabletPreviewTitleFontPx: MODELING_TABLET_PREVIEW_TITLE_FONT_PX_DEFAULT,
+    tabletPreviewBodyFontPx: MODELING_TABLET_PREVIEW_BODY_FONT_PX_DEFAULT,
   };
 }

@@ -65,3 +65,32 @@ export function modelingTitleForLgViewport(
   if (t.length > 0) return titleTablet;
   return titleMobile.trim();
 }
+
+/**
+ * md tier (768px–1023px): prefer dedicated tablet copy, then desktop, then mobile.
+ * Matches CMS when tablet fields are left empty — desktop copy still shows on tablet width.
+ */
+export function modelingTitleForTabletViewport(
+  titleDesktop: string,
+  titleTablet: string,
+  titleMobile: string,
+): string {
+  const t = titleTablet.trim();
+  if (t.length > 0) return titleTablet;
+  const d = titleDesktop.trim();
+  if (d.length > 0) return titleDesktop;
+  return titleMobile.trim();
+}
+
+/**
+ * md tier body lines: tablet CMS → desktop → mobile.
+ */
+export function modelingBodyLinesForTabletViewport(
+  linesDesktop: readonly string[],
+  linesTablet: readonly string[],
+  linesMobile: readonly string[],
+): string[] {
+  if (linesHaveContent(linesTablet)) return [...linesTablet];
+  if (linesHaveContent(linesDesktop)) return [...linesDesktop];
+  return [...linesMobile];
+}

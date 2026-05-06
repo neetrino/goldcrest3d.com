@@ -16,6 +16,8 @@ import {
   mergeCssProperties,
   modelingCmsMobileBodyFontStyle,
   modelingCmsMobileTitleFontStyle,
+  modelingCmsTabletBodyFontStyle,
+  modelingCmsTabletTitleFontStyle,
 } from "./modeling-cms-mobile-font-style";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
@@ -56,6 +58,8 @@ type ModelingBlockMechanicalProps = {
   isAndroidViewport: boolean;
   mobilePreviewTitleFontPx: number;
   mobilePreviewBodyFontPx: number;
+  tabletPreviewTitleFontPx: number;
+  tabletPreviewBodyFontPx: number;
 };
 
 /** Mechanical & Lock Systems block. Full-bleed image with title and description overlay. */
@@ -84,6 +88,8 @@ export function ModelingBlockMechanical({
   isAndroidViewport,
   mobilePreviewTitleFontPx,
   mobilePreviewBodyFontPx,
+  tabletPreviewTitleFontPx,
+  tabletPreviewBodyFontPx,
 }: ModelingBlockMechanicalProps) {
   const [isAndroidClient] = useState(() => {
     if (typeof navigator === "undefined") {
@@ -175,9 +181,12 @@ export function ModelingBlockMechanical({
               {hasTabletTitle ? (
                 <span
                   className={`hidden whitespace-pre-wrap md:block lg:hidden ${TITLE_LINE1_TABLET_NUDGE_UP_CLASS}`}
-                  style={{
-                    transform: modelingCopyTranslatePercent(titleTabletOffsetX, titleTabletOffsetY),
-                  }}
+                  style={mergeCssProperties(
+                    {
+                      transform: modelingCopyTranslatePercent(titleTabletOffsetX, titleTabletOffsetY),
+                    },
+                    modelingCmsTabletTitleFontStyle(tabletPreviewTitleFontPx),
+                  )}
                 >
                   {renderModelingTitleText(titleTablet)}
                 </span>
@@ -220,7 +229,10 @@ export function ModelingBlockMechanical({
               transform: modelingCopyTranslatePercent(bodyTabletOffsetX, bodyTabletOffsetY),
             }}
           >
-            <p className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] md:max-lg:block lg:hidden">
+            <p
+              className="hidden w-full max-w-[min(100%,calc(520px*var(--ms,1)))] text-left font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] md:max-lg:block lg:hidden"
+              style={modelingCmsTabletBodyFontStyle(tabletPreviewBodyFontPx)}
+            >
               {descriptionLinesTablet.map((line, i) => (
                 <span key={`t-${i}`} className="block whitespace-nowrap">
                   {renderModelingCopyLine(line)}

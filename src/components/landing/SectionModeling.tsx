@@ -13,6 +13,7 @@ import {
 } from "./modeling";
 
 import "./modeling/modeling-cms-mobile-font.css";
+import "./modeling/modeling-cms-tablet-font.css";
 import "./modeling/modeling-section-scale.css";
 
 type SectionModelingProps = {
@@ -35,11 +36,12 @@ export function SectionModeling({
     >
       <div className="modeling-specialization-cq mx-auto w-full max-w-[1920px]">
         <div className="modeling-specialization-scale py-6 md:pt-[calc(var(--modeling-scale-padding-y-md)*var(--ms,1))] md:pb-[calc(var(--modeling-scale-padding-b-md)*var(--ms,1))]">
-          <div className="flex min-h-[calc(140px*var(--ms,1))] w-full min-w-0 flex-col items-center justify-center overflow-visible py-6 md:min-h-[calc(200px*var(--ms,1))] md:justify-center md:overflow-hidden md:py-0">
-            <ModelingSpecializationTitle />
-          </div>
+          <div className="modeling-specialization-mobile-fixed-column">
+            <div className="flex min-h-[calc(140px*var(--ms,1))] w-full min-w-0 flex-col items-center justify-center overflow-visible py-6 md:min-h-[calc(200px*var(--ms,1))] md:justify-center md:overflow-hidden md:py-0">
+              <ModelingSpecializationTitle />
+            </div>
 
-          <div className="modeling-specialization-card-text-scale grid min-w-0 grid-cols-1 gap-[calc(0.625rem*var(--ms,1))] sm:grid-cols-2 lg:gap-[calc(0.5rem*var(--ms,1))]">
+            <div className="modeling-specialization-card-text-scale grid min-w-0 grid-cols-1 gap-[calc(0.625rem*var(--ms,1))] sm:grid-cols-2 lg:gap-[calc(0.5rem*var(--ms,1))]">
           <ModelingBlockHipHop
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HIP_HOP].desktop}
             imageUrlMobile={modeling[MODELING_SLOT_KEYS.HIP_HOP].mobile}
@@ -73,6 +75,12 @@ export function SectionModeling({
             }
             mobilePreviewBodyFontPx={
               modeling[MODELING_SLOT_KEYS.HIP_HOP].mobilePreviewBodyFontPx
+            }
+            tabletPreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.HIP_HOP].tabletPreviewTitleFontPx
+            }
+            tabletPreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.HIP_HOP].tabletPreviewBodyFontPx
             }
           />
           <ModelingBlockBridal
@@ -108,6 +116,12 @@ export function SectionModeling({
             }
             mobilePreviewBodyFontPx={
               modeling[MODELING_SLOT_KEYS.BRIDAL].mobilePreviewBodyFontPx
+            }
+            tabletPreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.BRIDAL].tabletPreviewTitleFontPx
+            }
+            tabletPreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.BRIDAL].tabletPreviewBodyFontPx
             }
           />
           <ModelingBlockPortrait
@@ -145,6 +159,12 @@ export function SectionModeling({
             mobilePreviewBodyFontPx={
               modeling[MODELING_SLOT_KEYS.PORTRAIT].mobilePreviewBodyFontPx
             }
+            tabletPreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.PORTRAIT].tabletPreviewTitleFontPx
+            }
+            tabletPreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.PORTRAIT].tabletPreviewBodyFontPx
+            }
           />
           <ModelingBlockMechanical
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.MECHANICAL].desktop}
@@ -181,6 +201,12 @@ export function SectionModeling({
             mobilePreviewBodyFontPx={
               modeling[MODELING_SLOT_KEYS.MECHANICAL].mobilePreviewBodyFontPx
             }
+            tabletPreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.MECHANICAL].tabletPreviewTitleFontPx
+            }
+            tabletPreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.MECHANICAL].tabletPreviewBodyFontPx
+            }
           />
           <ModelingBlockHeritage
             imageUrlDesktop={modeling[MODELING_SLOT_KEYS.HERITAGE].desktop}
@@ -215,6 +241,12 @@ export function SectionModeling({
             }
             mobilePreviewBodyFontPx={
               modeling[MODELING_SLOT_KEYS.HERITAGE].mobilePreviewBodyFontPx
+            }
+            tabletPreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.HERITAGE].tabletPreviewTitleFontPx
+            }
+            tabletPreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.HERITAGE].tabletPreviewBodyFontPx
             }
           />
           <ModelingBlockHighJewelry
@@ -257,7 +289,14 @@ export function SectionModeling({
             mobilePreviewBodyFontPx={
               modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].mobilePreviewBodyFontPx
             }
+            tabletPreviewTitleFontPx={
+              modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].tabletPreviewTitleFontPx
+            }
+            tabletPreviewBodyFontPx={
+              modeling[MODELING_SLOT_KEYS.HIGH_JEWELRY].tabletPreviewBodyFontPx
+            }
           />
+            </div>
           </div>
         </div>
       </div>

@@ -14,6 +14,12 @@ ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "titleMobileOf
 ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "bodyDesktopOffsetY" INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "bodyMobileOffsetY" INTEGER NOT NULL DEFAULT 0;
 
+-- --- ModelingSpecializationCopy: desktop + mobile horizontal offsets (migrations 20260429200000, 20260429210000) ---
+ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "titleDesktopOffsetX" INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "bodyDesktopOffsetX" INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "titleMobileOffsetX" INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "bodyMobileOffsetX" INTEGER NOT NULL DEFAULT 0;
+
 -- --- Tablet modeling + media (migration 20260428120000_tablet_hero_and_modeling_content) ---
 ALTER TABLE "SiteMediaItem" ADD COLUMN IF NOT EXISTS "r2ObjectKeyTablet" TEXT;
 
@@ -40,3 +46,9 @@ ALTER TABLE "PowerBannerCopy" ADD COLUMN IF NOT EXISTS "ctaOffsetX" INTEGER NOT 
 -- --- Modeling tablet copy horizontal offsets (migration 20260429180000_modeling_tablet_copy_offset_x) ---
 ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "titleTabletOffsetX" INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "bodyTabletOffsetX" INTEGER NOT NULL DEFAULT 0;
+
+-- --- Mobile + tablet CMS preview font sizes (migrations 20260504130000, 20260506120000) ---
+ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "mobilePreviewTitleFontPx" INTEGER NOT NULL DEFAULT 16;
+ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "mobilePreviewBodyFontPx" INTEGER NOT NULL DEFAULT 14;
+ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "tabletPreviewTitleFontPx" INTEGER NOT NULL DEFAULT 32;
+ALTER TABLE "ModelingSpecializationCopy" ADD COLUMN IF NOT EXISTS "tabletPreviewBodyFontPx" INTEGER NOT NULL DEFAULT 14;

@@ -1,7 +1,11 @@
 import { renderModelingCardDescriptionContent } from "./ModelingCardDescriptionContent";
 import { ModelingCardFullBleed } from "./ModelingCardFullBleed";
 import { ModelingCardGradientLayout } from "./ModelingCardGradientLayout";
-import { getModelingCardWidthStyle } from "./modeling-card.constants";
+import {
+  getModelingCardWidthStyle,
+  modelingBodyLinesForTabletViewport,
+} from "./modeling-card.constants";
+import { modelingCmsTabletBodyFontStyle } from "./modeling-cms-mobile-font-style";
 import {
   DEFAULT_IMAGE_POSITION,
   PORTRAIT_TABLET_OVERLAY_DESC_CLASS,
@@ -80,6 +84,8 @@ export function ModelingCard({
   imageFillClassNameDesktop = "object-contain",
   mobilePreviewTitleFontPx,
   mobilePreviewBodyFontPx,
+  tabletPreviewTitleFontPx,
+  tabletPreviewBodyFontPx,
 }: ModelingCardProps) {
   const hasNonEmptyLines = (lines: string[] | undefined): boolean =>
     Boolean(lines?.some((line) => line.trim().length > 0));
@@ -101,7 +107,6 @@ export function ModelingCard({
     mobilePortraitTypography &&
     hasLines &&
     independentTitleDescription;
-  const hasTabletDescriptionLines = hasNonEmptyLines(descriptionLinesTablet);
   const tabletImageColumnEnabled =
     imagePairBreakpoint === "md" &&
     (modelingTabletTierEnabled || portraitMobileLayout) &&
@@ -129,12 +134,23 @@ export function ModelingCard({
     : "";
   const bridalRowSpanClassDesktop = `${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""}`;
 
+  const portraitTabletDescriptionLines = modelingBodyLinesForTabletViewport(
+    descriptionLinesDesktop ?? [],
+    descriptionLinesTablet ?? [],
+    descriptionLinesMobile ?? [],
+  );
   const portraitTabletDescriptionContent =
     portraitMobileLayout &&
-    descriptionLinesTablet != null &&
-    hasTabletDescriptionLines ? (
-      <div className={PORTRAIT_TABLET_OVERLAY_DESC_CLASS}>
-        {descriptionLinesTablet.map((line, i) => (
+    portraitTabletDescriptionLines.some((l) => l.trim().length > 0) ? (
+      <div
+        className={PORTRAIT_TABLET_OVERLAY_DESC_CLASS}
+        style={
+          tabletPreviewBodyFontPx != null
+            ? modelingCmsTabletBodyFontStyle(tabletPreviewBodyFontPx)
+            : undefined
+        }
+      >
+        {portraitTabletDescriptionLines.map((line, i) => (
           <span key={`portrait-tablet-desc-${i}`} className="block">
             {renderModelingCopyLine(line)}
           </span>
@@ -308,6 +324,8 @@ export function ModelingCard({
         DescriptionTag={DescriptionTag}
         mobilePreviewTitleFontPx={mobilePreviewTitleFontPx}
         mobilePreviewBodyFontPx={mobilePreviewBodyFontPx}
+        tabletPreviewTitleFontPx={tabletPreviewTitleFontPx}
+        tabletPreviewBodyFontPx={tabletPreviewBodyFontPx}
       />
     );
   }

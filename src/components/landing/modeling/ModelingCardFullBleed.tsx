@@ -7,6 +7,7 @@ import {
   MODELING_CARD_FRAME_MOBILE_CLASSES,
   modelingCopyTranslatePercent,
   modelingTitleForLgViewport,
+  modelingTitleForTabletViewport,
 } from "./modeling-card.constants";
 import {
   PORTRAIT_MOBILE_OVERLAY_DESC_CLASS,
@@ -17,8 +18,10 @@ import {
 import type { ModelingCardProps } from "./modeling-card.types";
 import {
   MODELING_CMS_MOBILE_BODY_FONT_OVERRIDE_CLASS,
+  MODELING_CMS_TABLET_BODY_FONT_OVERRIDE_CLASS,
   modelingCmsMobileBodyFontStyle,
   modelingCmsMobileTitleFontStyle,
+  modelingCmsTabletTitleFontStyle,
 } from "./modeling-cms-mobile-font-style";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
@@ -65,6 +68,8 @@ export type ModelingCardFullBleedProps = Pick<
   | "descriptionLinesMobile"
   | "mobilePreviewTitleFontPx"
   | "mobilePreviewBodyFontPx"
+  | "tabletPreviewTitleFontPx"
+  | "tabletPreviewBodyFontPx"
 > & {
   textColor: string;
   hipHopMobileLayout: boolean;
@@ -231,6 +236,8 @@ export function ModelingCardFullBleed({
   descriptionLinesMobile,
   mobilePreviewTitleFontPx,
   mobilePreviewBodyFontPx,
+  tabletPreviewTitleFontPx,
+  tabletPreviewBodyFontPx,
   textColor,
   hipHopMobileLayout,
   bridalMobileLayout,
@@ -255,8 +262,15 @@ export function ModelingCardFullBleed({
   const titleTabletResolved = (titleTablet ?? "").trim();
   const hasDesktopTitle = title.trim().length > 0;
   const hasMobileTitle = (titleMobile ?? "").trim().length > 0;
-  const hasTabletTitle = modelingTabletTierEnabled && titleTabletResolved.length > 0;
-  const hasPortraitTabletTitle = portraitMobileLayout && titleTabletResolved.length > 0;
+  const titleForMdTablet = modelingTitleForTabletViewport(
+    title,
+    titleTabletResolved,
+    titleMobile ?? "",
+  );
+  const showMdTabletTitleLine =
+    modelingTabletTierEnabled && titleForMdTablet.length > 0;
+  const hasPortraitTabletTitle =
+    portraitMobileLayout && titleForMdTablet.length > 0;
   const showPortraitTabletText =
     portraitMobileLayout &&
     (hasPortraitTabletTitle || portraitTabletDescriptionContent != null);
@@ -461,9 +475,16 @@ export function ModelingCardFullBleed({
                         ),
                       }}
                     >
-                      <h3 className={PORTRAIT_TABLET_OVERLAY_TITLE_CLASS}>
+                      <h3
+                        className={PORTRAIT_TABLET_OVERLAY_TITLE_CLASS}
+                        style={
+                          tabletPreviewTitleFontPx != null
+                            ? modelingCmsTabletTitleFontStyle(tabletPreviewTitleFontPx)
+                            : undefined
+                        }
+                      >
                         <span className="whitespace-pre-wrap">
-                          {renderModelingTitleText(titleTabletResolved)}
+                          {renderModelingTitleText(titleForMdTablet)}
                         </span>
                       </h3>
                     </div>
@@ -559,7 +580,7 @@ export function ModelingCardFullBleed({
           )
         ) : (
           <>
-            {hasDesktopTitle || hasMobileTitle || hasTabletTitle ? (
+            {hasDesktopTitle || hasMobileTitle || showMdTabletTitleLine ? (
               <div
                 className={
                   modelingTabletTierEnabled
@@ -589,9 +610,16 @@ export function ModelingCardFullBleed({
                           {renderModelingTitleText(titleMobile ?? "")}
                         </span>
                       ) : null}
-                      {hasTabletTitle ? (
-                        <span className="hidden whitespace-pre-wrap md:inline lg:hidden">
-                          {renderModelingTitleText(titleTabletResolved)}
+                      {showMdTabletTitleLine ? (
+                        <span
+                          className="hidden whitespace-pre-wrap md:inline lg:hidden"
+                          style={
+                            tabletPreviewTitleFontPx != null
+                              ? modelingCmsTabletTitleFontStyle(tabletPreviewTitleFontPx)
+                              : undefined
+                          }
+                        >
+                          {renderModelingTitleText(titleForMdTablet)}
                         </span>
                       ) : null}
                       {showLgViewportTitle ? (
@@ -629,6 +657,10 @@ export function ModelingCardFullBleed({
                     ? ` ${MODELING_CMS_MOBILE_BODY_FONT_OVERRIDE_CLASS}`
                     : ""
                 }${
+                  modelingTabletTierEnabled && tabletPreviewBodyFontPx != null
+                    ? ` ${MODELING_CMS_TABLET_BODY_FONT_OVERRIDE_CLASS}`
+                    : ""
+                }${
                   hipHopMobileLayout
                     ? ` max-sm:mt-[calc(1rem*var(--ms,1))] ${
                         mobilePreviewBodyFontPx != null
@@ -645,6 +677,13 @@ export function ModelingCardFullBleed({
                   ...(mobilePreviewBodyFontPx != null
                     ? {
                         ["--modeling-cms-body-px" as string]: String(mobilePreviewBodyFontPx),
+                      }
+                    : {}),
+                  ...(modelingTabletTierEnabled && tabletPreviewBodyFontPx != null
+                    ? {
+                        ["--modeling-cms-tablet-body-px" as string]: String(
+                          tabletPreviewBodyFontPx,
+                        ),
                       }
                     : {}),
                   ...(hipHopMobileLayout

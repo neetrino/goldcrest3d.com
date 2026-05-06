@@ -158,4 +158,8 @@ export type ModelingCardProps = {
   mobilePreviewTitleFontPx?: number;
   /** CMS: mobile description font size (viewport below `md`) in px; scales with section --ms/--mt. */
   mobilePreviewBodyFontPx?: number;
+  /** CMS: tablet title font size (`md`–`lg`) in px; scales with section --ms/--mt. */
+  tabletPreviewTitleFontPx?: number;
+  /** CMS: tablet description font size (`md`–`lg`) in px; scales with section --ms/--mt. */
+  tabletPreviewBodyFontPx?: number;
 };

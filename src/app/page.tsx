@@ -4,6 +4,9 @@ import { getPowerBannerCopyBundle } from "@/lib/power-banner-copy/get-power-bann
 import { getLandingSiteMedia } from "@/lib/site-media/get-landing-site-media";
 import { headers } from "next/headers";
 
+/** CMS-driven media/copy must not be served from stale static shell. */
+export const dynamic = "force-dynamic";
+
 function isMobileUserAgent(userAgent: string): boolean {
   return /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(userAgent);
 }

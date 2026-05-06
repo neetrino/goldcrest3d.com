@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import type { AdminModelingSlotRow } from "@/lib/site-media/get-site-media-admin";
 
-import { ModelingTabletSlotCopyEditor } from "./ModelingTabletSlotCopyEditor";
+import { ModelingSlotCopyEditor } from "./ModelingSlotCopyEditor";
 import { ModelingSlotVariantUpload } from "./ModelingSlotVariantUpload";
 
 type ModelingTabletSlotFormProps = {
@@ -38,7 +38,7 @@ function ModelingTabletSlotForm({ row }: ModelingTabletSlotFormProps) {
           <p className="mt-1 font-mono text-[10px] text-white/60">Slot: {row.slotKey}</p>
         </div>
       </div>
-      <ModelingTabletSlotCopyEditor row={row} />
+      <ModelingSlotCopyEditor row={row} mode="tabletOnly" />
       <ModelingSlotVariantUpload row={row} variant="tablet" />
     </div>
   );
@@ -61,8 +61,10 @@ export function ModelingTabletMediaSection({
         <h2 className="text-xl font-semibold tracking-tight text-slate-900">{title}</h2>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">{description}</p>
         <p className="mt-3 text-sm text-slate-500">
-          Tablet content is stored separately from desktop and mobile. It does not fall back to other
-          breakpoints at runtime.
+          Upload tablet-only images below. <span className="font-medium">Tablet text content</span>{" "}
+          opens a tablet-only editor (768px–1023px). For desktop and mobile copy, use{" "}
+          <span className="font-medium">Text content</span> on the main Modeling Specialization tab.
+          Tablet images do not fall back to other breakpoints at runtime.
         </p>
       </div>
       <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

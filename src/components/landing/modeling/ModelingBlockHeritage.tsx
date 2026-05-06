@@ -12,6 +12,8 @@ import {
 import {
   modelingCmsMobileBodyFontStyle,
   modelingCmsMobileTitleFontStyle,
+  modelingCmsTabletBodyFontStyle,
+  modelingCmsTabletTitleFontStyle,
 } from "./modeling-cms-mobile-font-style";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
@@ -39,6 +41,8 @@ type ModelingBlockHeritageProps = {
   bodyTabletOffsetX: number;
   mobilePreviewTitleFontPx: number;
   mobilePreviewBodyFontPx: number;
+  tabletPreviewTitleFontPx: number;
+  tabletPreviewBodyFontPx: number;
 };
 
 type HeritageOverlayTextProps = {
@@ -62,6 +66,8 @@ type HeritageOverlayTextProps = {
   bodyTabletOffsetX: number;
   mobilePreviewTitleFontPx: number;
   mobilePreviewBodyFontPx: number;
+  tabletPreviewTitleFontPx: number;
+  tabletPreviewBodyFontPx: number;
 };
 
 function HeritageOverlayText({
@@ -85,6 +91,8 @@ function HeritageOverlayText({
   bodyTabletOffsetX,
   mobilePreviewTitleFontPx,
   mobilePreviewBodyFontPx,
+  tabletPreviewTitleFontPx,
+  tabletPreviewBodyFontPx,
 }: HeritageOverlayTextProps) {
   const titleTabletResolved = titleTablet.trim();
   const descTabletLines = descriptionLinesTablet.some((l) => l.trim().length > 0)
@@ -129,7 +137,10 @@ function HeritageOverlayText({
                   transform: modelingCopyTranslatePercent(titleTabletOffsetX, titleTabletOffsetY),
                 }}
               >
-                <span className="hidden whitespace-pre-wrap md:inline-block lg:hidden">
+                <span
+                  className="hidden whitespace-pre-wrap md:inline-block lg:hidden"
+                  style={modelingCmsTabletTitleFontStyle(tabletPreviewTitleFontPx)}
+                >
                   {renderModelingTitleText(titleTabletResolved)}
                 </span>
               </span>
@@ -173,7 +184,10 @@ function HeritageOverlayText({
                 transform: modelingCopyTranslatePercent(bodyTabletOffsetX, bodyTabletOffsetY),
               }}
             >
-              <p className="mt-[calc(3.5rem*var(--ms,1))] hidden w-[calc(470px*var(--ms,1))] max-w-full font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black md:block lg:hidden">
+              <p
+                className="mt-[calc(3.5rem*var(--ms,1))] hidden w-[calc(470px*var(--ms,1))] max-w-full font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black md:block lg:hidden"
+                style={modelingCmsTabletBodyFontStyle(tabletPreviewBodyFontPx)}
+              >
                 {descTabletLines.map((line, index) => (
                   <span key={`tablet-${index}`} className="block whitespace-nowrap">
                     {renderModelingCopyLine(line)}
@@ -226,6 +240,8 @@ export function ModelingBlockHeritage({
   bodyTabletOffsetX,
   mobilePreviewTitleFontPx,
   mobilePreviewBodyFontPx,
+  tabletPreviewTitleFontPx,
+  tabletPreviewBodyFontPx,
 }: ModelingBlockHeritageProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile && imageUrlDesktop === imageUrlTablet;
   return (
@@ -298,6 +314,8 @@ export function ModelingBlockHeritage({
         bodyTabletOffsetX={bodyTabletOffsetX}
         mobilePreviewTitleFontPx={mobilePreviewTitleFontPx}
         mobilePreviewBodyFontPx={mobilePreviewBodyFontPx}
+        tabletPreviewTitleFontPx={tabletPreviewTitleFontPx}
+        tabletPreviewBodyFontPx={tabletPreviewBodyFontPx}
       />
     </article>
   );

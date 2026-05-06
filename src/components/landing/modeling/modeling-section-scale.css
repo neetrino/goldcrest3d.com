@@ -16,7 +16,24 @@
   --modeling-scale-padding-b-md: 0px;
 }
 
+/**
+ * Below `sm` (640px): keep card column width fixed to Figma mobile artboard; center in viewport
+ * so wider phones get white gutters. At `sm+`, layout uses full section width again.
+ */
+.modeling-specialization-mobile-fixed-column {
+  --modeling-specialization-mobile-artboard-px: 390px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(100%, var(--modeling-specialization-mobile-artboard-px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
 @media (min-width: 640px) {
+  .modeling-specialization-mobile-fixed-column {
+    max-width: none;
+  }
+
   .modeling-specialization-scale {
     --ms: min(1, max(0.5, calc(100cqw / 1920px)));
   }

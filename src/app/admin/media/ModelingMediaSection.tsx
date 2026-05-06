@@ -40,10 +40,12 @@ export function ModelingMediaSection({
           {description}
         </p>
         <p className="mt-3 text-sm text-slate-500">
-          Each block has desktop (large screens) and mobile assets. If mobile is omitted, the
-          desktop file is used on small screens. Tablet-only content is managed under the separate
-          &quot;Modeling Specialization — Tablet&quot; tab. Changes go live after a successful save
-          or upload.
+          Each block has desktop and mobile image assets; if mobile is omitted, the desktop file is
+          used on small screens. Open <span className="font-medium">Text content</span> to edit
+          desktop and mobile copy, positions, and mobile preview font sizes. Tablet copy, tablet
+          offsets, and tablet preview fonts are edited under{" "}
+          <span className="font-medium">Modeling Specialization — Tablet</span> (with tablet-only
+          images). Changes go live after a successful save or upload.
         </p>
       </div>
       <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 
-import { modelingBodyLinesForLgViewport } from "./modeling-card.constants";
+import {
+  modelingBodyLinesForLgViewport,
+  modelingBodyLinesForTabletViewport,
+} from "./modeling-card.constants";
 import {
   BRIDAL_DESCRIPTION_SECURE_PRONG_LINE,
   BRIDAL_MOBILE_SECURE_PRONG_MARGIN_TOP_CLASS,
@@ -169,6 +172,11 @@ export function renderModelingCardDescriptionContent(
       );
 
       if (modelingTabletTierEnabled && descriptionLinesTablet != null) {
+        const tabletViewportStackLines = modelingBodyLinesForTabletViewport(
+          descriptionLinesDesktop ?? [],
+          descriptionLinesTablet ?? [],
+          descriptionLinesMobile ?? [],
+        );
         return (
           <>
             {descriptionLinesMobile != null && descriptionLinesMobile.length > 0 ? (
@@ -183,9 +191,10 @@ export function renderModelingCardDescriptionContent(
                 ))}
               </div>
             ) : null}
-            {tabletStackLines.length > 0 ? (
+            {tabletViewportStackLines.length > 0 &&
+            tabletViewportStackLines.some((l) => l.trim().length > 0) ? (
               <div className="hidden w-full min-w-0 flex-col items-start md:flex lg:hidden md:-translate-x-[calc(-0.1rem*var(--ms,1))]">
-                {bridalDesktopStack(tabletStackLines, "bridal-tablet-stack")}
+                {bridalDesktopStack(tabletViewportStackLines, "bridal-tablet-stack")}
               </div>
             ) : null}
             {(() => {
@@ -270,6 +279,11 @@ export function renderModelingCardDescriptionContent(
 
     if (modelingTabletTierEnabled && descriptionLinesTablet != null) {
       const mobileLinesMerged = mergeHipHopLonelyEngineeredLine(descriptionLines);
+      const tabletViewportHipHopLines = modelingBodyLinesForTabletViewport(
+        descriptionLinesDesktop ?? [],
+        descriptionLinesTablet ?? [],
+        descriptionLines ?? [],
+      );
       return (
         <>
           {mobileLinesMerged.length > 0 ? (
@@ -291,12 +305,13 @@ export function renderModelingCardDescriptionContent(
               })}
             </div>
           ) : null}
-          {tabletHipHopLines.length > 0 ? (
+          {tabletViewportHipHopLines.length > 0 &&
+          tabletViewportHipHopLines.some((l) => l.trim().length > 0) ? (
             <div
               className={`hidden min-w-0 flex-col items-center md:flex lg:hidden md:gap-0 ${HIPHOP_TABLET_DESCRIPTION_CLASS}`}
             >
               {renderHipHopBreakpointDesktopLines(
-                tabletHipHopLines,
+                tabletViewportHipHopLines,
                 "hiphop-tablet",
                 "md:mt-[calc(0.375rem*var(--ms,1))]",
               )}

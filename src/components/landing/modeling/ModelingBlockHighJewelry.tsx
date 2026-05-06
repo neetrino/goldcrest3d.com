@@ -13,6 +13,8 @@ import {
   mergeCssProperties,
   modelingCmsMobileBodyFontStyle,
   modelingCmsMobileTitleFontStyle,
+  modelingCmsTabletBodyFontStyle,
+  modelingCmsTabletTitleFontStyle,
 } from "./modeling-cms-mobile-font-style";
 import { renderModelingCopyLine, renderModelingTitleText } from "./modeling-copy-line";
 
@@ -76,6 +78,8 @@ type ModelingBlockHighJewelryProps = {
   tabletLine1Emphasis: string;
   mobilePreviewTitleFontPx: number;
   mobilePreviewBodyFontPx: number;
+  tabletPreviewTitleFontPx: number;
+  tabletPreviewBodyFontPx: number;
 };
 
 /** High Jewelry — full-bleed; mobile / tablet / desktop assets and copy tiers. */
@@ -105,6 +109,8 @@ export function ModelingBlockHighJewelry({
   tabletLine1Emphasis,
   mobilePreviewTitleFontPx,
   mobilePreviewBodyFontPx,
+  tabletPreviewTitleFontPx,
+  tabletPreviewBodyFontPx,
 }: ModelingBlockHighJewelryProps) {
   const oneImage =
     imageUrlDesktop === imageUrlMobile && imageUrlMobile === imageUrlTablet;
@@ -220,9 +226,12 @@ export function ModelingBlockHighJewelry({
             {titleTabletDisplay.length > 0 ? (
               <span
                 className="hidden whitespace-pre-wrap md:inline-block lg:hidden"
-                style={{
-                  transform: modelingCopyTranslatePercent(titleTabletOffsetX, titleTabletOffsetY),
-                }}
+                style={mergeCssProperties(
+                  {
+                    transform: modelingCopyTranslatePercent(titleTabletOffsetX, titleTabletOffsetY),
+                  },
+                  modelingCmsTabletTitleFontStyle(tabletPreviewTitleFontPx),
+                )}
               >
                 {renderModelingTitleText(titleTabletDisplay)}
               </span>
@@ -261,9 +270,12 @@ export function ModelingBlockHighJewelry({
         {hasTabletDescriptionCopy ? (
           <div
             className="mt-[calc(1rem*var(--ms,1))] hidden max-w-[calc(520px*var(--ms,1))] font-manrope text-[calc(14px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(22px*var(--ms,1)*var(--mt,1))] text-black/70 md:block lg:hidden"
-            style={{
-              transform: modelingCopyTranslatePercent(bodyTabletOffsetX, bodyTabletOffsetY),
-            }}
+            style={mergeCssProperties(
+              {
+                transform: modelingCopyTranslatePercent(bodyTabletOffsetX, bodyTabletOffsetY),
+              },
+              modelingCmsTabletBodyFontStyle(tabletPreviewBodyFontPx),
+            )}
           >
             {tabletLine1.length > 0 ? (
               <span className="block whitespace-nowrap -translate-x-[calc(1.9rem*var(--ms,1))]">

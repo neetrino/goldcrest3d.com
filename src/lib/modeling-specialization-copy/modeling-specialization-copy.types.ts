@@ -31,6 +31,10 @@ export type ModelingSpecializationCopyRow = {
   mobilePreviewTitleFontPx: number;
   /** Mobile description size (px, below `md` on landing + admin preview); scales with section --ms/--mt. */
   mobilePreviewBodyFontPx: number;
+  /** Tablet title size (px, `md`–`lg` on landing + admin); scales with section --ms/--mt. */
+  tabletPreviewTitleFontPx: number;
+  /** Tablet description size (px, `md`–`lg` on landing + admin); scales with section --ms/--mt. */
+  tabletPreviewBodyFontPx: number;
 };
 
 export type ModelingSpecializationCopyPayload = {
@@ -56,4 +60,6 @@ export type ModelingSpecializationCopyPayload = {
   tabletLine1Emphasis: string;
   mobilePreviewTitleFontPx: number;
   mobilePreviewBodyFontPx: number;
+  tabletPreviewTitleFontPx: number;
+  tabletPreviewBodyFontPx: number;
 };
