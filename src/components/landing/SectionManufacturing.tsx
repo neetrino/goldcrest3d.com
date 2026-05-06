@@ -44,7 +44,7 @@ function ManufacturingAccordionRow({
         aria-expanded={isActive}
         aria-controls={item.description ? `manufacturing-detail-${item.id}` : undefined}
       >
-        <span className="manufacturing-intelligence-accordion-label pr-4">
+        <span className="manufacturing-intelligence-accordion-label min-w-0 flex-1 pr-4 break-words">
           {item.title}
         </span>
         <span
@@ -73,17 +73,13 @@ function ManufacturingAccordionRow({
       {showDescription ? (
         <div
           id={`manufacturing-detail-${item.id}`}
-          className={
-            descriptionHasManualLineBreaks
-              ? "overflow-x-visible border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left md:overflow-x-auto"
-              : "border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left"
-          }
+          className="border-t border-black/[0.06] px-[30px] pb-6 pt-3 text-left"
         >
           <p
             className={`manufacturing-intelligence-accordion-detail text-[15px] font-normal leading-[22px] tracking-normal text-black/80 md:max-lg:text-[14px] md:max-lg:leading-[21px] ${
               descriptionHasManualLineBreaks
-                ? "whitespace-pre-line break-words md:whitespace-pre"
-                : ""
+                ? "whitespace-pre-line break-words"
+                : "break-words"
             }`}
           >
             {item.description}
