@@ -3,6 +3,10 @@ export const MODELING_COPY_OFFSET_Y_MIN_PCT = -1500;
 export const MODELING_COPY_OFFSET_Y_MAX_PCT = 1500;
 /** Admin Up/Down nudge step (percentage points). */
 export const MODELING_COPY_OFFSET_NUDGE_PCT = 1;
+/** Admin vertical offset: shortcut deltas next to Up/Down (percentage points). */
+export const MODELING_COPY_OFFSET_VERTICAL_QUICK_DELTAS_PCT = [
+  25, 50, 100, -25, -50, -100,
+] as const;
 
 /**
  * Tablet-only title/body X+Y offsets: very wide range; CSS uses translate % of the text box

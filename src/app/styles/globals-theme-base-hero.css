@@ -43,11 +43,10 @@ section[id] {
 /* Jewelry Rendering — ենթավերնագիր (mobile: Inter; md+: SF Compact) */
 #hero-rendering-subtitle {
   color: rgba(255, 255, 255, 0.9);
-  text-align: left;
   transform: translate(0, -12px);
 }
 
-@media (max-width: 767px) {
+@media (max-width: 754px) {
   #hero-rendering-subtitle {
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     font-size: 16px;
@@ -55,16 +54,18 @@ section[id] {
     font-weight: 300;
     line-height: 24px;
     letter-spacing: -0.312px;
+    text-align: left;
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 755px) {
   #hero-rendering-subtitle {
     font-family: "SF Compact", -apple-system, system-ui, sans-serif;
     font-size: 20px;
     font-style: italic;
     font-weight: 350;
     line-height: 28px;
+    text-align: left;
     transform: translate(0, -12px);
   }
 }
@@ -152,10 +153,9 @@ section[id] {
 /* Descendant h1: stack split for mobile-only vs desktop-only titles */
 .power-banners-section2-text-cluster h1 {
   color: #fff;
-  text-align: left;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 754px) {
   .power-banners-section2-text-cluster h1 {
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     font-size: 30px;
@@ -163,17 +163,19 @@ section[id] {
     font-weight: 300;
     line-height: 36px;
     letter-spacing: 0.396px;
+    text-align: left;
     translate: 0 -0.625rem;
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 755px) {
   .power-banners-section2-text-cluster h1 {
     font-family: "SF Compact", -apple-system, system-ui, sans-serif;
     font-size: 52px;
     font-style: normal;
     font-weight: 350;
     line-height: 72px;
+    text-align: left;
     translate: 0 -0.625rem;
   }
 }
@@ -214,7 +216,7 @@ section[id] {
   transform: translate(0, -1.65rem);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 755px) {
   #hero-section2-get-quote {
     transform: translate(0, -1.8rem);
   }

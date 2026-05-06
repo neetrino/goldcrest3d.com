@@ -31,7 +31,11 @@ import {
   MODELING_MOBILE_PREVIEW_BODY_FONT_PX_DEFAULT,
   MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
 } from "@/constants/modeling-specialization-mobile-preview-font";
-import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
+import {
+  MODELING_TABLET_PREVIEW_BODY_FONT_PX_DEFAULT,
+  MODELING_TABLET_PREVIEW_TITLE_FONT_PX_DEFAULT,
+} from "@/constants/modeling-specialization-tablet-preview-font";
+import { prisma } from "@/lib/db";
 import {
   emptyModelingSpecializationCopyRow,
   normalizeModelingSpecializationCopyPayload,
@@ -83,6 +87,8 @@ export type AdminModelingSlotRow = {
   tabletLine1Emphasis: string;
   mobilePreviewTitleFontPx: number;
   mobilePreviewBodyFontPx: number;
+  tabletPreviewTitleFontPx: number;
+  tabletPreviewBodyFontPx: number;
 };
 
 export type AdminOrderedItemRow = {
@@ -220,7 +226,7 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
       siteMediaItem.findMany({
         orderBy: [{ sectionKey: "asc" }, { sortOrder: "asc" }],
       }),
-      modelingSpecializationCopy.findMany(),
+      prisma.modelingSpecializationCopy.findMany(),
       manufacturingIntelligenceCopy.findMany(),
       manufacturingIntelligenceMobileCopy.findMany(),
       founderSectionCopy.findMany(),
@@ -256,6 +262,10 @@ export async function getSiteMediaAdminBundle(): Promise<AdminSiteMediaBundle> {
           row.mobilePreviewTitleFontPx ?? MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
         mobilePreviewBodyFontPx:
           row.mobilePreviewBodyFontPx ?? MODELING_MOBILE_PREVIEW_BODY_FONT_PX_DEFAULT,
+        tabletPreviewTitleFontPx:
+          row.tabletPreviewTitleFontPx ?? MODELING_TABLET_PREVIEW_TITLE_FONT_PX_DEFAULT,
+        tabletPreviewBodyFontPx:
+          row.tabletPreviewBodyFontPx ?? MODELING_TABLET_PREVIEW_BODY_FONT_PX_DEFAULT,
       }),
     }));
     manufacturingCopyRows = manufacturingRows.map((row) => ({

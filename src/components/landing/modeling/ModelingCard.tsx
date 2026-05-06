@@ -1,7 +1,11 @@
 import { renderModelingCardDescriptionContent } from "./ModelingCardDescriptionContent";
 import { ModelingCardFullBleed } from "./ModelingCardFullBleed";
 import { ModelingCardGradientLayout } from "./ModelingCardGradientLayout";
-import { getModelingCardWidthStyle } from "./modeling-card.constants";
+import {
+  getModelingCardWidthStyle,
+  modelingBodyLinesForTabletViewport,
+} from "./modeling-card.constants";
+import { modelingCmsTabletBodyFontStyle } from "./modeling-cms-mobile-font-style";
 import {
   DEFAULT_IMAGE_POSITION,
   PORTRAIT_TABLET_OVERLAY_DESC_CLASS,
@@ -80,6 +84,8 @@ export function ModelingCard({
   imageFillClassNameDesktop = "object-contain",
   mobilePreviewTitleFontPx,
   mobilePreviewBodyFontPx,
+  tabletPreviewTitleFontPx,
+  tabletPreviewBodyFontPx,
 }: ModelingCardProps) {
   const hasNonEmptyLines = (lines: string[] | undefined): boolean =>
     Boolean(lines?.some((line) => line.trim().length > 0));
@@ -101,7 +107,6 @@ export function ModelingCard({
     mobilePortraitTypography &&
     hasLines &&
     independentTitleDescription;
-  const hasTabletDescriptionLines = hasNonEmptyLines(descriptionLinesTablet);
   const tabletImageColumnEnabled =
     imagePairBreakpoint === "md" &&
     (modelingTabletTierEnabled || portraitMobileLayout) &&
@@ -118,23 +123,34 @@ export function ModelingCard({
     ? "leading-[calc(22px*var(--ms,1)*var(--mt,1))]"
     : "leading-[calc(22px*var(--ms,1)*var(--mt,1))] whitespace-nowrap";
   const hipHopMobileLineClass =
-    "block whitespace-normal leading-[calc(13px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
+    "block whitespace-normal leading-[calc(13px*var(--ms,1)*var(--mt,1))] min-[755px]:whitespace-nowrap min-[755px]:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
   const hipHopMobileLineSingleLineClass =
-    "block max-sm:whitespace-nowrap leading-[calc(13px*var(--ms,1)*var(--mt,1))] sm:whitespace-nowrap sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
+    "block max-[754px]:whitespace-nowrap leading-[calc(13px*var(--ms,1)*var(--mt,1))] min-[755px]:whitespace-nowrap min-[755px]:leading-[calc(22px*var(--ms,1)*var(--mt,1))]";
   const bridalRowWrapperClass = bridalMobileLayout
-    ? "flex w-full flex-col items-end gap-2 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-4 sm:gap-y-1"
+    ? "flex w-full flex-col items-end gap-2 min-[755px]:flex-row min-[755px]:flex-wrap min-[755px]:items-baseline min-[755px]:gap-x-4 min-[755px]:gap-y-1"
     : "flex flex-wrap items-baseline gap-x-4 gap-y-1";
   const bridalRowSpanClass = bridalMobileLayout
-    ? "max-sm:!m-0 max-sm:!translate-x-0 max-sm:block max-sm:w-[calc(291px*var(--ms,1))] max-sm:max-w-full max-sm:text-left max-sm:font-sans max-sm:text-[calc(12px*var(--ms,1)*var(--mt,1))] max-sm:font-light max-sm:text-[#364153] sm:inline"
+    ? "max-[754px]:!m-0 max-[754px]:!translate-x-0 max-[754px]:block max-[754px]:w-[calc(291px*var(--ms,1))] max-[754px]:max-w-full max-[754px]:text-left max-[754px]:font-sans max-[754px]:text-[calc(12px*var(--ms,1)*var(--mt,1))] max-[754px]:font-light max-[754px]:text-[#364153] min-[755px]:inline"
     : "";
-  const bridalRowSpanClassDesktop = `${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""}`;
+  const bridalRowSpanClassDesktop = `${bridalRowSpanClass} ${bridalMobileLayout ? "min-[755px]:font-manrope min-[755px]:text-[calc(14px*var(--ms,1)*var(--mt,1))] min-[755px]:leading-[calc(22px*var(--ms,1)*var(--mt,1))] min-[755px]:text-black" : ""}`;
 
+  const portraitTabletDescriptionLines = modelingBodyLinesForTabletViewport(
+    descriptionLinesDesktop ?? [],
+    descriptionLinesTablet ?? [],
+    descriptionLinesMobile ?? [],
+  );
   const portraitTabletDescriptionContent =
     portraitMobileLayout &&
-    descriptionLinesTablet != null &&
-    hasTabletDescriptionLines ? (
-      <div className={PORTRAIT_TABLET_OVERLAY_DESC_CLASS}>
-        {descriptionLinesTablet.map((line, i) => (
+    portraitTabletDescriptionLines.some((l) => l.trim().length > 0) ? (
+      <div
+        className={PORTRAIT_TABLET_OVERLAY_DESC_CLASS}
+        style={
+          tabletPreviewBodyFontPx != null
+            ? modelingCmsTabletBodyFontStyle(tabletPreviewBodyFontPx)
+            : undefined
+        }
+      >
+        {portraitTabletDescriptionLines.map((line, i) => (
           <span key={`portrait-tablet-desc-${i}`} className="block">
             {renderModelingCopyLine(line)}
           </span>
@@ -174,28 +190,28 @@ export function ModelingCard({
       : "text-[calc(40px*var(--ms,1)*var(--mt,1))] leading-[calc(28px*var(--ms,1)*var(--mt,1))]";
   const titleClassName = `font-manrope ${titleSizeClass} ${titleBold ? "font-bold" : "font-extrabold"} ${textColor}`;
   const titleClassNameResolved = hipHopMobileLayout
-    ? `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] ${textColor} sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-left sm:tracking-normal ${titleBold ? "sm:font-bold" : "sm:font-extrabold"}`
+    ? `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] ${textColor} min-[755px]:font-manrope min-[755px]:text-[calc(32px*var(--ms,1)*var(--mt,1))] min-[755px]:leading-[calc(24px*var(--ms,1)*var(--mt,1))] min-[755px]:scale-x-105 min-[755px]:origin-left min-[755px]:tracking-normal ${titleBold ? "min-[755px]:font-bold" : "min-[755px]:font-extrabold"}`
     : bridalMobileLayout
-      ? `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black sm:font-manrope sm:text-[calc(32px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(24px*var(--ms,1)*var(--mt,1))] sm:scale-x-105 sm:origin-left sm:tracking-normal ${titleBold ? "sm:font-bold" : "sm:font-extrabold"} sm:text-black`
+      ? `font-sans text-[calc(20px*var(--ms,1)*var(--mt,1))] font-bold leading-[calc(28px*var(--ms,1)*var(--mt,1))] tracking-[-0.449px] text-black min-[755px]:font-manrope min-[755px]:text-[calc(32px*var(--ms,1)*var(--mt,1))] min-[755px]:leading-[calc(24px*var(--ms,1)*var(--mt,1))] min-[755px]:scale-x-105 min-[755px]:origin-left min-[755px]:tracking-normal ${titleBold ? "min-[755px]:font-bold" : "min-[755px]:font-extrabold"} min-[755px]:text-black`
       : titleClassName;
   const descriptionClassName = hipHopMobileLayout
-    ? `font-sans w-full text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(16px*var(--ms,1)*var(--mt,1))] text-center sm:max-w-[calc(560px*var(--ms,1))] sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-center ${descriptionColor}`
+    ? `font-sans w-full text-[calc(12px*var(--ms,1)*var(--mt,1))] font-light leading-[calc(16px*var(--ms,1)*var(--mt,1))] text-center min-[755px]:max-w-[calc(560px*var(--ms,1))] min-[755px]:font-manrope min-[755px]:text-[calc(14px*var(--ms,1)*var(--mt,1))] min-[755px]:leading-[calc(22px*var(--ms,1)*var(--mt,1))] min-[755px]:text-center ${descriptionColor}`
     : `font-manrope font-light ${hasLines ? `text-[calc(14px*var(--ms,1)*var(--mt,1))] leading-[calc(22px*var(--ms,1)*var(--mt,1))] ${noDescriptionMaxWidth ? "" : "max-w-[calc(560px*var(--ms,1))]"}` : "text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] max-w-[calc(407px*var(--ms,1))]"} ${descriptionColor}`;
   const descriptionClassNameGradient = `font-manrope font-light text-[calc(16px*var(--ms,1)*var(--mt,1))] leading-[calc(26px*var(--ms,1)*var(--mt,1))] ${descriptionColor}`;
   const imageStyle = { objectPosition: imagePosition };
   const imgMobileWrapperClass =
     imagePairBreakpoint === "md"
-      ? "absolute inset-0 md:hidden"
-      : "absolute inset-0 sm:hidden";
+      ? "absolute inset-0 min-[755px]:hidden"
+      : "absolute inset-0 min-[755px]:hidden";
   const imgTabletWrapperClass = tabletImageColumnEnabled
-    ? "absolute inset-0 hidden md:block lg:hidden"
+    ? "absolute inset-0 hidden min-[755px]:block lg:hidden"
     : "";
   const imgDesktopWrapperClass =
     imagePairBreakpoint === "md"
       ? tabletImageColumnEnabled
         ? "absolute inset-0 hidden lg:block"
-        : "absolute inset-0 hidden md:block"
-      : "absolute inset-0 hidden sm:block";
+        : "absolute inset-0 hidden min-[755px]:block"
+      : "absolute inset-0 hidden min-[755px]:block";
   const textAlignClass =
     textAlign === "center"
       ? "text-center"
@@ -308,6 +324,8 @@ export function ModelingCard({
         DescriptionTag={DescriptionTag}
         mobilePreviewTitleFontPx={mobilePreviewTitleFontPx}
         mobilePreviewBodyFontPx={mobilePreviewBodyFontPx}
+        tabletPreviewTitleFontPx={tabletPreviewTitleFontPx}
+        tabletPreviewBodyFontPx={tabletPreviewBodyFontPx}
       />
     );
   }

@@ -31,6 +31,8 @@ type ModelingBlockPortraitProps = {
   bodyTabletOffsetX: number;
   mobilePreviewTitleFontPx: number;
   mobilePreviewBodyFontPx: number;
+  tabletPreviewTitleFontPx: number;
+  tabletPreviewBodyFontPx: number;
 };
 
 export function ModelingBlockPortrait({
@@ -58,6 +60,8 @@ export function ModelingBlockPortrait({
   bodyTabletOffsetX,
   mobilePreviewTitleFontPx,
   mobilePreviewBodyFontPx,
+  tabletPreviewTitleFontPx,
+  tabletPreviewBodyFontPx,
 }: ModelingBlockPortraitProps) {
   const sameUrl = imageUrlDesktop === imageUrlMobile;
   const tabletBg =
@@ -103,13 +107,15 @@ export function ModelingBlockPortrait({
       independentTitleDescription
       titleBlockTop="34%"
       titleBlockLeft="7%"
-      titleShiftClassName="md:translate-x-[calc(2.25rem*var(--ms,1))] lg:translate-x-0"
+      titleShiftClassName="min-[755px]:translate-x-[calc(2.25rem*var(--ms,1))] lg:translate-x-0"
       descriptionBlockTop="42%"
       descriptionBlockLeft="-13%"
       desktopOverlayShiftClassName="lg:translate-x-[calc(2rem*var(--ms,1))] lg:translate-y-[calc(2.25rem*var(--ms,1))]"
       mobilePortraitTypography
       mobilePreviewTitleFontPx={mobilePreviewTitleFontPx}
       mobilePreviewBodyFontPx={mobilePreviewBodyFontPx}
+      tabletPreviewTitleFontPx={tabletPreviewTitleFontPx}
+      tabletPreviewBodyFontPx={tabletPreviewBodyFontPx}
     />
   );
 }

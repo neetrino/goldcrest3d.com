@@ -12,12 +12,60 @@ import {
   MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_MAX,
   MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_MIN,
 } from "@/constants/modeling-specialization-mobile-preview-font";
+import {
+  MODELING_TABLET_PREVIEW_BODY_FONT_PX_MAX,
+  MODELING_TABLET_PREVIEW_BODY_FONT_PX_MIN,
+  MODELING_TABLET_PREVIEW_TITLE_FONT_PX_MAX,
+  MODELING_TABLET_PREVIEW_TITLE_FONT_PX_MIN,
+} from "@/constants/modeling-specialization-tablet-preview-font";
 import { MODELING_SLOT_KEYS } from "@/lib/site-media/site-media.registry";
 
 const MAX_TITLE_LEN = 280;
 const MAX_BODY_LEN = 4000;
 
 const MODELING_SLOT_SET = new Set<string>(Object.values(MODELING_SLOT_KEYS));
+
+/** Missing optional fields from FormData. */
+function formDataOptionalString(raw: unknown): string {
+  if (raw === null || raw === undefined) return "";
+  return typeof raw === "string" ? raw : String(raw);
+}
+
+const tabletOffsetFieldWide = z.coerce
+  .number()
+  .int("Offset must be an integer.")
+  .min(
+    MODELING_TABLET_COPY_OFFSET_MIN_PCT,
+    `Offset must be >= ${MODELING_TABLET_COPY_OFFSET_MIN_PCT}`,
+  )
+  .max(
+    MODELING_TABLET_COPY_OFFSET_MAX_PCT,
+    `Offset must be <= ${MODELING_TABLET_COPY_OFFSET_MAX_PCT}`,
+  );
+
+const tabletPreviewTitleFontPxField = z.coerce
+  .number()
+  .int("Tablet title size must be an integer.")
+  .min(
+    MODELING_TABLET_PREVIEW_TITLE_FONT_PX_MIN,
+    `Tablet title size must be >= ${MODELING_TABLET_PREVIEW_TITLE_FONT_PX_MIN}px`,
+  )
+  .max(
+    MODELING_TABLET_PREVIEW_TITLE_FONT_PX_MAX,
+    `Tablet title size must be <= ${MODELING_TABLET_PREVIEW_TITLE_FONT_PX_MAX}px`,
+  );
+
+const tabletPreviewBodyFontPxField = z.coerce
+  .number()
+  .int("Tablet description size must be an integer.")
+  .min(
+    MODELING_TABLET_PREVIEW_BODY_FONT_PX_MIN,
+    `Tablet description size must be >= ${MODELING_TABLET_PREVIEW_BODY_FONT_PX_MIN}px`,
+  )
+  .max(
+    MODELING_TABLET_PREVIEW_BODY_FONT_PX_MAX,
+    `Tablet description size must be <= ${MODELING_TABLET_PREVIEW_BODY_FONT_PX_MAX}px`,
+  );
 const offsetField = z.coerce
   .number()
   .int("Offset must be an integer.")
@@ -82,4 +130,18 @@ export const modelingSpecializationCopyFormSchema = z.object({
     .max(MAX_TITLE_LEN, `Desktop emphasized fragment max ${MAX_TITLE_LEN} chars`),
   mobilePreviewTitleFontPx: mobilePreviewTitleFontPxField,
   mobilePreviewBodyFontPx: mobilePreviewBodyFontPxField,
+  titleTablet: z.string().max(MAX_TITLE_LEN, `Tablet title max ${MAX_TITLE_LEN} chars`),
+  bodyTablet: z.string().max(MAX_BODY_LEN, `Tablet description max ${MAX_BODY_LEN} chars`),
+  titleTabletOffsetY: tabletOffsetFieldWide,
+  bodyTabletOffsetY: tabletOffsetFieldWide,
+  titleTabletOffsetX: tabletOffsetFieldWide,
+  bodyTabletOffsetX: tabletOffsetFieldWide,
+  tabletLine1Emphasis: z.preprocess(
+    formDataOptionalString,
+    z
+      .string()
+      .max(MAX_TITLE_LEN, `Tablet emphasized fragment max ${MAX_TITLE_LEN} chars`),
+  ),
+  tabletPreviewTitleFontPx: tabletPreviewTitleFontPxField,
+  tabletPreviewBodyFontPx: tabletPreviewBodyFontPxField,
 });

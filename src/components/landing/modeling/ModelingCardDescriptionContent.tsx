@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 
-import { modelingBodyLinesForLgViewport } from "./modeling-card.constants";
+import {
+  modelingBodyLinesForLgViewport,
+  modelingBodyLinesForTabletViewport,
+} from "./modeling-card.constants";
 import {
   BRIDAL_DESCRIPTION_SECURE_PRONG_LINE,
   BRIDAL_MOBILE_SECURE_PRONG_MARGIN_TOP_CLASS,
@@ -73,7 +76,7 @@ export type ModelingCardDescriptionContentParams = Pick<
 function renderHipHopBreakpointDesktopLines(
   lines: string[],
   keyPrefix: string,
-  continuationGapClass = "sm:mt-[calc(0.375rem*var(--ms,1))]",
+  continuationGapClass = "min-[755px]:mt-[calc(0.375rem*var(--ms,1))]",
 ): ReactNode {
   const merged = mergeHipHopLonelyEngineeredLine(lines);
   return merged.map((line, i) => (
@@ -169,23 +172,29 @@ export function renderModelingCardDescriptionContent(
       );
 
       if (modelingTabletTierEnabled && descriptionLinesTablet != null) {
+        const tabletViewportStackLines = modelingBodyLinesForTabletViewport(
+          descriptionLinesDesktop ?? [],
+          descriptionLinesTablet ?? [],
+          descriptionLinesMobile ?? [],
+        );
         return (
           <>
             {descriptionLinesMobile != null && descriptionLinesMobile.length > 0 ? (
-              <div className="flex w-full flex-col items-start gap-0 md:hidden">
+              <div className="flex w-full flex-col items-start gap-0 min-[755px]:hidden">
                 {descriptionLinesMobile.map((line, i) => (
                   <span
                     key={`bridal-mobile-${i}`}
-                    className={`${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""} ${line.trim() === BRIDAL_DESCRIPTION_SECURE_PRONG_LINE ? BRIDAL_MOBILE_SECURE_PRONG_MARGIN_TOP_CLASS : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
+                    className={`${bridalRowSpanClass} ${bridalMobileLayout ? "min-[755px]:font-manrope min-[755px]:text-[calc(14px*var(--ms,1)*var(--mt,1))] min-[755px]:text-black" : ""} ${line.trim() === BRIDAL_DESCRIPTION_SECURE_PRONG_LINE ? BRIDAL_MOBILE_SECURE_PRONG_MARGIN_TOP_CLASS : ""} ${i < 2 ? "max-[754px]:whitespace-nowrap" : "max-[754px]:whitespace-normal"}`}
                   >
                     {renderModelingCopyLine(line)}
                   </span>
                 ))}
               </div>
             ) : null}
-            {tabletStackLines.length > 0 ? (
-              <div className="hidden w-full min-w-0 flex-col items-start md:flex lg:hidden md:-translate-x-[calc(-0.1rem*var(--ms,1))]">
-                {bridalDesktopStack(tabletStackLines, "bridal-tablet-stack")}
+            {tabletViewportStackLines.length > 0 &&
+            tabletViewportStackLines.some((l) => l.trim().length > 0) ? (
+              <div className="hidden w-full min-w-0 flex-col items-start min-[755px]:flex lg:hidden min-[755px]:-translate-x-[calc(-0.1rem*var(--ms,1))]">
+                {bridalDesktopStack(tabletViewportStackLines, "bridal-tablet-stack")}
               </div>
             ) : null}
             {(() => {
@@ -207,11 +216,11 @@ export function renderModelingCardDescriptionContent(
       return (
         <>
           {descriptionLinesMobile != null && descriptionLinesMobile.length > 0 ? (
-            <div className="flex w-full flex-col items-start gap-0 sm:hidden">
+            <div className="flex w-full flex-col items-start gap-0 min-[755px]:hidden">
               {descriptionLinesMobile.map((line, i) => (
                 <span
                   key={`bridal-mobile-${i}`}
-                  className={`${bridalRowSpanClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""} ${line.trim() === BRIDAL_DESCRIPTION_SECURE_PRONG_LINE ? BRIDAL_MOBILE_SECURE_PRONG_MARGIN_TOP_CLASS : ""} ${i < 2 ? "max-sm:whitespace-nowrap" : "max-sm:whitespace-normal"}`}
+                  className={`${bridalRowSpanClass} ${bridalMobileLayout ? "min-[755px]:font-manrope min-[755px]:text-[calc(14px*var(--ms,1)*var(--mt,1))] min-[755px]:text-black" : ""} ${line.trim() === BRIDAL_DESCRIPTION_SECURE_PRONG_LINE ? BRIDAL_MOBILE_SECURE_PRONG_MARGIN_TOP_CLASS : ""} ${i < 2 ? "max-[754px]:whitespace-nowrap" : "max-[754px]:whitespace-normal"}`}
                 >
                   {renderModelingCopyLine(line)}
                 </span>
@@ -219,7 +228,7 @@ export function renderModelingCardDescriptionContent(
             </div>
           ) : null}
           {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
-            <div className="hidden w-full min-w-0 flex-col items-start sm:flex sm:-translate-x-[calc(-0.1rem*var(--ms,1))]">
+            <div className="hidden w-full min-w-0 flex-col items-start min-[755px]:flex min-[755px]:-translate-x-[calc(-0.1rem*var(--ms,1))]">
               {bridalDesktopStack(descriptionLinesDesktop, "bridal-desktop-stack")}
             </div>
           ) : null}
@@ -233,7 +242,7 @@ export function renderModelingCardDescriptionContent(
           <span
             key={i}
             id={i === 0 ? firstDescriptionLineId : undefined}
-            className={`${bridalRowSpanClass} ${i === 0 ? `${lineWrapClass} whitespace-nowrap` : lineWrapClass} ${bridalMobileLayout ? "sm:font-manrope sm:text-[calc(14px*var(--ms,1)*var(--mt,1))] sm:leading-[calc(22px*var(--ms,1)*var(--mt,1))] sm:text-black" : ""}`}
+            className={`${bridalRowSpanClass} ${i === 0 ? `${lineWrapClass} whitespace-nowrap` : lineWrapClass} ${bridalMobileLayout ? "min-[755px]:font-manrope min-[755px]:text-[calc(14px*var(--ms,1)*var(--mt,1))] min-[755px]:leading-[calc(22px*var(--ms,1)*var(--mt,1))] min-[755px]:text-black" : ""}`}
             style={
               i === 0
                 ? {
@@ -270,10 +279,15 @@ export function renderModelingCardDescriptionContent(
 
     if (modelingTabletTierEnabled && descriptionLinesTablet != null) {
       const mobileLinesMerged = mergeHipHopLonelyEngineeredLine(descriptionLines);
+      const tabletViewportHipHopLines = modelingBodyLinesForTabletViewport(
+        descriptionLinesDesktop ?? [],
+        descriptionLinesTablet ?? [],
+        descriptionLines ?? [],
+      );
       return (
         <>
           {mobileLinesMerged.length > 0 ? (
-            <div className="md:hidden">
+            <div className="min-[755px]:hidden">
               {mobileLinesMerged.map((line, i) => {
                 const forceSingleLineOnMobile =
                   HIPHOP_MOBILE_FORCE_SINGLE_LINE_TEXTS.has(line.trim());
@@ -283,7 +297,7 @@ export function renderModelingCardDescriptionContent(
                 return (
                   <span
                     key={i}
-                    className={`${hipHopMobileLineClass} ${hipHopMobileCmsNoWrapLines ? "!whitespace-nowrap" : ""} ${forceSingleLineOnMobile ? "max-md:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-md:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
+                    className={`${hipHopMobileLineClass} ${hipHopMobileCmsNoWrapLines ? "!whitespace-nowrap" : ""} ${forceSingleLineOnMobile ? "max-[754px]:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-[754px]:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
                   >
                     {renderModelingCopyLine(line)}
                   </span>
@@ -291,14 +305,15 @@ export function renderModelingCardDescriptionContent(
               })}
             </div>
           ) : null}
-          {tabletHipHopLines.length > 0 ? (
+          {tabletViewportHipHopLines.length > 0 &&
+          tabletViewportHipHopLines.some((l) => l.trim().length > 0) ? (
             <div
-              className={`hidden min-w-0 flex-col items-center md:flex lg:hidden md:gap-0 ${HIPHOP_TABLET_DESCRIPTION_CLASS}`}
+              className={`hidden min-w-0 flex-col items-center min-[755px]:flex lg:hidden min-[755px]:gap-0 ${HIPHOP_TABLET_DESCRIPTION_CLASS}`}
             >
               {renderHipHopBreakpointDesktopLines(
-                tabletHipHopLines,
+                tabletViewportHipHopLines,
                 "hiphop-tablet",
-                "md:mt-[calc(0.375rem*var(--ms,1))]",
+                "min-[755px]:mt-[calc(0.375rem*var(--ms,1))]",
               )}
             </div>
           ) : null}
@@ -322,7 +337,7 @@ export function renderModelingCardDescriptionContent(
     return (
       <>
         {mobileLinesMergedNoTablet.length > 0 ? (
-          <div className="sm:hidden">
+          <div className="min-[755px]:hidden">
             {mobileLinesMergedNoTablet.map((line, i) => {
               const forceSingleLineOnMobile =
                 HIPHOP_MOBILE_FORCE_SINGLE_LINE_TEXTS.has(line.trim());
@@ -332,7 +347,7 @@ export function renderModelingCardDescriptionContent(
               return (
                 <span
                   key={i}
-                  className={`${hipHopMobileLineClass} ${hipHopMobileCmsNoWrapLines ? "!whitespace-nowrap" : ""} ${forceSingleLineOnMobile ? "max-sm:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-sm:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
+                  className={`${hipHopMobileLineClass} ${hipHopMobileCmsNoWrapLines ? "!whitespace-nowrap" : ""} ${forceSingleLineOnMobile ? "max-[754px]:whitespace-nowrap" : ""} ${shiftLeftOnMobile ? "max-[754px]:-translate-x-[calc(1.5rem*var(--ms,1))]" : ""}`}
                 >
                   {renderModelingCopyLine(line)}
                 </span>
@@ -341,7 +356,7 @@ export function renderModelingCardDescriptionContent(
           </div>
         ) : null}
         {descriptionLinesDesktop != null && descriptionLinesDesktop.length > 0 ? (
-          <div className="hidden min-w-0 flex-col items-center sm:flex sm:gap-0">
+          <div className="hidden min-w-0 flex-col items-center min-[755px]:flex min-[755px]:gap-0">
             {renderHipHopBreakpointDesktopLines(descriptionLinesDesktop, "hiphop-desktop")}
           </div>
         ) : null}
@@ -358,7 +373,7 @@ export function renderModelingCardDescriptionContent(
             ? hipHopMobileLineSingleLineClass
             : hipHopMobileLineClass
           : `block ${lineWrapClass}`
-      }${hipHopMobileLayout && i >= HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX ? " hidden sm:block" : ""}`}
+      }${hipHopMobileLayout && i >= HIPHOP_MOBILE_HIDDEN_LINES_FROM_INDEX ? " hidden min-[755px]:block" : ""}`}
     >
       {renderModelingCopyLine(line)}
     </span>

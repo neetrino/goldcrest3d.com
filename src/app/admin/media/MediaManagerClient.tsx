@@ -137,7 +137,7 @@ export function MediaManagerClient({ bundle, powerBannerCopy }: MediaManagerClie
       {selectedTab === "modeling-tablet" ? (
         <ModelingTabletMediaSection
           title="Modeling Specialization — Tablet"
-          description="Tablet-only images and copy for each specialization card (768px–1023px)."
+          description="Tablet-only images per slot. Tablet copy, offsets, and preview fonts are edited here. Use the main Modeling tab for desktop and mobile text only."
           slots={bundle.modeling}
         />
       ) : null}

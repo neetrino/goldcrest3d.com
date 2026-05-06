@@ -28,7 +28,6 @@ import {
   getManufacturingMobileItemTitleKey,
 } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-mobile-copy.keys";
 import { logger } from "@/lib/logger";
-import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
 import {
   emptyModelingSpecializationCopyRow,
   normalizeModelingSpecializationCopyPayload,
@@ -62,7 +61,6 @@ import {
 } from "@/lib/validations/manufacturingIntelligenceItem";
 import { founderSectionFormSchema } from "@/lib/validations/founderSection";
 import { modelingSpecializationCopyFormSchema } from "@/lib/validations/modelingSpecializationCopy";
-import { modelingTabletSlotCopyFormSchema } from "@/lib/validations/modelingTabletSpecializationCopy";
 import { powerBannerTransformFormSchema } from "@/lib/validations/powerBannerCopy";
 import { engineeringProcessStepFormSchema } from "@/lib/validations/engineeringProcessStep";
 import { footerSocialLinksFormSchema } from "@/lib/validations/footerSocialLinks";
@@ -219,6 +217,15 @@ export async function updateModelingSlotCopy(
     desktopLine1Emphasis: formData.get("desktopLine1Emphasis"),
     mobilePreviewTitleFontPx: formData.get("mobilePreviewTitleFontPx"),
     mobilePreviewBodyFontPx: formData.get("mobilePreviewBodyFontPx"),
+    titleTablet: formData.get("titleTablet"),
+    bodyTablet: formData.get("bodyTablet"),
+    titleTabletOffsetY: formData.get("titleTabletOffsetY"),
+    bodyTabletOffsetY: formData.get("bodyTabletOffsetY"),
+    titleTabletOffsetX: formData.get("titleTabletOffsetX"),
+    bodyTabletOffsetX: formData.get("bodyTabletOffsetX"),
+    tabletLine1Emphasis: formData.get("tabletLine1Emphasis"),
+    tabletPreviewTitleFontPx: formData.get("tabletPreviewTitleFontPx"),
+    tabletPreviewBodyFontPx: formData.get("tabletPreviewBodyFontPx"),
   });
   if (!parsed.success) {
     const fieldErrors = parsed.error.flatten().fieldErrors;
@@ -241,6 +248,15 @@ export async function updateModelingSlotCopy(
         fieldErrors.desktopLine1Emphasis?.[0] ??
         fieldErrors.mobilePreviewTitleFontPx?.[0] ??
         fieldErrors.mobilePreviewBodyFontPx?.[0] ??
+        fieldErrors.titleTablet?.[0] ??
+        fieldErrors.bodyTablet?.[0] ??
+        fieldErrors.titleTabletOffsetY?.[0] ??
+        fieldErrors.bodyTabletOffsetY?.[0] ??
+        fieldErrors.titleTabletOffsetX?.[0] ??
+        fieldErrors.bodyTabletOffsetX?.[0] ??
+        fieldErrors.tabletLine1Emphasis?.[0] ??
+        fieldErrors.tabletPreviewTitleFontPx?.[0] ??
+        fieldErrors.tabletPreviewBodyFontPx?.[0] ??
         "Invalid input.",
     };
   }
@@ -263,10 +279,19 @@ export async function updateModelingSlotCopy(
     desktopLine1Emphasis: parsed.data.desktopLine1Emphasis,
     mobilePreviewTitleFontPx: parsed.data.mobilePreviewTitleFontPx,
     mobilePreviewBodyFontPx: parsed.data.mobilePreviewBodyFontPx,
+    titleTablet: parsed.data.titleTablet,
+    bodyTablet: parsed.data.bodyTablet,
+    titleTabletOffsetY: parsed.data.titleTabletOffsetY,
+    bodyTabletOffsetY: parsed.data.bodyTabletOffsetY,
+    titleTabletOffsetX: parsed.data.titleTabletOffsetX,
+    bodyTabletOffsetX: parsed.data.bodyTabletOffsetX,
+    tabletLine1Emphasis: parsed.data.tabletLine1Emphasis,
+    tabletPreviewTitleFontPx: parsed.data.tabletPreviewTitleFontPx,
+    tabletPreviewBodyFontPx: parsed.data.tabletPreviewBodyFontPx,
   });
 
   try {
-    await modelingSpecializationCopy.upsert({
+    await prisma.modelingSpecializationCopy.upsert({
       where: { slotKey: parsed.data.slotKey },
       create: {
         slotKey: parsed.data.slotKey,
@@ -288,83 +313,20 @@ export async function updateModelingSlotCopy(
         desktopLine1Emphasis: payload.desktopLine1Emphasis,
         mobilePreviewTitleFontPx: payload.mobilePreviewTitleFontPx,
         mobilePreviewBodyFontPx: payload.mobilePreviewBodyFontPx,
+        titleTablet: payload.titleTablet,
+        bodyTablet: payload.bodyTablet,
+        titleTabletOffsetY: payload.titleTabletOffsetY,
+        bodyTabletOffsetY: payload.bodyTabletOffsetY,
+        titleTabletOffsetX: payload.titleTabletOffsetX,
+        bodyTabletOffsetX: payload.bodyTabletOffsetX,
+        tabletLine1Emphasis: payload.tabletLine1Emphasis,
+        tabletPreviewTitleFontPx: payload.tabletPreviewTitleFontPx,
+        tabletPreviewBodyFontPx: payload.tabletPreviewBodyFontPx,
       },
     });
   } catch (e) {
     logger.error("updateModelingSlotCopy", e);
     return { ok: false, error: "Could not save text content." };
-  }
-
-  revalidateSite();
-  return { ok: true };
-}
-
-export async function updateModelingTabletSlotCopy(
-  _prev: SiteMediaActionResult | null,
-  formData: FormData,
-): Promise<SiteMediaActionResult> {
-  const denied = await requireAdmin();
-  if (denied) return denied;
-
-  const parsed = modelingTabletSlotCopyFormSchema.safeParse({
-    slotKey: formData.get("slotKey"),
-    titleTablet: formData.get("titleTablet"),
-    bodyTablet: formData.get("bodyTablet"),
-    titleTabletOffsetY: formData.get("titleTabletOffsetY"),
-    bodyTabletOffsetY: formData.get("bodyTabletOffsetY"),
-    titleTabletOffsetX: formData.get("titleTabletOffsetX"),
-    bodyTabletOffsetX: formData.get("bodyTabletOffsetX"),
-    tabletLine1Emphasis: formData.get("tabletLine1Emphasis"),
-  });
-  if (!parsed.success) {
-    const fieldErrors = parsed.error.flatten().fieldErrors;
-    return {
-      ok: false,
-      error:
-        fieldErrors.slotKey?.[0] ??
-        fieldErrors.titleTablet?.[0] ??
-        fieldErrors.bodyTablet?.[0] ??
-        fieldErrors.titleTabletOffsetY?.[0] ??
-        fieldErrors.bodyTabletOffsetY?.[0] ??
-        fieldErrors.titleTabletOffsetX?.[0] ??
-        fieldErrors.bodyTabletOffsetX?.[0] ??
-        fieldErrors.tabletLine1Emphasis?.[0] ??
-        "Invalid input.",
-    };
-  }
-
-  const slotKey = parsed.data.slotKey as ModelingSlotKey;
-  const tabletPayload = normalizeModelingSpecializationCopyPayload({
-    ...emptyModelingSpecializationCopyRow(slotKey),
-    titleTablet: parsed.data.titleTablet,
-    bodyTablet: parsed.data.bodyTablet,
-    titleTabletOffsetY: parsed.data.titleTabletOffsetY,
-    bodyTabletOffsetY: parsed.data.bodyTabletOffsetY,
-    titleTabletOffsetX: parsed.data.titleTabletOffsetX,
-    bodyTabletOffsetX: parsed.data.bodyTabletOffsetX,
-    tabletLine1Emphasis: parsed.data.tabletLine1Emphasis,
-  });
-
-  try {
-    await modelingSpecializationCopy.upsert({
-      where: { slotKey: parsed.data.slotKey },
-      create: {
-        slotKey: parsed.data.slotKey,
-        ...tabletPayload,
-      },
-      update: {
-        titleTablet: tabletPayload.titleTablet,
-        bodyTablet: tabletPayload.bodyTablet,
-        titleTabletOffsetY: tabletPayload.titleTabletOffsetY,
-        bodyTabletOffsetY: tabletPayload.bodyTabletOffsetY,
-        titleTabletOffsetX: tabletPayload.titleTabletOffsetX,
-        bodyTabletOffsetX: tabletPayload.bodyTabletOffsetX,
-        tabletLine1Emphasis: tabletPayload.tabletLine1Emphasis,
-      },
-    });
-  } catch (e) {
-    logger.error("updateModelingTabletSlotCopy", e);
-    return { ok: false, error: "Could not save tablet text content." };
   }
 
   revalidateSite();

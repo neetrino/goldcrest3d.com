@@ -4,6 +4,10 @@ import {
   MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
 } from "@/constants/modeling-specialization-mobile-preview-font";
 import {
+  MODELING_TABLET_PREVIEW_BODY_FONT_PX_DEFAULT,
+  MODELING_TABLET_PREVIEW_TITLE_FONT_PX_DEFAULT,
+} from "@/constants/modeling-specialization-tablet-preview-font";
+import {
   EMPTY_FOOTER_SOCIAL_LINKS,
   FOOTER_SOCIAL_KEYS,
   type FooterSocialLinks,
@@ -27,8 +31,8 @@ import { buildManufacturingIntelligenceMobileContent } from "@/lib/manufacturing
 import type { ManufacturingIntelligenceContent } from "@/lib/manufacturing-intelligence/manufacturing-intelligence.types";
 import { manufacturingIntelligenceCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-copy-prisma";
 import { manufacturingIntelligenceMobileCopy } from "@/lib/manufacturing-intelligence-copy/manufacturing-intelligence-mobile-copy-prisma";
+import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { modelingSpecializationCopy } from "@/lib/modeling-specialization-copy/modeling-specialization-copy-prisma";
 import {
   emptyModelingSpecializationCopyRow,
   normalizeModelingSpecializationCopyPayload,
@@ -83,6 +87,9 @@ export type ModelingSlotResolvedMedia = {
   /** Mobile (< md) title/body font sizes from CMS; scales with section --ms/--mt. */
   mobilePreviewTitleFontPx: number;
   mobilePreviewBodyFontPx: number;
+  /** Tablet (md–lg) title/body font sizes from CMS; scales with section --ms/--mt. */
+  tabletPreviewTitleFontPx: number;
+  tabletPreviewBodyFontPx: number;
 };
 
 export type LandingModelingMedia = Record<ModelingSlotKey, ModelingSlotResolvedMedia>;
@@ -224,7 +231,7 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
           sectionKey: SITE_MEDIA_GROUP_KEYS.FINISHED_CREATIONS_ROW2,
         },
       }),
-      modelingSpecializationCopy.findMany(),
+      prisma.modelingSpecializationCopy.findMany(),
       manufacturingIntelligenceCopy.findMany(),
       manufacturingIntelligenceMobileCopy.findMany(),
       founderSectionCopy.findMany(),
@@ -278,6 +285,10 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
               row.mobilePreviewTitleFontPx ?? MODELING_MOBILE_PREVIEW_TITLE_FONT_PX_DEFAULT,
             mobilePreviewBodyFontPx:
               row.mobilePreviewBodyFontPx ?? MODELING_MOBILE_PREVIEW_BODY_FONT_PX_DEFAULT,
+            tabletPreviewTitleFontPx:
+              row.tabletPreviewTitleFontPx ?? MODELING_TABLET_PREVIEW_TITLE_FONT_PX_DEFAULT,
+            tabletPreviewBodyFontPx:
+              row.tabletPreviewBodyFontPx ?? MODELING_TABLET_PREVIEW_BODY_FONT_PX_DEFAULT,
           }),
         },
       ]),
@@ -313,6 +324,8 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
           tabletLine1Emphasis: copy.tabletLine1Emphasis,
           mobilePreviewTitleFontPx: copy.mobilePreviewTitleFontPx,
           mobilePreviewBodyFontPx: copy.mobilePreviewBodyFontPx,
+          tabletPreviewTitleFontPx: copy.tabletPreviewTitleFontPx,
+          tabletPreviewBodyFontPx: copy.tabletPreviewBodyFontPx,
         };
         continue;
       }
@@ -347,6 +360,8 @@ export async function getLandingSiteMedia(): Promise<LandingSiteMedia> {
         tabletLine1Emphasis: copy.tabletLine1Emphasis,
         mobilePreviewTitleFontPx: copy.mobilePreviewTitleFontPx,
         mobilePreviewBodyFontPx: copy.mobilePreviewBodyFontPx,
+        tabletPreviewTitleFontPx: copy.tabletPreviewTitleFontPx,
+        tabletPreviewBodyFontPx: copy.tabletPreviewBodyFontPx,
       };
     }
     const manufacturingDesktop = buildManufacturingIntelligenceContent(
@@ -449,6 +464,8 @@ export function getStaticFallbackLandingSiteMedia(): LandingSiteMedia {
       tabletLine1Emphasis: copy.tabletLine1Emphasis,
       mobilePreviewTitleFontPx: copy.mobilePreviewTitleFontPx,
       mobilePreviewBodyFontPx: copy.mobilePreviewBodyFontPx,
+      tabletPreviewTitleFontPx: copy.tabletPreviewTitleFontPx,
+      tabletPreviewBodyFontPx: copy.tabletPreviewBodyFontPx,
     };
   }
   const manufacturingDesktop = buildManufacturingIntelligenceContent([], []);

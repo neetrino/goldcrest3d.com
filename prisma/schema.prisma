@@ -181,6 +181,10 @@ model ModelingSpecializationCopy {
   mobilePreviewTitleFontPx Int @default(16)
   /// Mobile description size (px, viewport below md) on landing + admin preview; scales with section --ms/--mt.
   mobilePreviewBodyFontPx  Int @default(14)
+  /// Tablet title size (px, viewport md–lg) on landing + admin; scales with section --ms/--mt.
+  tabletPreviewTitleFontPx Int @default(32)
+  /// Tablet description size (px, viewport md–lg) on landing + admin; scales with section --ms/--mt.
+  tabletPreviewBodyFontPx  Int @default(14)
   updatedAt             DateTime @updatedAt
 }
 

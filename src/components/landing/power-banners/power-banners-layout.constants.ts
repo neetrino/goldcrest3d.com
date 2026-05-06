@@ -19,6 +19,13 @@ export const SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX = 16;
 
 export const SECTION1_MODELING_TITLE_NUDGE_UP_PX = 0;
 
+/**
+ * Section1 (modeling) — copy + CTA sit in a centered column so text is not flush to the viewport edge
+ * on narrow / mid widths (esp. long CMS titles).
+ */
+export const SECTION1_MODELING_TEXT_CLUSTER_INNER_CLASSES =
+  "flex min-w-0 w-full max-w-sm flex-col items-center sm:max-w-md md:max-w-lg lg:max-w-3xl" as const;
+
 /** Mobile hero: two lines (md+ uses desktop single-line title). U+2011 keeps "Ready" on line 1 with "Production". */
 export const MODELING_TITLE_MOBILE_LINE1 = "3D Production\u2011Ready";
 export const MODELING_TITLE_MOBILE_LINE2 = "Modeling";
@@ -66,3 +73,7 @@ export const SECTION3_TEXT_COLUMN_TOP_MD_CLASS = "md:top-[47%]";
 /** Hero desktop `sizes` — մոտավորապես լայնության սահմանափակում */
 export const HERO_DESKTOP_IMAGE_SIZES = "(max-width: 767px) 0px, 100vw";
 export const HERO_MOBILE_IMAGE_SIZES = "(max-width: 767px) 100vw, 0px";
+
+/** Section2 (Rendering) — tablet copy/layout from 755px; mobile image only ≤754px */
+export const RENDERING_HERO_DESKTOP_IMAGE_SIZES = "(max-width: 754px) 0px, 100vw";
+export const RENDERING_HERO_MOBILE_IMAGE_SIZES = "(max-width: 754px) 100vw, 0px";

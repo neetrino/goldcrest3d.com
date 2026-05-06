@@ -1,5 +1,5 @@
 /**
- * Mobile modeling card frame — matches `modeling-card.constants` (`aspect-[360/259]` below `sm`).
+ * Mobile modeling card frame — matches `modeling-card.constants` (`aspect-[360/259]` at viewports ≤754px).
  */
 export const MODELING_MOBILE_ASPECT_WIDTH = 360;
 export const MODELING_MOBILE_ASPECT_HEIGHT = 259;

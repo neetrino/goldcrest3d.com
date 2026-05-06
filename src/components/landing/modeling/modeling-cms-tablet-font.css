@@ -1,0 +1,13 @@
+/**
+ * CMS-driven tablet copy font sizes (Modeling Specialization).
+ * Viewport 755px–1023px (matches `min-[755px]:inline lg:hidden` tablet copy tier).
+ */
+@media (min-width: 755px) and (max-width: 1023.98px) {
+  .modeling-cms-tablet-body-font-override,
+  .modeling-cms-tablet-body-font-override * {
+    font-size: calc(
+      var(--modeling-cms-tablet-body-px) * 1px * var(--ms, 1) * var(--mt, 1)
+    ) !important;
+    line-height: 1.2 !important;
+  }
+}
