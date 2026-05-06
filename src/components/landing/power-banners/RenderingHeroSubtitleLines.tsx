@@ -22,10 +22,10 @@ export function RenderingHeroSubtitleLines({
     return (
       <p
         id={LANDING_ELEMENT_IDS.HERO_RENDERING_SUBTITLE}
-        className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] self-center text-center min-[755px]:hidden"
+        className="hero-primary-subtitle-typography relative inline-block w-full max-w-[433px] self-start text-left min-[755px]:hidden"
       >
         {mobileLines.map((line, i) => (
-          <span key={i} className="block whitespace-nowrap">
+          <span key={i} className="block">
             {line.length > 0 ? line : "\u00A0"}
           </span>
         ))}
@@ -64,7 +64,7 @@ export function RenderingHeroSubtitleLines({
     >
       <span className="min-[755px]:hidden">
         {mobileLines.map((line, i) => (
-          <span key={i} className="block whitespace-nowrap">
+          <span key={i} className="block">
             {line.length > 0 ? line : "\u00A0"}
           </span>
         ))}

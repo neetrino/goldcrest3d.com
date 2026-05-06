@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import { Fragment } from "react";
 
 import { LANDING_ELEMENT_IDS } from "@/constants";
 import {
@@ -9,7 +8,6 @@ import {
 import type { PowerBannerCopyEntry } from "@/lib/power-banner-copy/power-banner-copy.types";
 import {
   resolveModelingTitleDesktop,
-  splitMultilineText,
   splitMultilineTextPreservingLines,
 } from "./resolve-power-banner-display";
 import {
@@ -32,10 +30,10 @@ export function ModelingHeroSlideTextStack({
 }: ModelingHeroSlideTextStackProps) {
   const desktopTitle = resolveModelingTitleDesktop(desktopCopy.title);
   const tabletTitle = resolveModelingTitleDesktop(tabletCopy.title);
-  const mobileTitleLines = splitMultilineText(mobileCopy.title);
+  const mobileTitleLines = splitMultilineTextPreservingLines(mobileCopy.title);
   const desktopLines = splitMultilineTextPreservingLines(desktopCopy.body);
   const tabletLines = splitMultilineTextPreservingLines(tabletCopy.body);
-  const mobileLines = splitMultilineText(mobileCopy.body);
+  const mobileLines = splitMultilineTextPreservingLines(mobileCopy.body);
 
   const clusterStyle = {
     ["--section1-modeling-text-nudge-y-mobile" as string]: `${SECTION1_HERO_TEXT_NUDGE_DOWN_PX + SECTION1_HERO_TEXT_EXTRA_NUDGE_DOWN_MOBILE_PX}px`,
@@ -51,17 +49,14 @@ export function ModelingHeroSlideTextStack({
       <div className={SECTION1_MODELING_TEXT_CLUSTER_INNER_CLASSES}>
       <div className="flex w-full flex-col items-center md:hidden">
         <h1
-          className="inline-block max-w-[min(100%,36rem)] whitespace-normal text-balance"
+          className="inline-block max-w-[min(100%,36rem)] whitespace-normal"
           style={{
             transform: `translate(${mobileCopy.titleOffsetX}px, ${mobileCopy.titleOffsetY - SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
           }}
         >
           {mobileTitleLines.map((line, i) => (
-            <span
-              key={i}
-              className={i === 0 ? "block whitespace-nowrap" : "block"}
-            >
-              {line}
+            <span key={i} className="block">
+              {line.length > 0 ? line : "\u00A0"}
             </span>
           ))}
         </h1>
@@ -75,14 +70,9 @@ export function ModelingHeroSlideTextStack({
             className="hero-primary-subtitle-typography mt-4 shrink-0"
           >
             {mobileLines.map((line, i) => (
-              <Fragment key={i}>
-                {i > 0 ? (
-                  <>
-                    <br className="md:hidden" />{" "}
-                  </>
-                ) : null}
-                <span className={i === 0 ? "whitespace-nowrap" : undefined}>{line}</span>
-              </Fragment>
+              <span key={i} className="block">
+                {line.length > 0 ? line : "\u00A0"}
+              </span>
             ))}
           </p>
         </div>
@@ -90,7 +80,7 @@ export function ModelingHeroSlideTextStack({
 
       <div className="hidden w-full flex-col items-center md:flex lg:hidden">
         <h1
-          className="inline-block max-w-none whitespace-normal text-balance"
+          className="inline-block max-w-none whitespace-normal"
           style={{
             transform: `translate(${tabletCopy.titleOffsetX}px, ${tabletCopy.titleOffsetY - SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
           }}
@@ -114,7 +104,7 @@ export function ModelingHeroSlideTextStack({
 
       <div className="hidden w-full flex-col items-center lg:flex">
         <h1
-          className="inline-block max-w-none whitespace-normal text-balance"
+          className="inline-block max-w-none whitespace-normal"
           style={{
             transform: `translate(${desktopCopy.titleOffsetX}px, ${desktopCopy.titleOffsetY - SECTION1_MODELING_TITLE_NUDGE_UP_PX}px)`,
           }}

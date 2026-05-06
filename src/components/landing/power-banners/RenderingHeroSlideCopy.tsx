@@ -20,8 +20,8 @@ export function RenderingHeroSlideCopy({
 }: RenderingHeroSlideCopyProps) {
   return (
     <div className="relative z-10 flex h-full w-full flex-col items-center justify-end px-5 pb-16 pt-16 sm:px-8 min-[755px]:absolute min-[755px]:left-0 min-[755px]:right-auto min-[755px]:top-[38%] min-[755px]:max-w-[min(520px,44vw)] min-[755px]:-translate-y-1/2 min-[755px]:items-start min-[755px]:justify-center min-[755px]:px-0 min-[755px]:pl-12 min-[755px]:pr-6 min-[755px]:pb-0 min-[755px]:pt-0 lg:pl-20">
-      <div className="power-banners-section2-text-cluster flex w-full max-w-md flex-col items-center gap-8 text-center text-white sm:max-w-lg min-[755px]:max-w-none min-[755px]:items-start min-[755px]:text-left">
-        <div className="flex w-full flex-col gap-8 min-[755px]:hidden">
+      <div className="power-banners-section2-text-cluster flex w-full max-w-md flex-col items-start gap-8 text-left text-white sm:max-w-lg min-[755px]:max-w-none min-[755px]:items-start min-[755px]:text-left">
+        <div className="flex w-full flex-col items-start gap-8 min-[755px]:hidden">
           <div
             style={{
               transform: `translate(${mobileCopy.titleOffsetX}px, ${mobileCopy.titleOffsetY}px)`,
@@ -111,7 +111,7 @@ export function RenderingHeroSlideCopy({
           <GetAQuoteButton
             id={HERO_SECTION2_GET_QUOTE_BUTTON_ID}
             variant="gold"
-            className="shrink-0 self-center"
+            className="shrink-0 self-start"
           />
         </span>
         <span

@@ -23,7 +23,7 @@ export function DesignHeroSlideCopy({
   const desktopSubtitleLines = splitMultilineTextPreservingLines(desktopCopy.body);
   const tabletSubtitleLines = splitMultilineTextPreservingLines(tabletCopy.body);
   const mobileSubtitleLines = splitMultilineTextPreservingLines(mobileCopy.body);
-  const mobileTitle = splitMultilineText(mobileCopy.title).join(" ");
+  const mobileTitleLines = splitMultilineTextPreservingLines(mobileCopy.title);
   const tabletTitle = splitMultilineText(tabletCopy.title).join(" ");
 
   return (
@@ -35,12 +35,16 @@ export function DesignHeroSlideCopy({
           <div className="power-banners-section3-text-cluster flex w-full flex-col items-end gap-7 text-right text-[#121212] max-md:-translate-y-[7.5rem]">
             <div className="flex w-full flex-col items-end gap-7">
               <h1
-                className="hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal text-balance"
+                className="hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal"
                 style={{
                   transform: `translate(${mobileCopy.titleOffsetX}px, ${mobileCopy.titleOffsetY}px)`,
                 }}
               >
-                {mobileTitle}
+                {mobileTitleLines.map((line, i) => (
+                  <span key={i} className="block">
+                    {line.length > 0 ? line : "\u00A0"}
+                  </span>
+                ))}
               </h1>
               <p
                 className="hero-primary-subtitle-typography-design max-w-[433px] self-end text-right"
@@ -61,7 +65,7 @@ export function DesignHeroSlideCopy({
         <div className="hidden w-full flex-col items-start gap-8 text-left md:max-lg:flex">
           <div className="power-banners-section3-text-cluster flex w-full flex-col items-start gap-8 text-[#121212] md:translate-y-0">
             <h1
-              className="hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal text-balance md:whitespace-nowrap"
+              className="hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal md:whitespace-nowrap"
               style={{
                 transform: `translate(${tabletCopy.titleOffsetX}px, ${tabletCopy.titleOffsetY}px)`,
               }}
@@ -88,7 +92,7 @@ export function DesignHeroSlideCopy({
         <div className="hidden w-full lg:flex lg:flex-col lg:items-start lg:gap-8 lg:text-left">
           <div className="power-banners-section3-text-cluster flex w-full flex-col items-start gap-8 text-[#121212] md:translate-y-0">
             <h1
-              className="hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal text-balance lg:whitespace-nowrap"
+              className="hero-primary-title-typography-design inline-block max-w-[min(100%,494px)] whitespace-normal lg:whitespace-nowrap"
               style={{
                 transform: `translate(${desktopCopy.titleOffsetX}px, ${desktopCopy.titleOffsetY}px)`,
               }}

@@ -97,7 +97,7 @@
   .power-banners-section2-text-cluster h1 {
     flex: 1 0 0;
     top: 24px;
-    text-align: center;
+    text-align: left;
   }
 
   /* Subtitle + CTA մի քիչ ներքև; վերնագիրը չի շարժվում (SECTION2_RENDERING_SUBTITLE_AND_CTA_NUDGE_DOWN_MOBILE_PX) */

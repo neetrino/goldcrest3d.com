@@ -54,7 +54,7 @@ section[id] {
     font-weight: 300;
     line-height: 24px;
     letter-spacing: -0.312px;
-    text-align: center;
+    text-align: left;
   }
 }
 
@@ -163,7 +163,7 @@ section[id] {
     font-weight: 300;
     line-height: 36px;
     letter-spacing: 0.396px;
-    text-align: center;
+    text-align: left;
     translate: 0 -0.625rem;
   }
 }
