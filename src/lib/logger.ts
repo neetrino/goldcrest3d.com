@@ -50,11 +50,56 @@ function formatErrorForLog(err: unknown): Record<string, string> {
   return out;
 }
 
-function log(level: string, message: string, err?: unknown) {
-  const payload =
-    err !== undefined ? { message, error: formatErrorForLog(err) } : { message };
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value) &&
+    Object.getPrototypeOf(value) === Object.prototype
+  );
+}
+
+function formatContextForLog(ctx: Record<string, unknown>): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [key, val] of Object.entries(ctx)) {
+    if (
+      typeof val === "string" ||
+      typeof val === "number" ||
+      typeof val === "boolean"
+    ) {
+      out[key] = String(val);
+    } else if (val === null || val === undefined) {
+      out[key] = String(val);
+    } else {
+      try {
+        out[key] = JSON.stringify(val);
+      } catch {
+        out[key] = "[unserializable]";
+      }
+    }
+  }
+  return out;
+}
+
+type LogLevel = "info" | "warn" | "error";
+
+function log(level: LogLevel, message: string, detail?: unknown) {
+  const payload: Record<string, unknown> = { message };
+
+  if (detail !== undefined) {
+    if (level === "error") {
+      payload.error = formatErrorForLog(detail);
+    } else if (isPlainRecord(detail)) {
+      payload.context = formatContextForLog(detail);
+    } else {
+      payload.detail = formatErrorForLog(detail);
+    }
+  }
+
   if (level === "error") {
     console.error(`[${level}]`, payload);
+  } else if (level === "warn") {
+    console.warn(`[${level}]`, payload);
   } else {
     console.info(`[${level}]`, payload);
   }
@@ -62,5 +107,6 @@ function log(level: string, message: string, err?: unknown) {
 
 export const logger = {
   info: (message: string) => log("info", message),
+  warn: (message: string, detail?: unknown) => log("warn", message, detail),
   error: (message: string, err?: unknown) => log("error", message, err),
 };
