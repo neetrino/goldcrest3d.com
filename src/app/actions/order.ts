@@ -1,11 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { CUSTOMER_SUPPORT_INBOX_EMAIL, R2_PREFIXES } from "@/constants";
+import { R2_PREFIXES } from "@/constants";
 import { requireAdminSession } from "@/auth";
 import { prisma } from "@/lib/db";
 import { getAppOrigin, getOrderPaymentUrl } from "@/lib/appUrl";
 import { sendEmail } from "@/lib/email";
+import { buildPaymentLinkEmailPayload } from "@/lib/email/buildPaymentLinkEmail";
 import { uploadToR2 } from "@/lib/storage";
 import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
 import {
@@ -267,13 +268,24 @@ export async function sendPaymentLink(
   if (!paymentUrl) return { success: false, error: "Site URL is not configured (AUTH_URL)." };
 
   const siteOrigin = getAppOrigin();
+  let siteHostname = "goldcrest3d.com";
+  try {
+    if (siteOrigin) {
+      siteHostname = new URL(siteOrigin).hostname;
+    }
+  } catch {
+    // keep default
+  }
+  const siteLinkHref = siteOrigin || `https://${siteHostname}`;
   const priceLabel = formatPrice(order.priceCents);
-  const { subject, text, html } = buildPaymentLinkEmailPayload(
-    order,
+  const { subject, text, html } = buildPaymentLinkEmailPayload({
+    clientName: order.clientName,
+    productTitle: order.productTitle,
     priceLabel,
     paymentUrl,
-    siteOrigin,
-  );
+    siteLinkHref,
+    siteHostname,
+  });
 
   const result = await sendEmail({
     to: order.clientEmail,
@@ -365,71 +377,3 @@ export async function setOrderPaymentLinkMode(
   }
 }
 
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
-
-type OrderEmailFields = {
-  id: string;
-  clientName: string;
-  productTitle: string;
-};
-
-function buildPaymentLinkEmailPayload(
-  order: OrderEmailFields,
-  priceLabel: string,
-  paymentUrl: string,
-  siteOrigin: string,
-): { subject: string; text: string; html: string } {
-  const subject = `Complete your purchase at Goldcrest 3D — Order #${order.id}`;
-  let siteHostname = "goldcrest3d.com";
-  try {
-    if (siteOrigin) {
-      siteHostname = new URL(siteOrigin).hostname;
-    }
-  } catch {
-    // keep default
-  }
-  const siteLinkHref = siteOrigin || `https://${siteHostname}`;
-  const { clientName, productTitle } = order;
-  const productQuoted = `"${productTitle}"`;
-  const contactEmail = CUSTOMER_SUPPORT_INBOX_EMAIL;
-
-  const text = [
-    `Hello ${clientName},`,
-    "",
-    `Thank you for choosing Goldcrest 3D. Your order for the ${productQuoted} is ready for payment.`,
-    "Please use the secure link below to complete your transaction:",
-    "",
-    `Pay Now: ${paymentUrl}`,
-    "",
-    "Order Details:",
-    `• Product: ${productTitle}`,
-    `• Total Amount: ${priceLabel}`,
-    "",
-    "If you have any questions regarding your order, feel free to reply to this email.",
-    contactEmail,
-    "",
-    "Best regards,",
-    "The Goldcrest 3D Team",
-    siteHostname,
-  ].join("\n");
-
-  const html = [
-    `<p>Hello ${escapeHtml(clientName)},</p>`,
-    `<p>Thank you for choosing Goldcrest 3D. Your order for the ${escapeHtml(productQuoted)} is ready for payment.</p>`,
-    `<p>Please use the secure link below to complete your transaction:</p>`,
-    `<p><a href="${escapeHtml(paymentUrl)}">Pay Now</a></p>`,
-    `<p>Order Details:</p>`,
-    `<p>• Product: ${escapeHtml(productTitle)}<br>• Total Amount: ${escapeHtml(priceLabel)}</p>`,
-    `<p>If you have any questions regarding your order, feel free to reply to this email.<br><a href="mailto:${escapeHtml(contactEmail)}">${escapeHtml(contactEmail)}</a></p>`,
-    `<p>Best regards,<br>The Goldcrest 3D Team<br><a href="${escapeHtml(siteLinkHref)}">${escapeHtml(siteHostname)}</a></p>`,
-  ].join("");
-
-  return { subject, text, html };
-}
