@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { ORDER_STATUS } from "@/constants/order-status";
+import { sendPaymentThankYouForOrder } from "@/lib/email/sendPaymentThankYouForOrder";
 import { applyPaidAmountToOrder } from "@/lib/payment/applyPaidAmount";
 import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 import { resolveOrderPaymentAmount } from "@/lib/payment/resolveOrderPaymentAmount";
@@ -70,6 +71,10 @@ export async function completeMockPayment(
     }
 
     await applyPaidAmountToOrder(id, resolved.amountCents);
+    const updated = await prisma.order.findUnique({ where: { id } });
+    if (updated) {
+      await sendPaymentThankYouForOrder(updated, resolved.amountCents);
+    }
     return { success: true, redirectPath: `/order/${encodeURIComponent(token)}?${query}` };
   } catch (err) {
     logger.error("completeMockPayment failed", err);

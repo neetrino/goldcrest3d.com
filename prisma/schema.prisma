@@ -96,6 +96,19 @@ model Order {
   paymentLinkSentAt DateTime?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  appliedStripeCheckoutSessions AppliedStripeCheckoutSession[]
+}
+
+/// One row per Stripe Checkout Session applied to an order (webhook idempotency; prevents double-counting on retries).
+model AppliedStripeCheckoutSession {
+  stripeCheckoutSessionId String   @id
+  orderId                 String
+  createdAt               DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
 }
 
 /// Site-wide managed images (R2 object keys; public URL via R2_PUBLIC_URL).

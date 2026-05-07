@@ -1,9 +1,7 @@
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
-import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { STRIPE_MINOR_UNITS_PER_MAJOR_UNIT } from "@/constants/order-form";
-import { applyPaidAmountToOrder } from "@/lib/payment/applyPaidAmount";
+import { processStripeCheckoutSessionCompleted } from "@/lib/payment/processStripeCheckoutSessionCompleted";
 import { isSimulatedPaymentFlow } from "@/lib/payment/config";
 
 const secretKey = process.env.STRIPE_SECRET_KEY;
@@ -42,23 +40,11 @@ export async function POST(request: NextRequest) {
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
-  const orderId = session.metadata?.orderId ?? session.client_reference_id;
-  if (!orderId || typeof orderId !== "string") {
-    return new Response("OK", { status: 200 });
-  }
-
-  const amountTotalMinor = session.amount_total ?? 0;
 
   try {
-    const order = await prisma.order.findUnique({ where: { id: orderId } });
-    if (!order) return new Response("OK", { status: 200 });
-
-    const paidDeltaWhole = Math.round(
-      amountTotalMinor / STRIPE_MINOR_UNITS_PER_MAJOR_UNIT,
-    );
-    await applyPaidAmountToOrder(orderId, paidDeltaWhole);
+    await processStripeCheckoutSessionCompleted(session);
   } catch (err) {
-    logger.error("Stripe webhook: order update failed", err);
+    logger.error("Stripe webhook: checkout session processing failed", err);
     return new Response("Database error", { status: 500 });
   }
 
