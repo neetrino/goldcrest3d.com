@@ -4,6 +4,7 @@ import {
   validateQuoteAttachment,
   validateQuoteAttachments,
   QUOTE_ATTACHMENT_MAX_BYTES,
+  QUOTE_ATTACHMENT_MAX_FILES,
 } from "./quoteAttachment";
 
 const TYPE_ERROR =
@@ -101,6 +102,15 @@ describe("validateQuoteAttachments", () => {
         file({ type: "application/pdf" }),
       ])
     ).toBeNull();
+  });
+
+  it("returns error when more than max files", () => {
+    const files = Array.from({ length: QUOTE_ATTACHMENT_MAX_FILES + 1 }, () =>
+      file({ type: "image/png" }),
+    );
+    expect(validateQuoteAttachments(files)).toBe(
+      `You can attach up to ${QUOTE_ATTACHMENT_MAX_FILES} files.`,
+    );
   });
 
   it("returns first error for invalid file in array", () => {

@@ -5,6 +5,9 @@
 
 export const QUOTE_ATTACHMENT_MAX_BYTES = 10 * 1024 * 1024; // 10 MB
 
+/** Max files per quote request (presigned upload + lead row). */
+export const QUOTE_ATTACHMENT_MAX_FILES = 10;
+
 export const QUOTE_ATTACHMENT_ALLOWED_MIME_TYPES: readonly string[] = [
   "image/png",
   "image/jpeg", // .jpg, .jpeg, .jfif
@@ -40,8 +43,15 @@ function fileExtensionLower(name: string): string | null {
  * Resolves canonical Content-Type for quote attachments (upload + validation).
  * Handles empty MIME and non-standard `image/jpg` after drag-and-drop.
  */
-export function resolveQuoteAttachmentContentType(file: File): string | null {
-  const raw = (file.type ?? "").trim().toLowerCase();
+/**
+ * Same rules as browser `File.type` + name, for server-side presign validation
+ * (metadata only — no file bytes on the server).
+ */
+export function resolveQuoteAttachmentContentTypeFromMeta(meta: {
+  fileName: string;
+  fileType: string;
+}): string | null {
+  const raw = (meta.fileType ?? "").trim().toLowerCase();
   const normalized =
     raw === "image/jpg" || raw === "image/pjpeg" ? "image/jpeg" : raw;
 
@@ -53,10 +63,17 @@ export function resolveQuoteAttachmentContentType(file: File): string | null {
     return null;
   }
 
-  const ext = fileExtensionLower(file.name);
+  const ext = fileExtensionLower(meta.fileName);
   if (!ext) return null;
   const inferred = EXTENSION_TO_CANONICAL_MIME[ext];
   return inferred && ALLOWED_SET.has(inferred) ? inferred : null;
+}
+
+export function resolveQuoteAttachmentContentType(file: File): string | null {
+  return resolveQuoteAttachmentContentTypeFromMeta({
+    fileName: file.name,
+    fileType: file.type,
+  });
 }
 
 const QUOTE_ATTACHMENT_TYPE_ERROR =
@@ -87,6 +104,9 @@ export function validateQuoteAttachment(
  * Returns the first error message found, or null if all valid (or empty).
  */
 export function validateQuoteAttachments(files: File[]): string | null {
+  if (files.length > QUOTE_ATTACHMENT_MAX_FILES) {
+    return `You can attach up to ${QUOTE_ATTACHMENT_MAX_FILES} files.`;
+  }
   for (const file of files) {
     const err = validateQuoteAttachment(file);
     if (err) return err;
