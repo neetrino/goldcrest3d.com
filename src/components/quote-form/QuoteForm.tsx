@@ -13,13 +13,12 @@ import { notifyAdminLeadsUpdated } from "@/lib/adminLeadsBroadcast";
 import { LANDING_IMAGE_IDS } from "@/constants";
 import { LANDING_IMAGES } from "@/constants/landing-assets";
 import type { QuoteSubmitResult } from "@/app/actions/quote";
+import { uploadQuoteAttachmentsWithPresignedUrls } from "@/lib/client/quote-direct-upload";
 import Image from "next/image";
 import {
   resolveQuoteAttachmentContentType,
   validateQuoteAttachment,
 } from "@/lib/validations/quoteAttachment";
-
-const QUOTE_ATTACHMENT_FIELD_NAME = "attachment";
 /** Picker shows images + PDF; server allows PNG, JPEG/JPG, WebP, PDF */
 const ACCEPT_ATTRIBUTE =
   "image/png,image/jpeg,image/webp,image/jpg,.jpg,.jpeg,.jfif,.webp,application/pdf,image/*";
@@ -36,13 +35,6 @@ const QUOTE_SUBMIT_BUTTON_CLASS =
   "font-manrope flex w-full items-center justify-center self-stretch rounded-[33px] bg-[#181610] pt-[16.412px] pr-[102.148px] pb-[15.569px] pl-[102.345px] text-[14px] font-bold uppercase leading-[20px] tracking-[1.4px] text-white transition-colors hover:bg-[#181610]/90 disabled:opacity-60 md:h-[68px] md:min-w-[266px] md:w-auto md:rounded-full md:px-16 md:py-6 md:self-auto";
 
 type FileWithPreview = { file: File; previewUrl: string | null };
-
-function setFileInputFiles(input: HTMLInputElement | null, files: File[]) {
-  if (!input) return;
-  const dt = new DataTransfer();
-  for (const f of files) dt.items.add(f);
-  input.files = dt.files;
-}
 
 function isImageFile(file: File): boolean {
   const t = resolveQuoteAttachmentContentType(file);
@@ -67,6 +59,7 @@ export function QuoteForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [items, setItems] = useState<FileWithPreview[]>([]);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const addFiles = useCallback((newFiles: File[]) => {
     const valid: FileWithPreview[] = [];
@@ -119,14 +112,6 @@ export function QuoteForm() {
     e.dataTransfer.dropEffect = "copy";
   }, []);
 
-  // Sync hidden input with current files so form submit sends them
-  useEffect(() => {
-    setFileInputFiles(
-      fileInputRef.current,
-      items.map((i) => i.file),
-    );
-  }, [items]);
-
   const itemsRef = useRef<FileWithPreview[]>([]);
   useEffect(() => {
     itemsRef.current = items;
@@ -141,7 +126,7 @@ export function QuoteForm() {
       });
       setItems([]);
       setValidationError(null);
-      setFileInputFiles(fileInputRef.current, []);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     });
   }, [state?.success]);
 
@@ -153,9 +138,32 @@ export function QuoteForm() {
     };
   }, []);
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formEl = e.currentTarget;
+    setValidationError(null);
+    setIsUploading(true);
+    try {
+      const uploadResult = await uploadQuoteAttachmentsWithPresignedUrls(
+        itemsRef.current.map((i) => i.file),
+      );
+      if (!uploadResult.ok) {
+        setValidationError(uploadResult.error);
+        return;
+      }
+      const fd = new FormData(formEl);
+      fd.set("attachmentKeys", JSON.stringify(uploadResult.keys));
+      await formAction(fd);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const busy = isPending || isUploading;
+
   return (
     <form
-      action={formAction}
+      onSubmit={handleSubmit}
       className="space-y-12"
       aria-describedby={
         state?.success === false
@@ -177,7 +185,7 @@ export function QuoteForm() {
             required
             maxLength={120}
             autoComplete="name"
-            disabled={isPending}
+            disabled={busy}
             className={inputClass}
             placeholder="Jean-Pierre Laurent"
           />
@@ -192,7 +200,7 @@ export function QuoteForm() {
             type="email"
             required
             autoComplete="email"
-            disabled={isPending}
+            disabled={busy}
             className={inputClass}
             placeholder="email@studio.com"
           />
@@ -209,7 +217,7 @@ export function QuoteForm() {
           required
           maxLength={5000}
           rows={4}
-          disabled={isPending}
+          disabled={busy}
           className={`min-h-[129px] resize-y ${inputClass}`}
           placeholder="Describe technical requirements..."
         />
@@ -225,16 +233,15 @@ export function QuoteForm() {
             htmlFor="quote-attachment"
             className="flex w-full cursor-pointer flex-col items-center justify-center"
           >
-            <span className="sr-only">Attach files (optional)</span>
             <input
               ref={fileInputRef}
               id="quote-attachment"
-              name={QUOTE_ATTACHMENT_FIELD_NAME}
               type="file"
               accept={ACCEPT_ATTRIBUTE}
               multiple
-              disabled={isPending}
+              disabled={busy}
               className="sr-only"
+              aria-label="Attach files (optional)"
               onChange={handleFileChange}
             />
             {items.length > 0 ? (
@@ -266,11 +273,13 @@ export function QuoteForm() {
                         e.preventDefault();
                         removeFile(index);
                       }}
-                      disabled={isPending}
+                      disabled={busy}
                       className="shrink-0 rounded p-1 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600 disabled:opacity-50"
                       aria-label={`Remove ${item.file.name}`}
                     >
-                      <span className="text-lg leading-none" aria-hidden>Ã—</span>
+                      <span className="text-lg leading-none" aria-hidden>
+                        x
+                      </span>
                     </button>
                   </li>
                 ))}
@@ -298,7 +307,7 @@ export function QuoteForm() {
               </>
             )}
             <p className="mt-1 font-manrope text-[12px] font-normal leading-[16px] text-[rgba(24,22,16,0.4)]">
-              PNG, JPG, JPEG, WebP, PDF up to 10MB
+              PNG, JPG, JPEG, WebP, PDF up to 10MB each, up to 10 files
             </p>
           </label>
         </div>
@@ -334,10 +343,14 @@ export function QuoteForm() {
       <div className="-mt-4 flex w-full justify-center md:mt-0">
         <button
           type="submit"
-          disabled={isPending}
+          disabled={busy}
           className={QUOTE_SUBMIT_BUTTON_CLASS}
         >
-          {isPending ? "Sending..." : "Submit Request"}
+          {isUploading
+            ? "Uploading..."
+            : isPending
+              ? "Sending..."
+              : "Submit Request"}
         </button>
       </div>
     </form>

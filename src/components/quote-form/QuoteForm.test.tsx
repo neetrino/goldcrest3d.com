@@ -4,6 +4,15 @@ import { QuoteForm } from "./QuoteForm";
 
 vi.mock("@/app/actions/quote", () => ({
   submitQuote: vi.fn(() => Promise.resolve(null)),
+  requestQuoteAttachmentPresignedUploads: vi.fn(() =>
+    Promise.resolve({ ok: true, uploads: [] }),
+  ),
+}));
+
+vi.mock("@/lib/client/quote-direct-upload", () => ({
+  uploadQuoteAttachmentsWithPresignedUrls: vi.fn(() =>
+    Promise.resolve({ ok: true, keys: [] }),
+  ),
 }));
 
 describe("QuoteForm", () => {
@@ -14,7 +23,7 @@ describe("QuoteForm", () => {
     expect(screen.getByLabelText(/^email$/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/message/i)).toBeInTheDocument();
     expect(
-      screen.getByLabelText(/attach file \(optional\)/i)
+      screen.getByLabelText(/attach files \(optional\)/i),
     ).toBeInTheDocument();
 
     const submit = screen.getByRole("button", { name: /submit request/i });
@@ -38,7 +47,7 @@ describe("QuoteForm", () => {
 
   it("has accessibility hints for file input", () => {
     render(<QuoteForm />);
-    const fileInputs = screen.getAllByLabelText(/attach file \(optional\)/i);
+    const fileInputs = screen.getAllByLabelText(/attach files \(optional\)/i);
     const fileInput = fileInputs[0];
     expect(fileInput).toHaveAttribute("accept", expect.stringContaining("image/png"));
     expect(fileInput.getAttribute("accept")).toContain("image/webp");
