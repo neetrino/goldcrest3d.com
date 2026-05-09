@@ -142,6 +142,8 @@ export function QuoteForm() {
     e.preventDefault();
     const formEl = e.currentTarget;
     setValidationError(null);
+    /** Snapshot before `setIsUploading` — disabled controls are omitted from FormData. */
+    const fd = new FormData(formEl);
     setIsUploading(true);
     try {
       const uploadResult = await uploadQuoteAttachmentsWithPresignedUrls(
@@ -151,7 +153,6 @@ export function QuoteForm() {
         setValidationError(uploadResult.error);
         return;
       }
-      const fd = new FormData(formEl);
       fd.set("attachmentKeys", JSON.stringify(uploadResult.keys));
       await formAction(fd);
     } finally {
