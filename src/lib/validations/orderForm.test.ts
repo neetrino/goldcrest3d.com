@@ -12,7 +12,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane Doe",
       clientEmail: "jane@example.com",
       productTitle: "Custom bracket",
-      priceAmount: 15000,
+      priceAmountDollars: 150,
       paymentType: "FULL",
     });
     expect(result.success).toBe(true);
@@ -23,21 +23,32 @@ describe("orderFormSchema", () => {
       clientName: "Jane Doe",
       clientEmail: "jane@example.com",
       productTitle: "Custom bracket",
-      priceAmount: 20000,
+      priceAmountDollars: 200,
       paymentType: "SPLIT",
     });
     expect(result.success).toBe(true);
   });
 
-  it("accepts zero price", () => {
+  it("accepts minimum price $0.01", () => {
     const result = orderFormSchema.safeParse({
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Sample",
-      priceAmount: 0,
+      priceAmountDollars: 0.01,
       paymentType: "FULL",
     });
     expect(result.success).toBe(true);
+  });
+
+  it("rejects zero price", () => {
+    const result = orderFormSchema.safeParse({
+      clientName: "Jane",
+      clientEmail: "jane@example.com",
+      productTitle: "Sample",
+      priceAmountDollars: 0,
+      paymentType: "FULL",
+    });
+    expect(result.success).toBe(false);
   });
 
   it("rejects empty clientName", () => {
@@ -45,7 +56,7 @@ describe("orderFormSchema", () => {
       clientName: "",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmount: 100,
+      priceAmountDollars: 100,
       paymentType: "FULL",
     });
     expect(result.success).toBe(false);
@@ -56,32 +67,32 @@ describe("orderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "invalid",
       productTitle: "Product",
-      priceAmount: 100,
+      priceAmountDollars: 100,
       paymentType: "FULL",
     });
     expect(result.success).toBe(false);
   });
 
-  it("rejects negative priceAmount", () => {
+  it("rejects negative priceAmountDollars", () => {
     const result = orderFormSchema.safeParse({
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmount: -100,
+      priceAmountDollars: -100,
       paymentType: "FULL",
     });
     expect(result.success).toBe(false);
   });
 
-  it("rejects non-integer priceAmount", () => {
+  it("accepts two-decimal priceAmountDollars", () => {
     const result = orderFormSchema.safeParse({
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmount: 99.5,
+      priceAmountDollars: 99.99,
       paymentType: "FULL",
     });
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 
   it("rejects invalid paymentType", () => {
@@ -89,7 +100,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmount: 100,
+      priceAmountDollars: 100,
       paymentType: "HALF",
     });
     expect(result.success).toBe(false);
@@ -100,7 +111,7 @@ describe("orderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmount: 100,
+      priceAmountDollars: 100,
     });
     expect(result.success).toBe(false);
   });
@@ -112,7 +123,7 @@ describe("createOrderFormSchema", () => {
       clientName: "Jane Doe",
       clientEmail: "jane@example.com",
       productTitle: "Custom bracket",
-      priceAmount: 15000,
+      priceAmountDollars: 150,
       paymentLinkMode: "FULL_ONLY",
     });
     expect(result.success).toBe(true);
@@ -123,7 +134,7 @@ describe("createOrderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "invalid",
       productTitle: "Product",
-      priceAmount: 100,
+      priceAmountDollars: 100,
       paymentLinkMode: "SPLIT_ENABLED",
     });
     expect(result.success).toBe(false);
@@ -134,7 +145,7 @@ describe("createOrderFormSchema", () => {
       clientName: "Jane",
       clientEmail: "jane@example.com",
       productTitle: "Product",
-      priceAmount: 100,
+      priceAmountDollars: 100,
     });
     expect(result.success).toBe(false);
   });

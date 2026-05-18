@@ -122,11 +122,11 @@ export function OrderNewForm({ leadEmails = [] }: OrderNewFormProps) {
           name="priceCents"
           type="number"
           required
-          min={0}
-          step={1}
+          min={0.01}
+          step={0.01}
           disabled={isPending}
           className={inputClass}
-          placeholder="50000"
+          placeholder="0.01"
         />
       </div>
       <fieldset>

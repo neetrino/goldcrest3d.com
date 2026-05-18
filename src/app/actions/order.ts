@@ -14,6 +14,11 @@ import {
 } from "@/lib/validations/orderForm";
 import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
 import { formatPrice } from "@/lib/formatPrice";
+import {
+  dollarsToMinorUnits,
+  minorUnitsToDollars,
+  parseAdminPriceDollars,
+} from "@/lib/money";
 import { logger } from "@/lib/logger";
 import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
 import { ORDER_STATUS } from "@/constants/order-status";
@@ -48,16 +53,13 @@ export async function createOrder(
   const paymentLinkModeRaw = formData.get("paymentLinkMode");
   const file = formData.get(FORM_FIELD_PRODUCT_IMAGE);
 
-  const priceParsed =
-    typeof priceRaw === "string" && priceRaw.trim() !== ""
-      ? parseInt(priceRaw.trim(), 10)
-      : NaN;
+  const priceDollars = parseAdminPriceDollars(priceRaw);
 
   const parsed = createOrderFormSchema.safeParse({
     clientName: typeof clientName === "string" ? clientName : "",
     clientEmail: typeof clientEmail === "string" ? clientEmail : "",
     productTitle: typeof productTitle === "string" ? productTitle : "",
-    priceAmount: Number.isNaN(priceParsed) ? 0 : priceParsed,
+    priceAmountDollars: Number.isNaN(priceDollars) ? 0 : priceDollars,
     paymentLinkMode:
       paymentLinkModeRaw === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
         ? ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
@@ -70,7 +72,7 @@ export async function createOrder(
       first.clientName?.[0] ??
       first.clientEmail?.[0] ??
       first.productTitle?.[0] ??
-      first.priceAmount?.[0] ??
+      first.priceAmountDollars?.[0] ??
       first.paymentLinkMode?.[0] ??
       "Invalid data";
     return { success: false, error: msg };
@@ -83,6 +85,7 @@ export async function createOrder(
   }
 
   const token = generateOrderToken();
+  const priceCents = dollarsToMinorUnits(parsed.data.priceAmountDollars);
   try {
     const order = await prisma.order.create({
       data: {
@@ -91,7 +94,7 @@ export async function createOrder(
         clientEmail: parsed.data.clientEmail,
         productTitle: parsed.data.productTitle,
         productImageKey,
-        priceCents: parsed.data.priceAmount,
+        priceCents,
         paymentType: ORDER_PAYMENT_TYPE.UNSET,
         paymentLinkMode: parsed.data.paymentLinkMode,
       },
@@ -123,10 +126,10 @@ export async function updateOrder(
   const paymentLinkModeRaw = formData.get("paymentLinkMode");
   const file = formData.get(FORM_FIELD_PRODUCT_IMAGE);
 
-  const priceParsed =
-    typeof priceRaw === "string" && priceRaw.trim() !== ""
-      ? parseInt(priceRaw.trim(), 10)
-      : NaN;
+  const priceDollars = parseAdminPriceDollars(priceRaw);
+  const priceDollarsForValidation = Number.isNaN(priceDollars)
+    ? minorUnitsToDollars(existing.priceCents)
+    : priceDollars;
 
   const paymentLinkModeFromForm =
     paymentLinkModeRaw === ORDER_PAYMENT_LINK_MODE.SPLIT_ENABLED
@@ -141,7 +144,7 @@ export async function updateOrder(
     clientName: typeof clientName === "string" ? clientName : "",
     clientEmail: typeof clientEmail === "string" ? clientEmail : "",
     productTitle: typeof productTitle === "string" ? productTitle : "",
-    priceAmount: Number.isNaN(priceParsed) ? existing.priceCents : priceParsed,
+    priceAmountDollars: priceDollarsForValidation,
     paymentLinkMode: paymentLinkModeFromForm,
   });
 
@@ -151,7 +154,7 @@ export async function updateOrder(
       first.clientName?.[0] ??
       first.clientEmail?.[0] ??
       first.productTitle?.[0] ??
-      first.priceAmount?.[0] ??
+      first.priceAmountDollars?.[0] ??
       "Invalid data";
     return { error: msg };
   }
@@ -180,6 +183,7 @@ export async function updateOrder(
       ? ORDER_PAYMENT_TYPE.UNSET
       : ORDER_PAYMENT_TYPE.FULL;
 
+  const priceCents = dollarsToMinorUnits(parsed.data.priceAmountDollars);
   try {
     await prisma.order.update({
       where: { id: orderId },
@@ -187,7 +191,7 @@ export async function updateOrder(
         clientName: parsed.data.clientName,
         clientEmail: parsed.data.clientEmail,
         productTitle: parsed.data.productTitle,
-        priceCents: parsed.data.priceAmount,
+        priceCents,
         paymentLinkMode: parsed.data.paymentLinkMode,
         paymentType: nextPaymentType,
         ...(productImageKey != null && { productImageKey }),
