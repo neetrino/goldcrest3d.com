@@ -22,7 +22,7 @@ function resolveSiteHostname(fallbackHref: string): string {
 }
 
 /**
- * Sends a branded English thank-you after a successful payment (Stripe webhook or mock flow).
+ * Sends a branded English thank-you after a successful Arca payment.
  * Does not throw; logs on failure. Skips gracefully when email is not configured.
  */
 export async function sendPaymentThankYouForOrder(

@@ -18,7 +18,7 @@ const mockOrder = {
   clientEmail: "client@example.com",
   productTitle: "Custom model",
   productImageKey: "orders/ord-1/image.png",
-  priceCents: 25000,
+  priceCents: 25_000,
   paymentType: "FULL" as const,
   paymentLinkMode: "FULL_ONLY" as const,
   paidCents: 0,
@@ -54,7 +54,7 @@ describe("OrderEditForm", () => {
       "client@example.com"
     );
     expect(screen.getByLabelText(/product title/i)).toHaveValue("Custom model");
-    expect(screen.getByLabelText(/price \(\$\)/i)).toHaveValue(25000);
+    expect(screen.getByLabelText(/price \(\$\)/i)).toHaveValue(250);
   });
 
   it("shows Update button", () => {

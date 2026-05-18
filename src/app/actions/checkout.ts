@@ -2,19 +2,16 @@
 
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { isSimulatedPaymentFlow } from "@/lib/payment/config";
-import { createMockCheckoutSession } from "@/lib/payment/mockCheckout";
+import { createArcaCheckoutSession } from "@/lib/arca/createArcaCheckoutSession";
+import { MIN_CHARGE_MINOR_UNITS } from "@/lib/money";
+import { isPaymentConfigured } from "@/lib/payment/config";
+import type { CreateCheckoutSessionResult } from "@/lib/payment/checkout-result";
 import { resolveOrderPaymentAmount } from "@/lib/payment/resolveOrderPaymentAmount";
-import {
-  createCheckoutSession,
-  type CreateCheckoutSessionResult,
-} from "@/lib/stripe";
 
 const ORDER_ID_MAX_LENGTH = 50;
 
 /**
- * Server Action: start checkout — Stripe session URL, or mock payment page when simulated flow (PAYMENT_MOCK_MODE or missing STRIPE_SECRET_KEY).
- * Computes amount from order (FULL = remaining total, SPLIT = first or second 50%).
+ * Server Action: register an Arca/iPay hosted payment and return the redirect URL.
  */
 export async function createCheckoutSessionForOrder(
   orderId: string,
@@ -26,6 +23,14 @@ export async function createCheckoutSessionForOrder(
       : "";
   if (!id) return { success: false, error: "Invalid order." };
 
+  if (!isPaymentConfigured()) {
+    return {
+      success: false,
+      error:
+        "Payment is not configured. Set ARCA_API_USERNAME and ARCA_API_PASSWORD in the environment.",
+    };
+  }
+
   try {
     const order = await prisma.order.findUnique({ where: { id } });
     if (!order) return { success: false, error: "Order not found." };
@@ -35,20 +40,22 @@ export async function createCheckoutSessionForOrder(
       return { success: false, error: resolved.error };
     }
 
-    if (isSimulatedPaymentFlow()) {
-      return createMockCheckoutSession(order.token, resolved.paymentIndex);
+    const amountMinor = resolved.amountCents;
+    if (amountMinor < MIN_CHARGE_MINOR_UNITS) {
+      return { success: false, error: "Amount must be at least $0.01." };
     }
 
-    const orderForCheckout = {
-      id: order.id,
-      token: order.token,
-      priceCents: order.priceCents,
-      productTitle: order.productTitle,
-      paymentType: order.paymentType,
-      paidCents: order.paidCents,
-    };
-
-    return createCheckoutSession(orderForCheckout, resolved.amountCents, resolved.paymentIndex);
+    return createArcaCheckoutSession(
+      {
+        id: order.id,
+        token: order.token,
+        productTitle: order.productTitle,
+        paymentType: order.paymentType,
+      },
+      amountMinor,
+      amountMinor,
+      resolved.paymentIndex,
+    );
   } catch (err) {
     logger.error("createCheckoutSessionForOrder failed", err);
     return { success: false, error: "Payment could not be started. Please try again." };

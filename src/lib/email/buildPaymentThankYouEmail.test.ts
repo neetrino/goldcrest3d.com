@@ -17,8 +17,8 @@ describe("buildPaymentThankYouEmailPayload", () => {
   it("uses partial-payment subject and new copy for balance", () => {
     const { subject, text, html } = buildPaymentThankYouEmailPayload(base);
     expect(subject).toContain("we received your payment");
-    expect(text).toContain("$500");
-    expect(text).toContain("Remaining balance: $500");
+    expect(text).toContain("$5");
+    expect(text).toContain("Remaining balance: $5");
     expect(text).toContain("We're happy to confirm");
     expect(html).toContain("Remaining balance:");
     expect(html).toContain("https://example.com/order/tok");

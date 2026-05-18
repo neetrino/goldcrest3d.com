@@ -1,6 +1,7 @@
 import { ORDER_PAYMENT_TYPE } from "@/constants/order-payment";
 import { ORDER_STATUS } from "@/constants/order-status";
 import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
+import { MIN_CHARGE_MINOR_UNITS, MIN_SPLIT_ORDER_MINOR_UNITS } from "@/lib/money";
 
 type OrderLike = {
   status: string;
@@ -27,8 +28,7 @@ export function resolveOrderPaymentAmount(
   if (order.status === ORDER_STATUS.PAYMENT_PROCESSING) {
     return {
       ok: false,
-      error:
-        "A payment is already being processed. Wait or clear the simulated hold (dev).",
+      error: "A payment is already being processed. Please check back shortly.",
     };
   }
 
@@ -37,6 +37,10 @@ export function resolveOrderPaymentAmount(
   const remaining = total - paid;
   if (remaining <= 0) {
     return { ok: false, error: "No amount due for payment." };
+  }
+
+  if (remaining < MIN_CHARGE_MINOR_UNITS) {
+    return { ok: false, error: "Remaining balance is below the minimum charge ($0.01)." };
   }
 
   if (order.paymentType === ORDER_PAYMENT_TYPE.UNSET) {
@@ -50,6 +54,12 @@ export function resolveOrderPaymentAmount(
   }
 
   if (order.paymentType === "SPLIT") {
+    if (total < MIN_SPLIT_ORDER_MINOR_UNITS) {
+      return {
+        ok: false,
+        error: "50/50 payments require an order total of at least $0.02.",
+      };
+    }
     const half = Math.floor(total / 2);
     if (paymentIndex === 1) {
       if (paid < half) {

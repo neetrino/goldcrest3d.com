@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db";
 import { ORDER_STATUS } from "@/constants/order-status";
 
 /**
- * Applies a confirmed payment amount to an order (Stripe webhook or mock success).
+ * Applies a confirmed payment amount to an order (Arca return URL or cron reconciliation).
  * Idempotent-safe for duplicate deliveries if amounts match expected increments.
  */
 export async function applyPaidAmountToOrder(

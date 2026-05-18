@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { updateOrder } from "@/app/actions/order";
 import type { UpdateOrderResult } from "@/app/actions/order";
 import { FORM_FIELD_PRODUCT_IMAGE } from "@/constants/order-form";
+import { minorUnitsToDollars } from "@/lib/money";
 import { ORDER_PAYMENT_LINK_MODE } from "@/constants/order-payment-link-mode";
 import type { Order } from "@/generated/prisma/client";
 
@@ -127,9 +128,9 @@ export function OrderEditForm({
           name="priceCents"
           type="number"
           required
-          min={0}
-          step={1}
-          defaultValue={order.priceCents}
+          min={0.01}
+          step={0.01}
+          defaultValue={minorUnitsToDollars(order.priceCents)}
           disabled={isPending}
           className={inputClass}
         />

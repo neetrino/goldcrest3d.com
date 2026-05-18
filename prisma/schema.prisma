@@ -87,28 +87,34 @@ model Order {
   clientEmail   String
   productTitle  String
   productImageKey String? // R2 key
-  priceCents    Int      // order total in whole major units (legacy column name)
+  priceCents    Int      // order total in minor units (e.g. USD cents; 1 = $0.01)
   paymentLinkMode String @default("FULL_ONLY") // FULL_ONLY | SPLIT_ENABLED (admin-controlled link options)
   paymentType   String   // FULL | SPLIT | UNSET (UNSET until client chooses)
-  paidCents     Int      @default(0) // paid total in whole major units (Stripe minor ÷ factor)
+  paidCents     Int      @default(0) // paid total in whole major units
   status        String   @default("PENDING") // PENDING | PAYMENT_PROCESSING | PAID
   /// Set when the payment link email was successfully sent (admin action).
   paymentLinkSentAt DateTime?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  appliedStripeCheckoutSessions AppliedStripeCheckoutSession[]
+  arcaPayments ArcaPayment[]
 }
 
-/// One row per Stripe Checkout Session applied to an order (webhook idempotency; prevents double-counting on retries).
-model AppliedStripeCheckoutSession {
-  stripeCheckoutSessionId String   @id
-  orderId                 String
-  createdAt               DateTime @default(now())
+/// One row per Arca/iPay register.do session (return URL + cron idempotency).
+model ArcaPayment {
+  arcaOrderId           String    @id
+  orderId               String
+  merchantOrderNumber   String
+  paymentIndex          Int?
+  /// Expected charge in minor units (same scale as Order.priceCents).
+  amountWholeExpected   Int
+  appliedAt             DateTime?
+  createdAt             DateTime  @default(now())
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@index([orderId])
+  @@index([merchantOrderNumber])
 }
 
 /// Site-wide managed images (R2 object keys; public URL via R2_PUBLIC_URL).

@@ -10,11 +10,15 @@ const adminOrderBase = {
   clientName: z.string().min(1, "Client name is required").max(120),
   clientEmail: z.string().email("Valid email address"),
   productTitle: z.string().min(1, "Product title is required").max(200),
-  /** Whole-unit price from admin forms (same scale as DB `priceCents`). */
-  priceAmount: z
+  /** Price in dollars from admin forms (converted to minor units before save). */
+  priceAmountDollars: z
     .number()
-    .int("Price must be a whole number")
-    .min(0, "Price cannot be negative"),
+    .min(0.01, "Minimum price is $0.01")
+    .max(9_999_999.99, "Price is too large")
+    .refine(
+      (value) => Math.abs(Math.round(value * 100) - value * 100) < 1e-6,
+      "Use at most 2 decimal places (e.g. 0.01)",
+    ),
 };
 
 export const orderFormSchema = z.object({

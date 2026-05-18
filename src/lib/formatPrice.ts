@@ -1,12 +1,15 @@
+import { minorUnitsToDollars } from "@/lib/money";
+
 /**
- * Format a whole-unit amount for display (same integer scale as DB `priceCents` / `paidCents`).
- * Uses a dollar sign; numeric value is unchanged.
+ * Format DB minor units for display (e.g. 1 → $0.01, 15000 → $150.00).
  */
-export function formatPrice(amountWholeUnits: number): string {
+export function formatPrice(amountMinorUnits: number): string {
+  const dollars = minorUnitsToDollars(amountMinorUnits);
+  const fractionDigits = Number.isInteger(dollars) ? 0 : 2;
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(Math.round(amountWholeUnits));
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: 2,
+  }).format(dollars);
 }
