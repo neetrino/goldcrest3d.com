@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getOrderPaymentUrl } from "@/lib/appUrl";
+import { PAYMENT_RESULT_PATHS } from "@/constants/payment-routes";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { processArcaPaymentCompleted } from "@/lib/payment/processArcaPaymentCompleted";
+import { appendPaymentReturnQuery } from "@/lib/payment/paymentReturnSearchParams";
 
 function firstParam(value: string | null): string | undefined {
   const v = value?.trim();
@@ -24,9 +25,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
   }
 
-  const orderPageUrl = getOrderPaymentUrl(token);
-  const fallbackRedirect = orderPageUrl ?? "/";
-
   const arcaOrderIdFromQuery =
     firstParam(request.nextUrl.searchParams.get("orderId")) ??
     firstParam(request.nextUrl.searchParams.get("mdOrder"));
@@ -41,24 +39,40 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     arcaOrderId = latestPending?.arcaOrderId;
   }
 
+  const bankFailed = request.nextUrl.searchParams.get("payment") === "failed";
+  const query = {
+    token,
+    orderId: arcaOrderIdFromQuery,
+    mdOrder: arcaOrderIdFromQuery,
+    payment: bankFailed ? "failed" : undefined,
+  };
+
   if (!arcaOrderId) {
-    const redirectUrl = new URL(fallbackRedirect, request.url);
-    redirectUrl.searchParams.set("payment", "unknown");
-    return NextResponse.redirect(redirectUrl);
+    const path = appendPaymentReturnQuery(
+      bankFailed ? PAYMENT_RESULT_PATHS.fail : PAYMENT_RESULT_PATHS.success,
+      { token, payment: bankFailed ? "failed" : undefined },
+    );
+    return NextResponse.redirect(new URL(path, request.url));
   }
 
   const outcome = await processArcaPaymentCompleted(arcaOrderId);
 
-  const redirectUrl = new URL(fallbackRedirect, request.url);
-
   if (outcome.handled) {
-    redirectUrl.searchParams.set("paid", "1");
-    return NextResponse.redirect(redirectUrl);
+    const path = appendPaymentReturnQuery(PAYMENT_RESULT_PATHS.success, {
+      ...query,
+      orderId: arcaOrderId,
+      mdOrder: arcaOrderId,
+    });
+    return NextResponse.redirect(new URL(path, request.url));
   }
 
   if (outcome.reason === "not_paid") {
-    redirectUrl.searchParams.set("payment", "pending");
-    return NextResponse.redirect(redirectUrl);
+    const path = appendPaymentReturnQuery(PAYMENT_RESULT_PATHS.success, {
+      ...query,
+      orderId: arcaOrderId,
+      mdOrder: arcaOrderId,
+    });
+    return NextResponse.redirect(new URL(path, request.url));
   }
 
   logger.warn("Arca return: payment not applied", {
@@ -66,6 +80,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     arcaOrderId,
     reason: outcome.reason,
   });
-  redirectUrl.searchParams.set("payment", "failed");
-  return NextResponse.redirect(redirectUrl);
+  const path = appendPaymentReturnQuery(PAYMENT_RESULT_PATHS.fail, {
+    ...query,
+    orderId: arcaOrderId,
+    mdOrder: arcaOrderId,
+    payment: "failed",
+  });
+  return NextResponse.redirect(new URL(path, request.url));
 }
