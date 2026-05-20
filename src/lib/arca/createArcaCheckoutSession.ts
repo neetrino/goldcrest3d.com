@@ -1,3 +1,4 @@
+import { PAYMENT_RESULT_PATHS } from "@/constants/payment-routes";
 import { getAppOrigin, getOrderPaymentUrl } from "@/lib/appUrl";
 import { arcaRegisterOrder, isArcaApiSuccess } from "@/lib/arca/client";
 import { getArcaConfig } from "@/lib/arca/config";
@@ -51,8 +52,8 @@ export async function createArcaCheckoutSession(
   }
 
   const tokenQuery = `token=${encodeURIComponent(order.token)}`;
-  const returnUrl = `${origin}/api/payments/arca/return?${tokenQuery}`;
-  const failUrl = `${origin}/api/payments/arca/return?${tokenQuery}&payment=failed`;
+  const returnUrl = `${origin}${PAYMENT_RESULT_PATHS.success}?${tokenQuery}`;
+  const failUrl = `${origin}${PAYMENT_RESULT_PATHS.fail}?${tokenQuery}`;
   const merchantOrderNumber = buildArcaMerchantOrderNumber(order.id, paymentIndex);
 
   const label =
